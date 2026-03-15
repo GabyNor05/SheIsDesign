@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SheIsDesign\\backend\\backend.csproj": {}
+    "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj": {}
   },
   "projects": {
-    "D:\\SheIsDesign\\backend\\backend.csproj": {
+    "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SheIsDesign\\backend\\backend.csproj",
+        "projectUniqueName": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj",
         "projectName": "backend",
-        "projectPath": "D:\\SheIsDesign\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\wow\\.nuget\\packages\\",
-        "outputPath": "D:\\SheIsDesign\\backend\\obj\\",
+        "projectPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj",
+        "packagesPath": "/Users/anika.debeer/.nuget/packages/",
+        "outputPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\wow\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/anika.debeer/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -72,7 +72,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
