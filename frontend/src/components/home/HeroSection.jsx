@@ -3,11 +3,23 @@ import { FiPlay, FiArrowRight } from "react-icons/fi";
 import { HiTrophy, HiUser } from "react-icons/hi2";
 import { MdRocketLaunch } from "react-icons/md";
 
+// ============================================================
+// DUMMY DATA — replace with API calls when DB is connected
+//
+// Stats bar — derived from aggregate DB queries:
+//   - "1,200+"  → SELECT COUNT(*) FROM Mentee
+//                 ERD: Mentee table
+//   - "48"      → SELECT COUNT(*) FROM Event
+//                 ERD: Event table
+//   - "320+"    → SELECT COUNT(*) FROM Post
+//                 ERD: Post table
+// ============================================================
 const stats = [
   { number: "1,200+", label: "Designers" },
   { number: "48", label: "Events Hosted" },
   { number: "320+", label: "Projects Shared" },
 ];
+// ============================================================
 
 function HeroSection() {
   return (
@@ -40,7 +52,8 @@ function HeroSection() {
         pointerEvents: "none",
       }} />
 
-      <div className="max-w-[1440px] mx-auto grid grid-cols-12 gap-8 items-center" style={{ position: "relative", zIndex: 1 }}>
+      <div className="max-w-[1440px] mx-auto grid grid-cols-12 gap-8 items-center"
+        style={{ position: "relative", zIndex: 1 }}>
 
         {/* Left Column */}
         <div className="col-span-12 md:col-span-6 flex flex-col gap-8 pr-0 md:pr-8">
@@ -53,12 +66,15 @@ function HeroSection() {
             borderRadius: "100px", padding: "6px 16px", width: "fit-content",
           }}>
             <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#C41262" }} />
-            <span style={{ fontSize: "11px", fontWeight: 500, color: "#FE7FAB", letterSpacing: "0.12em", textTransform: "uppercase" }}>
+            <span style={{
+              fontSize: "11px", fontWeight: 500, color: "#FE7FAB",
+              letterSpacing: "0.12em", textTransform: "uppercase",
+            }}>
               A Community for Designers
             </span>
           </div>
 
-          {/* H1 */}
+          {/* H1  */}
           <h1 style={{
             fontFamily: "'Poppins', sans-serif",
             fontWeight: 800,
@@ -91,8 +107,9 @@ function HeroSection() {
             the leaderboard.
           </p>
 
-          {/* Buttons */}
+          {/* CTA Buttons — static links */}
           <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+            {/* Links to register page — route: /register */}
             <Link
               to="/register"
               style={{
@@ -106,6 +123,7 @@ function HeroSection() {
               <MdRocketLaunch size={16} />
               Get Started
             </Link>
+            {/* Links to events page — route: /events */}
             <Link
               to="/events"
               style={{
@@ -122,17 +140,31 @@ function HeroSection() {
             </Link>
           </div>
 
-          {/* Stats */}
+          {/* 
+            Stats bar
+            TODO: replace hardcoded numbers with API aggregate calls
+            API calls: studentService.getCount(), eventService.getCount(), galleryService.getCount()
+            ERD:
+              - Designers  → SELECT COUNT(*) FROM Mentee
+              - Events     → SELECT COUNT(*) FROM Event
+              - Projects   → SELECT COUNT(*) FROM Post
+          */}
           <div style={{
             display: "flex", gap: "32px", paddingTop: "24px",
             borderTop: "1px solid rgba(248,235,237,0.08)", flexWrap: "wrap",
           }}>
             {stats.map((stat) => (
               <div key={stat.label}>
-                <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: "24px", fontWeight: 700, color: "#C41262" }}>
+                <div style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "24px", fontWeight: 700, color: "#C41262",
+                }}>
                   {stat.number}
                 </div>
-                <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: "12px", color: "rgba(248,235,237,0.4)", marginTop: "2px" }}>
+                <div style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "12px", color: "rgba(248,235,237,0.4)", marginTop: "2px",
+                }}>
                   {stat.label}
                 </div>
               </div>
@@ -143,7 +175,10 @@ function HeroSection() {
         {/* Right Column */}
         <div className="col-span-12 md:col-span-6 flex flex-col gap-4">
 
-          {/* Main image block */}
+          {/* 
+            Main image block
+            Replace this placeholder <div> with a real hero image/illustration
+          */}
           <div style={{
             height: "380px", borderRadius: "20px",
             background: "linear-gradient(135deg, rgba(196,18,98,0.12) 0%, rgba(13,6,8,0.8) 100%)",
@@ -151,13 +186,21 @@ function HeroSection() {
             position: "relative", overflow: "hidden",
             display: "flex", alignItems: "center", justifyContent: "center",
           }}>
-            {/* Top glow line */}
+            {/* Top glow line — decorative */}
             <div style={{
               position: "absolute", top: 0, left: 0, right: 0, height: "1px",
               background: "linear-gradient(90deg, transparent, rgba(196,18,98,0.5), transparent)",
             }} />
 
-            {/* Top badge */}
+            {/* 
+              Top right badge
+              TODO: replace with real top designer data
+              ERD: SELECT Mentee.fullname, Submission.rank
+                   FROM Submission
+                   JOIN Mentee ON Submission.menteeID = Mentee.MenteeID
+                   WHERE Submission.rank = 1
+                   LIMIT 1
+            */}
             <div style={{
               position: "absolute", top: "16px", right: "16px",
               display: "flex", alignItems: "center", gap: "8px",
@@ -166,12 +209,15 @@ function HeroSection() {
               borderRadius: "10px", padding: "8px 14px",
             }}>
               <HiTrophy size={14} color="#FE7FAB" />
-              <span style={{ fontFamily: "'Poppins', sans-serif", fontSize: "11px", fontWeight: 600, color: "#FE7FAB" }}>
+              <span style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "11px", fontWeight: 600, color: "#FE7FAB",
+              }}>
                 Top Designer Badge
               </span>
             </div>
 
-            {/* Centre placeholder */}
+            {/* Centre image placeholder — replace with <img> static asset */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
               <div style={{
                 width: "56px", height: "56px", borderRadius: "16px",
@@ -181,12 +227,26 @@ function HeroSection() {
               }}>
                 <FiArrowRight size={24} color="rgba(248,235,237,0.3)" />
               </div>
-              <span style={{ fontFamily: "'Poppins', sans-serif", fontSize: "12px", fontWeight: 500, color: "rgba(248,235,237,0.3)" }}>
+              <span style={{
+                fontFamily: "'Poppins', sans-serif",
+                fontSize: "12px", fontWeight: 500,
+                color: "rgba(248,235,237,0.3)",
+              }}>
                 Hero Illustration / Photography
               </span>
             </div>
 
-            {/* Bottom floating card */}
+            {/* 
+              Bottom floating designer card
+              TODO: replace with real #1 leaderboard student
+              ERD: SELECT Mentee.fullname, Submission.rank, Submission.points
+                   FROM Submission
+                   JOIN Mentee ON Submission.menteeID = Mentee.MenteeID
+                   ORDER BY Submission.points DESC
+                   LIMIT 1
+              Also replace avatar placeholder with:
+              <img src={mentee.profile_image} /> — if profile image added to Mentee table
+            */}
             <div style={{
               position: "absolute", bottom: "16px", left: "16px",
               display: "flex", alignItems: "center", gap: "10px",
@@ -199,21 +259,39 @@ function HeroSection() {
                 background: "linear-gradient(135deg, #C41262, #FE4081)",
                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
               }}>
+                {/* ERD: Mentee profile image — not yet in ERD, suggest adding profile_image_url to Mentee table */}
                 <HiUser size={16} color="white" />
               </div>
               <div>
-                <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: "12px", fontWeight: 600, color: "#F8EBED" }}>
+                {/* ERD: Mentee.fullname */}
+                <div style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "12px", fontWeight: 600, color: "#F8EBED",
+                }}>
                   Designer Name
                 </div>
-                <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: "11px", color: "#FE7FAB" }}>
+                {/* ERD: Submission.rank */}
+                <div style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "11px", color: "#FE7FAB",
+                }}>
                   #1 Leaderboard
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Two small blocks */}
+          {/* 
+            Two small image blocks
+            TODO: replace with real featured Post images
+            ERD: SELECT Post.image_file_link, Post.title, Post.category
+                 FROM Post
+                 WHERE Post.status = 'featured'
+                 ORDER BY Post.like_count DESC
+                 LIMIT 2
+          */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            {/* ERD: Post.image_file_link — replace FiArrowRight with <img> */}
             {["Event Graphic", "Portfolio Work"].map((label) => (
               <div key={label} style={{
                 height: "110px", borderRadius: "14px",
@@ -223,7 +301,11 @@ function HeroSection() {
                 alignItems: "center", justifyContent: "center", gap: "8px",
               }}>
                 <FiArrowRight size={20} color="rgba(248,235,237,0.2)" />
-                <span style={{ fontFamily: "'Poppins', sans-serif", fontSize: "11px", color: "rgba(248,235,237,0.3)" }}>
+                {/* ERD: Post.category */}
+                <span style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "11px", color: "rgba(248,235,237,0.3)",
+                }}>
                   {label}
                 </span>
               </div>
