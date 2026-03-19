@@ -1,0 +1,178 @@
+/* =============================================
+   FeaturedWorkSection.css
+   Styles for src/components/home/FeaturedWorkSection.jsx
+   ============================================= */
+
+/* --- Section wrapper --- */
+.featured-section {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0D0608;
+    border-top: 1px solid rgba(248, 235, 237, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- Background glow --- */
+.featured-glow {
+    position: absolute;
+    bottom: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* --- Inner container --- */
+.featured-inner {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Section header --- */
+.featured-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.featured-eyebrow {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: #FE7FAB;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.featured-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 4vw, 48px);
+    line-height: 1.15;
+    color: #F8EBED;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* --- "View Full Gallery" link --- */
+.featured-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.6) !important;
+    border: 1px solid rgba(248, 235, 237, 0.1) !important;
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* --- Masonry grid outer --- */
+.featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* --- Each masonry column --- */
+.featured-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* =============================================
+   WorkCard styles
+   ============================================= */
+
+.work-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* --- Image placeholder block --- */
+.work-card-image {
+    width: 100%;
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(196, 18, 98, 0.08) 0%, rgba(13, 6, 8, 0.9) 100%);
+    border: 1px solid rgba(196, 18, 98, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.work-card-image--tall {
+    height: 340px;
+}
+
+.work-card-image--short {
+    height: 220px;
+}
+
+.work-card-image-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.3), transparent);
+}
+
+.work-card-image-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(196, 18, 98, 0.12);
+    border: 1px solid rgba(196, 18, 98, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.work-card-image-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    color: rgba(248, 235, 237, 0.2);
+}
+
+/* --- Card meta (title + designer) --- */
+.work-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 4px;
+}
+
+.work-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #F8EBED;
+}
+
+.work-card-designer-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.work-card-designer {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.35);
+}

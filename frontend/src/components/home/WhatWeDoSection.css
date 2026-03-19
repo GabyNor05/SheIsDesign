@@ -1,0 +1,176 @@
+/* =============================================
+   WhatWeDoSection.css
+   Styles for src/components/home/WhatWeDoSection.jsx
+   ============================================= */
+
+/* --- Section wrapper --- */
+.whatwedo-section {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0D0608;
+    border-top: 1px solid rgba(248, 235, 237, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- Background glow --- */
+.whatwedo-glow {
+    position: absolute;
+    top: 50%;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+/* --- Inner container --- */
+.whatwedo-inner {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Section header --- */
+.whatwedo-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.whatwedo-eyebrow {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: #FE7FAB;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.whatwedo-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 4vw, 48px);
+    line-height: 1.15;
+    color: #F8EBED;
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+/* --- Decorative divider --- */
+.whatwedo-divider {
+    width: 48px;
+    height: 3px;
+    margin: 0 auto;
+    background: linear-gradient(90deg, #C41262, #FE4081);
+    border-radius: 2px;
+}
+
+/* --- Features list --- */
+.whatwedo-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Single feature row --- */
+.whatwedo-row {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    padding-top: 48px;
+    padding-bottom: 48px;
+}
+
+.whatwedo-row--bordered {
+    border-bottom: 1px solid rgba(248, 235, 237, 0.06);
+}
+
+/* --- Step number --- */
+.whatwedo-number {
+    flex-shrink: 0;
+    width: 100px;
+}
+
+.whatwedo-number span {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, rgba(196, 18, 98, 0.3), rgba(196, 18, 98, 0.05));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* --- Feature icon box --- */
+.whatwedo-icon {
+    flex-shrink: 0;
+}
+
+.whatwedo-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(196, 18, 98, 0.12);
+    border: 1px solid rgba(196, 18, 98, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #C41262;
+}
+
+/* --- Feature text content --- */
+.whatwedo-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 560px;
+}
+
+.whatwedo-feature-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #F8EBED;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.whatwedo-feature-description {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: rgba(248, 235, 237, 0.5);
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* --- Arrow button (decorative) --- */
+.whatwedo-arrow {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+/* DaisyUI btn-circle btn-ghost override — remove default outline */
+.whatwedo-arrow-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(196, 18, 98, 0.25) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #C41262 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.whatwedo-arrow-btn:hover,
+.whatwedo-arrow-btn:focus,
+.whatwedo-arrow-btn:active,
+.whatwedo-arrow-btn:focus-visible {
+    background: rgba(196, 18, 98, 0.08) !important;
+    border: 1px solid rgba(196, 18, 98, 0.4) !important;
+    box-shadow: none !important;
+    outline: none !important;
+}

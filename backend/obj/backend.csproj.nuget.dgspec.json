@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\burnt\\Documents\\GitHub\\SheIsDesign\\SheIsDesign\\Backend\\backend.csproj": {}
+    "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\burnt\\Documents\\GitHub\\SheIsDesign\\SheIsDesign\\Backend\\backend.csproj": {
+    "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\burnt\\Documents\\GitHub\\SheIsDesign\\SheIsDesign\\Backend\\backend.csproj",
+        "projectUniqueName": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\Users\\burnt\\Documents\\GitHub\\SheIsDesign\\SheIsDesign\\Backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\burnt\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\burnt\\Documents\\GitHub\\SheIsDesign\\SheIsDesign\\Backend\\obj\\",
+        "projectPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj",
+        "packagesPath": "/Users/anika.debeer/.nuget/packages/",
+        "outputPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\burnt\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/anika.debeer/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -92,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.104/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

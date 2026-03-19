@@ -1,0 +1,259 @@
+/* =============================================
+   LeaderboardSection.css
+   Styles for src/components/home/LeaderboardSection.jsx
+   ============================================= */
+
+/* --- Section wrapper --- */
+.leaderboard-section {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0D0608;
+    border-top: 1px solid rgba(248, 235, 237, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- Background glow --- */
+.leaderboard-glow {
+    position: absolute;
+    top: -80px;
+    right: 20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* --- Inner container --- */
+.leaderboard-inner {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Section header --- */
+.leaderboard-header {
+    text-align: center;
+    margin-bottom: 56px;
+}
+
+.leaderboard-eyebrow {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: #FE7FAB;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.leaderboard-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 4vw, 48px);
+    line-height: 1.15;
+    color: #F8EBED;
+    margin-top: 12px;
+    margin-bottom: 16px;
+}
+
+.leaderboard-subtext {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    color: rgba(248, 235, 237, 0.5);
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+/* --- Main leaderboard card --- */
+.leaderboard-card {
+    width: 100%;
+    max-width: 760px;
+    border-radius: 24px;
+    background: linear-gradient(145deg, rgba(196, 18, 98, 0.08) 0%, rgba(13, 6, 8, 0.95) 100%);
+    border: 1px solid rgba(196, 18, 98, 0.2);
+    overflow: hidden;
+}
+
+/* --- Card top bar --- */
+.leaderboard-card-header {
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(248, 235, 237, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.leaderboard-card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.leaderboard-card-header-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: rgba(248, 235, 237, 0.6);
+}
+
+.leaderboard-card-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.leaderboard-card-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(248, 235, 237, 0.1);
+}
+
+/* --- Rankings list --- */
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Single ranking row --- */
+.leaderboard-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 40px;
+}
+
+.leaderboard-row--bordered {
+    border-bottom: 1px solid rgba(248, 235, 237, 0.04);
+}
+
+/* ERD: Submission.rank */
+.leaderboard-rank {
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.leaderboard-rank--first {
+    font-size: 34px;
+    color: #C41262;
+}
+
+.leaderboard-rank--other {
+    font-size: 26px;
+    color: rgba(248, 235, 237, 0.2);
+}
+
+/* --- Medal icon circle --- */
+.leaderboard-medal {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Avatar placeholder --- */
+.leaderboard-avatar {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(196, 18, 98, 0.12);
+    border: 1px solid rgba(196, 18, 98, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Name + handle block --- */
+.leaderboard-identity {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.leaderboard-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #F8EBED;
+}
+
+.leaderboard-handle {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.35);
+}
+
+/* --- Points display --- */
+.leaderboard-points {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.leaderboard-points-value {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.leaderboard-points-value--first {
+    color: #C41262;
+}
+
+.leaderboard-points-value--other {
+    color: rgba(248, 235, 237, 0.6);
+}
+
+/* --- Card footer --- */
+.leaderboard-card-footer {
+    padding: 20px 40px;
+    border-top: 1px solid rgba(248, 235, 237, 0.06);
+    background: rgba(196, 18, 98, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.leaderboard-footer-count {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.3);
+}
+
+/* --- "View Full Leaderboard" button --- */
+.leaderboard-footer-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C41262, #FE4081) !important;
+    color: white !important;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.leaderboard-footer-btn:hover,
+.leaderboard-footer-btn:focus,
+.leaderboard-footer-btn:active,
+.leaderboard-footer-btn:focus-visible {
+    background: linear-gradient(135deg, #C41262, #FE4081) !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    opacity: 0.88;
+}
