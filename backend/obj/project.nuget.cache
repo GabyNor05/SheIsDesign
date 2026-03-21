@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5KXTkWI4Yvs=",
+  "dgSpecHash": "ymNVnbFyMww=",
   "success": true,
-  "projectFilePath": "C:\\Users\\burnt\\Documents\\GitHub\\SheIsDesign\\SheIsDesign\\Backend\\backend.csproj",
+  "projectFilePath": "C:\\Users\\burnt\\Documents\\GitHub\\SheDesign\\SheIsDesign\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\burnt\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\burnt\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
