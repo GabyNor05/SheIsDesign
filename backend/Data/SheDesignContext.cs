@@ -24,6 +24,63 @@ namespace SheDesign.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // User column mapping for existing PostgreSQL lowercase schema
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.ToTable("Users");
+                entity.Property(u => u.Email).HasColumnName("email");
+                entity.Property(u => u.PasswordHash).HasColumnName("password");
+                entity.Property(u => u.Role).HasColumnName("roles");
+            });
+
+            // Comment table naming & mapping
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.ToTable("Comment");
+                entity.Property(c => c.body).HasColumnName("body");
+                entity.Property(c => c.userId).HasColumnName("userId");
+                entity.Property(c => c.menteeId).HasColumnName("menteeId");
+                entity.Property(c => c.timeStamp).HasColumnName("timeStamp");
+            });
+
+            modelBuilder.Entity<Donation>(entity =>
+            {
+                entity.ToTable("Donation");
+                entity.Property(d => d.donor_name).HasColumnName("donor_name");
+                entity.Property(d => d.eventId).HasColumnName("eventId");
+            });
+
+            modelBuilder.Entity<Event>(entity =>
+            {
+                entity.ToTable("Event");
+                entity.Property(e => e.name).HasColumnName("name");
+            });
+
+            modelBuilder.Entity<Mentee>(entity =>
+            {
+                entity.ToTable("Mentee");
+                entity.Property(m => m.userId).HasColumnName("userId");
+            });
+
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.ToTable("Post");
+                entity.Property(p => p.menteeId).HasColumnName("menteeId");
+                entity.Property(p => p.eventId).HasColumnName("eventId");
+            });
+
+            modelBuilder.Entity<Submission>(entity =>
+            {
+                entity.ToTable("Submission");
+                entity.Property(s => s.menteeId).HasColumnName("menteeId");
+            });
+
+            modelBuilder.Entity<Volenteer>(entity =>
+            {
+                entity.ToTable("Volenteer");
+                entity.Property(v => v.userId).HasColumnName("userId");
+            });
+
             // Comment relationships
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.User)

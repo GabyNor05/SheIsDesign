@@ -12,7 +12,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<SheDesignContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("SheIsDesignDatabase")));
+builder.Services.AddDbContext<SheDesignContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("SheIsDesignDatabase")));
 
 var app = builder.Build();
 

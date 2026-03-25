@@ -32,16 +32,20 @@ namespace backend.Migrations
 
                     b.Property<string>("body")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("body");
 
                     b.Property<int>("menteeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("menteeId");
 
                     b.Property<DateTime>("timeStamp")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("timeStamp");
 
                     b.Property<int>("userId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("userId");
 
                     b.HasKey("Id");
 
@@ -49,7 +53,7 @@ namespace backend.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.Donation", b =>
@@ -68,10 +72,12 @@ namespace backend.Migrations
 
                     b.Property<string>("donor_name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("donor_name");
 
                     b.Property<int>("eventId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("eventId");
 
                     b.Property<string>("notes")
                         .IsRequired()
@@ -81,7 +87,7 @@ namespace backend.Migrations
 
                     b.HasIndex("eventId");
 
-                    b.ToTable("Donation");
+                    b.ToTable("Donation", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.Event", b =>
@@ -115,7 +121,8 @@ namespace backend.Migrations
 
                     b.Property<string>("name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.Property<int>("points_reward")
                         .HasColumnType("integer");
@@ -129,7 +136,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Event");
+                    b.ToTable("Event", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.Mentee", b =>
@@ -153,7 +160,8 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("userId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("userId");
 
                     b.Property<int>("year_of_study")
                         .HasColumnType("integer");
@@ -162,7 +170,7 @@ namespace backend.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Mentee");
+                    b.ToTable("Mentee", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.Post", b =>
@@ -185,7 +193,8 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("eventId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("eventId");
 
                     b.Property<string>("image_file_link")
                         .IsRequired()
@@ -195,7 +204,8 @@ namespace backend.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("menteeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("menteeId");
 
                     b.Property<DateTime>("post_date")
                         .HasColumnType("timestamp with time zone");
@@ -214,7 +224,7 @@ namespace backend.Migrations
 
                     b.HasIndex("menteeId");
 
-                    b.ToTable("Post");
+                    b.ToTable("Post", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.Submission", b =>
@@ -226,7 +236,8 @@ namespace backend.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("menteeId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("menteeId");
 
                     b.Property<int>("points")
                         .HasColumnType("integer");
@@ -246,7 +257,7 @@ namespace backend.Migrations
 
                     b.HasIndex("menteeId");
 
-                    b.ToTable("Submission");
+                    b.ToTable("Submission", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.User", b =>
@@ -258,23 +269,27 @@ namespace backend.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date_created");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("email");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("password");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("roles");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.Volenteer", b =>
@@ -289,13 +304,14 @@ namespace backend.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("userId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("userId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Volenteer");
+                    b.ToTable("Volenteer", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.Comment", b =>
