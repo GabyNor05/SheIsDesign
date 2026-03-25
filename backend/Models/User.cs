@@ -5,9 +5,9 @@ namespace Models.User
     public class User
     {
         public int Id { get; set; }
-        public string email { get; set; } = String.Empty;
-        public string password { get; set; } = String.Empty;
-        public UserRoles roles { get; set; } = UserRoles.Guest;
+        public string Email { get; set; } = String.Empty;
+        public string Password { get; set; } = String.Empty;
+        public UserRoles Roles { get; set; } = UserRoles.Guest;
     }
 }
 
