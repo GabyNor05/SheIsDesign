@@ -30,6 +30,7 @@ namespace backend.Controllers
             {
                 Id = user.Id,
                 Email = user.Email,
+                DateCreated = user.DateCreated,
                 Role = user.Role
             }).ToListAsync();
         }
@@ -49,6 +50,7 @@ namespace backend.Controllers
             {
                 Id = user.Id,
                 Email = user.Email,
+                DateCreated = user.DateCreated,
                 Role = user.Role
             };
         }
@@ -93,6 +95,7 @@ namespace backend.Controllers
             {
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                DateCreated = DateTime.UtcNow,
                 Role = "User"
             };
 
@@ -103,6 +106,7 @@ namespace backend.Controllers
             {
                 Id = user.Id,
                 Email = user.Email,
+                DateCreated = user.DateCreated,
                 Role = user.Role
             };
 
@@ -111,9 +115,9 @@ namespace backend.Controllers
 
         
         [HttpPost("Login")]
-        public async Task<ActionResult> Login(string username, string password)
+        public async Task<ActionResult> Login(string email, string password)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if(user == null)
             {

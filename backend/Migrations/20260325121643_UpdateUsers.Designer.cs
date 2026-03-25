@@ -12,8 +12,8 @@ using SheDesign.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(SheDesignContext))]
-    [Migration("20260325114846_UpdateModels")]
-    partial class UpdateModels
+    [Migration("20260325121643_UpdateUsers")]
+    partial class UpdateUsers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -272,8 +272,7 @@ namespace backend.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateCreated")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date_created");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
