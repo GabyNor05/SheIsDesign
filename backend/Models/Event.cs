@@ -1,4 +1,4 @@
-namespace Models.Event
+namespace SheDesign.Models
 {
     public class Event
     {
@@ -13,5 +13,8 @@ namespace Models.Event
         public int points_reward { get; set; }
         public string status { get; set; } = String.Empty;
         public string image_link { get; set; } = String.Empty;
+
+        public ICollection<Donation> Donations { get; set; } = new List<Donation>();
+        public ICollection<Post> Posts { get; set; } = new List<Post>();
     }
 }

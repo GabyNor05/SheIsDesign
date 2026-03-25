@@ -1,4 +1,4 @@
-namespace Models.Donation
+namespace SheDesign.Models
 {
     public class Donation
     {
@@ -8,5 +8,7 @@ namespace Models.Donation
         public float amount { get; set; }
         public DateTime date { get; set; } = DateTime.Now;
         public string notes { get; set; } = String.Empty;
+
+        public Event? Event { get; set; }
     }
 }

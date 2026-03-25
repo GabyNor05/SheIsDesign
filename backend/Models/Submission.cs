@@ -1,4 +1,4 @@
-namespace Models.Submission
+namespace SheDesign.Models
 {
     public class Submission
     {
@@ -8,5 +8,7 @@ namespace Models.Submission
         public string status { get; set; } = String.Empty;
         public int points { get; set; }
         public int rank { get; set; }
+
+        public Mentee? Mentee { get; set; }
     }
 }

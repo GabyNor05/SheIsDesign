@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "q+0WqZr3bII=",
+  "dgSpecHash": "6IkeJpK8txQ=",
   "success": true,
   "projectFilePath": "C:\\Users\\burnt\\Documents\\GitHub\\SheDesign\\SheIsDesign\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\burnt\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\burnt\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
+    "C:\\Users\\burnt\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\burnt\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\burnt\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\burnt\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",
