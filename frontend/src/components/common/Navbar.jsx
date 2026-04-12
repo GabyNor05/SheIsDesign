@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <div className="navbar bg-primary px-8">
+    <div className="navbar bg-primary px-8 sticky top-0 z-50 shadow-lg">
 
       {/* Logo */}
       <div className="flex-1">
@@ -22,8 +22,8 @@ function Navbar() {
 
       {/* Sign In button */}
       <div className="flex-none">
-        <Link to="/login" className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
-          Sign In
+        <Link to="/register" className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
+          Join
         </Link>
       </div>
 
