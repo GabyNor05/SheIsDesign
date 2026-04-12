@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "NkCeipa+Z0Y=",
+  "dgSpecHash": "BbCP4GyCi+A=",
   "success": true,
   "projectFilePath": "D:\\SheIsDesign\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wow\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\wow\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",
+    "C:\\Users\\wow\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\wow\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\wow\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\wow\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",
@@ -150,5 +151,15 @@
     "C:\\Users\\wow\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.6\\system.security.cryptography.protecteddata.9.0.6.nupkg.sha512",
     "C:\\Users\\wow\\.nuget\\packages\\yamldotnet\\16.3.0\\yamldotnet.16.3.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problem reading the cache file D:\\SheIsDesign\\backend\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "D:\\SheIsDesign\\backend\\backend.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\SheIsDesign\\backend\\backend.csproj",
+      "targetGraphs": []
+    }
+  ]
 }
