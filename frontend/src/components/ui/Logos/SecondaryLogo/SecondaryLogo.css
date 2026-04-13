@@ -1,0 +1,52 @@
+.secondary-logo {
+    border-radius: 50%;
+    background: var(--sid-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.secondary-logo svg {
+    display: block;
+}
+
+.secondary-logo--sm {
+    width: 30px;
+    height: 30px;
+}
+
+.secondary-logo--sm svg {
+    width: 12px;
+    height: 12px;
+}
+
+.secondary-logo--md {
+    width: 38px;
+    height: 38px;
+}
+
+.secondary-logo--md svg {
+    width: 15px;
+    height: 15px;
+}
+
+.secondary-logo--lg {
+    width: 48px;
+    height: 48px;
+}
+
+.secondary-logo--lg svg {
+    width: 20px;
+    height: 20px;
+}
+
+.secondary-logo--xl {
+    width: 60px;
+    height: 60px;
+}
+
+.secondary-logo--xl svg {
+    width: 26px;
+    height: 26px;
+}

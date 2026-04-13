@@ -22,9 +22,9 @@ function Navbar() {
 
       {/* Sign In button */}
       <div className="flex-none">
-        <Link to="/register" className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
-          Join
-        </Link>
+<Link to="/signup" className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
+  Join
+</Link>
       </div>
 
     </div>

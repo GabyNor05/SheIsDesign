@@ -1,0 +1,72 @@
+.primary-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.primary-logo__mark {
+    border-radius: 50%;
+    background: var(--sid-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.primary-logo__mark svg {
+    display: block;
+}
+
+.primary-logo__wordmark {
+    font-family: var(--sid-font);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sid-text-primary);
+    white-space: nowrap;
+}
+
+/* Sizes */
+.primary-logo--sm .primary-logo__mark {
+    width: 30px;
+    height: 30px;
+}
+
+.primary-logo--sm .primary-logo__mark svg {
+    width: 12px;
+    height: 12px;
+}
+
+.primary-logo--sm .primary-logo__wordmark {
+    font-size: 12px;
+}
+
+.primary-logo--md .primary-logo__mark {
+    width: 38px;
+    height: 38px;
+}
+
+.primary-logo--md .primary-logo__mark svg {
+    width: 15px;
+    height: 15px;
+}
+
+.primary-logo--md .primary-logo__wordmark {
+    font-size: 13px;
+}
+
+.primary-logo--lg .primary-logo__mark {
+    width: 48px;
+    height: 48px;
+}
+
+.primary-logo--lg .primary-logo__mark svg {
+    width: 20px;
+    height: 20px;
+}
+
+.primary-logo--lg .primary-logo__wordmark {
+    font-size: 15px;
+}
