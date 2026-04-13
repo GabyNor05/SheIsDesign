@@ -1,95 +1,458 @@
-.signup-success-page {
-    position: relative;
+/* =============================================
+   SignupSuccessPage.css
+   SheIsDesign — signup success / pending review
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* ── Root ──────────────────────────────────────────────────── */
+.ssp-root {
     min-height: 100vh;
-    background: var(--sid-bg);
+    background-color: #0D0608;
+    font-family: 'Poppins', sans-serif;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 24px 48px;
+    flex-direction: column;
+    position: relative;
     overflow: hidden;
 }
 
-/* Animated container */
-.signup-success-page__content {
+/* ── Glows ─────────────────────────────────────────────────── */
+.ssp-glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.ssp-glow--1 {
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.16) 0%, transparent 65%);
+    animation: glow-breathe 5s ease-in-out infinite alternate;
+}
+
+.ssp-glow--2 {
+    bottom: -80px;
+    right: -80px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.08) 0%, transparent 65%);
+}
+
+@keyframes glow-breathe {
+    from {
+        opacity: 0.7;
+        transform: translateX(-50%) scale(1);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.06);
+    }
+}
+
+/* Dot grid */
+.ssp-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(248, 235, 237, 0.05) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Nav ───────────────────────────────────────────────────── */
+.ssp-nav {
     position: relative;
     z-index: 10;
-    display: flex;
-    flex-direction: column;
+    padding: 28px 48px;
+    flex-shrink: 0;
+}
+
+.ssp-nav__logo {
+    display: inline-flex;
     align-items: center;
-    text-align: center;
-    gap: 28px;
-    max-width: 420px;
-    width: 100%;
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    gap: 10px;
+    text-decoration: none;
 }
 
-.signup-success-page__content--visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Check circle */
-.signup-success-page__circle {
-    width: 96px;
-    height: 96px;
+.ssp-nav__logo-mark {
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
-    background: rgba(196, 18, 98, 0.10);
-    border: 2px solid rgba(196, 18, 98, 0.35);
-    box-shadow: 0 0 48px rgba(196, 18, 98, 0.18);
+    background: linear-gradient(135deg, #C41262, #FE4081);
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 0 16px rgba(196, 18, 98, 0.3);
 }
 
-/* Heading */
-.signup-success-page__heading {
+.ssp-nav__logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #F8EBED;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* ── Main ──────────────────────────────────────────────────── */
+.ssp-main {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 24px 64px;
+}
+
+/* ── Card ──────────────────────────────────────────────────── */
+.ssp-card {
+    width: 100%;
+    max-width: 520px;
+    background: rgba(248, 235, 237, 0.03);
+    border: 1px solid rgba(196, 18, 98, 0.15);
+    border-radius: 28px;
+    padding: 48px 44px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    text-align: center;
+    position: relative;
+    opacity: 0;
+    animation: card-arrive 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+
+@keyframes card-arrive {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ssp-card__glow-line {
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.7), transparent);
+    border-radius: 1px;
+}
+
+/* ── Check icon ────────────────────────────────────────────── */
+.ssp-icon-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ssp-check-icon {
+    color: #FE4081;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 0 16px rgba(196, 18, 98, 0.5));
+    animation: check-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s both;
+}
+
+@keyframes check-pop {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.ssp-icon-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(196, 18, 98, 0.25);
+    background: rgba(196, 18, 98, 0.07);
+    animation: ring-expand 0.5s ease 0.3s both;
+}
+
+@keyframes ring-expand {
+    from {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+.ssp-card__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 10px;
 }
 
-.signup-success-page__title {
-    font-family: var(--sid-font);
-    font-size: 32px;
+.ssp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #FE7FAB;
+}
+
+.ssp-eyebrow__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #C41262;
+    box-shadow: 0 0 8px rgba(196, 18, 98, 0.7);
+    animation: dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.ssp-heading {
+    font-family: 'Poppins', sans-serif;
     font-weight: 800;
-    color: var(--sid-text-primary);
-    letter-spacing: -0.6px;
+    font-size: 32px;
+    letter-spacing: -0.5px;
     line-height: 1.15;
+    color: #F8EBED;
     margin: 0;
 }
 
-.signup-success-page__subtitle {
-    font-family: var(--sid-font);
-    font-size: 15px;
-    color: var(--sid-text-muted);
+.ssp-heading__name {
+    background: linear-gradient(135deg, #C41262 0%, #FE4081 50%, #FE7FAB 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ssp-subtext {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    color: rgba(248, 235, 237, 0.45);
+    margin: 0;
+    max-width: 360px;
+}
+
+/* ── Divider ───────────────────────────────────────────────── */
+.ssp-card__divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(248, 235, 237, 0.06);
+}
+
+/* ── Notices ───────────────────────────────────────────────── */
+.ssp-notice,
+.ssp-access {
+    width: 100%;
+    border-radius: 16px;
+    padding: 16px 20px;
+    text-align: left;
+}
+
+.ssp-notice {
+    background: rgba(196, 18, 98, 0.06);
+    border: 1px solid rgba(196, 18, 98, 0.15);
+}
+
+.ssp-access {
+    background: rgba(248, 235, 237, 0.03);
+    border: 1px solid rgba(248, 235, 237, 0.07);
+}
+
+.ssp-notice__row,
+.ssp-access__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.ssp-notice__icon {
+    font-size: 18px;
+    color: #FE7FAB;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.ssp-access__icon {
+    font-size: 18px;
+    color: rgba(248, 235, 237, 0.3);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.ssp-notice__title,
+.ssp-access__title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    margin: 0 0 5px;
+}
+
+.ssp-notice__title {
+    color: #FE7FAB;
+}
+
+.ssp-access__title {
+    color: rgba(248, 235, 237, 0.6);
+}
+
+.ssp-notice__body,
+.ssp-access__body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 12.5px;
     line-height: 1.65;
     margin: 0;
 }
 
-.signup-success-page__highlight {
-    font-weight: 500;
-    color: var(--sid-text-secondary);
+.ssp-notice__body {
+    color: rgba(248, 235, 237, 0.4);
 }
 
-/* CTA */
-.signup-success-page__cta {
+.ssp-access__body {
+    color: rgba(248, 235, 237, 0.3);
+}
+
+/* ── Footer: countdown ─────────────────────────────────────── */
+.ssp-footer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
     width: 100%;
-    max-width: 320px;
+    justify-content: center;
 }
 
-/* Rule + confirm */
-.signup-success-page__rule {
-    width: 100%;
-    height: 1px;
-    background: var(--sid-border);
+/* Circular countdown */
+.ssp-countdown {
+    position: relative;
+    width: 68px;
+    height: 68px;
+    flex-shrink: 0;
 }
 
-.signup-success-page__confirm {
-    font-family: var(--sid-font);
-    font-size: 12px;
-    color: var(--sid-text-faint);
-    line-height: 1.6;
+.ssp-countdown__number {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #F8EBED;
+}
+
+.ssp-footer__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+}
+
+.ssp-footer__redirecting {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.5);
     margin: 0;
+}
+
+.ssp-footer__redirecting strong {
+    color: #FE7FAB;
+    font-weight: 600;
+}
+
+.ssp-footer__hint {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.25);
+    margin: 0;
+}
+
+/* ── CTA button ────────────────────────────────────────────── */
+.ssp-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: white;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 4px 20px rgba(196, 18, 98, 0.3);
+    transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.ssp-cta:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(196, 18, 98, 0.4);
+}
+
+.ssp-cta__arrow {
+    margin-left: 2px;
+    transition: transform 0.2s ease;
+}
+
+.ssp-cta:hover .ssp-cta__arrow {
+    transform: translateX(3px);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .ssp-card {
+        padding: 32px 24px;
+    }
+
+    .ssp-heading {
+        font-size: 26px;
+    }
+
+    .ssp-nav {
+        padding: 24px;
+    }
 }
