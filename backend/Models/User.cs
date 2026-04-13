@@ -1,19 +1,19 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.VisualBasic;
 
-namespace SheDesign.Models
+namespace Models.User
 {
     public class User
     {
         public int Id { get; set; }
-        [Required]
-        [EmailAddress]
         public string Email { get; set; } = String.Empty;
-        public string PasswordHash { get; set; } = String.Empty;
-        public string Role { get; set; } = "User";
-
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
-        public ICollection<Mentee> Mentees { get; set; } = new List<Mentee>();
-        public ICollection<Volenteer> Volenteers { get; set; } = new List<Volenteer>();
+        public string Password { get; set; } = String.Empty;
+        public UserRoles Roles { get; set; } = UserRoles.Guest;
     }
+}
+
+public enum UserRoles
+{
+    Admin,
+    User,
+    Guest,
 }

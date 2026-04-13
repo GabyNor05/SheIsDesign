@@ -1,0 +1,259 @@
+/* =============================================
+   EventsSection.css
+   Styles for src/components/home/EventsSection.jsx
+   ============================================= */
+
+/* --- Section wrapper --- */
+.events-section {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0D0608;
+    border-top: 1px solid rgba(248, 235, 237, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- Background glow --- */
+.events-glow {
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* --- Inner container --- */
+.events-inner {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Section header row --- */
+.events-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* --- Eyebrow label --- */
+.events-eyebrow {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: #FE7FAB;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* --- Section heading --- */
+.events-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 4vw, 48px);
+    line-height: 1.15;
+    color: #F8EBED;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* --- "View All" link button --- */
+.events-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.6);
+    border: 1px solid rgba(248, 235, 237, 0.1) !important;
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* --- Events grid --- */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* --- Individual event card --- */
+.event-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(196, 18, 98, 0.07) 0%, rgba(13, 6, 8, 0.9) 100%);
+    border: 1px solid rgba(196, 18, 98, 0.15);
+    overflow: hidden;
+}
+
+/* --- Event image placeholder block --- */
+.event-card-image {
+    width: 100%;
+    height: 180px;
+    background: rgba(196, 18, 98, 0.06);
+    border-bottom: 1px solid rgba(196, 18, 98, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.event-card-image-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(196, 18, 98, 0.12);
+    border: 1px solid rgba(196, 18, 98, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-card-image-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    color: rgba(248, 235, 237, 0.2);
+}
+
+/* --- Card content area --- */
+.event-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 28px;
+    flex: 1;
+}
+
+/* --- Status badge --- */
+.event-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 100px;
+    width: fit-content;
+}
+
+.event-badge span {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.event-badge--open {
+    background: rgba(196, 18, 98, 0.15);
+    border: 1px solid rgba(196, 18, 98, 0.3);
+    color: #FE4081;
+}
+
+.event-badge--coming-soon {
+    background: rgba(254, 127, 171, 0.1);
+    border: 1px solid rgba(254, 127, 171, 0.2);
+    color: #FE7FAB;
+}
+
+.event-badge--upcoming {
+    background: rgba(248, 235, 237, 0.06);
+    border: 1px solid rgba(248, 235, 237, 0.12);
+    color: rgba(248, 235, 237, 0.5);
+}
+
+/* --- Event title --- */
+.event-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: #F8EBED;
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* --- Date row --- */
+.event-card-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.event-card-date span {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.4);
+}
+
+/* --- Description --- */
+.event-card-description {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: rgba(248, 235, 237, 0.5);
+    line-height: 1.7;
+    margin: 0;
+    flex: 1;
+}
+
+/* --- View event button --- */
+.event-card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 14px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C41262, #FE4081) !important;
+    color: white !important;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.event-card-btn:hover,
+.event-card-btn:focus,
+.event-card-btn:active,
+.event-card-btn:focus-visible {
+    background: linear-gradient(135deg, #C41262, #FE4081) !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    opacity: 0.88;
+}
+
+/* --- Scroll dots --- */
+.events-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+}
+
+.events-dot-active {
+    width: 32px;
+    height: 6px;
+    border-radius: 3px;
+    background: #C41262;
+}
+
+.events-dot-inactive {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(248, 235, 237, 0.15);
+}

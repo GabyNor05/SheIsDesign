@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj": {}
+    "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj": {
+    "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
+        "projectUniqueName": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\obj\\",
+        "projectPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj",
+        "packagesPath": "/Users/anika.debeer/.nuget/packages/",
+        "outputPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/anika.debeer/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -48,11 +48,29 @@
               "target": "Package",
               "version": "[10.0.3, )"
             },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[10.0.5, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
               "version": "[10.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[10.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.5, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[10.0.2, )"
             },
             "NSwag.AspNetCore": {
               "target": "Package",
@@ -86,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

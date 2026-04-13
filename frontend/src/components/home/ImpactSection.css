@@ -1,0 +1,134 @@
+/* =============================================
+   ImpactSection.css
+   Styles for src/components/home/ImpactSection.jsx
+   ============================================= */
+
+/* --- Section wrapper --- */
+.impact-section {
+    font-family: 'Poppins', sans-serif;
+    background-color: #0D0608;
+    border-top: 1px solid rgba(248, 235, 237, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+/* --- Background glows --- */
+.impact-glow-1 {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.impact-glow-2 {
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* --- Inner container --- */
+.impact-inner {
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Statement heading block --- */
+.impact-heading-block {
+    text-align: center;
+    max-width: 760px;
+}
+
+.impact-eyebrow {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    color: #FE7FAB;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.impact-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.1;
+    color: #F8EBED;
+    letter-spacing: -1px;
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.impact-heading-gradient {
+    background: linear-gradient(135deg, #C41262 0%, #FE4081 50%, #FE7FAB 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* --- Decorative divider --- */
+.impact-divider {
+    width: 64px;
+    height: 2px;
+    background: linear-gradient(90deg, #C41262, #FE4081);
+    border-radius: 2px;
+}
+
+/* --- Stats row grid --- */
+.impact-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    max-width: 860px;
+}
+
+/* --- Individual stat cell --- */
+.impact-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px 0;
+}
+
+.impact-stat--bordered {
+    border-right: 1px solid rgba(248, 235, 237, 0.06);
+}
+
+/* --- Icon container --- */
+.impact-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(196, 18, 98, 0.12);
+    border: 1px solid rgba(196, 18, 98, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #C41262;
+}
+
+/* --- Stat number --- */
+.impact-stat-number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 4vw, 52px);
+    color: #F8EBED;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+/* --- Stat label --- */
+.impact-stat-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.4);
+}
