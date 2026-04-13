@@ -25,7 +25,7 @@ const yearOptions = [
 function AuthPage() {
     const location = useLocation();
     const isRegisterPage = location.pathname.includes("register");
-    const role = location.pathname.includes("admin") ? "admin" : "user";
+    const role = "admin";
     const [isRegister, setIsRegister] = useState(isRegisterPage);
     const [formValues, setFormValues] = useState({
         fullName: "",
@@ -46,6 +46,7 @@ function AuthPage() {
     /* Token Modal Logic - when an admin logs in open the modal */
     const [showTokenModal, setShowTokenModal] = useState(false);
 
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (isRegister) {
@@ -54,17 +55,25 @@ function AuthPage() {
                 return;
             }else {
                 localStorage.setItem("isRegistered", "true");
+                localStorage.setItem("FullName", formValues.fullName);
+                localStorage.setItem("Email", formValues.email);
+                localStorage.setItem("StudentNumber", formValues.studentNumber);
+                localStorage.setItem("YearOfStudy", formValues.yearOfStudy);
+                localStorage.setItem("FieldOfStudy", formValues.fieldOfStudy);
+
                 console.log("Register submit", formValues);
                 <Navigate to="/otp" state={{ isRegister: true }} />
             }
         } else {
             if (role === "admin") {
                 // Handle admin login
-                <Navigate to="/admin/dashboard" />
-            }else {
+                setShowTokenModal(true);
+            } else {
                 localStorage.setItem("isLoggedIn", "true");
-                console.log("Login submit", formValues);
-                <Navigate to="/otp" state={{ isRegister: false }} />
+                localStorage.setItem("Email", formValues.email);
+                //Passport logic would go here to verify credentials and then navigate to OTP page if successful
+                localStorage.setItem("role", "user");
+                window.location.href = "/otp";
             }
 
         }
@@ -138,7 +147,7 @@ function AuthPage() {
                                                 onChange={handleInput}
                                                 type="text"
                                                 placeholder="Your full name"
-                                                className="input input-bordered w-full bg-white/5 border-white/10 text-white placeholder-white/40"
+                                                className="input  w-full bg-white/5 border-white/10 text-white placeholder-white/40"
                                             />
                                         </div>
                                         <div className="form-control w-full">
@@ -153,7 +162,7 @@ function AuthPage() {
                                                 onChange={handleInput}
                                                 type="email"
                                                 placeholder="you@university.co.za"
-                                                className="input input-bordered w-full bg-white/5 border-white/10 text-white placeholder-white/40"
+                                                className="input w-full bg-white/5 border-white/10 text-white placeholder-white/40"
                                             />
                                         </div>
                                         <div className="grid gap-4 sm:grid-cols-2">
@@ -169,7 +178,7 @@ function AuthPage() {
                                                     onChange={handleInput}
                                                     type="password"
                                                     placeholder="Create a password"
-                                                    className="input input-bordered w-full bg-white/5 border-white/10 text-white placeholder-white/40"
+                                                    className="input  w-full bg-white/5 border-white/10 text-white placeholder-white/40"
                                                 />
                                             </div>
                                             <div className="form-control w-full">
@@ -184,7 +193,7 @@ function AuthPage() {
                                                     onChange={handleInput}
                                                     type="password"
                                                     placeholder="Repeat password"
-                                                    className="input input-bordered w-full bg-white/5 border-white/10 text-white placeholder-white/40"
+                                                    className="input  w-full bg-white/5 border-white/10 text-white placeholder-white/40"
                                                 />
                                             </div>
                                         </div>
@@ -198,7 +207,7 @@ function AuthPage() {
                                                 name="university"
                                                 value={formValues.university}
                                                 onChange={handleInput}
-                                                className="select select-bordered w-full bg-white/5 border-white/10 text-white"
+                                                className="select w-full bg-white/5 border-white/10 text-white"
                                             >
                                                 {universityOptions.map((option) => (
                                                     <option key={option} value={option} disabled={option === universityOptions[0]}>
@@ -220,7 +229,7 @@ function AuthPage() {
                                                     onChange={handleInput}
                                                     type="text"
                                                     placeholder="e.g. STU202400"
-                                                    className="input input-bordered w-full bg-white/5 border-white/10 text-white placeholder-white/40"
+                                                    className="input w-full bg-white/5 border-white/10 text-white placeholder-white/40"
                                                 />
                                             </div>
                                             <div className="form-control w-full">
@@ -233,7 +242,7 @@ function AuthPage() {
                                                     name="yearOfStudy"
                                                     value={formValues.yearOfStudy}
                                                     onChange={handleInput}
-                                                    className="select select-bordered w-full bg-white/5 border-white/10 text-white"
+                                                    className="select w-full bg-white/5 border-white/10 text-white"
                                                 >
                                                     {yearOptions.map((option) => (
                                                         <option key={option} value={option} disabled={option === yearOptions[0]}>
@@ -255,7 +264,7 @@ function AuthPage() {
                                                 onChange={handleInput}
                                                 type="text"
                                                 placeholder="e.g. Graphic Design, UX Design..."
-                                                className="input input-bordered w-full bg-white/5 border-white/10 text-white placeholder-white/40"
+                                                className="input w-full bg-white/5 border-white/10 text-white placeholder-white/40"
                                             />
                                         </div>
                                     </div>
@@ -283,7 +292,7 @@ function AuthPage() {
                                             onChange={handleInput}
                                             type="email"
                                             placeholder="you@university.co.za"
-                                            className="input input-bordered w-full bg-white/5 border-white/10 text-white placeholder-white/40"
+                                            className="input w-full bg-white/5 border-white/10 text-white placeholder-white/40"
                                         />
                                     </div>
                                     <div className="form-control w-full">
@@ -298,7 +307,7 @@ function AuthPage() {
                                             onChange={handleInput}
                                             type="password"
                                             placeholder="Enter your password"
-                                            className="input input-bordered w-full bg-white/5 border-white/10 text-white placeholder-white/40"
+                                            className="input w-full bg-white/5 border-white/10 text-white placeholder-white/40"
                                         />
                                     </div>
                                 </div>
@@ -380,24 +389,37 @@ function AuthPage() {
 
                 {/* Token Modal */}
                 {showTokenModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-                        <div className="bg-white rounded-lg p-8 w-full max-w-md text-center">
-                            <h2 className="text-2xl font-bold mb-4">Admin Access Token</h2>
-                            <h3 className="text-lg mb-2">Use this token for API authentication:</h3>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">TOKEN:</label>
-                            <input
-                                type="text"
-                                value="abc123def456"
-                                readOnly
-                                className="bg-gray-100 border border-gray-300 rounded py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
+                        <div className="modal-backdrop rounded-[32px] h-1/2">
+                        <div className="modal-card relative rounded-[32px] p-8 sm:p-12 w-full max-w-md shadow-2xl border border-white/10 bg-gradient-to-br from-[#201A1B] to-[#0D0608] text-center">
+                            <div className="form-card-glow-line" />
+                            <div className="">
+                                <h2 className="text-3xl font-extrabold text-white mb-2">Admin Access Token</h2>
+                                <button onClick={() => setShowTokenModal(false)} className=" w-4 h-4 absolute top-4 right-4 text-white/60 hover:text-white">
+                                    &times;
+                                </button>
+                            </div>
+                            
+                            <p className="text-base text-white/80 mb-4">Check your email <span className="font-semibold text-primary">{formValues.email}</span> for your admin access token.</p>
+                            <div className="mb-4">
+                                <label className="block text-xs font-semibold uppercase tracking-[0.2em] text-white/60 mb-1">Token</label>
+                                <input
+                                    type="text"
+                                    value="abc123def456"
+                                    readOnly
+                                    className="input w-full bg-white/10 border-white/20 text-white text-center font-mono text-lg rounded-xl mb-2"
+                                />
+                            </div>
                             <button
-                                onClick={() => setShowTokenModal(false)}
-                                className="btn hero-btn-primary px-6 py-3"
+                                onClick={() => { setShowTokenModal(false); window.location.href = "/admin/dashboard"; }}
+                                className="btn hero-btn-primary w-full px-8 py-4 text-base font-bold mt-2"
                             >
-                                Close
+                                Go to Dashboard
                             </button>
                         </div>
+                        </div>
+
+                        
                     </div>
                 )}
         </section>

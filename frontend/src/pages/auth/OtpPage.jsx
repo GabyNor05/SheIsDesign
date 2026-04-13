@@ -7,7 +7,6 @@ import "./AuthPage.css";
 
 function OtpPage() {
   const location = useLocation();
-  const { isRegister } = location.state || { isRegister: false };
 
   // OTP state as array for 6 inputs
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
