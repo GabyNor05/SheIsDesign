@@ -91,10 +91,12 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(UserCreateDTO dto)
         {
+            var hash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            Console.WriteLine($"DEBUG: The generated hash is: {hash}");
             var user = new User
             {
                 Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                PasswordHash = hash,
                 DateCreated = DateTime.UtcNow,
                 Role = "User"
             };
@@ -107,7 +109,8 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                Password = user.PasswordHash
             };
 
             return CreatedAtAction("GetUser", new { id = user.Id }, result);
