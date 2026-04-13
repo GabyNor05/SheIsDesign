@@ -11,7 +11,8 @@ import VolunteerPage from "./pages/public/VolunteerPage";
 
 // Auth pages
 import AuthPage from "./pages/auth/AuthPage";
-import AdminAuthPage from "./pages/auth/AdminAuthPage";
+import OtpPage from "./pages/auth/OtpPage";
+import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -33,11 +34,10 @@ const router = createBrowserRouter([
       { path: "donate", element: <DonatePage /> },
       { path: "volunteer", element: <VolunteerPage /> },
       { path: "login", element: <AuthPage /> },
+      { path: "register", element: <AuthPage /> },
+      { path: "otp", element: <OtpPage /> },
+      { path: "application-status", element: <ApplicationStatusPage /> },
     ],
-  },
-  {
-    path: "/admin",
-    element: <AdminAuthPage />,
   },
   {
     path: "/admin",
