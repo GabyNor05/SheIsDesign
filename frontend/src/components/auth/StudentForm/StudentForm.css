@@ -1,0 +1,88 @@
+.student-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.student-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+@media (max-width: 480px) {
+    .student-form__row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Volunteer checkbox */
+.student-form__volunteer-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.student-form__checkbox-wrap {
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.student-form__checkbox-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.student-form__checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: var(--sid-radius-sm);
+    border: 2px solid rgba(255, 255, 255, 0.20);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.student-form__checkbox--checked {
+    background: var(--sid-gradient);
+    border-color: var(--sid-primary);
+}
+
+.student-form__volunteer-text {
+    font-family: var(--sid-font);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--sid-text-muted);
+    line-height: 1.5;
+}
+
+.student-form__volunteer-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-left: 32px;
+    padding: 12px 16px;
+    border-radius: var(--sid-radius-lg);
+    background: rgba(196, 18, 98, 0.08);
+    border: 1px solid rgba(196, 18, 98, 0.20);
+    color: var(--sid-text-pink);
+}
+
+.student-form__volunteer-note svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.student-form__volunteer-note p {
+    font-family: var(--sid-font);
+    font-size: 12px;
+    color: var(--sid-text-muted);
+    line-height: 1.6;
+    margin: 0;
+}
