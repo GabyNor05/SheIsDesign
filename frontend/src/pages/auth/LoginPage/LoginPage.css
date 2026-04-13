@@ -1,0 +1,489 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* ── Page root ─────────────────────────────────────────────── */
+.login-root {
+    display: flex;
+    min-height: 100vh;
+    background-color: #0D0608;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEFT — EDITORIAL PANEL
+   ══════════════════════════════════════════════════════════════ */
+.login-editorial {
+    position: relative;
+    width: 55%;
+    min-height: 100vh;
+    background-color: #0D0608;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid rgba(196, 18, 98, 0.12);
+}
+
+/* Noise texture overlay */
+.login-editorial__noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.4;
+    z-index: 0;
+}
+
+/* Gradient glow blobs */
+.login-editorial__glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.login-editorial__glow--1 {
+    top: -120px;
+    left: -120px;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.22) 0%, transparent 65%);
+    animation: glow-pulse 6s ease-in-out infinite alternate;
+}
+
+.login-editorial__glow--2 {
+    bottom: -80px;
+    right: -80px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.12) 0%, transparent 65%);
+    animation: glow-pulse 8s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes glow-pulse {
+    from {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
+/* Dot grid */
+.login-editorial__dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(248, 235, 237, 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Logo top ──────────────────────────────────────────────── */
+.login-editorial__top {
+    position: relative;
+    z-index: 1;
+    padding: 36px 52px;
+}
+
+.login-editorial__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.login-editorial__logo-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(196, 18, 98, 0.35);
+}
+
+.login-editorial__logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #F8EBED;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* ── Body: word stack + tagline ────────────────────────────── */
+.login-editorial__body {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 40px 40px;
+}
+
+.login-editorial__words {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 20px;
+}
+
+/* Each word animates in from below */
+.login-editorial__word {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: clamp(56px, 5.5vw, 80px);
+    line-height: 1.0;
+    letter-spacing: -3px;
+    color: #F8EBED;
+    opacity: 0;
+    transform: translateY(32px);
+    animation: word-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    /* Last word gets gradient */
+}
+
+.login-editorial__word:last-child {
+    background: linear-gradient(135deg, #C41262 0%, #FE4081 50%, #FE7FAB 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    padding-bottom: 10px;
+}
+
+@keyframes word-rise {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tagline */
+.login-editorial__tagline {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.75;
+    color: rgba(248, 235, 237, 0.4);
+    max-width: 360px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fade-up 0.5s ease 0.6s forwards;
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Stat pills ────────────────────────────────────────────── */
+.login-editorial__stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    opacity: 0;
+    animation: fade-up 0.5s ease 0.75s forwards;
+    padding: 20px 24px;
+    background: rgba(248, 235, 237, 0.03);
+    border: 1px solid rgba(248, 235, 237, 0.07);
+    border-radius: 16px;
+    width: fit-content;
+}
+
+.login-editorial__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.login-editorial__stat-num {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #C41262;
+    line-height: 1;
+}
+
+.login-editorial__stat-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 11px;
+    color: rgba(248, 235, 237, 0.3);
+}
+
+.login-editorial__stat-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(248, 235, 237, 0.08);
+}
+
+/* Bottom glow line */
+.login-editorial__glow-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.5), transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RIGHT — FORM PANEL
+   ══════════════════════════════════════════════════════════════ */
+.login-form-panel {
+    position: relative;
+    width: 45%;
+    min-height: 100vh;
+    background-color: #0D0608;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    overflow-y: auto;
+}
+
+/* Subtle right-side glow */
+.login-form-panel__glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ── Form card ─────────────────────────────────────────────── */
+.login-form-card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: rgba(248, 235, 237, 0.03);
+    border: 1px solid rgba(196, 18, 98, 0.15);
+    border-radius: 24px;
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    opacity: 0;
+    animation: card-arrive 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+
+@keyframes card-arrive {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Top glow line on card */
+.login-form-card__glow-line {
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.6), transparent);
+    border-radius: 1px;
+}
+
+/* ── Card header ───────────────────────────────────────────── */
+.login-form-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Eyebrow */
+.login-form-card__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #FE7FAB;
+}
+
+.login-form-card__eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #C41262;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(196, 18, 98, 0.7);
+    animation: dot-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 8px rgba(196, 18, 98, 0.7);
+    }
+
+    50% {
+        opacity: 0.6;
+        box-shadow: 0 0 14px rgba(196, 18, 98, 0.4);
+    }
+}
+
+/* Heading */
+.login-form-card__heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    color: #F8EBED;
+    margin: 0;
+}
+
+/* Subtext */
+.login-form-card__subtext {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: rgba(248, 235, 237, 0.4);
+    margin: 0;
+}
+
+/* ── Form body ─────────────────────────────────────────────── */
+.login-form-card__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.login-form-card__password-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-form-card__forgot-row {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.login-form-card__forgot {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.35);
+    transition: color 0.2s ease;
+}
+
+.login-form-card__forgot:hover {
+    color: #FE7FAB;
+}
+
+/* Submit button */
+.login-form-card__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 20px rgba(196, 18, 98, 0.3);
+    margin-top: 4px;
+}
+
+.login-form-card__submit:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(196, 18, 98, 0.4);
+}
+
+.login-form-card__submit:active {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* ── Switch link ───────────────────────────────────────────── */
+.login-form-card__switch {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.3);
+    text-align: center;
+    margin: 0;
+}
+
+.login-form-card__switch-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #FE7FAB;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease, gap 0.2s ease;
+}
+
+.login-form-card__switch-link:hover {
+    color: #FE4081;
+    gap: 7px;
+}
+
+/* ── Responsive: stack on narrow screens ───────────────────── */
+@media (max-width: 900px) {
+    .login-root {
+        flex-direction: column;
+    }
+
+    .login-editorial,
+    .login-form-panel {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .login-editorial {
+        padding-bottom: 48px;
+    }
+
+    .login-editorial__word {
+        font-size: clamp(40px, 10vw, 64px);
+    }
+}

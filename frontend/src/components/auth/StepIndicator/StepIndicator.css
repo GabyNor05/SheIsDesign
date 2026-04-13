@@ -1,0 +1,79 @@
+.step-indicator {
+    display: flex;
+    align-items: center;
+}
+
+.step-indicator__item {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.step-indicator__connector {
+    width: 48px;
+    height: 1px;
+    background: var(--sid-border);
+    margin: 0 8px;
+    transition: background 0.3s ease;
+}
+
+.step-indicator__connector--done {
+    background: var(--sid-primary);
+}
+
+.step-indicator__step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.step-indicator__dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease;
+}
+
+.step-indicator__dot--active {
+    background: var(--sid-gradient);
+}
+
+.step-indicator__dot--done {
+    background: var(--sid-primary);
+}
+
+.step-indicator__number {
+    font-family: var(--sid-font);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sid-text-faint);
+}
+
+.step-indicator__dot--active .step-indicator__number {
+    color: var(--sid-text-primary);
+}
+
+.step-indicator__label {
+    font-family: var(--sid-font);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sid-text-faint);
+    transition: color 0.3s ease;
+}
+
+.step-indicator__label--active {
+    font-weight: 700;
+    color: var(--sid-text-primary);
+}
+
+.step-indicator__label--done {
+    color: var(--sid-text-muted);
+}

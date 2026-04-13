@@ -1,0 +1,78 @@
+.cv-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cv-upload__label {
+    font-family: var(--sid-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sid-text-label);
+}
+
+.cv-upload__zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 32px 20px;
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: var(--sid-radius-lg);
+    background: var(--sid-surface);
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    outline: none;
+}
+
+.cv-upload__zone:hover,
+.cv-upload__zone:focus-visible {
+    border-color: rgba(255, 255, 255, 0.28);
+    background: var(--sid-surface-hover);
+}
+
+.cv-upload__zone--drag {
+    border-color: var(--sid-primary);
+    background: rgba(196, 18, 98, 0.10);
+}
+
+.cv-upload__zone--filled {
+    border-color: var(--sid-border-primary);
+    background: rgba(196, 18, 98, 0.07);
+}
+
+.cv-upload__icon {
+    color: rgba(255, 255, 255, 0.22);
+}
+
+.cv-upload__zone--filled .cv-upload__icon {
+    color: var(--sid-primary);
+}
+
+.cv-upload__title {
+    font-family: var(--sid-font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sid-text-muted);
+}
+
+.cv-upload__hint {
+    font-family: var(--sid-font);
+    font-size: 12px;
+    color: var(--sid-text-faint);
+}
+
+.cv-upload__filename {
+    font-family: var(--sid-font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--sid-text-pink);
+}
+
+.cv-upload__input {
+    display: none;
+}
