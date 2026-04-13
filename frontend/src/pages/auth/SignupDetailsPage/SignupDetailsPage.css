@@ -1,0 +1,550 @@
+/* =============================================
+   SignupDetailsPage.css
+   SheIsDesign — sign up step 2 (about you)
+   Centred layout with nav step indicator
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+/* ── Page root ─────────────────────────────────────────────── */
+.sdp-root {
+    min-height: 100vh;
+    background-color: #0D0608;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ── Glow blobs ────────────────────────────────────────────── */
+.sdp-glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.sdp-glow--1 {
+    top: -120px;
+    left: -120px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.14) 0%, transparent 65%);
+}
+
+.sdp-glow--2 {
+    bottom: -80px;
+    right: -80px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.08) 0%, transparent 65%);
+}
+
+/* Dot grid */
+.sdp-dots {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(248, 235, 237, 0.05) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NAV
+   ══════════════════════════════════════════════════════════════ */
+.sdp-nav {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    background: rgba(13, 6, 8, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(248, 235, 237, 0.06);
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    flex-shrink: 0;
+}
+
+/* Logo */
+.sdp-nav__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.sdp-nav__logo-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 16px rgba(196, 18, 98, 0.3);
+}
+
+.sdp-nav__logo-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: #F8EBED;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Step indicator */
+.sdp-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.sdp-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sdp-step__dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.sdp-step__dot--done {
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: white;
+}
+
+.sdp-step__dot--active {
+    background: #F8EBED;
+    color: #0D0608;
+}
+
+.sdp-step__dot--inactive {
+    background: rgba(248, 235, 237, 0.08);
+    color: rgba(248, 235, 237, 0.3);
+}
+
+.sdp-step__label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.sdp-step__label--active {
+    font-weight: 700;
+    color: #F8EBED;
+}
+
+.sdp-step__connector {
+    width: 40px;
+    height: 1px;
+    margin: 0 12px;
+    background: rgba(248, 235, 237, 0.1);
+}
+
+.sdp-step__connector--done {
+    background: linear-gradient(90deg, #C41262, #FE4081);
+}
+
+/* Back link */
+.sdp-nav__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.35);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.sdp-nav__back:hover {
+    color: #FE7FAB;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MAIN — centred
+   ══════════════════════════════════════════════════════════════ */
+.sdp-main {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 48px 24px 80px;
+}
+
+/* ── Form card ─────────────────────────────────────────────── */
+.sdp-card {
+    width: 100%;
+    max-width: 560px;
+    background: rgba(248, 235, 237, 0.03);
+    border: 1px solid rgba(196, 18, 98, 0.15);
+    border-radius: 24px;
+    padding: 40px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+    opacity: 0;
+    animation: card-arrive 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+}
+
+@keyframes card-arrive {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Top glow line */
+.sdp-card__glow-line {
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.6), transparent);
+    border-radius: 1px;
+}
+
+/* Header */
+.sdp-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sdp-card__heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    color: #F8EBED;
+    margin: 0;
+}
+
+.sdp-card__heading-name {
+    background: linear-gradient(135deg, #C41262 0%, #FE4081 60%, #FE7FAB 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.sdp-card__subtext {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13.5px;
+    color: rgba(248, 235, 237, 0.4);
+    margin: 0;
+}
+
+/* ── Toggle (Student / Industry Pro) ──────────────────────── */
+.sdp-toggle {
+    display: flex;
+    gap: 6px;
+    background: rgba(248, 235, 237, 0.04);
+    border: 1px solid rgba(248, 235, 237, 0.07);
+    border-radius: 16px;
+    padding: 6px;
+}
+
+.sdp-toggle__btn {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 11px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.4);
+    background: transparent;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sdp-toggle__btn:hover:not(.sdp-toggle__btn--active) {
+    color: rgba(248, 235, 237, 0.65);
+}
+
+.sdp-toggle__btn--active {
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 2px 12px rgba(196, 18, 98, 0.3);
+}
+
+/* Divider under toggle */
+.sdp-card__divider {
+    height: 1px;
+    background: rgba(248, 235, 237, 0.06);
+    margin: 0 -4px;
+}
+
+/* ── Form */
+.sdp-card__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Fields group ──────────────────────────────────────────── */
+.sdp-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ── Shared field label (used by sdp-specific wrappers) ────── */
+.sdp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sdp-field-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(248, 235, 237, 0.45);
+}
+
+/* ── CV Upload zone ────────────────────────────────────────── */
+.sdp-upload {
+    width: 100%;
+    border: 2px dashed rgba(248, 235, 237, 0.1);
+    border-radius: 14px;
+    background: rgba(248, 235, 237, 0.02);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 28px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.sdp-upload:hover,
+.sdp-upload--dragging {
+    border-color: rgba(196, 18, 98, 0.4);
+    background: rgba(196, 18, 98, 0.04);
+}
+
+.sdp-upload--filled {
+    border-color: rgba(196, 18, 98, 0.35);
+    background: rgba(196, 18, 98, 0.05);
+}
+
+.sdp-upload__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(196, 18, 98, 0.1);
+    border: 1px solid rgba(196, 18, 98, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(196, 18, 98, 0.6);
+}
+
+.sdp-upload__primary {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.6);
+    text-align: center;
+}
+
+.sdp-upload__secondary {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 11.5px;
+    color: rgba(248, 235, 237, 0.25);
+    text-align: center;
+}
+
+.sdp-upload__filename {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #FE7FAB;
+}
+
+.sdp-upload__input {
+    display: none;
+}
+
+/* ── Volunteer toggle ──────────────────────────────────────── */
+.sdp-volunteer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sdp-volunteer__label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.sdp-volunteer__box {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 2px solid rgba(248, 235, 237, 0.2);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.sdp-volunteer__box--checked {
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    border-color: transparent;
+}
+
+.sdp-volunteer__text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13.5px;
+    color: rgba(248, 235, 237, 0.6);
+    line-height: 1.5;
+}
+
+.sdp-volunteer__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-left: 32px;
+    background: rgba(196, 18, 98, 0.06);
+    border: 1px solid rgba(196, 18, 98, 0.12);
+    border-radius: 12px;
+    padding: 12px 16px;
+}
+
+.sdp-volunteer__note-icon {
+    font-size: 16px;
+    color: #FE7FAB;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.sdp-volunteer__note-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 12.5px;
+    color: rgba(248, 235, 237, 0.5);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ── Info notice ───────────────────────────────────────────── */
+.sdp-info-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(248, 235, 237, 0.03);
+    border: 1px solid rgba(248, 235, 237, 0.07);
+    border-radius: 14px;
+    padding: 14px 16px;
+}
+
+.sdp-info-notice__icon {
+    font-size: 16px;
+    color: rgba(248, 235, 237, 0.25);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.sdp-info-notice__text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 12.5px;
+    color: rgba(248, 235, 237, 0.35);
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* ── Submit ────────────────────────────────────────────────── */
+.sdp-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 20px rgba(196, 18, 98, 0.3);
+    margin-top: 4px;
+}
+
+.sdp-submit:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(196, 18, 98, 0.4);
+}
+
+.sdp-submit:active {
+    transform: translateY(0);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .sdp-nav {
+        padding: 0 20px;
+    }
+
+    .sdp-steps {
+        display: none;
+    }
+
+    .sdp-card {
+        padding: 28px 24px;
+    }
+
+    .sdp-card__heading {
+        font-size: 22px;
+    }
+}

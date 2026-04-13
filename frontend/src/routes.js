@@ -10,9 +10,12 @@ import DonatePage from "./pages/public/DonatePage";
 import VolunteerPage from "./pages/public/VolunteerPage";
 
 // Auth pages
-import AuthPage from "./pages/auth/AuthPage";
-import OtpPage from "./pages/auth/OtpPage";
-import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage";
+import LoginPage from "./pages/auth/LoginPage/LoginPage";
+import SignupBasicPage from "./pages/auth/SignupBasicPage/SignupBasicPage";
+import OtpPage from "./pages/auth/OtpPage/OtpPage";
+import SignupDetailsPage from "./pages/auth/SignupDetailsPage/SignupDetailsPage";
+import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage";
+import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -27,15 +30,20 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     children: [
+      // Public
       { index: true, element: <HomePage /> },
       { path: "events", element: <EventsPage /> },
       { path: "gallery", element: <GalleryPage /> },
       { path: "leaderboard", element: <LeaderboardPage /> },
       { path: "donate", element: <DonatePage /> },
       { path: "volunteer", element: <VolunteerPage /> },
-      { path: "login", element: <AuthPage /> },
-      { path: "register", element: <AuthPage /> },
+
+      // Auth
+      { path: "login", element: <LoginPage /> },
+      { path: "signup", element: <SignupBasicPage /> },
       { path: "otp", element: <OtpPage /> },
+      { path: "signup/details", element: <SignupDetailsPage /> },
+      { path: "signup/success", element: <SignupSuccessPage /> },
       { path: "application-status", element: <ApplicationStatusPage /> },
     ],
   },

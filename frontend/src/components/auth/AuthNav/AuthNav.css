@@ -1,0 +1,37 @@
+.auth-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+}
+
+.auth-nav__inner {
+    height: 64px;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.auth-nav__logo {
+    text-decoration: none;
+}
+
+.auth-nav__back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--sid-font);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--sid-text-label);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.auth-nav__back:hover {
+    color: var(--sid-text-secondary);
+}

@@ -56,7 +56,7 @@ function HeroSection() {
           {/* DaisyUI: btn class used as base, extended with gradient via CSS */}
           <div className="flex gap-3 items-center flex-wrap">
             {/* Route: /register */}
-            <Link to="/register" className="btn hero-btn-primary">
+<Link to="/signup" className="btn hero-btn-primary">
               <MdRocketLaunch size={16} />
               Get Started
             </Link>
