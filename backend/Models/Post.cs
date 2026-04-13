@@ -1,4 +1,4 @@
-namespace Models.Post
+namespace SheDesign.Models
 {
     public class Post
     {
@@ -13,5 +13,8 @@ namespace Models.Post
         public DateTime post_date { get; set; } = DateTime.Now;
         public string description { get; set; } = String.Empty;
         public string status { get; set; } = String.Empty;
+
+        public Mentee? Mentee { get; set; }
+        public Event? Event { get; set; }
     }
 }

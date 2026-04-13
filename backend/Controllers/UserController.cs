@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheDesign.Data;
-using Models.User;
+using SheDesign.Models;
+using SheDesign.DTO;
 
 namespace backend.Controllers
 {
@@ -21,16 +22,22 @@ namespace backend.Controllers
             _context = context;
         }
 
-        // GET: api/User
+        // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserReadDTO>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Select(user => new UserReadDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                DateCreated = user.DateCreated,
+                Role = user.Role
+            }).ToListAsync();
         }
 
-        // GET: api/User/5
+        // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<UserReadDTO>> GetUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
 
@@ -39,10 +46,16 @@ namespace backend.Controllers
                 return NotFound();
             }
 
-            return user;
+            return new UserReadDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                DateCreated = user.DateCreated,
+                Role = user.Role
+            };
         }
 
-        // PUT: api/User/5
+        // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
@@ -73,18 +86,56 @@ namespace backend.Controllers
             return NoContent();
         }
 
-        // POST: api/User
+        // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser(UserCreateDTO dto)
         {
+            var hash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            Console.WriteLine($"DEBUG: The generated hash is: {hash}");
+            var user = new User
+            {
+                Email = dto.Email,
+                PasswordHash = hash,
+                DateCreated = DateTime.UtcNow,
+                Role = "User"
+            };
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            var result = new UserReadDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                DateCreated = user.DateCreated,
+                Role = user.Role,
+                Password = user.PasswordHash
+            };
+
+            return CreatedAtAction("GetUser", new { id = user.Id }, result);
         }
 
-        // DELETE: api/User/5
+        
+        [HttpPost("Login")]
+        public async Task<ActionResult> Login(string email, string password)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if(user == null)
+            {
+                return Unauthorized("User Not Found");
+            }
+
+            bool validPassword = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+
+            if(!validPassword)
+                return Unauthorized("Incorrect Password");
+
+            return Ok("Login Successful");
+        }
+
+        // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
