@@ -398,6 +398,32 @@
     gap: 7px;
 }
 
+/* ── Signup-only: name row ── */
+.login-form-card__name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+/* ── Signup-only: terms note ── */
+.login-form-card__terms {
+    font-size: 11.5px;
+    color: rgba(248, 235, 237, 0.22);
+    text-align: center;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.login-form-card__terms-link {
+    color: rgba(254, 127, 171, 0.6);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.login-form-card__terms-link:hover {
+    color: #FE7FAB;
+}
+
 /* ══════════════════════════════════════════════════════════════
    FLOATING CARDS (right panel)
    ══════════════════════════════════════════════════════════════ */
@@ -408,7 +434,6 @@
     align-items: flex-start;
     width: 100%;
     max-width: 360px;
-    padding-top: 58px;
 }
 
 /* Header above stack */

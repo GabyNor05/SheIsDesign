@@ -1,0 +1,270 @@
+/* ── AuthPage.css ──────────────────────────────────────────────────────────────
+   Imports all background, split layout, modal, and OTP styles from LoginPage.css
+   This file only adds: the toggle slider + auth-card class aliases
+   ──────────────────────────────────────────────────────────────────────────── */
+@import "../LoginPage/LoginPage.css";
+
+/* ══════════════════════════════════════════════════════════════
+   AUTH PANEL (mirrors .login-form-panel)
+   ══════════════════════════════════════════════════════════════ */
+.auth-panel {
+    position: relative;
+    width: 100%;
+    max-width: 520px;
+}
+
+/* ── Auth card (mirrors .login-form-card) ── */
+.auth-card {
+    position: relative;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.032);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(196, 18, 98, 0.14);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 32px 80px rgba(13, 6, 8, 0.35),
+        0 0 60px rgba(196, 18, 98, 0.06);
+    border-radius: 28px;
+    padding: 36px 44px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    opacity: 0;
+    animation: card-arrive 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+}
+
+.auth-card__glow-line {
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.65), transparent);
+    border-radius: 1px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TOGGLE SLIDER
+   ══════════════════════════════════════════════════════════════ */
+.auth-toggle {
+    display: flex;
+    align-items: center;
+    background: rgba(13, 6, 8, 0.6);
+    border: 1px solid rgba(196, 18, 98, 0.15);
+    border-radius: 14px;
+    padding: 5px;
+    gap: 2px;
+    width: 100%;
+}
+
+.auth-toggle__btn {
+    position: relative;
+    flex: 1;
+    background: none;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+/* The animated sliding pill (rendered via framer-motion layoutId) */
+.auth-toggle__pill {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    box-shadow: 0 4px 18px rgba(196, 18, 98, 0.45);
+    z-index: -1;
+}
+
+.auth-toggle__label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: rgba(248, 235, 237, 0.35);
+    transition: color 0.2s ease;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.01em;
+}
+
+.auth-toggle__btn--active .auth-toggle__label {
+    color: #ffffff;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   AUTH CARD CONTENT (mirrors login-form-card__ classes)
+   ══════════════════════════════════════════════════════════════ */
+.auth-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.auth-card__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #FE7FAB;
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-card__eyebrow-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #C41262;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(196, 18, 98, 0.7);
+    animation: dot-pulse 2s ease-in-out infinite;
+}
+
+.auth-card__heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+    color: #F8EBED;
+    margin: 0;
+}
+
+.auth-card__subtext {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.65;
+    color: rgba(248, 235, 237, 0.38);
+    margin: 0;
+}
+
+/* ── Form ── */
+.auth-card__form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.auth-card__name-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.auth-card__password-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.auth-card__forgot-row {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.auth-card__forgot {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.3);
+    transition: color 0.2s ease;
+}
+
+.auth-card__forgot:hover {
+    color: #FE7FAB;
+}
+
+/* Submit button */
+.auth-card__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 20px rgba(196, 18, 98, 0.3);
+    margin-top: 2px;
+}
+
+.auth-card__submit:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 28px rgba(196, 18, 98, 0.4);
+}
+
+.auth-card__submit:active {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Switch link */
+.auth-card__switch {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.28);
+    text-align: center;
+    margin: 0;
+}
+
+.auth-card__switch-link {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: #FE7FAB;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease, gap 0.2s ease;
+}
+
+.auth-card__switch-link:hover {
+    color: #FE4081;
+    gap: 7px;
+}
+
+/* Terms */
+.auth-card__terms {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    color: rgba(248, 235, 237, 0.2);
+    text-align: center;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.auth-card__terms-link {
+    color: rgba(254, 127, 171, 0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.auth-card__terms-link:hover {
+    color: #FE7FAB;
+}
