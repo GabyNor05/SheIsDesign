@@ -1,19 +1,55 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// AuthPage.jsx — Unified auth page
-// One card, one background, slider at top toggles between Login and Sign Up
-// Accepts ?mode=login or ?mode=signup via URL, defaults to login
+// AuthPage.jsx — Unified login + signup page
+// One card, slider at top toggles between modes
+// Link here with: /auth?mode=signup  or  /auth?mode=login
+//
+// ┌─────────────────────────────────────────────────────────────────┐
+// │  BACKEND HANDOFF — lines marked 🔌 need changing when API ready │
+// │                                                                 │
+// │  SAFE TO CHANGE NOW (frontend only, backend doesn't care):      │
+// │    • All CSS / layout / animations                              │
+// │    • The toggle slider                                          │
+// │    • Component structure and file locations                     │
+// │    • Navigation after login (navigate("/"))                     │
+// │    • Mock OTP / token values used for UI testing                │
+// │                                                                 │
+// │  NEEDS BACKEND COORDINATION:                                    │
+// │  🔌 handleLoginSubmit — replace mock check with:               │
+// │       POST /api/auth/login                                      │
+// │       body: { email, password }  → matches LoginDTO.cs          │
+// │       response: user object      → matches UserReadDTO.cs        │
+// │                                                                 │
+// │  🔌 handleSignupSubmit — replace navigate() with:              │
+// │       POST /api/auth/register                                   │
+// │       body: { email, password }  → matches UserCreateDTO.cs     │
+// │       then POST /api/mentee with { fullname, userID }           │
+// │                                                                 │
+// │  🔌 handleOtpVerified — replace mock user with API response:   │
+// │       login(apiResponseUserObject)                              │
+// │       response shape: { id, email, role, fullname,              │
+// │                         profileImageUrl? }                      │
+// │                                                                 │
+// │  🔌 ADMIN_EMAILS — replace with role from UserReadDTO.cs:      │
+// │       if (res.role === "admin") setModalStep("token")           │
+// │       else setModalStep("otp")                                  │
+// │                                                                 │
+// │  🔌 MOCK_TOKEN / MOCK_OTP in TokenModal / OtpModal —           │
+// │       both will be verified server-side, not client-side        │
+// └─────────────────────────────────────────────────────────────────┘
 // ─────────────────────────────────────────────────────────────────────────────
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdLogin, MdPersonAdd, MdArrowForward, MdAdminPanelSettings, MdVerifiedUser } from "react-icons/md";
+import { MdLogin, MdPersonAdd, MdArrowForward } from "react-icons/md";
 import { FiMail } from "react-icons/fi";
 import { Field, PasswordField, OrDivider, GoogleButton } from "../../../components/ui/Fields/Field/Field";
-import FloatingCards from "../../components/auth/FloatingCards/FloatingCards";
-import TokenModal from "../../components/auth/TokenModal/TokenModal";
-import OtpModal from "../../components/auth/OtpModal/OtpModal";
+import FloatingCards from "../../../components/auth/FloatingCards/FloatingCards";
+import TokenModal from "../../../components/auth/TokenModal/TokenModal";
+import OtpModal from "../../../components/auth/OtpModal/OtpModal";
+import { useAuth } from "../../../context/AuthContext";
 import "./AuthPage.css";
 
+// 🔌 Replace with role check from API response (UserReadDTO.cs)
 const ADMIN_EMAILS = ["admin@sheisdesign.co.za", "superadmin@example.com"];
 
 // ── Toggle slider ─────────────────────────────────────────────────────────────
@@ -61,18 +97,16 @@ function LoginFields({ onSubmit }) {
   return (
     <>
       <div className="auth-card__header">
-        <div className="auth-card__eyebrow">
-          <div className="auth-card__eyebrow-dot" />
-          <span>Welcome back</span>
-        </div>
         <h1 className="auth-card__heading">Log in to your account</h1>
         <p className="auth-card__subtext">
           Access your profile, submissions, and leaderboard ranking.
         </p>
       </div>
 
-      <form onSubmit={(e) => { e.preventDefault(); onSubmit({ email, password }); }}
-            className="auth-card__form">
+      <form
+        onSubmit={(e) => { e.preventDefault(); onSubmit({ email, password }); }}
+        className="auth-card__form"
+      >
         <Field
           label="Email Address"
           type="email"
@@ -104,8 +138,10 @@ function LoginFields({ onSubmit }) {
         </button>
       </form>
 
-      <OrDivider />
-      <GoogleButton />
+      <div className="auth-card__google-group">
+        <OrDivider />
+        <GoogleButton />
+      </div>
     </>
   );
 }
@@ -120,18 +156,16 @@ function SignupFields({ onSubmit }) {
   return (
     <>
       <div className="auth-card__header">
-        <div className="auth-card__eyebrow">
-          <div className="auth-card__eyebrow-dot" />
-          <span>Create your account</span>
-        </div>
         <h1 className="auth-card__heading">Join SheIsDesign</h1>
         <p className="auth-card__subtext">
           It only takes a minute. Join 1,200+ women in design.
         </p>
       </div>
 
-      <form onSubmit={(e) => { e.preventDefault(); onSubmit({ firstName, lastName, email, password }); }}
-            className="auth-card__form">
+      <form
+        onSubmit={(e) => { e.preventDefault(); onSubmit({ firstName, lastName, email, password }); }}
+        className="auth-card__form"
+      >
         <div className="auth-card__name-row">
           <Field
             label="First Name"
@@ -173,8 +207,10 @@ function SignupFields({ onSubmit }) {
         </button>
       </form>
 
-      <OrDivider />
-      <GoogleButton label="Sign up with Google" />
+      <div className="auth-card__google-group">
+        <OrDivider />
+        <GoogleButton label="Sign up with Google" />
+      </div>
 
       <p className="auth-card__terms">
         By signing up you agree to our{" "}
@@ -186,33 +222,42 @@ function SignupFields({ onSubmit }) {
   );
 }
 
-// ── Main card ─────────────────────────────────────────────────────────────────
+// ── Auth card — owns all modal + mode state ───────────────────────────────────
 function AuthCard() {
-  const navigate = useNavigate();
+  const navigate      = useNavigate();
+  const { login }     = useAuth();
   const [searchParams] = useSearchParams();
+
   const [mode, setMode] = useState(
     searchParams.get("mode") === "signup" ? "signup" : "login"
   );
 
-  // Login modal state
-  const [modalStep, setModalStep] = useState(null);
+  const [modalStep, setModalStep]   = useState(null);
   const [loginEmail, setLoginEmail] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin]       = useState(false);
 
-  function handleLoginSubmit({ email, password }) {
+  // 🔌 Replace with: POST /api/auth/login → check res.role for admin
+  function handleLoginSubmit({ email }) {
     setLoginEmail(email);
     const adminCheck = ADMIN_EMAILS.includes(email.toLowerCase().trim());
     setIsAdmin(adminCheck);
     setModalStep(adminCheck ? "token" : "otp");
   }
 
-  function handleSignupSubmit({ firstName, lastName, email, password }) {
-    // TODO: POST /api/auth/register
+  // 🔌 Replace with: POST /api/auth/register + POST /api/mentee
+  function handleSignupSubmit({ firstName, email }) {
     navigate("/signup/details", { state: { firstName, email } });
   }
 
+  // 🔌 Replace mock user with real API response object from login endpoint
   function handleOtpVerified() {
     setModalStep(null);
+    login({
+      email: loginEmail,
+      fullname: "User",         // 🔌 use API response fullname
+      role: isAdmin ? "admin" : "student",
+      profileImageUrl: null,    // 🔌 use API response profileImageUrl
+    });
     navigate(isAdmin ? "/admin/dashboard" : "/");
   }
 
@@ -222,10 +267,8 @@ function AuthCard() {
         <div className="auth-card">
           <div className="auth-card__glow-line" />
 
-          {/* Slider toggle */}
           <AuthToggle mode={mode} onChange={setMode} />
 
-          {/* Animated content swap */}
           <AnimatePresence mode="wait">
             <motion.div
               key={mode}
@@ -242,8 +285,7 @@ function AuthCard() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Switch link below the card content */}
-          <p className="auth-card__switch">
+          {/* <p className="auth-card__switch">
             {mode === "login" ? (
               <>
                 Don't have an account?{" "}
@@ -259,11 +301,10 @@ function AuthCard() {
                 </button>
               </>
             )}
-          </p>
+          </p> */}
         </div>
       </div>
 
-      {/* Modals — only relevant in login mode */}
       {modalStep === "token" && (
         <TokenModal
           email={loginEmail}
