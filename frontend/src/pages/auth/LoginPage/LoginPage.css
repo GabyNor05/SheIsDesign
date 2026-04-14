@@ -1,9 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800&display=swap');
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-/* ── Page root ─────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   PAGE ROOT
+   ══════════════════════════════════════════════════════════════ */
 .login-root {
-    display: flex;
+    position: relative;
     min-height: 100vh;
     background-color: #0D0608;
     font-family: 'Poppins', sans-serif;
@@ -11,40 +12,207 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   LEFT — FORM PANEL  (wider: 58%)
+   BACKGROUND LAYERS
+   All layers are position:fixed so they fill the full viewport
+   behind both panels (no per-panel fills)
+   ══════════════════════════════════════════════════════════════ */
+.login-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Layer 1: Orbs ── */
+.login-bg__orb {
+    position: absolute;
+    border-radius: 50%;
+}
+
+.login-bg__orb--a {
+    /* top-right bleeds from right panel into left */
+    width: 780px;
+    height: 780px;
+    top: -220px;
+    right: -180px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.32) 0%, transparent 62%);
+    animation: orb-a 7s ease-in-out infinite alternate;
+}
+
+.login-bg__orb--b {
+    /* bottom-left — starts left, bleeds toward centre */
+    width: 560px;
+    height: 560px;
+    bottom: -140px;
+    left: -80px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.2) 0%, transparent 65%);
+    animation: orb-b 9s ease-in-out infinite alternate-reverse;
+}
+
+.login-bg__orb--c {
+    /* sits right on the split line so both halves share it */
+    width: 420px;
+    height: 420px;
+    top: 30%;
+    left: 44%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.13) 0%, transparent 60%);
+    animation: orb-c 11s ease-in-out infinite alternate;
+}
+
+@keyframes orb-a {
+    from {
+        transform: scale(1) translate(0, 0);
+    }
+
+    to {
+        transform: scale(1.1) translate(-24px, 18px);
+    }
+}
+
+@keyframes orb-b {
+    from {
+        transform: scale(1) translate(0, 0);
+    }
+
+    to {
+        transform: scale(1.15) translate(18px, -22px);
+    }
+}
+
+@keyframes orb-c {
+    from {
+        transform: scale(0.9) translate(0, 0);
+    }
+
+    to {
+        transform: scale(1.2) translate(-12px, 12px);
+    }
+}
+
+/* ── Layer 2: Aurora streaks ── */
+.login-bg__aurora {
+    position: absolute;
+    border-radius: 50%;
+}
+
+.login-bg__aurora--1 {
+    width: 110%;
+    height: 140px;
+    top: 32%;
+    left: -5%;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.13), rgba(254, 127, 171, 0.08), transparent);
+    filter: blur(30px);
+    transform: rotate(-6deg);
+    animation: aurora-1 14s ease-in-out infinite alternate;
+}
+
+.login-bg__aurora--2 {
+    width: 90%;
+    height: 100px;
+    top: 64%;
+    left: 5%;
+    background: linear-gradient(90deg, transparent, rgba(254, 64, 129, 0.09), rgba(196, 18, 98, 0.12), transparent);
+    filter: blur(22px);
+    transform: rotate(4deg);
+    animation: aurora-2 18s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes aurora-1 {
+    from {
+        transform: rotate(-6deg) translateX(0);
+    }
+
+    to {
+        transform: rotate(-4deg) translateX(60px);
+    }
+}
+
+@keyframes aurora-2 {
+    from {
+        transform: rotate(4deg) translateX(0);
+    }
+
+    to {
+        transform: rotate(3deg) translateX(-50px);
+    }
+}
+
+/* ── Layer 3: Dot grid ── */
+.login-bg__dotgrid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(248, 235, 237, 0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+/* ── Layer 4: Grain ── */
+.login-bg__grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.28;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E");
+}
+
+/* ── Layer 5: Vignette ── */
+.login-bg__vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(13, 6, 8, 0.6) 100%);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SPLIT LAYOUT
+   Asymmetric: left wider, vertically offset so they dont mirror
+   No border between halves — orb bleeds across instead
+   ══════════════════════════════════════════════════════════════ */
+.login-split {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 100vh;
+}
+
+.login-split__left {
+    width: 55%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 80px 56px 80px 64px;
+}
+
+.login-split__right {
+    width: 45%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 140px 48px 80px 40px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LOGIN FORM PANEL + CARD
+   Liquid glass effect: low-opacity white fill + backdrop blur
    ══════════════════════════════════════════════════════════════ */
 .login-form-panel {
     position: relative;
-    width: 58%;
-    min-height: 100vh;
-    background-color: #0D0608;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 48px;
-    overflow-y: auto;
-    border-right: 1px solid rgba(196, 18, 98, 0.12);
+    width: 100%;
+    max-width: 520px;
 }
 
-/* Subtle glow blob */
-.login-form-panel__glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(196, 18, 98, 0.09) 0%, transparent 70%);
-    pointer-events: none;
-}
-
-/* ── Form card ─────────────────────────────────────────────── */
+/* ── Form card ── */
 .login-form-card {
     position: relative;
     width: 100%;
-    max-width: 520px;
-    background: rgba(248, 235, 237, 0.03);
-    border: 1px solid rgba(196, 18, 98, 0.15);
+    /* Softer glass — lighter fill so it feels part of the bg */
+    background: rgba(255, 255, 255, 0.032);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    /* Subtle border, no double-ring */
+    border: 1px solid rgba(196, 18, 98, 0.14);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 32px 80px rgba(13, 6, 8, 0.35),
+        0 0 60px rgba(196, 18, 98, 0.06);
     border-radius: 28px;
     padding: 48px 44px;
     display: flex;
@@ -66,18 +234,17 @@
     }
 }
 
-/* Top glow line on card */
 .login-form-card__glow-line {
     position: absolute;
     top: 0;
     left: 20%;
     right: 20%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.6), transparent);
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.65), transparent);
     border-radius: 1px;
 }
 
-/* ── Card header ───────────────────────────────────────────── */
+/* ── Card header ── */
 .login-form-card__header {
     display: flex;
     flex-direction: column;
@@ -88,7 +255,6 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 10.5px;
     letter-spacing: 0.15em;
@@ -121,7 +287,6 @@
 }
 
 .login-form-card__heading {
-    font-family: 'Poppins', sans-serif;
     font-weight: 800;
     font-size: 30px;
     letter-spacing: -0.5px;
@@ -131,7 +296,6 @@
 }
 
 .login-form-card__subtext {
-    font-family: 'Poppins', sans-serif;
     font-weight: 400;
     font-size: 14px;
     line-height: 1.65;
@@ -139,7 +303,7 @@
     margin: 0;
 }
 
-/* ── Form body ─────────────────────────────────────────────── */
+/* ── Form body ── */
 .login-form-card__form {
     display: flex;
     flex-direction: column;
@@ -173,7 +337,7 @@
     color: #FE7FAB;
 }
 
-/* Submit button */
+/* Submit — only used if PrimaryButton isn't wired up yet */
 .login-form-card__submit {
     display: flex;
     align-items: center;
@@ -207,7 +371,6 @@
 
 /* Switch link */
 .login-form-card__switch {
-    font-family: 'Poppins', sans-serif;
     font-weight: 400;
     font-size: 13px;
     color: rgba(248, 235, 237, 0.3);
@@ -236,209 +399,183 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   RIGHT — EDITORIAL PANEL  (slimmer: 42%)
+   FLOATING CARDS (right panel)
    ══════════════════════════════════════════════════════════════ */
-.login-editorial {
-    position: relative;
-    width: 42%;
-    min-height: 100vh;
-    background-color: #0D0608;
+.fc-wrapper {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    gap: 32px;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 360px;
+    padding-top: 58px;
 }
 
-/* Noise texture */
-.login-editorial__noise {
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    opacity: 0.4;
-    z-index: 0;
-}
-
-/* Glow blobs */
-.login-editorial__glow {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.login-editorial__glow--1 {
-    top: -120px;
-    right: -100px;
-    width: 480px;
-    height: 480px;
-    background: radial-gradient(circle, rgba(196, 18, 98, 0.22) 0%, transparent 65%);
-    animation: glow-pulse 6s ease-in-out infinite alternate;
-}
-
-.login-editorial__glow--2 {
-    bottom: -80px;
-    left: -80px;
-    width: 360px;
-    height: 360px;
-    background: radial-gradient(circle, rgba(254, 64, 129, 0.12) 0%, transparent 65%);
-    animation: glow-pulse 8s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes glow-pulse {
-    from {
-        opacity: 0.7;
-        transform: scale(1);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1.08);
-    }
-}
-
-/* Dot grid */
-.login-editorial__dots {
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(circle, rgba(248, 235, 237, 0.07) 1px, transparent 1px);
-    background-size: 28px 28px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Body */
-.login-editorial__body {
-    position: relative;
-    z-index: 1;
-    flex: 1;
+/* Header above stack */
+.fc-header {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 48px 40px;
-}
-
-.login-editorial__words {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin-bottom: 24px;
-}
-
-.login-editorial__word {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 800;
-    font-size: clamp(42px, 4.2vw, 68px);
-    line-height: 1.0;
-    letter-spacing: -2px;
-    color: #F8EBED;
+    gap: 10px;
     opacity: 0;
-    transform: translateY(32px);
-    animation: word-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: card-arrive 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
 }
 
-.login-editorial__word:last-child {
-    background: linear-gradient(135deg, #C41262 0%, #FE4081 50%, #FE7FAB 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    padding-bottom: 10px;
+.fc-header__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 10.5px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #FE7FAB;
 }
 
-@keyframes word-rise {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.fc-header__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #C41262;
+    box-shadow: 0 0 8px rgba(196, 18, 98, 0.7);
+    animation: dot-pulse 2s ease-in-out infinite;
 }
 
-/* Tagline */
-.login-editorial__tagline {
-    font-family: 'Poppins', sans-serif;
+.fc-header__title {
+    font-weight: 800;
+    font-size: clamp(28px, 2.8vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: #F8EBED;
+    margin: 0;
+}
+
+.fc-header__sub {
     font-weight: 400;
     font-size: 13px;
-    line-height: 1.75;
-    color: rgba(248, 235, 237, 0.4);
-    max-width: 300px;
-    margin-bottom: 36px;
+    line-height: 1.7;
+    color: rgba(248, 235, 237, 0.38);
+    max-width: 280px;
+    margin: 0;
+}
+
+/* ── Stack container ── */
+.fc-stack {
+    position: relative;
+    /* wider + taller to accommodate the fanned-out back cards */
+    width: 320px;
+    height: 280px;
     opacity: 0;
-    animation: fade-up 0.5s ease 0.6s forwards;
+    animation: card-arrive 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
 }
 
-@keyframes fade-up {
-    from {
-        opacity: 0;
-        transform: translateY(12px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Stat pills */
-.login-editorial__stats {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    opacity: 0;
-    animation: fade-up 0.5s ease 0.75s forwards;
-    padding: 20px 22px;
-    background: rgba(248, 235, 237, 0.03);
-    border: 1px solid rgba(248, 235, 237, 0.07);
-    border-radius: 16px;
-    width: fit-content;
-    gap: 14px;
-}
-
-/* On the narrower panel, stack stats vertically for a cleaner look */
-.login-editorial__stats {
-    flex-direction: column;
-}
-
-.login-editorial__stat {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-}
-
-.login-editorial__stat-num {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    color: #C41262;
-    line-height: 1;
-    min-width: 64px;
-}
-
-.login-editorial__stat-label {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
-    font-size: 11px;
-    color: rgba(248, 235, 237, 0.3);
-}
-
-.login-editorial__stat-divider {
-    width: 100%;
-    height: 1px;
-    background: rgba(248, 235, 237, 0.06);
-}
-
-/* Bottom glow line */
-.login-editorial__glow-line {
+/* Orb that sits behind all cards */
+.fc-stack::before {
+    content: '';
     position: absolute;
-    bottom: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 340px;
+    height: 340px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.22) 0%, transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: orb-b 7s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+/* ── Individual card ── */
+.fc-card {
+    position: absolute;
+    top: 0;
     left: 0;
-    right: 0;
+    width: 240px;
+    border-radius: 20px;
+    border: 1px solid;
+    padding: 26px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* NO backdrop-filter — solid bg handles readability */
+    cursor: pointer;
+    transform-origin: bottom left;
+    will-change: transform, opacity;
+}
+
+.fc-card__glow-line {
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.6), transparent);
+    border-radius: 1px;
+}
+
+.fc-card__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(196, 18, 98, 0.22);
+    border: 1px solid rgba(196, 18, 98, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FE7FAB;
+}
+
+.fc-card__stat {
+    font-weight: 800;
+    font-size: 34px;
+    color: #FE4081;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.fc-card__label {
+    font-weight: 700;
+    font-size: 14px;
+    color: #F8EBED;
+    line-height: 1.2;
+}
+
+.fc-card__sub {
+    font-weight: 400;
+    font-size: 12.5px;
+    color: rgba(248, 235, 237, 0.5);
+    line-height: 1.55;
+}
+
+/* ── Dot indicators ── */
+.fc-dots {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    opacity: 0;
+    animation: card-arrive 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.65s forwards;
+}
+
+.fc-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(248, 235, 237, 0.15);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, width 0.3s ease;
+}
+
+.fc-dot--active {
+    background: #C41262;
+    width: 20px;
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(196, 18, 98, 0.6);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   MODALS — TOKEN + OTP
+   MODALS — TOKEN + OTP (shared styles)
    ══════════════════════════════════════════════════════════════ */
-
-/* Overlay */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -462,7 +599,6 @@
     }
 }
 
-/* Card */
 .modal-wrapper {
     position: relative;
     width: 100%;
@@ -495,7 +631,6 @@
     }
 }
 
-/* Top glow line */
 .modal-glow-line {
     position: absolute;
     top: 0;
@@ -506,7 +641,6 @@
     border-radius: 1px;
 }
 
-/* Close button */
 .modal-close {
     position: absolute;
     top: 16px;
@@ -531,7 +665,6 @@
     background: rgba(248, 235, 237, 0.06);
 }
 
-/* Icon circle */
 .modal-icon-wrap {
     width: 56px;
     height: 56px;
@@ -552,12 +685,10 @@
     color: #FE4081;
 }
 
-/* Eyebrow */
 .modal-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    font-family: 'Poppins', sans-serif;
     font-weight: 500;
     font-size: 10px;
     letter-spacing: 0.18em;
@@ -574,9 +705,7 @@
     animation: dot-pulse 2s ease-in-out infinite;
 }
 
-/* Heading */
 .modal-heading {
-    font-family: 'Poppins', sans-serif;
     font-weight: 800;
     font-size: 22px;
     letter-spacing: -0.3px;
@@ -585,9 +714,7 @@
     line-height: 1.2;
 }
 
-/* Sub text */
 .modal-sub {
-    font-family: 'Poppins', sans-serif;
     font-weight: 400;
     font-size: 13px;
     line-height: 1.65;
@@ -599,10 +726,8 @@
 .modal-email {
     color: #FE7FAB;
     font-weight: 600;
-    font-style: normal;
 }
 
-/* Field */
 .modal-field {
     width: 100%;
     display: flex;
@@ -616,7 +741,6 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Poppins', sans-serif;
     font-weight: 600;
     font-size: 10px;
     letter-spacing: 0.18em;
@@ -654,9 +778,7 @@
     color: rgba(248, 235, 237, 0.2);
 }
 
-/* Error message */
 .modal-error {
-    font-family: 'Poppins', sans-serif;
     font-size: 11.5px;
     color: #FE7FAB;
     font-weight: 500;
@@ -668,7 +790,6 @@
     margin-top: 6px;
 }
 
-/* CTA button */
 .modal-btn {
     display: flex;
     align-items: center;
@@ -700,7 +821,6 @@
     cursor: not-allowed;
 }
 
-/* Spinner */
 .modal-spinner {
     width: 18px;
     height: 18px;
@@ -716,9 +836,7 @@
     }
 }
 
-/* Resend link */
 .modal-resend {
-    font-family: 'Poppins', sans-serif;
     font-size: 12px;
     color: rgba(248, 235, 237, 0.25);
     margin: 0;
@@ -756,7 +874,7 @@
     border-radius: 12px;
     background: rgba(248, 235, 237, 0.05);
     border: 1px solid rgba(248, 235, 237, 0.1);
-    color: #F8EBED;
+    color: #ffffff;
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
     font-size: 22px;
@@ -773,35 +891,48 @@
 }
 
 .otp-box--filled {
-    border-color: rgba(196, 18, 98, 0.4);
-    background: rgba(196, 18, 98, 0.06);
-    color: #FE7FAB;
+    border-color: rgba(196, 18, 98, 0.5);
+    background: rgba(196, 18, 98, 0.08);
+    color: #ffffff;
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
-    .login-root {
+    .login-split {
         flex-direction: column;
     }
 
-    .login-form-panel,
-    .login-editorial {
+    .login-split__left,
+    .login-split__right {
         width: 100%;
-        min-height: auto;
+        padding: 40px 24px;
     }
 
-    .login-editorial {
-        padding-bottom: 48px;
-    }
-
-    .login-editorial__word {
-        font-size: clamp(36px, 10vw, 56px);
-    }
-
-    .login-form-panel {
+    .login-split__left {
         border-right: none;
-        border-bottom: 1px solid rgba(196, 18, 98, 0.12);
-        padding: 48px 24px;
+        border-bottom: 1px solid rgba(196, 18, 98, 0.1);
+    }
+
+    .login-split__right {
+        padding-bottom: 56px;
+    }
+
+    .fc-wrapper {
+        align-items: center;
+    }
+
+    .fc-header {
+        text-align: center;
+    }
+
+    .fc-header__sub {
+        max-width: 100%;
+    }
+
+    .fc-dots {
+        justify-content: center;
     }
 
     .otp-box {

@@ -1,0 +1,160 @@
+/* ══════════════════════════════════════════════════════════════
+   Navbar.css
+   Default: transparent so it bleeds into any page background
+   .navbar--solid: used on non-auth pages or on scroll
+   ══════════════════════════════════════════════════════════════ */
+
+.navbar-custom {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+
+    /* Dark base — always visible, always on-brand */
+    background: rgba(6, 2, 4, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    /* Bottom edge: subtle pink glow line */
+    border-bottom: 1px solid rgba(196, 18, 98, 0.2);
+    box-shadow:
+        0 1px 0 rgba(196, 18, 98, 0.1),
+        0 4px 32px rgba(196, 18, 98, 0.08),
+        inset 0 -1px 0 rgba(196, 18, 98, 0.06);
+
+    transition:
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* Scrolled — deepen the glow slightly */
+.navbar-custom.navbar-custom--scrolled {
+    background: rgba(4, 1, 2, 0.99);
+    box-shadow:
+        0 1px 0 rgba(196, 18, 98, 0.18),
+        0 8px 40px rgba(196, 18, 98, 0.12),
+        inset 0 -1px 0 rgba(196, 18, 98, 0.1);
+}
+
+/* Solid variant — same dark but fully opaque for non-auth pages */
+.navbar-custom.navbar-custom--solid {
+    background: #0D0608;
+    border-bottom: 1px solid rgba(196, 18, 98, 0.2);
+}
+
+/* ── Logo ── */
+.navbar-custom__logo {
+    flex: 1;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: #F8EBED;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.navbar-custom__logo:hover {
+    opacity: 0.85;
+}
+
+.navbar-custom__logo-accent {
+    color: #FE4081;
+}
+
+/* On solid bg, accent is white */
+.navbar-custom--solid .navbar-custom__logo-accent {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Nav links ── */
+.navbar-custom__links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-right: 28px;
+}
+
+.navbar-custom__link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 13.5px;
+    color: rgba(248, 235, 237, 0.55);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.navbar-custom__link::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #FE4081;
+    transition: width 0.25s ease;
+}
+
+.navbar-custom__link:hover {
+    color: #F8EBED;
+}
+
+.navbar-custom__link:hover::after {
+    width: 100%;
+}
+
+/* Active link */
+.navbar-custom__link--active {
+    color: #FE7FAB;
+}
+
+.navbar-custom__link--active::after {
+    width: 100%;
+    background: #FE7FAB;
+}
+
+/* ── Join button ── */
+.navbar-custom__cta {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #C41262;
+    background: #F8EBED;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 20px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 12px rgba(196, 18, 98, 0.2);
+}
+
+.navbar-custom__cta:hover {
+    background: #FE4081;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 18px rgba(196, 18, 98, 0.35);
+}
+
+.navbar-custom__cta:active {
+    transform: translateY(0);
+}
+
+/* ── Mobile hide ── */
+@media (max-width: 768px) {
+    .navbar-custom__links {
+        display: none;
+    }
+
+    .navbar-custom {
+        padding: 0 20px;
+    }
+}

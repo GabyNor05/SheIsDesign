@@ -1,34 +1,55 @@
-import { Link } from "react-router-dom";
+// ─────────────────────────────────────────────────────────────────────────────
+// Navbar.jsx
+// Transparent by default so it bleeds into the page background
+// Gains a glass fill on scroll via .navbar-custom--scrolled
+// Pass solid={true} on non-auth pages to force the pink fill
+// ─────────────────────────────────────────────────────────────────────────────
 
-function Navbar() {
+import { Link, useLocation } from "react-router-dom";
+import "./Navbar.css";
+
+export default function Navbar({ solid = false }) {
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
+
+  const navClass = [
+    "navbar-custom",
+    solid ? "navbar-custom--solid" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className="navbar bg-primary px-8 sticky top-0 z-50 shadow-lg">
-
+    <nav className={navClass}>
       {/* Logo */}
-      <div className="flex-1">
-        <Link to="/" className="text-primary-content font-bold text-xl tracking-wide">
-          SheIs<span className="text-accent">Design</span>
-        </Link>
-      </div>
+      <Link to="/" className="navbar-custom__logo">
+        SheIs<span className="navbar-custom__logo-accent">Design</span>
+      </Link>
 
       {/* Nav links */}
-      <div className="flex-none hidden md:flex gap-6 mr-6">
-        <Link to="/events" className="text-primary-content hover:text-accent transition-colors text-sm font-medium">Events</Link>
-        <Link to="/gallery" className="text-primary-content hover:text-accent transition-colors text-sm font-medium">Gallery</Link>
-        <Link to="/leaderboard" className="text-primary-content hover:text-accent transition-colors text-sm font-medium">Leaderboard</Link>
-        <Link to="/donate" className="text-primary-content hover:text-accent transition-colors text-sm font-medium">Donate</Link>
-        <Link to="/volunteer" className="text-primary-content hover:text-accent transition-colors text-sm font-medium">Volunteer</Link>
+      <div className="navbar-custom__links">
+        {[
+          { to: "/events",      label: "Events"      },
+          { to: "/gallery",     label: "Gallery"     },
+          { to: "/leaderboard", label: "Leaderboard" },
+          { to: "/donate",      label: "Donate"      },
+          { to: "/volunteer",   label: "Volunteer"   },
+        ].map(({ to, label }) => (
+          <Link
+            key={to}
+            to={to}
+            className={`navbar-custom__link ${isActive(to) ? "navbar-custom__link--active" : ""}`}
+          >
+            {label}
+          </Link>
+        ))}
       </div>
 
-      {/* Sign In button */}
-      <div className="flex-none">
-<Link to="/signup" className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
-  Join
-</Link>
-      </div>
-
-    </div>
+      {/* CTA */}
+      <Link to="/signup" className="navbar-custom__cta">
+        Join
+      </Link>
+    </nav>
   );
 }
-
-export default Navbar;
