@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { MdLogin, MdArrowForward, MdAdminPanelSettings, MdVerifiedUser } from "react-icons/md";
 import { FiMail, FiShield, FiKey } from "react-icons/fi";
 import { Field, PasswordField, OrDivider, GoogleButton } from '../../../components/ui/Fields/Field/Field';
+import { loginUser } from "../../../services/authService";
+import { useAuth } from "../../../hooks/useAuth";
 import "./LoginPage.css";
 
 // ── OTP Input component ───────────────────────────────────────────────────────
@@ -275,28 +277,39 @@ function EditorialPanel() {
 // ── Login form LEFT panel ─────────────────────────────────────────────────────
 function LoginForm({ onCreateAccount }) {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // Modal state machine: null | "token" | "otp"
   const [modalStep, setModalStep] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userData, setUserData] = useState(null);
 
-  // Simulated admin emails — replace with actual API check
-  const ADMIN_EMAILS = ["admin@sheisdesign.co.za", "superadmin@example.com"];
-
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    // TODO: POST /api/auth/login — response tells us role
-    const adminCheck = ADMIN_EMAILS.includes(email.toLowerCase().trim());
-    setIsAdmin(adminCheck);
+    setError("");
+    setLoading(true);
 
-    if (adminCheck) {
-      // Admin: token modal first
-      setModalStep("token");
-    } else {
-      // Student: OTP straight away
-      setModalStep("otp");
+    try {
+      const user = await loginUser(email.trim(), password);
+      setUserData(user);
+      login(user);
+
+      const adminCheck = user.role === "Admin";
+      setIsAdmin(adminCheck);
+
+      if (adminCheck) {
+        setModalStep("token");
+      } else {
+        setModalStep("otp");
+      }
+    } catch (err) {
+      setError(err.message || "Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -341,7 +354,7 @@ function LoginForm({ onCreateAccount }) {
               placeholder="you@university.ac.za"
               icon={FiMail}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setError(""); }}
             />
 
             <div className="login-form-card__password-group">
@@ -350,7 +363,7 @@ function LoginForm({ onCreateAccount }) {
                 placeholder="Enter your password"
                 name="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { setPassword(e.target.value); setError(""); }}
               />
               <div className="login-form-card__forgot-row">
                 <button type="button" className="login-form-card__forgot">
@@ -359,9 +372,14 @@ function LoginForm({ onCreateAccount }) {
               </div>
             </div>
 
-            <button type="submit" className="login-form-card__submit">
-              <MdLogin size={18} />
-              Login
+            {error && (
+              <p style={{ color: "#f87171", fontSize: "0.85rem", margin: "0 0 0.5rem" }}>
+                {error}
+              </p>
+            )}
+
+            <button type="submit" className="login-form-card__submit" disabled={loading}>
+              {loading ? <span className="modal-spinner" /> : <><MdLogin size={18} />Login</>}
             </button>
           </form>
 

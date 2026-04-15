@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiImage, FiUser, FiMail } from "react-icons/fi";
 import { MdArrowForward, MdPersonAdd } from "react-icons/md";
 import { Field, PasswordField, OrDivider, GoogleButton } from "../../../components/ui/Fields/Field/Field";
+import { registerUser } from "../../../services/authService";
 import "./SignupBasicPage.css";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -116,12 +117,22 @@ function SignupForm() {
   const [lastName, setLastName]   = useState("");
   const [email, setEmail]         = useState("");
   const [password, setPassword]   = useState("");
+  const [error, setError]         = useState("");
+  const [loading, setLoading]     = useState(false);
 
-function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    // TODO: POST /api/auth/register → creates User + Mentee records
-    // ERD: User { email, password, role } + Mentee { fullname, userID FK }
-    navigate("/signup/details", { state: { firstName, email } });
+    setError("");
+    setLoading(true);
+
+    try {
+      const user = await registerUser(email.trim(), password);
+      navigate("/signup/details", { state: { firstName, lastName, email, userId: user.id } });
+    } catch (err) {
+      setError(err.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -178,12 +189,17 @@ function handleSubmit(e) {
             placeholder="Create a password"
             name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value); setError(""); }}
           />
 
-          <button type="submit" className="sgp-form-card__submit">
-            <MdPersonAdd size={18} />
-            Sign Up
+          {error && (
+            <p style={{ color: "#f87171", fontSize: "0.85rem", margin: "0 0 0.5rem" }}>
+              {error}
+            </p>
+          )}
+
+          <button type="submit" className="sgp-form-card__submit" disabled={loading}>
+            {loading ? <span className="modal-spinner" /> : <><MdPersonAdd size={18} />Sign Up</>}
           </button>
         </form>
 

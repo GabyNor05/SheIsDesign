@@ -109,8 +109,7 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role,
-                Password = user.PasswordHash
+                Role = user.Role
             };
 
             return CreatedAtAction("GetUser", new { id = user.Id }, result);
@@ -118,21 +117,27 @@ namespace backend.Controllers
 
         
         [HttpPost("Login")]
-        public async Task<ActionResult> Login(string email, string password)
+        public async Task<ActionResult> Login([FromBody] LoginDTO dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
 
-            if(user == null)
+            if (user == null)
             {
                 return Unauthorized("User Not Found");
             }
 
-            bool validPassword = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+            bool validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
 
-            if(!validPassword)
+            if (!validPassword)
                 return Unauthorized("Incorrect Password");
 
-            return Ok("Login Successful");
+            return Ok(new UserReadDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                DateCreated = user.DateCreated,
+                Role = user.Role
+            });
         }
 
         // DELETE: api/Users/5
