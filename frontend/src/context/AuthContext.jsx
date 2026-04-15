@@ -15,6 +15,7 @@ export function AuthProvider({ children }) {
   function login(userData) {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("hasLoggedInBefore", "true");
   }
 
   function logout() {

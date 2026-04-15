@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FiPlay, FiArrowRight } from "react-icons/fi";
 import { HiTrophy, HiUser } from "react-icons/hi2";
 import { MdRocketLaunch } from "react-icons/md";
+import { useAuth } from "../../../hooks/useAuth";
 import "./HeroSection.css";
  
 // ============================================================
@@ -19,6 +20,8 @@ const stats = [
 ];
  
 function HeroSection() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <section className="hero-section w-full px-8 md:px-16 pt-24 pb-28">
  
@@ -55,11 +58,12 @@ function HeroSection() {
           {/* CTA Buttons */}
           {/* DaisyUI: btn class used as base, extended with gradient via CSS */}
           <div className="flex gap-3 items-center flex-wrap">
-            {/* Route: /register */}
-<Link to="/signup" className="btn hero-btn-primary">
-              <MdRocketLaunch size={16} />
-              Get Started
-            </Link>
+            {!isAuthenticated && (
+              <Link to="/signup" className="btn hero-btn-primary">
+                <MdRocketLaunch size={16} />
+                Get Started
+              </Link>
+            )}
             {/* Route: /events */}
             <Link to="/events" className="btn hero-btn-secondary">
               <FiPlay size={14} />

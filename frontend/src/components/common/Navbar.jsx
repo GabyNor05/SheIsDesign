@@ -1,6 +1,38 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 function Navbar() {
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  const hasLoggedInBefore = localStorage.getItem("hasLoggedInBefore") === "true";
+
+  function handleLogout() {
+    logout();
+    navigate("/");
+  }
+
+  function renderAuthButton() {
+    if (isAuthenticated) {
+      return (
+        <button onClick={handleLogout} className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
+          Log Out
+        </button>
+      );
+    }
+    if (hasLoggedInBefore) {
+      return (
+        <Link to="/login" className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
+          Log In
+        </Link>
+      );
+    }
+    return (
+      <Link to="/signup" className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
+        Join
+      </Link>
+    );
+  }
+
   return (
     <div className="navbar bg-primary px-8 sticky top-0 z-50 shadow-lg">
 
@@ -20,11 +52,9 @@ function Navbar() {
         <Link to="/volunteer" className="text-primary-content hover:text-accent transition-colors text-sm font-medium">Volunteer</Link>
       </div>
 
-      {/* Sign In button */}
+      {/* Join / Log In / Log Out button */}
       <div className="flex-none">
-<Link to="/signup" className="btn btn-sm bg-white text-primary border-none hover:bg-accent hover:text-white">
-  Join
-</Link>
+        {renderAuthButton()}
       </div>
 
     </div>
