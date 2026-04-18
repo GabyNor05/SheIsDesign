@@ -7163,19 +7163,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/anika.debeer/.nuget/packages/": {}
+    "C:\\Users\\User\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj",
+      "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj",
-      "packagesPath": "/Users/anika.debeer/.nuget/packages/",
-      "outputPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/obj/",
+      "projectPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/anika.debeer/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -7269,7 +7269,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
@@ -7689,10 +7689,24 @@
   },
   "logs": [
     {
-      "code": "Undefined",
+      "code": "NU1901",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0."
+      "message": "Package 'NuGet.Packaging' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
+      "libraryId": "NuGet.Packaging",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1901",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'NuGet.Protocol' 6.12.1 has a known low severity vulnerability, https://github.com/advisories/GHSA-g4vj-cjjj-v7hg",
+      "libraryId": "NuGet.Protocol",
+      "targetGraphs": [
+        "net10.0"
+      ]
     }
   ]
 }

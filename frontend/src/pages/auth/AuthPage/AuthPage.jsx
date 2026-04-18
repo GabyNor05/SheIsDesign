@@ -47,6 +47,7 @@ import FloatingCards from "../../../components/auth/FloatingCards/FloatingCards"
 import TokenModal from "../../../components/auth/TokenModal/TokenModal";
 import OtpModal from "../../../components/auth/OtpModal/OtpModal";
 import { useAuth } from "../../../context/AuthContext";
+import { loginUser } from "../../../services/authService";
 import "./AuthPage.css";
 
 // 🔌 Replace with role check from API response (UserReadDTO.cs)
@@ -90,7 +91,7 @@ function AuthToggle({ mode, onChange }) {
 }
 
 // ── Login fields ──────────────────────────────────────────────────────────────
-function LoginFields({ onSubmit }) {
+function LoginFields({ onSubmit, error }) {
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
 
@@ -131,6 +132,10 @@ function LoginFields({ onSubmit }) {
             </button>
           </div>
         </div>
+
+        {error && (
+          <p className="auth-card__error">{error}</p>
+        )}
 
         <button type="submit" className="auth-card__submit">
           <MdLogin size={18} />
@@ -235,13 +240,21 @@ function AuthCard() {
   const [modalStep, setModalStep]   = useState(null);
   const [loginEmail, setLoginEmail] = useState("");
   const [isAdmin, setIsAdmin]       = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [apiUser, setApiUser]       = useState(null);
 
-  // 🔌 Replace with: POST /api/auth/login → check res.role for admin
-  function handleLoginSubmit({ email }) {
-    setLoginEmail(email);
-    const adminCheck = ADMIN_EMAILS.includes(email.toLowerCase().trim());
-    setIsAdmin(adminCheck);
-    setModalStep(adminCheck ? "token" : "otp");
+  async function handleLoginSubmit({ email, password }) {
+    setLoginError("");
+    try {
+      const res = await loginUser(email, password);
+      setApiUser(res);
+      setLoginEmail(email);
+      const adminCheck = res.role === "admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
+      setIsAdmin(adminCheck);
+      setModalStep(adminCheck ? "token" : "otp");
+    } catch (err) {
+      setLoginError(err.message || "Invalid email or password.");
+    }
   }
 
   // 🔌 Replace with: POST /api/auth/register + POST /api/mentee
@@ -249,15 +262,9 @@ function AuthCard() {
     navigate("/signup/details", { state: { firstName, email } });
   }
 
-  // 🔌 Replace mock user with real API response object from login endpoint
   function handleOtpVerified() {
     setModalStep(null);
-    login({
-      email: loginEmail,
-      fullname: "User",         // 🔌 use API response fullname
-      role: isAdmin ? "admin" : "student",
-      profileImageUrl: null,    // 🔌 use API response profileImageUrl
-    });
+    login(apiUser);
     navigate(isAdmin ? "/admin/dashboard" : "/");
   }
 
@@ -278,7 +285,7 @@ function AuthCard() {
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             >
               {mode === "login" ? (
-                <LoginFields onSubmit={handleLoginSubmit} />
+                <LoginFields onSubmit={handleLoginSubmit} error={loginError} />
               ) : (
                 <SignupFields onSubmit={handleSignupSubmit} />
               )}

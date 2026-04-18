@@ -12,10 +12,17 @@ export function AuthProvider({ children }) {
     }
   });
 
+  const [hasLoggedInBefore, setHasLoggedInBefore] = useState(
+    () => localStorage.getItem("hasLoggedInBefore") === "true"
+  );
+
   function login(userData) {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("hasLoggedInBefore", "true");
+    if (!hasLoggedInBefore) {
+      localStorage.setItem("hasLoggedInBefore", "true");
+      setHasLoggedInBefore(true);
+    }
   }
 
   function logout() {
@@ -24,10 +31,14 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, hasLoggedInBefore }}>
       {children}
     </AuthContext.Provider>
   );
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
 }
 
 export default AuthContext;

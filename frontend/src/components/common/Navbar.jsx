@@ -1,7 +1,8 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Navbar.jsx — Auth-aware navbar
-// Logged out: shows "Join" button → /auth?mode=signup
-// Logged in:  shows avatar/initials + dropdown with Profile + Log out
+// Never logged in:    shows "Join"    → /signup
+// Returning user:     shows "Log In"  → /login
+// Logged in:          shows avatar/initials + dropdown with Profile + Log out
 // ─────────────────────────────────────────────────────────────────────────────
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -90,7 +91,7 @@ function UserAvatar({ user, onLogout }) {
 export default function Navbar({ solid = false }) {
   const location   = useLocation();
   const navigate   = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, logout, hasLoggedInBefore } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -101,6 +102,16 @@ export default function Navbar({ solid = false }) {
   function handleLogout() {
     logout();
     navigate("/");
+  }
+
+  function renderAuthControl() {
+    if (user) {
+      return <UserAvatar user={user} onLogout={handleLogout} />;
+    }
+    if (hasLoggedInBefore) {
+      return <Link to="/login" className="navbar-custom__cta">Log In</Link>;
+    }
+    return <Link to="/signup" className="navbar-custom__cta">Join</Link>;
   }
 
   return (
@@ -129,14 +140,8 @@ export default function Navbar({ solid = false }) {
         ))}
       </div>
 
-      {/* Right side — Join or Avatar */}
-      {user ? (
-        <UserAvatar user={user} onLogout={handleLogout} />
-      ) : (
-        <Link to="/auth?mode=signup" className="navbar-custom__cta">
-          Join
-        </Link>
-      )}
+      {/* Right side — Avatar, Log In, or Join */}
+      {renderAuthControl()}
     </nav>
   );
 }

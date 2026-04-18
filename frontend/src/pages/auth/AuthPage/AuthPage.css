@@ -366,6 +366,17 @@
 }
 
 /* Submit button */
+.auth-card__error {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12.5px;
+    color: #FFB3CC;
+    background: rgba(254, 64, 129, 0.08);
+    border: 1px solid rgba(254, 64, 129, 0.2);
+    border-radius: 8px;
+    padding: 9px 12px;
+    margin: 0;
+}
+
 .auth-card__submit {
     display: flex;
     align-items: center;

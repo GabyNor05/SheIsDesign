@@ -718,3 +718,5 @@ C:\Users\User\Documents\GitHub\SheIsDesign\backend\obj\Debug\net10.0\refint\back
 C:\Users\User\Documents\GitHub\SheIsDesign\backend\obj\Debug\net10.0\backend.pdb
 C:\Users\User\Documents\GitHub\SheIsDesign\backend\obj\Debug\net10.0\backend.genruntimeconfig.cache
 C:\Users\User\Documents\GitHub\SheIsDesign\backend\obj\Debug\net10.0\ref\backend.dll
+C:\Users\User\Documents\GitHub\SheIsDesign\backend\bin\Debug\net10.0\package-lock.json
+C:\Users\User\Documents\GitHub\SheIsDesign\backend\bin\Debug\net10.0\package.json
