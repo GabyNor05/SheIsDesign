@@ -241,7 +241,9 @@
 .sid-or {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .sid-or__line {
