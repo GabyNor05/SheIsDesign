@@ -1,3 +1,4 @@
 .claude/settings.local.json
 ./backend/appsettings.json
 appsettings.json
+backend/appsettings.json
