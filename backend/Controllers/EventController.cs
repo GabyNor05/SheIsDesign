@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheDesign.Models;
 using SheDesign.Data;
+using System.Data.Common;
+using System.Text.Json;
+using SheDesign.DTO;
 
 namespace backend.Controllers
 {
@@ -40,6 +43,43 @@ namespace backend.Controllers
             }
 
             return @event;
+        }
+
+        [HttpGet("status/{status}")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetEventsByStatus(string status)
+        {
+            var events = await _context.Event.Where(e => e.status == status).ToListAsync();
+
+            if (events == null || !events.Any())
+            {
+                return NotFound($"No events found: {status}");
+            }
+
+            return Ok(events);
+        }
+
+        [HttpGet("category/{category}")]
+        public async Task<ActionResult<IEnumerable<Event>>> GetEventsStatsByCategory(string category)
+        {
+            var _events = await _context.Event.Where(e => e.category == category).ToListAsync();
+
+            if (_events == null || !_events.Any())
+            {
+                return NotFound($"No events found for category: {category}");
+            }
+
+            var _openCount = _events.Count(e => e.status.Equals("open", StringComparison.CurrentCultureIgnoreCase));
+            var _draftCount = _events.Count(e => e.status.Equals("drafted", StringComparison.CurrentCultureIgnoreCase));
+            var _closedCount = _events.Count(e => e.status.Equals("closed", StringComparison.CurrentCultureIgnoreCase));
+
+            var DTO = new EventStatisticsDTO
+            {
+                openCount = _openCount,
+                draftCount = _draftCount,
+                closedCount = _closedCount
+            };
+
+            return Ok(DTO);
         }
 
         // PUT: api/Event/5

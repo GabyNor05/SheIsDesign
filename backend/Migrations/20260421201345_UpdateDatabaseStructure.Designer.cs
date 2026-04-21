@@ -12,15 +12,15 @@ using SheDesign.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(SheDesignContext))]
-    [Migration("20260325121643_UpdateUsers")]
-    partial class UpdateUsers
+    [Migration("20260421201345_UpdateDatabaseStructure")]
+    partial class UpdateDatabaseStructure
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("ProductVersion", "10.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -38,9 +38,9 @@ namespace backend.Migrations
                         .HasColumnType("text")
                         .HasColumnName("body");
 
-                    b.Property<int>("menteeId")
+                    b.Property<int>("studentId")
                         .HasColumnType("integer")
-                        .HasColumnName("menteeId");
+                        .HasColumnName("studentId");
 
                     b.Property<DateTime>("timeStamp")
                         .HasColumnType("timestamp with time zone")
@@ -52,7 +52,7 @@ namespace backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("menteeId");
+                    b.HasIndex("studentId");
 
                     b.HasIndex("userId");
 
@@ -142,40 +142,6 @@ namespace backend.Migrations
                     b.ToTable("Event", (string)null);
                 });
 
-            modelBuilder.Entity("SheDesign.Models.Mentee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("field_of_study")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("fullname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("university")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("integer")
-                        .HasColumnName("userId");
-
-                    b.Property<int>("year_of_study")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Mentee", (string)null);
-                });
-
             modelBuilder.Entity("SheDesign.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -206,16 +172,16 @@ namespace backend.Migrations
                     b.Property<int>("link_count")
                         .HasColumnType("integer");
 
-                    b.Property<int>("menteeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("menteeId");
-
                     b.Property<DateTime>("post_date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("status")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("studentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("studentId");
 
                     b.Property<string>("title")
                         .IsRequired()
@@ -225,9 +191,43 @@ namespace backend.Migrations
 
                     b.HasIndex("eventId");
 
-                    b.HasIndex("menteeId");
+                    b.HasIndex("studentId");
 
                     b.ToTable("Post", (string)null);
+                });
+
+            modelBuilder.Entity("SheDesign.Models.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("field_of_study")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("fullname")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("university")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer")
+                        .HasColumnName("userId");
+
+                    b.Property<int>("year_of_study")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Student", (string)null);
                 });
 
             modelBuilder.Entity("SheDesign.Models.Submission", b =>
@@ -237,10 +237,6 @@ namespace backend.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("menteeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("menteeId");
 
                     b.Property<int>("points")
                         .HasColumnType("integer");
@@ -252,13 +248,20 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("studentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("studentId");
+
+                    b.Property<DateTime>("timeStamp")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("menteeId");
+                    b.HasIndex("studentId");
 
                     b.ToTable("Submission", (string)null);
                 });
@@ -294,33 +297,11 @@ namespace backend.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("SheDesign.Models.Volenteer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("eventCount")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("userId")
-                        .HasColumnType("integer")
-                        .HasColumnName("userId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("Volenteer", (string)null);
-                });
-
             modelBuilder.Entity("SheDesign.Models.Comment", b =>
                 {
-                    b.HasOne("SheDesign.Models.Mentee", "Mentee")
+                    b.HasOne("SheDesign.Models.Student", "Student")
                         .WithMany("Comments")
-                        .HasForeignKey("menteeId")
+                        .HasForeignKey("studentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -330,7 +311,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Mentee");
+                    b.Navigation("Student");
 
                     b.Navigation("User");
                 });
@@ -346,17 +327,6 @@ namespace backend.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("SheDesign.Models.Mentee", b =>
-                {
-                    b.HasOne("SheDesign.Models.User", "User")
-                        .WithMany("Mentees")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SheDesign.Models.Post", b =>
                 {
                     b.HasOne("SheDesign.Models.Event", "Event")
@@ -365,37 +335,37 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SheDesign.Models.Mentee", "Mentee")
+                    b.HasOne("SheDesign.Models.Student", "Student")
                         .WithMany("Posts")
-                        .HasForeignKey("menteeId")
+                        .HasForeignKey("studentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Event");
 
-                    b.Navigation("Mentee");
+                    b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("SheDesign.Models.Submission", b =>
-                {
-                    b.HasOne("SheDesign.Models.Mentee", "Mentee")
-                        .WithMany("Submissions")
-                        .HasForeignKey("menteeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Mentee");
-                });
-
-            modelBuilder.Entity("SheDesign.Models.Volenteer", b =>
+            modelBuilder.Entity("SheDesign.Models.Student", b =>
                 {
                     b.HasOne("SheDesign.Models.User", "User")
-                        .WithMany("Volenteers")
+                        .WithMany("Students")
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SheDesign.Models.Submission", b =>
+                {
+                    b.HasOne("SheDesign.Models.Student", "Student")
+                        .WithMany("Submissions")
+                        .HasForeignKey("studentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("SheDesign.Models.Event", b =>
@@ -405,7 +375,7 @@ namespace backend.Migrations
                     b.Navigation("Posts");
                 });
 
-            modelBuilder.Entity("SheDesign.Models.Mentee", b =>
+            modelBuilder.Entity("SheDesign.Models.Student", b =>
                 {
                     b.Navigation("Comments");
 
@@ -418,9 +388,7 @@ namespace backend.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Mentees");
-
-                    b.Navigation("Volenteers");
+                    b.Navigation("Students");
                 });
 #pragma warning restore 612, 618
         }

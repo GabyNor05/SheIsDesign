@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateUsers : Migration
+    public partial class NewDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,7 +74,7 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mentee",
+                name: "Student",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -87,29 +87,9 @@ namespace backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mentee", x => x.Id);
+                    table.PrimaryKey("PK_Student", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mentee_Users_userId",
-                        column: x => x.userId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Volenteer",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    eventCount = table.Column<int>(type: "integer", nullable: false),
-                    userId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Volenteer", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Volenteer_Users_userId",
+                        name: "FK_Student_Users_userId",
                         column: x => x.userId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -124,16 +104,16 @@ namespace backend.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     body = table.Column<string>(type: "text", nullable: false),
                     userId = table.Column<int>(type: "integer", nullable: false),
-                    menteeId = table.Column<int>(type: "integer", nullable: false),
+                    studentId = table.Column<int>(type: "integer", nullable: false),
                     timeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comment_Mentee_menteeId",
-                        column: x => x.menteeId,
-                        principalTable: "Mentee",
+                        name: "FK_Comment_Student_studentId",
+                        column: x => x.studentId,
+                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -151,7 +131,7 @@ namespace backend.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     title = table.Column<string>(type: "text", nullable: false),
-                    menteeId = table.Column<int>(type: "integer", nullable: false),
+                    studentId = table.Column<int>(type: "integer", nullable: false),
                     image_file_link = table.Column<string>(type: "text", nullable: false),
                     category = table.Column<string>(type: "text", nullable: false),
                     eventId = table.Column<int>(type: "integer", nullable: false),
@@ -171,9 +151,9 @@ namespace backend.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Post_Mentee_menteeId",
-                        column: x => x.menteeId,
-                        principalTable: "Mentee",
+                        name: "FK_Post_Student_studentId",
+                        column: x => x.studentId,
+                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -184,27 +164,28 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    menteeId = table.Column<int>(type: "integer", nullable: false),
+                    studentId = table.Column<int>(type: "integer", nullable: false),
                     title = table.Column<string>(type: "text", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
                     points = table.Column<int>(type: "integer", nullable: false),
-                    rank = table.Column<int>(type: "integer", nullable: false)
+                    rank = table.Column<int>(type: "integer", nullable: false),
+                    timeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Submission", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Submission_Mentee_menteeId",
-                        column: x => x.menteeId,
-                        principalTable: "Mentee",
+                        name: "FK_Submission_Student_studentId",
+                        column: x => x.studentId,
+                        principalTable: "Student",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_menteeId",
+                name: "IX_Comment_studentId",
                 table: "Comment",
-                column: "menteeId");
+                column: "studentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comment_userId",
@@ -217,29 +198,24 @@ namespace backend.Migrations
                 column: "eventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mentee_userId",
-                table: "Mentee",
-                column: "userId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Post_eventId",
                 table: "Post",
                 column: "eventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_menteeId",
+                name: "IX_Post_studentId",
                 table: "Post",
-                column: "menteeId");
+                column: "studentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Submission_menteeId",
-                table: "Submission",
-                column: "menteeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Volenteer_userId",
-                table: "Volenteer",
+                name: "IX_Student_userId",
+                table: "Student",
                 column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Submission_studentId",
+                table: "Submission",
+                column: "studentId");
         }
 
         /// <inheritdoc />
@@ -258,13 +234,10 @@ namespace backend.Migrations
                 name: "Submission");
 
             migrationBuilder.DropTable(
-                name: "Volenteer");
-
-            migrationBuilder.DropTable(
                 name: "Event");
 
             migrationBuilder.DropTable(
-                name: "Mentee");
+                name: "Student");
 
             migrationBuilder.DropTable(
                 name: "Users");

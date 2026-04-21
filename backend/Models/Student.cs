@@ -1,6 +1,6 @@
 namespace SheDesign.Models
 {
-    public class Mentee
+    public class Student
     {
         public int Id { get; set; }
         public string fullname { get; set; } = String.Empty;
