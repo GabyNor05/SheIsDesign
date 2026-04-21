@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 // Set DaisyUI theme on the root HTML element
-document.documentElement.setAttribute("data-theme", "sheisdesign_light");
+document.documentElement.setAttribute("data-theme", "dark");
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

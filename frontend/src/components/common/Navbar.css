@@ -1,0 +1,330 @@
+/* ══════════════════════════════════════════════════════════════
+   Navbar.css
+   Default: transparent so it bleeds into any page background
+   .navbar--solid: used on non-auth pages or on scroll
+   ══════════════════════════════════════════════════════════════ */
+
+.navbar-custom {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    height: 64px;
+
+    /* Dark base — always visible, always on-brand */
+    background: rgba(6, 2, 4, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    /* Bottom edge: subtle pink glow line */
+    border-bottom: 1px solid rgba(196, 18, 98, 0.2);
+    box-shadow:
+        0 1px 0 rgba(196, 18, 98, 0.1),
+        0 4px 32px rgba(196, 18, 98, 0.08),
+        inset 0 -1px 0 rgba(196, 18, 98, 0.06);
+
+    transition:
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* Scrolled — deepen the glow slightly */
+.navbar-custom.navbar-custom--scrolled {
+    background: rgba(4, 1, 2, 0.99);
+    box-shadow:
+        0 1px 0 rgba(196, 18, 98, 0.18),
+        0 8px 40px rgba(196, 18, 98, 0.12),
+        inset 0 -1px 0 rgba(196, 18, 98, 0.1);
+}
+
+/* Solid variant — same dark but fully opaque for non-auth pages */
+.navbar-custom.navbar-custom--solid {
+    background: #0D0608;
+    border-bottom: 1px solid rgba(196, 18, 98, 0.2);
+}
+
+/* ── Logo ── */
+.navbar-custom__logo {
+    flex: 1;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: #F8EBED;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.navbar-custom__logo:hover {
+    opacity: 0.85;
+}
+
+.navbar-custom__logo-accent {
+    color: #FE4081;
+}
+
+/* On solid bg, accent is white */
+.navbar-custom--solid .navbar-custom__logo-accent {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* ── Nav links ── */
+.navbar-custom__links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-right: 28px;
+}
+
+.navbar-custom__link {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 13.5px;
+    color: rgba(248, 235, 237, 0.55);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.navbar-custom__link::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #FE4081;
+    transition: width 0.25s ease;
+}
+
+.navbar-custom__link:hover {
+    color: #F8EBED;
+}
+
+.navbar-custom__link:hover::after {
+    width: 100%;
+}
+
+/* Active link */
+.navbar-custom__link--active {
+    color: #FE7FAB;
+}
+
+.navbar-custom__link--active::after {
+    width: 100%;
+    background: #FE7FAB;
+}
+
+/* ── Join button ── */
+.navbar-custom__cta {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #C41262;
+    background: #F8EBED;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 20px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 12px rgba(196, 18, 98, 0.2);
+}
+
+.navbar-custom__cta:hover {
+    background: #FE4081;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 18px rgba(196, 18, 98, 0.35);
+}
+
+.navbar-custom__cta:active {
+    transform: translateY(0);
+}
+
+/* ── Mobile hide ── */
+@media (max-width: 768px) {
+    .navbar-custom__links {
+        display: none;
+    }
+
+    .navbar-custom {
+        padding: 0 20px;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   USER AVATAR + DROPDOWN
+   ══════════════════════════════════════════════════════════════ */
+.nav-avatar {
+    position: relative;
+}
+
+.nav-avatar__trigger {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Profile image */
+.nav-avatar__img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(196, 18, 98, 0.5);
+    transition: border-color 0.2s;
+}
+
+.nav-avatar__trigger:hover .nav-avatar__img {
+    border-color: #FE4081;
+}
+
+/* Initials fallback */
+.nav-avatar__initials {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: white;
+    letter-spacing: 0.02em;
+    border: 2px solid rgba(196, 18, 98, 0.4);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.nav-avatar__trigger:hover .nav-avatar__initials {
+    border-color: #FE4081;
+    box-shadow: 0 0 14px rgba(196, 18, 98, 0.4);
+}
+
+/* Online status dot */
+.nav-avatar__status {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid rgba(6, 2, 4, 0.96);
+}
+
+/* ── Dropdown ── */
+.nav-avatar__dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 220px;
+    background: rgba(18, 8, 12, 0.97);
+    border: 1px solid rgba(196, 18, 98, 0.2);
+    border-radius: 16px;
+    padding: 6px;
+    box-shadow:
+        0 0 0 1px rgba(196, 18, 98, 0.06),
+        0 16px 48px rgba(13, 6, 8, 0.8),
+        0 0 32px rgba(196, 18, 98, 0.08);
+    animation: dropdown-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    z-index: 100;
+}
+
+@keyframes dropdown-in {
+    from {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.nav-avatar__dropdown-glow {
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.6), transparent);
+    border-radius: 1px;
+}
+
+/* User info block */
+.nav-avatar__dropdown-user {
+    padding: 10px 12px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nav-avatar__dropdown-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #F8EBED;
+}
+
+.nav-avatar__dropdown-email {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    color: rgba(248, 235, 237, 0.35);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-avatar__dropdown-divider {
+    height: 1px;
+    background: rgba(248, 235, 237, 0.06);
+    margin: 4px 0;
+}
+
+/* Dropdown items */
+.nav-avatar__dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.6);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    text-align: left;
+}
+
+.nav-avatar__dropdown-item:hover {
+    background: rgba(248, 235, 237, 0.06);
+    color: #F8EBED;
+}
+
+.nav-avatar__dropdown-item--danger {
+    color: rgba(254, 64, 129, 0.7);
+}
+
+.nav-avatar__dropdown-item--danger:hover {
+    background: rgba(196, 18, 98, 0.1);
+    color: #FE4081;
+}
