@@ -12,234 +12,93 @@ namespace backend.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Event",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    start_date = table.Column<DateOnly>(type: "date", nullable: false),
-                    end_date = table.Column<DateOnly>(type: "date", nullable: false),
-                    entry_count = table.Column<int>(type: "integer", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false),
-                    max_entery = table.Column<int>(type: "integer", nullable: false),
-                    category = table.Column<string>(type: "text", nullable: false),
-                    points_reward = table.Column<int>(type: "integer", nullable: false),
-                    status = table.Column<string>(type: "text", nullable: false),
-                    image_link = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Event", x => x.Id);
-                });
+            migrationBuilder.Sql(@"
+                CREATE TABLE IF NOT EXISTS ""Event"" (
+                    ""Id"" serial PRIMARY KEY,
+                    name text NOT NULL,
+                    start_date date NOT NULL,
+                    end_date date NOT NULL,
+                    entry_count integer NOT NULL,
+                    description text NOT NULL,
+                    max_entery integer NOT NULL,
+                    category text NOT NULL,
+                    points_reward integer NOT NULL,
+                    status text NOT NULL,
+                    image_link text NOT NULL
+                );
 
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    email = table.Column<string>(type: "text", nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    roles = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
+                CREATE TABLE IF NOT EXISTS ""Users"" (
+                    ""Id"" serial PRIMARY KEY,
+                    email text NOT NULL,
+                    password text NOT NULL,
+                    ""DateCreated"" timestamptz NOT NULL,
+                    roles text NOT NULL
+                );
 
-            migrationBuilder.CreateTable(
-                name: "Donation",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    donor_name = table.Column<string>(type: "text", nullable: false),
-                    eventId = table.Column<int>(type: "integer", nullable: false),
-                    amount = table.Column<float>(type: "real", nullable: false),
-                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    notes = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Donation", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Donation_Event_eventId",
-                        column: x => x.eventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                CREATE TABLE IF NOT EXISTS ""Donation"" (
+                    ""Id"" serial PRIMARY KEY,
+                    donor_name text NOT NULL,
+                    ""eventId"" integer NOT NULL REFERENCES ""Event""(""Id"") ON DELETE CASCADE,
+                    amount real NOT NULL,
+                    date timestamptz NOT NULL,
+                    notes text NOT NULL
+                );
 
-            migrationBuilder.CreateTable(
-                name: "Mentee",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    fullname = table.Column<string>(type: "text", nullable: false),
-                    university = table.Column<string>(type: "text", nullable: false),
-                    year_of_study = table.Column<int>(type: "integer", nullable: false),
-                    field_of_study = table.Column<string>(type: "text", nullable: false),
-                    userId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Mentee", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Mentee_Users_userId",
-                        column: x => x.userId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                CREATE TABLE IF NOT EXISTS ""Mentee"" (
+                    ""Id"" serial PRIMARY KEY,
+                    fullname text NOT NULL,
+                    university text NOT NULL,
+                    year_of_study integer NOT NULL,
+                    field_of_study text NOT NULL,
+                    ""userId"" integer NOT NULL REFERENCES ""Users""(""Id"") ON DELETE CASCADE
+                );
 
-            migrationBuilder.CreateTable(
-                name: "Volenteer",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    eventCount = table.Column<int>(type: "integer", nullable: false),
-                    userId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Volenteer", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Volenteer_Users_userId",
-                        column: x => x.userId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                CREATE TABLE IF NOT EXISTS ""Volenteer"" (
+                    ""Id"" serial PRIMARY KEY,
+                    ""eventCount"" integer NOT NULL,
+                    ""userId"" integer NOT NULL REFERENCES ""Users""(""Id"") ON DELETE CASCADE
+                );
 
-            migrationBuilder.CreateTable(
-                name: "Comment",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    body = table.Column<string>(type: "text", nullable: false),
-                    userId = table.Column<int>(type: "integer", nullable: false),
-                    menteeId = table.Column<int>(type: "integer", nullable: false),
-                    timeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comment_Mentee_menteeId",
-                        column: x => x.menteeId,
-                        principalTable: "Mentee",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Comment_Users_userId",
-                        column: x => x.userId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                CREATE TABLE IF NOT EXISTS ""Comment"" (
+                    ""Id"" serial PRIMARY KEY,
+                    body text NOT NULL,
+                    ""userId"" integer NOT NULL REFERENCES ""Users""(""Id"") ON DELETE CASCADE,
+                    ""menteeId"" integer NOT NULL REFERENCES ""Mentee""(""Id"") ON DELETE CASCADE,
+                    ""timeStamp"" timestamptz NOT NULL
+                );
 
-            migrationBuilder.CreateTable(
-                name: "Post",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    title = table.Column<string>(type: "text", nullable: false),
-                    menteeId = table.Column<int>(type: "integer", nullable: false),
-                    image_file_link = table.Column<string>(type: "text", nullable: false),
-                    category = table.Column<string>(type: "text", nullable: false),
-                    eventId = table.Column<int>(type: "integer", nullable: false),
-                    link_count = table.Column<int>(type: "integer", nullable: false),
-                    comment_count = table.Column<int>(type: "integer", nullable: false),
-                    post_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false),
-                    status = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Post", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Post_Event_eventId",
-                        column: x => x.eventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Post_Mentee_menteeId",
-                        column: x => x.menteeId,
-                        principalTable: "Mentee",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                CREATE TABLE IF NOT EXISTS ""Post"" (
+                    ""Id"" serial PRIMARY KEY,
+                    title text NOT NULL,
+                    ""menteeId"" integer NOT NULL REFERENCES ""Mentee""(""Id"") ON DELETE CASCADE,
+                    image_file_link text NOT NULL,
+                    category text NOT NULL,
+                    ""eventId"" integer NOT NULL REFERENCES ""Event""(""Id"") ON DELETE CASCADE,
+                    link_count integer NOT NULL,
+                    comment_count integer NOT NULL,
+                    post_date timestamptz NOT NULL,
+                    description text NOT NULL,
+                    status text NOT NULL
+                );
 
-            migrationBuilder.CreateTable(
-                name: "Submission",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    menteeId = table.Column<int>(type: "integer", nullable: false),
-                    title = table.Column<string>(type: "text", nullable: false),
-                    status = table.Column<string>(type: "text", nullable: false),
-                    points = table.Column<int>(type: "integer", nullable: false),
-                    rank = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Submission", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Submission_Mentee_menteeId",
-                        column: x => x.menteeId,
-                        principalTable: "Mentee",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                CREATE TABLE IF NOT EXISTS ""Submission"" (
+                    ""Id"" serial PRIMARY KEY,
+                    ""menteeId"" integer NOT NULL REFERENCES ""Mentee""(""Id"") ON DELETE CASCADE,
+                    title text NOT NULL,
+                    status text NOT NULL,
+                    points integer NOT NULL,
+                    rank integer NOT NULL
+                );
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Comment_menteeId",
-                table: "Comment",
-                column: "menteeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comment_userId",
-                table: "Comment",
-                column: "userId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Donation_eventId",
-                table: "Donation",
-                column: "eventId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Mentee_userId",
-                table: "Mentee",
-                column: "userId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Post_eventId",
-                table: "Post",
-                column: "eventId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Post_menteeId",
-                table: "Post",
-                column: "menteeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Submission_menteeId",
-                table: "Submission",
-                column: "menteeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Volenteer_userId",
-                table: "Volenteer",
-                column: "userId");
+                CREATE INDEX IF NOT EXISTS ""IX_Comment_menteeId"" ON ""Comment""(""menteeId"");
+                CREATE INDEX IF NOT EXISTS ""IX_Comment_userId"" ON ""Comment""(""userId"");
+                CREATE INDEX IF NOT EXISTS ""IX_Donation_eventId"" ON ""Donation""(""eventId"");
+                CREATE INDEX IF NOT EXISTS ""IX_Mentee_userId"" ON ""Mentee""(""userId"");
+                CREATE INDEX IF NOT EXISTS ""IX_Post_eventId"" ON ""Post""(""eventId"");
+                CREATE INDEX IF NOT EXISTS ""IX_Post_menteeId"" ON ""Post""(""menteeId"");
+                CREATE INDEX IF NOT EXISTS ""IX_Submission_menteeId"" ON ""Submission""(""menteeId"");
+                CREATE INDEX IF NOT EXISTS ""IX_Volenteer_userId"" ON ""Volenteer""(""userId"");
+            ");
         }
 
         /// <inheritdoc />

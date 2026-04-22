@@ -29,3 +29,33 @@ export async function loginUser(email, password) {
 
   return response.json();
 }
+
+export async function createMentee({ fullname, university, year_of_study, field_of_study, student_number, wants_volunteer, userId }) {
+  const response = await fetch(`${API_BASE}/Mentee`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ fullname, university, year_of_study, field_of_study, student_number, wants_volunteer, userId }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || "Failed to save student details");
+  }
+
+  return response.json();
+}
+
+export async function createIndustryProfessional({ institution, job_title, userId }) {
+  const response = await fetch(`${API_BASE}/IndustryProfessional`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ institution, job_title, userId }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || "Failed to save professional details");
+  }
+
+  return response.json();
+}

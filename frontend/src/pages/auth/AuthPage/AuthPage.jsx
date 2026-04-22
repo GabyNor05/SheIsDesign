@@ -47,7 +47,7 @@ import FloatingCards from "../../../components/auth/FloatingCards/FloatingCards"
 import TokenModal from "../../../components/auth/TokenModal/TokenModal";
 import OtpModal from "../../../components/auth/OtpModal/OtpModal";
 import { useAuth } from "../../../context/AuthContext";
-import { loginUser } from "../../../services/authService";
+import { loginUser, registerUser } from "../../../services/authService";
 import "./AuthPage.css";
 
 // 🔌 Replace with role check from API response (UserReadDTO.cs)
@@ -152,7 +152,7 @@ function LoginFields({ onSubmit, error }) {
 }
 
 // ── Signup fields ─────────────────────────────────────────────────────────────
-function SignupFields({ onSubmit }) {
+function SignupFields({ onSubmit, error }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName]   = useState("");
   const [email, setEmail]         = useState("");
@@ -206,6 +206,10 @@ function SignupFields({ onSubmit }) {
           onChange={(e) => setPassword(e.target.value)}
         />
 
+        {error && (
+          <p className="auth-card__error">{error}</p>
+        )}
+
         <button type="submit" className="auth-card__submit">
           <MdPersonAdd size={18} />
           Sign up
@@ -240,8 +244,9 @@ function AuthCard() {
   const [modalStep, setModalStep]   = useState(null);
   const [loginEmail, setLoginEmail] = useState("");
   const [isAdmin, setIsAdmin]       = useState(false);
-  const [loginError, setLoginError] = useState("");
-  const [apiUser, setApiUser]       = useState(null);
+  const [loginError, setLoginError]   = useState("");
+  const [signupError, setSignupError] = useState("");
+  const [apiUser, setApiUser]         = useState(null);
 
   async function handleLoginSubmit({ email, password }) {
     setLoginError("");
@@ -257,9 +262,14 @@ function AuthCard() {
     }
   }
 
-  // 🔌 Replace with: POST /api/auth/register + POST /api/mentee
-  function handleSignupSubmit({ firstName, email }) {
-    navigate("/signup/details", { state: { firstName, email } });
+  async function handleSignupSubmit({ firstName, lastName, email, password }) {
+    setSignupError("");
+    try {
+      const res = await registerUser(email, password);
+      navigate("/signup/details", { state: { firstName, lastName, email, userId: res.id } });
+    } catch (err) {
+      setSignupError(err.message || "Registration failed. Please try again.");
+    }
   }
 
   function handleOtpVerified() {
@@ -287,7 +297,7 @@ function AuthCard() {
               {mode === "login" ? (
                 <LoginFields onSubmit={handleLoginSubmit} error={loginError} />
               ) : (
-                <SignupFields onSubmit={handleSignupSubmit} />
+                <SignupFields onSubmit={handleSignupSubmit} error={signupError} />
               )}
             </motion.div>
           </AnimatePresence>

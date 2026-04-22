@@ -6,8 +6,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { createMentee, createIndustryProfessional } from "../../../services/authService";
 import {
-  FiMail, FiImage, FiBriefcase, FiUpload, FiFile,
+  FiMail, FiBriefcase, FiUpload, FiFile,
 } from "react-icons/fi";
 import { MdBusiness, MdBadge, MdPalette, MdCheckCircle } from "react-icons/md";
 import { Field, SelectField, TagInput } from "../../../components/ui/Fields/Field/Field";
@@ -205,22 +206,22 @@ export default function SignupDetailsPage() {
   const navigate  = useNavigate();
   const location  = useLocation();
 
-  // First name passed from SignupBasicPage via navigate("/signup/about", { state: { firstName, email } })
   const firstName = location.state?.firstName || "there";
+  const lastName  = location.state?.lastName  || "";
   const email     = location.state?.email     || "";
+  const userId    = location.state?.userId;
 
-  const [tab, setTab] = useState("student"); // "student" | "industry"
+  const [tab, setTab] = useState("student");
+  const [submitError, setSubmitError] = useState("");
 
-  // Student fields
   const [studentFields, setStudentFields] = useState({
-    university:   "",
+    university:    "",
     studentNumber: "",
-    yearOfStudy:  "",
-    fieldOfStudy: "",
+    yearOfStudy:   "",
+    fieldOfStudy:  "",
   });
   const [wantsVolunteer, setWantsVolunteer] = useState(false);
 
-  // Industry fields
   const [industryFields, setIndustryFields] = useState({
     institution: "",
     jobTitle:    "",
@@ -235,22 +236,32 @@ export default function SignupDetailsPage() {
     setIndustryFields((p) => ({ ...p, [key]: val }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setSubmitError("");
 
-    if (tab === "student") {
-      // TODO: PATCH /api/auth/profile/student
-      // Body: { university, studentNumber, yearOfStudy, fieldOfStudy, wantsVolunteer }
-      // ERD: UPDATE Mentee SET university=?, student_number=?, year_of_study=?, field_of_study=? WHERE userID=?
-      console.log("Student submit", { ...studentFields, wantsVolunteer });
-    } else {
-      // TODO: POST /api/auth/profile/industry
-      // Body: { institution, jobTitle, skills[], cvFile }
-      // ERD: INSERT INTO IndustryProfessional (institution, job_title, userID)
-      console.log("Industry submit", { ...industryFields, cvFile });
+    try {
+      if (tab === "student") {
+        await createMentee({
+          fullname:       `${firstName} ${lastName}`.trim(),
+          university:     studentFields.university,
+          year_of_study:  studentFields.yearOfStudy,
+          field_of_study: studentFields.fieldOfStudy,
+          student_number: studentFields.studentNumber,
+          wants_volunteer: wantsVolunteer,
+          userId,
+        });
+      } else {
+        await createIndustryProfessional({
+          institution: industryFields.institution,
+          job_title:   industryFields.jobTitle,
+          userId,
+        });
+      }
+      navigate("/signup/success");
+    } catch (err) {
+      setSubmitError(err.message || "Something went wrong. Please try again.");
     }
-
-    navigate("/signup/success");
   }
 
   return (
@@ -352,6 +363,10 @@ export default function SignupDetailsPage() {
                 cvFile={cvFile}
                 onCvFile={setCvFile}
               />
+            )}
+
+            {submitError && (
+              <p className="auth-card__error">{submitError}</p>
             )}
 
             <button type="submit" className="sdp-submit">

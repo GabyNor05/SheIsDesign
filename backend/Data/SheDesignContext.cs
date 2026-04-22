@@ -19,6 +19,7 @@ namespace SheDesign.Data
         public DbSet<Post> Post { get; set; }
         public DbSet<Submission> Submission { get; set; }
         public DbSet<Volenteer> Volenteer { get; set; }
+        public DbSet<IndustryProfessional> IndustryProfessional { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -126,6 +127,19 @@ namespace SheDesign.Data
                 .HasOne(v => v.User)
                 .WithMany(u => u.Volenteers)
                 .HasForeignKey(v => v.userId);
+
+            modelBuilder.Entity<IndustryProfessional>(entity =>
+            {
+                entity.ToTable("IndustryProfessional");
+                entity.Property(i => i.userId).HasColumnName("userId");
+                entity.Property(i => i.institution).HasColumnName("institution");
+                entity.Property(i => i.job_title).HasColumnName("job_title");
+            });
+
+            modelBuilder.Entity<IndustryProfessional>()
+                .HasOne(i => i.User)
+                .WithMany(u => u.IndustryProfessionals)
+                .HasForeignKey(i => i.userId);
         }
     }
 }
