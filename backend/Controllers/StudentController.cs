@@ -35,10 +35,7 @@ namespace backend.Controllers
         {
             var student = await _context.Student.FindAsync(id);
 
-            if (student == null)
-            {
-                return NotFound();
-            }
+            if (student == null) return NotFound();
 
             return student;
         }
@@ -48,10 +45,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStudent(int id, Student student)
         {
-            if (id != student.Id)
-            {
-                return BadRequest();
-            }
+            if (id != student.Id) return BadRequest();
 
             _context.Entry(student).State = EntityState.Modified;
 
@@ -107,10 +101,7 @@ namespace backend.Controllers
         public async Task<IActionResult> DeleteStudent(int id)
         {
             var student = await _context.Student.FindAsync(id);
-            if (student == null)
-            {
-                return NotFound();
-            }
+            if (student == null) return NotFound();
 
             _context.Student.Remove(student);
             await _context.SaveChangesAsync();
