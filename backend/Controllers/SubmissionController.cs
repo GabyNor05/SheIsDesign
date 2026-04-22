@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheDesign.Models;
 using SheDesign.Data;
+using SheDesign.DTO;
 
 namespace backend.Controllers
 {
@@ -40,6 +41,47 @@ namespace backend.Controllers
             }
 
             return submission;
+        }
+
+        [HttpGet("details")]
+        public async Task<ActionResult<Submission>> GetSubmissionDetails(int id)
+        {
+            var submission = await _context.Submission.FindAsync(id);
+
+            if (submission == null)
+            {
+                return NotFound();
+            }
+
+            int studentId = submission.studentId;
+
+            var student = await _context.Student.FindAsync(studentId);
+
+            if (student == null)
+            {
+                return NotFound();
+            }
+
+            int userId = student.userId;
+
+            var User = await _context.Users.FindAsync(userId);
+
+            if (User == null)
+            {
+                return NotFound();
+            }
+
+            var DTO = new LeaderboardDetailsDTO
+            {
+                rank = submission.rank,
+                points = submission.points,
+                studentName = student.fullname,
+                studentEmail = User.Email,
+                submissionTitle = submission.title,
+                submissionStatus = submission.status
+            };
+
+            return Ok(DTO);
         }
 
         // PUT: api/Submission/5
