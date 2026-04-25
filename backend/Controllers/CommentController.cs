@@ -34,10 +34,7 @@ namespace backend.Controllers
         {
             var comment = await _context.Comment.FindAsync(id);
 
-            if (comment == null)
-            {
-                return NotFound();
-            }
+            if (comment == null) return NotFound();
 
             return comment;
         }
@@ -47,10 +44,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutComment(int id, Comment comment)
         {
-            if (id != comment.Id)
-            {
-                return BadRequest();
-            }
+            if (id != comment.Id) return BadRequest();
 
             _context.Entry(comment).State = EntityState.Modified;
 
@@ -89,10 +83,7 @@ namespace backend.Controllers
         public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = await _context.Comment.FindAsync(id);
-            if (comment == null)
-            {
-                return NotFound();
-            }
+            if (comment == null) return NotFound();
 
             _context.Comment.Remove(comment);
             await _context.SaveChangesAsync();

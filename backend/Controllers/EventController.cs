@@ -37,10 +37,7 @@ namespace backend.Controllers
         {
             var @event = await _context.Event.FindAsync(id);
 
-            if (@event == null)
-            {
-                return NotFound();
-            }
+            if (@event == null) return NotFound();
 
             return @event;
         }
@@ -50,10 +47,7 @@ namespace backend.Controllers
         {
             var events = await _context.Event.Where(e => e.status == status).ToListAsync();
 
-            if (events == null || !events.Any())
-            {
-                return NotFound($"No events found: {status}");
-            }
+            if (events == null || !events.Any()) return NotFound($"No events found: {status}");
 
             return Ok(events);
         }
@@ -63,10 +57,7 @@ namespace backend.Controllers
         {
             var _events = await _context.Event.Where(e => e.category == category).ToListAsync();
 
-            if (_events == null || !_events.Any())
-            {
-                return NotFound($"No events found for category: {category}");
-            }
+            if (_events == null || !_events.Any()) return NotFound($"No events found for category: {category}");
 
             var _openCount = _events.Count(e => e.status.Equals("open", StringComparison.CurrentCultureIgnoreCase));
             var _draftCount = _events.Count(e => e.status.Equals("drafted", StringComparison.CurrentCultureIgnoreCase));
@@ -87,10 +78,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEvent(int id, Event @event)
         {
-            if (id != @event.Id)
-            {
-                return BadRequest();
-            }
+            if (id != @event.Id) return BadRequest();
 
             _context.Entry(@event).State = EntityState.Modified;
 
@@ -129,10 +117,7 @@ namespace backend.Controllers
         public async Task<IActionResult> DeleteEvent(int id)
         {
             var @event = await _context.Event.FindAsync(id);
-            if (@event == null)
-            {
-                return NotFound();
-            }
+            if (@event == null) return NotFound();
 
             _context.Event.Remove(@event);
             await _context.SaveChangesAsync();

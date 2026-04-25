@@ -35,10 +35,7 @@ namespace backend.Controllers
         {
             var submission = await _context.Submission.FindAsync(id);
 
-            if (submission == null)
-            {
-                return NotFound();
-            }
+            if (submission == null) return NotFound();
 
             return submission;
         }
@@ -48,28 +45,19 @@ namespace backend.Controllers
         {
             var submission = await _context.Submission.FindAsync(id);
 
-            if (submission == null)
-            {
-                return NotFound();
-            }
+            if (submission == null) return NotFound();
 
             int studentId = submission.studentId;
 
             var student = await _context.Student.FindAsync(studentId);
 
-            if (student == null)
-            {
-                return NotFound();
-            }
+            if (student == null) return NotFound();
 
             int userId = student.userId;
 
             var User = await _context.Users.FindAsync(userId);
 
-            if (User == null)
-            {
-                return NotFound();
-            }
+            if (User == null) return NotFound();
 
             var DTO = new LeaderboardDetailsDTO
             {
@@ -89,10 +77,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubmission(int id, Submission submission)
         {
-            if (id != submission.Id)
-            {
-                return BadRequest();
-            }
+            if (id != submission.Id) return BadRequest();
 
             _context.Entry(submission).State = EntityState.Modified;
 
@@ -131,10 +116,7 @@ namespace backend.Controllers
         public async Task<IActionResult> DeleteSubmission(int id)
         {
             var submission = await _context.Submission.FindAsync(id);
-            if (submission == null)
-            {
-                return NotFound();
-            }
+            if (submission == null) return NotFound();
 
             _context.Submission.Remove(submission);
             await _context.SaveChangesAsync();
