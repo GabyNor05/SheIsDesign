@@ -7163,19 +7163,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "C:\\Users\\wow\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
+      "projectUniqueName": "D:\\SheIsDesign\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\obj\\",
+      "projectPath": "D:\\SheIsDesign\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\wow\\.nuget\\packages\\",
+      "outputPath": "D:\\SheIsDesign\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\wow\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
