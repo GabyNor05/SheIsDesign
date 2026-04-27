@@ -20,6 +20,10 @@ import ManageDonationsPage from "./pages/admin/ManageDonationsPage";
 import ManageGalleryPage from "./pages/admin/ManageGalleryPage";
 import ManageLeaderboardPage from "./pages/admin/ManageLeaderboardPage";
 
+//Judge pages
+import JudgeDashboard from "./pages/judge/JudgeDashboard";
+import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -49,6 +53,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin",
+    element: <RootLayout />,
     children: [
       { path: "dashboard", element: <AdminDashboard /> },
       { path: "events", element: <ManageEventsPage /> },
@@ -56,6 +61,14 @@ const router = createBrowserRouter([
       { path: "donations", element: <ManageDonationsPage /> },
       { path: "gallery", element: <ManageGalleryPage /> },
       { path: "leaderboard", element: <ManageLeaderboardPage /> },
+    ],
+  },
+  {
+    path: "/judge",
+    element: <RootLayout />,
+    children: [
+      { path: "dashboard", element: <JudgeDashboard /> },
+      { path: "events", element: <JudgeEventsPage /> },
     ],
   },
 ]);

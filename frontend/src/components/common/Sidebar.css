@@ -1,0 +1,48 @@
+.sidebar-container {
+    position: fixed;
+    left: 0;
+    z-index: 50;
+    width: 220px;
+    display: flex;
+    align-items: center;
+
+
+
+    /* Dark base — always visible, always on-brand */
+    background: rgba(6, 2, 4, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    /* Bottom edge: subtle pink glow line */
+    border-bottom: 1px solid rgba(196, 18, 98, 0.2);
+    box-shadow:
+        0 1px 0 rgba(196, 18, 98, 0.1),
+        0 4px 32px rgba(196, 18, 98, 0.08),
+        inset 0 -1px 0 rgba(196, 18, 98, 0.06);
+
+    transition:
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* ── Logo ── */
+.sidebar-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: #F8EBED;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.sidebar-logo:hover {
+    opacity: 0.85;
+}
+
+.sidebar-logo-accent {
+    color: #FE4081;
+}

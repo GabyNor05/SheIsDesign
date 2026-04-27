@@ -244,6 +244,7 @@ function AuthCard() {
   const [modalStep, setModalStep]   = useState(null);
   const [loginEmail, setLoginEmail] = useState("");
   const [isAdmin, setIsAdmin]       = useState(false);
+  const [isJudge, setIsJudge]       = useState(false);
   const [loginError, setLoginError]   = useState("");
   const [signupError, setSignupError] = useState("");
   const [apiUser, setApiUser]         = useState(null);
@@ -255,6 +256,7 @@ function AuthCard() {
       setApiUser(res);
       setLoginEmail(email);
       const adminCheck = res.role === "admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
+      const judgeCheck = res.role === "judge";
       setIsAdmin(adminCheck);
       setModalStep(adminCheck ? "token" : "otp");
     } catch (err) {
@@ -275,7 +277,7 @@ function AuthCard() {
   function handleOtpVerified() {
     setModalStep(null);
     login(apiUser);
-    navigate(isAdmin ? "/admin/dashboard" : "/");
+    navigate(isAdmin ? "/admin/dashboard" : isJudge ? "/judge/dashboard" : "/");
   }
 
   return (

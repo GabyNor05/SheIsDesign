@@ -722,3 +722,15 @@ C:\Users\User\Documents\GitHub\SheIsDesign\backend\bin\Debug\net10.0\package-loc
 C:\Users\User\Documents\GitHub\SheIsDesign\backend\bin\Debug\net10.0\package.json
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend\bin\Debug\net10.0\package-lock.json
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend\bin\Debug\net10.0\package.json
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.csproj.AssemblyReference.cache
+D:\SheIsDesign\backend\obj\Debug\net10.0\rpswa.dswa.cache.json
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.GeneratedMSBuildEditorConfig.editorconfig
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.AssemblyInfoInputs.cache
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.AssemblyInfo.cs
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.csproj.CoreCompileInputs.cache
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.MvcApplicationPartsAssemblyInfo.cs
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.MvcApplicationPartsAssemblyInfo.cache
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.sourcelink.json
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.dll
+D:\SheIsDesign\backend\obj\Debug\net10.0\refint\backend.dll
+D:\SheIsDesign\backend\obj\Debug\net10.0\backend.pdb
