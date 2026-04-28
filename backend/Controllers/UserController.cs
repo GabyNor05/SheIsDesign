@@ -41,10 +41,7 @@ namespace backend.Controllers
         {
             var user = await _context.Users.FindAsync(id);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return NotFound();
 
             return new UserReadDTO
             {
@@ -60,10 +57,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
+            if (id != user.Id) return BadRequest();
 
             _context.Entry(user).State = EntityState.Modified;
 
@@ -109,8 +103,7 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role,
-                Password = user.PasswordHash
+                Role = user.Role
             };
 
             return CreatedAtAction("GetUser", new { id = user.Id }, result);
@@ -118,21 +111,24 @@ namespace backend.Controllers
 
         
         [HttpPost("Login")]
-        public async Task<ActionResult> Login(string email, string password)
+        public async Task<ActionResult> Login([FromBody] LoginDTO dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
 
-            if(user == null)
-            {
-                return Unauthorized("User Not Found");
-            }
+            if (user == null) return Unauthorized("User Not Found");
 
-            bool validPassword = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+            bool validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
 
-            if(!validPassword)
+            if (!validPassword)
                 return Unauthorized("Incorrect Password");
 
-            return Ok("Login Successful");
+            return Ok(new UserReadDTO
+            {
+                Id = user.Id,
+                Email = user.Email,
+                DateCreated = user.DateCreated,
+                Role = user.Role
+            });
         }
 
         // DELETE: api/Users/5
@@ -140,10 +136,7 @@ namespace backend.Controllers
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            if (user == null) return NotFound();
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();

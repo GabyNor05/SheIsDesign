@@ -4,7 +4,7 @@ namespace SheDesign.Models
     {
         public int Id { get; set; }
         public string title { get; set; } = String.Empty;
-        public int menteeId { get; set; }
+        public int studentId { get; set; }
         public string image_file_link { get; set; } = String.Empty;
         public string category { get; set; } = String.Empty;
         public int eventId { get; set; }
@@ -14,7 +14,7 @@ namespace SheDesign.Models
         public string description { get; set; } = String.Empty;
         public string status { get; set; } = String.Empty;
 
-        public Mentee? Mentee { get; set; }
+        public Student? Student { get; set; }
         public Event? Event { get; set; }
     }
 }

@@ -139,6 +139,35 @@ namespace backend.Migrations
                     b.ToTable("Event", (string)null);
                 });
 
+            modelBuilder.Entity("SheDesign.Models.IndustryProfessional", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("institution")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("institution");
+
+                    b.Property<string>("job_title")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("job_title");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer")
+                        .HasColumnName("userId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("IndustryProfessional", (string)null);
+                });
+
             modelBuilder.Entity("SheDesign.Models.Mentee", b =>
                 {
                     b.Property<int>("Id")
@@ -155,6 +184,10 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("student_number")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("university")
                         .IsRequired()
                         .HasColumnType("text");
@@ -163,8 +196,12 @@ namespace backend.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("userId");
 
-                    b.Property<int>("year_of_study")
-                        .HasColumnType("integer");
+                    b.Property<bool>("wants_volunteer")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("year_of_study")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -343,6 +380,17 @@ namespace backend.Migrations
                     b.Navigation("Event");
                 });
 
+            modelBuilder.Entity("SheDesign.Models.IndustryProfessional", b =>
+                {
+                    b.HasOne("SheDesign.Models.User", "User")
+                        .WithMany("IndustryProfessionals")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SheDesign.Models.Mentee", b =>
                 {
                     b.HasOne("SheDesign.Models.User", "User")
@@ -414,6 +462,8 @@ namespace backend.Migrations
             modelBuilder.Entity("SheDesign.Models.User", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("IndustryProfessionals");
 
                     b.Navigation("Mentees");
 

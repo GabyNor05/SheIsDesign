@@ -34,10 +34,7 @@ namespace backend.Controllers
         {
             var donation = await _context.Donation.FindAsync(id);
 
-            if (donation == null)
-            {
-                return NotFound();
-            }
+            if (donation == null) return NotFound();
 
             return donation;
         }
@@ -47,10 +44,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDonation(int id, Donation donation)
         {
-            if (id != donation.Id)
-            {
-                return BadRequest();
-            }
+            if (id != donation.Id) return BadRequest();
 
             _context.Entry(donation).State = EntityState.Modified;
 
@@ -89,10 +83,7 @@ namespace backend.Controllers
         public async Task<IActionResult> DeleteDonation(int id)
         {
             var donation = await _context.Donation.FindAsync(id);
-            if (donation == null)
-            {
-                return NotFound();
-            }
+            if (donation == null) return NotFound();
 
             _context.Donation.Remove(donation);
             await _context.SaveChangesAsync();

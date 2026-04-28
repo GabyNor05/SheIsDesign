@@ -1,11 +1,11 @@
-import HeroSection from "../../components/home/HeroSection";
-import WhatWeDoSection from "../../components/home/WhatWeDoSection";
-import EventsSection from "../../components/home/EventsSection";
-import LeaderboardSection from "../../components/home/LeaderboardSection";
-import FeaturedWorkSection from "../../components/home/FeaturedWorkSection";
-import ImpactSection from "../../components/home/ImpactSection";
-import SupportSection from "../../components/home/SupportSection";
-import CTASection from "../../components/home/CTASection";
+import HeroSection from "../../components/home/HeroSection/HeroSection";
+import WhatWeDoSection from "../../components/home/WhatWeDoSection/WhatWeDoSection";
+import EventsSection from "../../components/home/EventsSection/EventsSection";
+import LeaderboardSection from "../../components/home/LeaderboardSection/LeaderboardSection";
+import FeaturedWorkSection from "../../components/home/FeaturedWorkSection/FeaturedWorkSection";
+import ImpactSection from "../../components/home/ImpactSection/ImpactSection";
+import SupportSection from "../../components/home/SupportSection/SupportSection"
+import CTASection from "../../components/home/CTASection/CTASection";
 
 function HomePage() {
   return (

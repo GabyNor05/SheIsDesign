@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheDesign.Models;
 using SheDesign.Data;
+using SheDesign.DTO;
 
 namespace backend.Controllers
 {
@@ -74,10 +75,20 @@ namespace backend.Controllers
         }
 
         // POST: api/Mentee
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Mentee>> PostMentee(Mentee mentee)
+        public async Task<ActionResult<Mentee>> PostMentee(MenteeCreateDTO dto)
         {
+            var mentee = new Mentee
+            {
+                fullname = dto.fullname,
+                university = dto.university,
+                year_of_study = dto.year_of_study,
+                field_of_study = dto.field_of_study,
+                student_number = dto.student_number,
+                wants_volunteer = dto.wants_volunteer,
+                userId = dto.userId,
+            };
+
             _context.Mentee.Add(mentee);
             await _context.SaveChangesAsync();
 

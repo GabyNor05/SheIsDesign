@@ -34,10 +34,7 @@ namespace backend.Controllers
         {
             var post = await _context.Post.FindAsync(id);
 
-            if (post == null)
-            {
-                return NotFound();
-            }
+            if (post == null) return NotFound();
 
             return post;
         }
@@ -47,10 +44,7 @@ namespace backend.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, Post post)
         {
-            if (id != post.Id)
-            {
-                return BadRequest();
-            }
+            if (id != post.Id) return BadRequest();
 
             _context.Entry(post).State = EntityState.Modified;
 
@@ -89,10 +83,7 @@ namespace backend.Controllers
         public async Task<IActionResult> DeletePost(int id)
         {
             var post = await _context.Post.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+            if (post == null) return NotFound();
 
             _context.Post.Remove(post);
             await _context.SaveChangesAsync();

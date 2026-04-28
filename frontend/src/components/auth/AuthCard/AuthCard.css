@@ -1,0 +1,32 @@
+.auth-card {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    border-radius: var(--sid-radius-2xl);
+    padding: 40px;
+    background: var(--sid-gradient-card);
+    border: 1px solid rgba(196, 18, 98, 0.18);
+    backdrop-filter: blur(12px);
+    z-index: 10;
+}
+
+.auth-card--wide {
+    max-width: 560px;
+}
+
+.auth-card__glow-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.50), transparent);
+    border-radius: var(--sid-radius-2xl) var(--sid-radius-2xl) 0 0;
+}
+
+@media (max-width: 520px) {
+    .auth-card {
+        padding: 28px 20px;
+        border-radius: var(--sid-radius-xl);
+    }
+}
