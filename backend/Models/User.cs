@@ -14,8 +14,7 @@ namespace SheDesign.Models
         public string Role { get; set; } = "User";
 
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
-        public ICollection<Mentee> Mentees { get; set; } = new List<Mentee>();
-        public ICollection<Volenteer> Volenteers { get; set; } = new List<Volenteer>();
+        public ICollection<Student> Students { get; set; } = new List<Student>();
         public ICollection<IndustryProfessional> IndustryProfessionals { get; set; } = new List<IndustryProfessional>();
     }
 }

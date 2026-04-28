@@ -5,7 +5,7 @@ namespace SheDesign.Models
         public int Id { get; set; }
         public string fullname { get; set; } = String.Empty;
         public string university { get; set; } = String.Empty;
-        public string year_of_study { get; set; } = String.Empty;
+        public int year_of_study { get; set; }
         public string field_of_study { get; set; } = String.Empty;
         public string student_number { get; set; } = String.Empty;
         public bool wants_volunteer { get; set; } = false;

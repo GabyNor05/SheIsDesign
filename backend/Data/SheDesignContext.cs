@@ -18,6 +18,7 @@ namespace SheDesign.Data
         public DbSet<Student> Student { get; set; }
         public DbSet<Post> Post { get; set; }
         public DbSet<Submission> Submission { get; set; }
+        public DbSet<IndustryProfessional> IndustryProfessional { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,7 +58,7 @@ namespace SheDesign.Data
 
             modelBuilder.Entity<Student>(entity =>
             {
-                entity.ToTable("Mentee");
+                entity.ToTable("Student");
                 entity.Property(m => m.userId).HasColumnName("userId");
             });
 
