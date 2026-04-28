@@ -57,7 +57,7 @@ namespace SheDesign.Data
 
             modelBuilder.Entity<Student>(entity =>
             {
-                entity.ToTable("Student");
+                entity.ToTable("Mentee");
                 entity.Property(m => m.userId).HasColumnName("userId");
             });
 
@@ -82,7 +82,7 @@ namespace SheDesign.Data
 
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Student)
-                .WithMany(s => s.Comments)
+                .WithMany(m => m.Comments)
                 .HasForeignKey(c => c.studentId);
 
             // Donation relationship
@@ -91,16 +91,16 @@ namespace SheDesign.Data
                 .WithMany(e => e.Donations)
                 .HasForeignKey(d => d.eventId);
 
-            // Student relationship
+            // Mentee relationship
             modelBuilder.Entity<Student>()
-                .HasOne(s => s.User)
+                .HasOne(m => m.User)
                 .WithMany(u => u.Students)
-                .HasForeignKey(s => s.userId);
+                .HasForeignKey(m => m.userId);
 
             // Post relationships
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.Student)
-                .WithMany(s => s.Posts)
+                .WithMany(m => m.Posts)
                 .HasForeignKey(p => p.studentId);
 
             modelBuilder.Entity<Post>()
@@ -111,7 +111,7 @@ namespace SheDesign.Data
             // Submission relationship
             modelBuilder.Entity<Submission>()
                 .HasOne(s => s.Student)
-                .WithMany(s => s.Submissions)
+                .WithMany(m => m.Submissions)
                 .HasForeignKey(s => s.studentId);
         }
     }

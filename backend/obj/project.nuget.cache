@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ZRNVR8C+2ZU=",
+  "dgSpecHash": "Ki94sJeI0Og=",
   "success": true,
   "projectFilePath": "C:\\Users\\burnt\\Documents\\GitHub\\SheDesign\\SheIsDesign\\backend\\backend.csproj",
   "expectedPackageFiles": [
@@ -152,15 +152,6 @@
     "C:\\Users\\burnt\\.nuget\\packages\\yamldotnet\\16.3.0\\yamldotnet.16.3.0.nupkg.sha512"
   ],
   "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "message": "Problem reading the cache file C:\\Users\\burnt\\Documents\\GitHub\\SheDesign\\SheIsDesign\\backend\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
-      "projectPath": "C:\\Users\\burnt\\Documents\\GitHub\\SheDesign\\SheIsDesign\\backend\\backend.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\burnt\\Documents\\GitHub\\SheDesign\\SheIsDesign\\backend\\backend.csproj",
-      "targetGraphs": []
-    },
     {
       "code": "NU1901",
       "level": "Warning",
