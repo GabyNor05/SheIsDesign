@@ -15,11 +15,9 @@ namespace SheDesign.Data
         public DbSet<Comment> Comment { get; set; }
         public DbSet<Donation> Donation { get; set; }
         public DbSet<Event> Event { get; set; }
-        public DbSet<Mentee> Mentee { get; set; }
+        public DbSet<Student> Student { get; set; }
         public DbSet<Post> Post { get; set; }
         public DbSet<Submission> Submission { get; set; }
-        public DbSet<Volenteer> Volenteer { get; set; }
-        public DbSet<IndustryProfessional> IndustryProfessional { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,7 +38,7 @@ namespace SheDesign.Data
                 entity.ToTable("Comment");
                 entity.Property(c => c.body).HasColumnName("body");
                 entity.Property(c => c.userId).HasColumnName("userId");
-                entity.Property(c => c.menteeId).HasColumnName("menteeId");
+                entity.Property(c => c.studentId).HasColumnName("studentId");
                 entity.Property(c => c.timeStamp).HasColumnName("timeStamp");
             });
 
@@ -57,7 +55,7 @@ namespace SheDesign.Data
                 entity.Property(e => e.name).HasColumnName("name");
             });
 
-            modelBuilder.Entity<Mentee>(entity =>
+            modelBuilder.Entity<Student>(entity =>
             {
                 entity.ToTable("Mentee");
                 entity.Property(m => m.userId).HasColumnName("userId");
@@ -66,20 +64,14 @@ namespace SheDesign.Data
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Post");
-                entity.Property(p => p.menteeId).HasColumnName("menteeId");
+                entity.Property(p => p.studentId).HasColumnName("studentId");
                 entity.Property(p => p.eventId).HasColumnName("eventId");
             });
 
             modelBuilder.Entity<Submission>(entity =>
             {
                 entity.ToTable("Submission");
-                entity.Property(s => s.menteeId).HasColumnName("menteeId");
-            });
-
-            modelBuilder.Entity<Volenteer>(entity =>
-            {
-                entity.ToTable("Volenteer");
-                entity.Property(v => v.userId).HasColumnName("userId");
+                entity.Property(s => s.studentId).HasColumnName("studentId");
             });
 
             // Comment relationships
@@ -89,9 +81,9 @@ namespace SheDesign.Data
                 .HasForeignKey(c => c.userId);
 
             modelBuilder.Entity<Comment>()
-                .HasOne(c => c.Mentee)
+                .HasOne(c => c.Student)
                 .WithMany(m => m.Comments)
-                .HasForeignKey(c => c.menteeId);
+                .HasForeignKey(c => c.studentId);
 
             // Donation relationship
             modelBuilder.Entity<Donation>()
@@ -100,16 +92,16 @@ namespace SheDesign.Data
                 .HasForeignKey(d => d.eventId);
 
             // Mentee relationship
-            modelBuilder.Entity<Mentee>()
+            modelBuilder.Entity<Student>()
                 .HasOne(m => m.User)
-                .WithMany(u => u.Mentees)
+                .WithMany(u => u.Students)
                 .HasForeignKey(m => m.userId);
 
             // Post relationships
             modelBuilder.Entity<Post>()
-                .HasOne(p => p.Mentee)
+                .HasOne(p => p.Student)
                 .WithMany(m => m.Posts)
-                .HasForeignKey(p => p.menteeId);
+                .HasForeignKey(p => p.studentId);
 
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.Event)
@@ -118,28 +110,9 @@ namespace SheDesign.Data
 
             // Submission relationship
             modelBuilder.Entity<Submission>()
-                .HasOne(s => s.Mentee)
+                .HasOne(s => s.Student)
                 .WithMany(m => m.Submissions)
-                .HasForeignKey(s => s.menteeId);
-
-            // Volenteer relationship
-            modelBuilder.Entity<Volenteer>()
-                .HasOne(v => v.User)
-                .WithMany(u => u.Volenteers)
-                .HasForeignKey(v => v.userId);
-
-            modelBuilder.Entity<IndustryProfessional>(entity =>
-            {
-                entity.ToTable("IndustryProfessional");
-                entity.Property(i => i.userId).HasColumnName("userId");
-                entity.Property(i => i.institution).HasColumnName("institution");
-                entity.Property(i => i.job_title).HasColumnName("job_title");
-            });
-
-            modelBuilder.Entity<IndustryProfessional>()
-                .HasOne(i => i.User)
-                .WithMany(u => u.IndustryProfessionals)
-                .HasForeignKey(i => i.userId);
+                .HasForeignKey(s => s.studentId);
         }
     }
 }
