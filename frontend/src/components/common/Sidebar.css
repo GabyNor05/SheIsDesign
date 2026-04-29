@@ -9,7 +9,7 @@
 
 
     /* Dark base — always visible, always on-brand */
-    background: rgba(6, 2, 4, 0.96);
+    background: #1A1A1A;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 
