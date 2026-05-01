@@ -1,4 +1,5 @@
 import { CalendarDots, Calendar, Plus, Pencil, Trash } from "@phosphor-icons/react";
+import Section from "./Section";
 
 const T = {
     // Backgrounds
@@ -130,31 +131,10 @@ function EventsTable() {
 
 function UpcomingEvents() {
     return (
-        <div className="w-full p-5 rounded-[14px]" style={{ background: T.surface }}>
-            <div className="flex flex-row justify-between mb-4">
-                <div className="flex flex-row gap-4 items-center">
-                    <CalendarDots size={24} />
-                    <h2 className="text-[24px] font-bold ">Upcoming Events</h2>
-                </div>
-                <button 
-                    style={{
-                        display: "flex", alignItems: "center", gap: 7,
-                        background: T.pink, border: "none", borderRadius: 8,
-                        padding: "8px 16px", cursor: "pointer", color: "#fff",
-                        fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600,
-                        transition: "opacity 0.15s",
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
-                    onMouseLeave={e => e.currentTarget.style.opacity = "1"}
-                    onFocus={e => { e.currentTarget.style.boxShadow = `0 0 0 2px #fff, 0 0 0 4px ${T.pink}`; }}
-                    onBlur={e => { e.currentTarget.style.boxShadow = "none"; }}
-                >
-                    <Plus size={13} color="#fff" />
-                    New Event
-                </button>
-            </div>
+        <Section icon = <CalendarDots size={24} /> title="Upcoming Events" onNewEvent={() => alert("Create new event")}>
+        
             <EventsTable />
-        </div>
+        </Section>
     );
 }
 
