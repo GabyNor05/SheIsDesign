@@ -12,8 +12,8 @@ using SheDesign.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(SheDesignContext))]
-    [Migration("20260421201345_UpdateDatabaseStructure")]
-    partial class UpdateDatabaseStructure
+    [Migration("20260503202429_AddSubmissionTable")]
+    partial class AddSubmissionTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,45 +101,70 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("category")
+                    b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("description")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateOnly>("end_date")
+                    b.Property<DateOnly>("End_date")
                         .HasColumnType("date");
 
-                    b.Property<int>("entry_count")
+                    b.Property<int?>("Entry_count")
                         .HasColumnType("integer");
 
-                    b.Property<string>("image_link")
+                    b.Property<string>("Image_link")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Max_entry")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Points_reward")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("Start_date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("max_entery")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<int>("points_reward")
-                        .HasColumnType("integer");
-
-                    b.Property<DateOnly>("start_date")
-                        .HasColumnType("date");
-
-                    b.Property<string>("status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.ToTable("Event", (string)null);
+                });
+
+            modelBuilder.Entity("SheDesign.Models.IndustryProfessional", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("institution")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("job_title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("IndustryProfessional");
                 });
 
             modelBuilder.Entity("SheDesign.Models.Post", b =>
@@ -212,6 +237,10 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("student_number")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("university")
                         .IsRequired()
                         .HasColumnType("text");
@@ -219,6 +248,9 @@ namespace backend.Migrations
                     b.Property<int>("userId")
                         .HasColumnType("integer")
                         .HasColumnName("userId");
+
+                    b.Property<bool>("wants_volunteer")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("year_of_study")
                         .HasColumnType("integer");
@@ -327,6 +359,17 @@ namespace backend.Migrations
                     b.Navigation("Event");
                 });
 
+            modelBuilder.Entity("SheDesign.Models.IndustryProfessional", b =>
+                {
+                    b.HasOne("SheDesign.Models.User", "User")
+                        .WithMany("IndustryProfessionals")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SheDesign.Models.Post", b =>
                 {
                     b.HasOne("SheDesign.Models.Event", "Event")
@@ -387,6 +430,8 @@ namespace backend.Migrations
             modelBuilder.Entity("SheDesign.Models.User", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("IndustryProfessionals");
 
                     b.Navigation("Students");
                 });

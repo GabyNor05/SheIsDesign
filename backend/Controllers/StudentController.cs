@@ -24,7 +24,7 @@ namespace backend.Controllers
 
         // GET: api/Student
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudent()
+        public async Task<ActionResult<IEnumerable<Student>>> GetStudent(StudentReadDTO dto)
         {
             return await _context.Student.ToListAsync();
         }
