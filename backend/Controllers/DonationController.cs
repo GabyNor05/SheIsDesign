@@ -64,7 +64,11 @@ namespace backend.Controllers
         public async Task<ActionResult<float>> GetDonationTotals()
         {
             var total = await _context.Donation.SumAsync(e => e.amount);
-            return Ok(total);
+            var totalDonations = new
+            {
+              total_Donations = total  
+            };
+            return Ok(totalDonations);
         }
 
         // POST: api/Donation
