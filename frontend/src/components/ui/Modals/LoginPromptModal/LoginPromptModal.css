@@ -1,0 +1,140 @@
+.login-modal__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(13, 6, 8, 0.88);
+    backdrop-filter: blur(4px);
+}
+
+.login-modal__card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 20px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #140a0d;
+    border: 1px solid rgba(196, 18, 98, 0.25);
+    box-shadow: 0 0 80px rgba(196, 18, 98, 0.15), 0 24px 64px rgba(0, 0, 0, 0.6);
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-modal__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.login-modal__close:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.login-modal__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(196, 18, 98, 0.12);
+    border: 1px solid rgba(196, 18, 98, 0.25);
+}
+
+.login-modal__text {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-modal__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-modal__subtitle {
+    font-size: 13px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.50);
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.login-modal__btn-login {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: #ffffff;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 24px rgba(196, 18, 98, 0.35);
+}
+
+.login-modal__btn-login:hover {
+    opacity: 0.88;
+}
+
+.login-modal__btn-signup {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    background: transparent;
+    border: 1px solid rgba(196, 18, 98, 0.30);
+    color: #FE4081;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.login-modal__btn-signup:hover {
+    border-color: rgba(196, 18, 98, 0.60);
+    background: rgba(196, 18, 98, 0.05);
+}
+
+.login-modal__btn-dismiss {
+    width: 100%;
+    padding: 8px;
+    font-size: 13px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    color: rgba(255, 255, 255, 0.28);
+    transition: color 0.2s;
+}
+
+.login-modal__btn-dismiss:hover {
+    color: rgba(255, 255, 255, 0.55);
+}
