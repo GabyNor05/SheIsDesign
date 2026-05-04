@@ -24,7 +24,7 @@ namespace backend.Controllers
 
         // GET: api/Student
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudent(StudentReadDTO dto)
+        public async Task<ActionResult<IEnumerable<Student>>> GetStudent()
         {
             return await _context.Student.ToListAsync();
         }
@@ -71,20 +71,24 @@ namespace backend.Controllers
         // POST: api/Student
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Student>> PostStudent(StudentCreateDTO dto)
+        public async Task<ActionResult<StudentReadDTO>> PostStudent(StudentCreateDTO dto)
         {
+            var existingUser = _context.Users.Find(dto.UserID);
+
             var student = new Student
             {
-                fullname = dto.fullname,
-                university = dto.university,
-                year_of_study = dto.year_of_study,
-                field_of_study = dto.field_of_study,
-                userId = dto.userID
+                fullname = dto.Fullname,
+                university = dto.University,
+                year_of_study = dto.Year_of_study,
+                field_of_study = dto.Field_of_study,
+                userId = dto.UserID,
+                User = existingUser
             };
 
             _context.Student.Add(student);
             await _context.SaveChangesAsync();
 
+            // Mapping to ReadDTO
             var result = new StudentReadDTO
             {
                 fullname = student.fullname,

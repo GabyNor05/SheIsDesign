@@ -11,7 +11,7 @@ namespace SheDesign.Models
         public int Max_entry { get; set; }
         public string Category { get; set; } = String.Empty;
         public int Points_reward { get; set; }
-        public string Status { get; set; } = String.Empty;
+        public string Status { get; set; } = String.Empty; 
         public string? Image_link { get; set; } = String.Empty;
         public ICollection<Donation>? Donations { get; set; } = new List<Donation>();
         public ICollection<Post>? Posts { get; set; } = new List<Post>();
