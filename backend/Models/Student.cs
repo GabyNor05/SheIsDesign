@@ -13,8 +13,8 @@ namespace SheDesign.Models
 
         public User? User { get; set; }
 
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
-        public ICollection<Post> Posts { get; set; } = new List<Post>();
-        public ICollection<Submission> Submissions { get; set; } = new List<Submission>();
+        public ICollection<Comment>? Comments { get; set; } = new List<Comment>();
+        public ICollection<Post>? Posts { get; set; } = new List<Post>();
+        public ICollection<Submission>? Submissions { get; set; } = new List<Submission>();
     }
 }
