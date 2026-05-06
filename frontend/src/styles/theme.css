@@ -1,0 +1,33 @@
+:root {
+    --sid-primary: #C41262;
+    --sid-secondary: #FE4081;
+    --sid-bg: #0D0608;
+
+    --sid-surface: rgba(255, 255, 255, 0.05);
+    --sid-surface-hover: rgba(255, 255, 255, 0.08);
+
+    --sid-border: rgba(255, 255, 255, 0.10);
+    --sid-border-focus: rgba(255, 255, 255, 0.30);
+    --sid-border-error: rgba(254, 64, 129, 0.55);
+    --sid-border-primary: rgba(196, 18, 98, 0.35);
+
+    --sid-gradient: linear-gradient(135deg, #C41262, #FE4081);
+    --sid-gradient-card: linear-gradient(135deg, rgba(196, 18, 98, 0.10) 0%, rgba(13, 6, 8, 0.88) 100%);
+    --sid-glow-btn: 0 4px 24px rgba(196, 18, 98, 0.35);
+
+    --sid-text-primary: #ffffff;
+    --sid-text-secondary: rgba(255, 255, 255, 0.85);
+    --sid-text-muted: rgba(255, 255, 255, 0.70);
+    --sid-text-faint: rgba(255, 255, 255, 0.50);
+    --sid-text-label: rgba(255, 255, 255, 0.40);
+    --sid-text-error: rgba(254, 64, 129, 0.90);
+    --sid-text-pink: #FE4081;
+
+    --sid-font: 'Poppins', sans-serif;
+
+    --sid-radius-sm: 8px;
+    --sid-radius-md: 12px;
+    --sid-radius-lg: 16px;
+    --sid-radius-xl: 24px;
+    --sid-radius-2xl: 32px;
+}

@@ -1,0 +1,27 @@
+.google-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--sid-font);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--sid-text-secondary);
+    background: var(--sid-surface);
+    border: 1px solid var(--sid-border);
+    border-radius: var(--sid-radius-lg);
+    padding: 13px 20px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    -webkit-transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    -moz-transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    -ms-transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    -o-transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.google-btn:hover {
+    background: var(--sid-surface-hover);
+    border-color: rgba(255, 255, 255, 0.20);
+    color: var(--sid-text-primary);
+}

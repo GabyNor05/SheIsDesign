@@ -1,0 +1,275 @@
+.featured-event {
+    padding: 40px 48px;
+    background: #0D0608;
+    font-family: 'Poppins', sans-serif;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.featured-event__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.featured-event__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.featured-event__label-text {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #C41262;
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__card {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(196, 18, 98, 0.22);
+    background: linear-gradient(135deg, rgba(196, 18, 98, 0.08) 0%, rgba(13, 6, 8, 0.97) 100%);
+    display: flex;
+    min-height: 300px;
+}
+
+/* Left image panel */
+.featured-event__image {
+    width: 300px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #1c0710, #2e0d1e);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+}
+
+.featured-event__status-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__status-badge--open {
+    background: #C41262;
+    color: #ffffff;
+}
+
+.featured-event__status-badge--closed {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.40);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.featured-event__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+}
+
+.featured-event__img-placeholder {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(196, 18, 98, 0.2);
+    border: 1px solid rgba(196, 18, 98, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.featured-event__img-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.25);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Right content panel */
+.featured-event__content {
+    flex: 1;
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.featured-event__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.featured-event__category {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #C41262;
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__meta-divider {
+    width: 1px;
+    height: 12px;
+    background: rgba(196, 18, 98, 0.25);
+    display: inline-block;
+}
+
+.featured-event__time-left {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.65);
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__title {
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.featured-event__date-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.65);
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__description {
+    font-size: 13px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 480px;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__stats {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 20px;
+}
+
+.featured-event__stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__stat-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__progress-wrap {
+    max-width: 320px;
+}
+
+.featured-event__progress-track {
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(196, 18, 98, 0.25);
+    overflow: hidden;
+}
+
+.featured-event__progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #C41262, #FE4081);
+    transition: width 0.6s ease;
+    box-shadow: 0 0 10px rgba(254, 64, 129, 0.5);
+}
+
+.featured-event__progress-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.55);
+    margin-top: 6px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.featured-event__cta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: 20px;
+}
+
+.featured-event__btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 24px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: opacity 0.2s;
+    box-shadow: 0 4px 24px rgba(196, 18, 98, 0.35);
+}
+
+.featured-event__btn-primary:hover {
+    opacity: 0.88;
+}
+
+.featured-event__btn-primary--disabled {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.25);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.featured-event__btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 24px;
+    border-radius: 12px;
+    background: transparent;
+    border: 1px solid rgba(196, 18, 98, 0.3);
+    color: #FE4081;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.featured-event__btn-secondary:hover {
+    border-color: rgba(196, 18, 98, 0.6);
+    background: rgba(196, 18, 98, 0.05);
+}

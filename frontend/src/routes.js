@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "./components/common/RootLayout";
-
 // Public pages
 import HomePage from "./pages/public/HomePage";
 import EventsPage from "./pages/public/EventsPage";
@@ -8,11 +7,11 @@ import GalleryPage from "./pages/public/GalleryPage";
 import LeaderboardPage from "./pages/public/LeaderboardPage";
 import DonatePage from "./pages/public/DonatePage";
 import VolunteerPage from "./pages/public/VolunteerPage";
-
 // Auth pages
-import AuthPage from "./pages/auth/AuthPage";
-import AdminAuthPage from "./pages/auth/AdminAuthPage";
-
+import AuthPage from "./pages/auth/AuthPage/AuthPage";
+import SignupDetailsPage from "./pages/auth/SignupDetailsPage/SignupDetailsPage";
+import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage";
+import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageEventsPage from "./pages/admin/ManageEventsPage";
@@ -21,26 +20,40 @@ import ManageDonationsPage from "./pages/admin/ManageDonationsPage";
 import ManageGalleryPage from "./pages/admin/ManageGalleryPage";
 import ManageLeaderboardPage from "./pages/admin/ManageLeaderboardPage";
 
+//Judge pages
+import JudgeDashboard from "./pages/judge/JudgeDashboard";
+import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     children: [
+      // Public
       { index: true, element: <HomePage /> },
       { path: "events", element: <EventsPage /> },
       { path: "gallery", element: <GalleryPage /> },
       { path: "leaderboard", element: <LeaderboardPage /> },
       { path: "donate", element: <DonatePage /> },
       { path: "volunteer", element: <VolunteerPage /> },
+
+      // Auth — single page, slider toggles login/signup
+      // /auth             → defaults to login
+      // /auth?mode=signup → opens signup tab
+      // /login and /signup kept as redirects so old links still work
+      { path: "auth", element: <AuthPage /> },
       { path: "login", element: <AuthPage /> },
+      { path: "signup", element: <AuthPage /> },
+
+      // Post-signup flow (unchanged)
+      { path: "signup/details", element: <SignupDetailsPage /> },
+      { path: "signup/success", element: <SignupSuccessPage /> },
+      { path: "application-status", element: <ApplicationStatusPage /> },
     ],
   },
   {
     path: "/admin",
-    element: <AdminAuthPage />,
-  },
-  {
-    path: "/admin",
+    element: <RootLayout />,
     children: [
       { path: "dashboard", element: <AdminDashboard /> },
       { path: "events", element: <ManageEventsPage /> },
@@ -48,6 +61,14 @@ const router = createBrowserRouter([
       { path: "donations", element: <ManageDonationsPage /> },
       { path: "gallery", element: <ManageGalleryPage /> },
       { path: "leaderboard", element: <ManageLeaderboardPage /> },
+    ],
+  },
+  {
+    path: "/judge",
+    element: <RootLayout />,
+    children: [
+      { path: "dashboard", element: <JudgeDashboard /> },
+      { path: "events", element: <JudgeEventsPage /> },
     ],
   },
 ]);
