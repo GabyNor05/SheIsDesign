@@ -1,6 +1,7 @@
 import Stats from "../../components/admin/overview/Stats";
 import QuickActions from "../../components/admin/overview/QuickActions";
 import UpcomingEvents from "../../components/admin/overview/UpcomingEvents";
+import RecentActivity from "../../components/admin/overview/RecentActivity";
 
 const T = {
     // Backgrounds
@@ -75,6 +76,7 @@ function Overview() {
                 <Stats />
                 <QuickActions />
                 <UpcomingEvents />
+                <RecentActivity />
 
         </div>
     );

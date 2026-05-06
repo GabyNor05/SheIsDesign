@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Fire } from "@phosphor-icons/react";
+import Section from "./Section";
 
 const T = {
   // Backgrounds
@@ -71,16 +72,13 @@ function QuickActionCard({ action }) {
 
 function QuickActions() {
     return (
-        <div className="w-full p-5" style={{ background : T.surface }}>
-            <div className="flex flex-row gap-4">
-                <Fire size={24} />
-                <h3 className="text-xl font-bold mb-1" style={{ color: T.textPrimary }}>Quick Actions</h3>
-            </div>
+        <Section icon={<Fire size={24} />} title="Quick Actions">
             <div style={{ display: "flex", gap: 14, paddingTop: 16, flexWrap: "wrap" }}>
             {QUICK_ACTIONS.map(a => <QuickActionCard key={a.id} action={a} />)}
             </div>
-      </div>
+        </Section>
     );
 }
+
 
 export default QuickActions;
