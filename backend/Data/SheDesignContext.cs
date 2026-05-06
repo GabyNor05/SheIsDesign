@@ -53,7 +53,7 @@ namespace SheDesign.Data
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.ToTable("Event");
-                entity.Property(e => e.name).HasColumnName("name");
+                entity.Property(e => e.Title).HasColumnName("name");
             });
 
             modelBuilder.Entity<Student>(entity =>
@@ -114,6 +114,12 @@ namespace SheDesign.Data
                 .HasOne(s => s.Student)
                 .WithMany(m => m.Submissions)
                 .HasForeignKey(s => s.studentId);
+
+            // IndustryProfessional relationship
+            modelBuilder.Entity<IndustryProfessional>()
+                .HasOne(ip => ip.User)
+                .WithMany(u => u.IndustryProfessionals)
+                .HasForeignKey(ip => ip.userId);
         }
     }
 }
