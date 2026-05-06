@@ -1,4 +1,4 @@
-import { useState, } from "react";
+/* The purpose of the Sidebar has changed instead of navigating to a different page it just storing what the active tab is so that the AdminDashboard knows what to render. The Sidebar will now act as a control panel for the AdminDashboard, managing the state of the active tab and providing a way for the user to switch between different sections of the dashboard. */
 import { Navigate, Link, useNavigate } from "react-router-dom";
 import { SquaresFour, CalendarDots, UsersThree, Trophy, Images, HandHeart, Question, SignOut } from "@phosphor-icons/react";
 import { useAuth } from "../../context/AuthContext";
@@ -31,27 +31,25 @@ judge -> Dashboard, Events
 const navTabs = [
     ...(role === "admin"
         ? [
-            { name: "Dashboard", path: "admin/dashboard", icon: icons.dashboard },
-            { name: "Events", path: "admin/events", icon: icons.events },
-            { name: "Participants", path: "admin/participants", icon: icons.participants },
-            { name: "Leaderboard", path: "admin/leaderboard", icon: icons.leaderboard },
-            { name: "Gallery", path: "admin/gallery", icon: icons.gallery },
-            { name: "Donations", path: "admin/donations", icon: icons.donations }
+            { name: "Dashboard", icon: icons.dashboard },
+            { name: "Events", icon: icons.events },
+            { name: "Participants", icon: icons.participants },
+            { name: "Leaderboard", icon: icons.leaderboard },
+            { name: "Gallery", icon: icons.gallery },
+            { name: "Donations", icon: icons.donations }
         ]
         : []),
     ...(role === "judge"
         ? [
-            { name: "Dashboard", path: "judge/dashboard", icon: icons.dashboard },
-            { name: "Events", path: "judge/events", icon: icons.events }
+            { name: "Dashboard", icon: icons.dashboard },
+            { name: "Events", icon: icons.events }
         ]
         : [])
 ];
 
 
 
-function Sidebar() {
-    const [activeTab, setActiveTab] = useState(navTabs[0].name);
-    const [isActive, setIsActive] = useState(false);
+function Sidebar({ activeTab, setActiveTab }) {
     const navigate = useNavigate();
     const { logout } = useAuth();
 
@@ -73,12 +71,8 @@ function Sidebar() {
                             return (
                                 <button
                                     key={tab.name}
-                                    to={tab.path}
-                                    className={`sidebar-nav-item ${activeTab === tab.name ? "active" : ""} w-full flex items-center gap-3  py-[10px] px-3 text-white text-sm hover:bg-gray-100 hover:text-gray-200 active:text-white active:font-semibold rounded-[10px] mb-[2px] border-none  transition-colors duration-200 font-[DM Sans]`}
-                                    onClick={() => {
-                                        setActiveTab(tab.name);
-                                        navigate(`/${tab.path}`);
-                                    }}
+                                    className={`sidebar-nav-item ${isActive ? "active" : ""} w-full flex items-center gap-3  py-[10px] px-3 text-white text-sm hover:bg-gray-100 hover:text-gray-200 active:text-white active:font-semibold rounded-[10px] mb-[2px] border-none  transition-colors duration-200 font-[DM Sans]`}
+                                    onClick={() => setActiveTab(tab.name)}
                                     style={{
                                         background: isActive ? "#FE4081" : "transparent",
                                         fontWeight: isActive ? 600 : 400,
@@ -88,8 +82,7 @@ function Sidebar() {
                                     <span className="sidebar-nav-label">{tab.name}</span>
                                 </button>
                             )
-                        })
-                        }
+                        })}
                     </nav>
                 </div>
             </div>
@@ -102,7 +95,7 @@ function Sidebar() {
                     </button>
                     <button
                         className="sidebar-logout-btn w-full flex items-center gap-2 py-[10px] px-3 mb-[2px] text-sm text-red-600 font-medium hover:bg-gray-100/20 rounded-lg transition-colors duration-200 font-[DM Sans]"
-                        onClick={() => handleLogout()}>
+                        onClick={handleLogout}>
                         <SignOut size={24} />
                         Log out
                     </button>
@@ -110,7 +103,6 @@ function Sidebar() {
             </div>
         </aside>
     );
-
 }
 
 export default Sidebar;
