@@ -2,19 +2,22 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/common/Sidebar";
 import Overview from "./Overview";
-import ManageEvents from "./ManageEvents";
+import Events from "./ManageEvents";
+import Leaderboard from "./Leaderboard";
 
 /* The structure for this component is a flex container with a sidebar and main content area:
 Each page content will be an imported component, in this folder. It must check what tab.name is being recieved from the sideboard to decided what mainContent is being rendered*/
 
-function renderContent(activeTab) {
+function renderContent(activeTab, setActiveTab) {
     switch (activeTab) {
         case "Dashboard":
-            return <Overview />;
+            return <Overview setActiveTab={setActiveTab} />;
         case "Events":
-            return <ManageEvents />;
+            return <Events />;
+        case "Leaderboard":
+            return <Leaderboard />;
         default:
-            return <Overview />;
+            return <Overview setActiveTab={setActiveTab} />;
     }
 }
 
@@ -34,7 +37,7 @@ function AdminDashboard() {
                         Home
                     </span> / <span className="text-[#F0F0F0]">{activeTab}</span>
                 </div>
-                {renderContent(activeTab)}
+                {renderContent(activeTab, setActiveTab)}
             </div>
         
 

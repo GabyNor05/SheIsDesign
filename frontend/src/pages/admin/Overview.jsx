@@ -1,3 +1,4 @@
+import {useState} from "react";
 import Stats from "../../components/admin/overview/Stats";
 import QuickActions from "../../components/admin/overview/QuickActions";
 import UpcomingEvents from "../../components/admin/overview/UpcomingEvents";
@@ -52,7 +53,8 @@ const ACTIVITY_ICONS = {
 
 
 
-function Overview() {
+function Overview({ setActiveTab }) {
+    const [modal, setModal] = useState(null);
     return (
         <div className="flex flex-col gap-12 px-20">
             <div className="flex flex-row justify-between items-baseline font-poppins ">
@@ -73,8 +75,8 @@ function Overview() {
                 </div>
             </div>
             
+                <QuickActions setActiveTab={setActiveTab} />
                 <Stats />
-                <QuickActions />
                 <UpcomingEvents />
                 <RecentActivity />
 

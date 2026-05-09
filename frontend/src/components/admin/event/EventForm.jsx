@@ -1,3 +1,8 @@
+import { useState} from "react"
+
+const CATEGORIES = ["Branding", "Motion", "UI/UX", "Typography", "Illustration", "Packaging", "Photography", "Web Design", "Other"];
+const STATUSES   = ["OPEN", "DRAFT", "CLOSED", "UPCOMING"];
+
 const T = {
   // Backgrounds
   bg:        "#0D0D0D",   // page background

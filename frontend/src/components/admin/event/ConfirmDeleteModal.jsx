@@ -1,3 +1,5 @@
+import Modal from "../Modal";
+
 const T = {
   // Backgrounds
   bg:        "#0D0D0D",   // page background
