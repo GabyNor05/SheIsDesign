@@ -1,22 +1,96 @@
-import { CalendarDots, Calendar, Plus, Pencil, Trash } from "@phosphor-icons/react";
-import Section from "./Section";
+import {
+  CalendarDots,
+  CalendarBlank,
+  Plus,
+  Pencil,
+  Trash,
+} from "@phosphor-icons/react";
+import SectionHeader from "../SectionHeader";
+import Card from "./Card";
 
 import { T } from "../theme";
 
-const EVENTS = [
-    { id: 1, name: "Brand Identity Challenge", date: "12 Mar 2026", participants: 84, status: "ACTIVE" },
-    { id: 2, name: "Motion Design Bootcamp", date: "20 Mar 2026", participants: 41, status: "UPCOMING" },
-    { id: 3, name: "UI/UX Hackathon 2026", date: "5 Apr 2026", participants: 122, status: "UPCOMING" },
-    { id: 4, name: "Typography Sprint", date: "18 Apr 2026", participants: 28, status: "DRAFT" },
-    { id: 5, name: "Illustration Open Brief", date: "2 May 2026", participants: 87, status: "UPCOMING" },
-    { id: 6, name: "Annual Design Awards 2025", date: "14 Oct 2025", participants: 203, status: "CLOSED" },
+const UPCOMING_EVENTS = [
+  {
+    id: "evt-001",
+    title: "Brand Identity Challenge",
+    category: "BRAND IDENTITY",
+    status: "OPEN",
+    dateRange: "1–12 Mar 2026",
+    entries: 84,
+    maxEntries: 100,
+  },
+  {
+    id: "evt-002",
+    title: "Motion Design Bootcamp",
+    category: "MOTION DESIGN",
+    status: "OPEN",
+    dateRange: "10–20 Mar 2026",
+    entries: 41,
+    maxEntries: 60,
+  },
+  {
+    id: "evt-003",
+    title: "UI/UX Hackathon 2026",
+    category: "UX DESIGN",
+    status: "OPEN",
+    dateRange: "1–5 Apr 2026",
+    entries: 112,
+    maxEntries: 150,
+  },
+  {
+    id: "evt-004",
+    title: "Typography Sprint",
+    category: "GRAPHIC DESIGN",
+    status: "UPCOMING",
+    dateRange: "12–18 Apr 2026",
+    entries: 29,
+    maxEntries: 60,
+  },
+  {
+    id: "evt-005",
+    title: "Typography Sprint",
+    category: "GRAPHIC DESIGN",
+    status: "UPCOMING",
+    dateRange: "12–18 Apr 2026",
+    entries: 29,
+    maxEntries: 60,
+  },
+  {
+    id: "evt-006",
+    title: "Motion Design Bootcamp",
+    category: "MOTION DESIGN",
+    status: "OPEN",
+    dateRange: "10–20 Mar 2026",
+    entries: 41,
+    maxEntries: 60,
+  },
+   {
+    id: "evt-004",
+    title: "Typography Sprint",
+    category: "GRAPHIC DESIGN",
+    status: "UPCOMING",
+    dateRange: "12–18 Apr 2026",
+    entries: 29,
+    maxEntries: 60,
+  },
+  {
+    id: "evt-005",
+    title: "Typography Sprint",
+    category: "GRAPHIC DESIGN",
+    status: "UPCOMING",
+    dateRange: "12–18 Apr 2026",
+    entries: 29,
+    maxEntries: 60,
+  },
+  
 ];
 
 const STATUS_MAP = {
-    ACTIVE: { bg: "#10e26633", color: T.activeGreen, dot: T.activeGreen },
-    UPCOMING: { bg: T.upBg, color: T.upBlue, dot: T.upBlue },
-    DRAFT: { bg: T.draftBg, color: T.draftGray, dot: T.draftGray },
-    CLOSED: { bg: T.closedBg, color: T.closedRed, dot: T.closedRed },
+  ACTIVE: { bg: "#10e26633", color: T.activeGreen, dot: T.activeGreen },
+  UPCOMING: { bg: T.upBg, color: T.upBlue, dot: T.upBlue },
+  DRAFT: { bg: T.draftBg, color: T.draftGray, dot: T.draftGray },
+  CLOSED: { bg: T.closedBg, color: T.closedRed, dot: T.closedRed },
 };
 
 function StatusBadge({ status }) {
@@ -25,95 +99,213 @@ function StatusBadge({ status }) {
     <span
       role="status"
       style={{
-        display: "inline-flex", alignItems: "center", gap: 6,
-        background: s.bg, color: s.color, borderRadius: 20,
-        padding: "4px 10px", fontSize: 11.5, fontWeight: 600,
-        fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        background: s.bg,
+        color: s.color,
+        borderRadius: 20,
+        padding: "4px 10px",
+        fontSize: 11.5,
+        fontWeight: 600,
+        fontFamily: "'DM Sans', sans-serif",
+        letterSpacing: "0.06em",
       }}
     >
-      <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: s.dot, display: "inline-block" }} />
+      <span
+        aria-hidden="true"
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: "50%",
+          background: s.dot,
+          display: "inline-block",
+        }}
+      />
       {status}
     </span>
   );
 }
 
-function EventsTable() {
-    const cols = ["EVENT NAME", "DATE", "PARTICIPANTS", "STATUS", "ACTIONS"];
-    return (
-        <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }} aria-label="Upcoming events">
-                <thead>
-                    <tr>
-                        {cols.map(c => (
-                            <th key={c} scope="col" style={{
-                                textAlign: c === "PARTICIPANTS" ? "center" : "left",
-                                padding: "10px 14px",
-                                fontFamily: "'DM Sans', sans-serif", fontSize: 11,
-                                fontWeight: 700, color: T.textSecond, letterSpacing: "0.1em",
-                                borderBottom: `1px solid ${T.border}`, whiteSpace: "nowrap",
-                            }}>
-                                {c}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {EVENTS.map((ev, i) => (
-                        <tr key={ev.id} style={{ borderBottom: i < EVENTS.length - 1 ? `1px solid ${T.border}` : "none", transition: "background 0.12s" }}
-                            onMouseEnter={e => e.currentTarget.style.background = T.surfaceHi}
-                            onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-                        >
-                            <td style={{ padding: "14px 14px", fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: T.textPrimary, fontWeight: 500 }}>
-                                {ev.name}
-                            </td>
-                            <td style={{ padding: "14px 14px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: T.textSecond, whiteSpace: "nowrap" }}>
-                                {ev.date}
-                            </td>
-                            <td style={{ padding: "14px 14px", fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: T.textSecond, textAlign: "center" }}>
-                                {ev.participants}
-                            </td>
-                            <td style={{ padding: "14px 14px" }}>
-                                <StatusBadge status={ev.status} />
-                            </td>
-                            <td style={{ padding: "14px 14px" }}>
-                                <div style={{ display: "flex", gap: 6 }}>
-                                    <button
-                                        aria-label={`Edit ${ev.name}`}
-                                        style={{ background: T.surfaceHi, border: "none", cursor: "pointer", color: T.textSecond, padding: "6px 8px", borderRadius: 6, display: "flex", transition: "all 0.15s" }}
-                                        onMouseEnter={e => { e.currentTarget.style.background = "#333"; e.currentTarget.style.color = T.textPrimary; }}
-                                        onMouseLeave={e => { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.color = T.textSecond; }}
-                                        onFocus={e => { e.currentTarget.style.boxShadow = `0 0 0 2px ${T.pink}`; }}
-                                        onBlur={e => { e.currentTarget.style.boxShadow = "none"; }}
-                                    >
-                                        <Pencil size={14} color="currentColor" />
-                                    </button>
-                                    <button
-                                        aria-label={`Delete ${ev.name}`}
-                                        style={{ background: T.surfaceHi, border: "none", cursor: "pointer", color: T.textSecond, padding: "6px 8px", borderRadius: 6, display: "flex", transition: "all 0.15s" }}
-                                        onMouseEnter={e => { e.currentTarget.style.background = T.closedBg; e.currentTarget.style.color = T.closedRed; }}
-                                        onMouseLeave={e => { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.color = T.textSecond; }}
-                                        onFocus={e => { e.currentTarget.style.boxShadow = `0 0 0 2px ${T.closedRed}`; }}
-                                        onBlur={e => { e.currentTarget.style.boxShadow = "none"; }}
-                                    >
-                                        <Trash size={14} color="currentColor" />
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+function EventCard({ event }) {
+  const pct = Math.min(
+    100,
+    Math.round((event.entries / event.maxEntries) * 100),
+  );
+  return (
+    <div
+      style={{
+        background: T.surface,
+        border: `1px solid ${T.border}`,
+        borderRadius: 14,
+        padding: "18px 20px",
+        maxHeight: "167.891px",
+        minWidth: 230,
+        maxWidth: 260,
+        flex: "0 0 240px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        transition: "border-color 0.2s, transform 0.2s",
+        cursor: "pointer",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = T.pink + "66";
+        e.currentTarget.style.transform = "translateY(-2px)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = T.border;
+        e.currentTarget.style.transform = "translateY(0)";
+      }}
+    >
+        <div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <div className="w-full">
+          <div
+            style={{
+              fontFamily: "Syne, sans-serif",
+              
+              fontWeight: 700,
+              fontSize: 14.5,
+              color: T.textPrimary,
+              marginBottom: 4,
+              lineHeight: 1.3,
+            }}
+          >
+            {event.title}
+          </div>
         </div>
-    );
+        <StatusBadge status={event.status} />
+      </div>
+          <div
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              width: "100%",
+              fontSize: 10.5,
+              color: T.textMuted,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+            }}
+          >
+            {event.category}
+          </div>
+        </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          color: T.textMuted,
+        }}
+      >
+        <CalendarBlank size={14} color={T.textSecond} />
+
+        <span
+          style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12,
+            color: T.textSecond,
+          }}
+        >
+          {event.dateRange}
+        </span>
+      </div>
+
+      <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: 6,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 11.5,
+              color: T.textMuted,
+            }}
+          >
+            Entries
+          </span>
+          <span
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              fontWeight: 600,
+              color: T.textSecond,
+            }}
+          >
+            {event.entries} / {event.maxEntries}
+          </span>
+        </div>
+        <div
+          style={{
+            height: 5,
+            background: T.surfaceBord,
+            borderRadius: 3,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              width: `${pct}%`,
+              height: "100%",
+              background:
+                pct > 80
+                  ? T.pink
+                  : `linear-gradient(90deg, ${T.pink}88, ${T.pink})`,
+              borderRadius: 3,
+              transition: "width 0.5s ease",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function UpcomingEvents() {
-    return (
-        <Section icon = <CalendarDots size={24} /> title="Upcoming Events" onNewEvent={() => alert("Create new event")}>
-        
-            <EventsTable />
-        </Section>
-    );
+  const openCount = UPCOMING_EVENTS.filter((e) => e.status === "OPEN").length;
+  return (
+    <div >
+      <SectionHeader
+        icon=<CalendarDots />
+        title="Upcoming Events"
+        badge={`${openCount} open`}
+        action="View all"
+      />
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          height: "167.891px",
+          overflow: "hidden",
+          overflowX: "scroll",
+
+          alignItems: "flex-start",
+          alignSelf: "stretch",
+          gap: 14,
+          paddingBottom: 4,
+          scrollbarWidth: "thin",
+          scrollbarColor: `${T.border} transparent`,
+        }}
+      >
+        {UPCOMING_EVENTS.map((ev) => (
+          <EventCard key={ev.id} event={ev} />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default UpcomingEvents;

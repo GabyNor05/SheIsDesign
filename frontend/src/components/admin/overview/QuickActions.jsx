@@ -45,13 +45,13 @@ function QuickActions({ setActiveTab }) {
     }
   };
   return (
-    <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 28 }}>
+    <div style={{ display: "flex", gap: 10, flexWrap: "wrap",  }}>
       {QUICK_ACTIONS.map((action, i) => (
         <button key={action.id} style={{
-          display: "flex", alignItems: "center", gap: 8,
+          display: "flex", alignItems: "center", gap: 6,
           background: i === 0 ? T.pink : T.surface,
           border: `1px solid ${i === 0 ? T.pink : T.border}`,
-          borderRadius: "16777200px", padding: "10px 18px", cursor: "pointer",
+          borderRadius: "16777200px", padding: "8px 16px", cursor: "pointer",
           color: i === 0 ? "#fff" : T.textSecond,
           fontFamily: "Poppins", fontSize: 13.5, fontWeight: 500,
           transition: "all 0.18s",

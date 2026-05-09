@@ -56,7 +56,7 @@ const ACTIVITY_ICONS = {
 function Overview({ setActiveTab }) {
     const [modal, setModal] = useState(null);
     return (
-        <div className="flex flex-col gap-12 px-20">
+        <div className="flex flex-col gap-8 px-20 w-full">
             <div className="flex flex-row justify-between items-baseline font-poppins ">
                 <div className="flex flex-col text-left">
                     <h2 className="text-[40px] font-bold mb-1">Overview</h2>
@@ -76,9 +76,9 @@ function Overview({ setActiveTab }) {
             </div>
             
                 <QuickActions setActiveTab={setActiveTab} />
-                <Stats />
                 <UpcomingEvents />
                 <RecentActivity />
+                <Stats />
 
         </div>
     );
