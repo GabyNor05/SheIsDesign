@@ -1,41 +1,17 @@
 
-import {useState } from "react";
-import { Plus, IdentificationCard, Handshake} from "@phosphor-icons/react";
-import {FiBarChart2} from "react-icons/fi";
+import { useState } from "react";
+import { Plus, IdentificationCard, Handshake } from "@phosphor-icons/react";
+import { FiBarChart2 } from "react-icons/fi";
 import EventForm from "../event/EventForm";
 import InviteJudgeForm from "../event/InviteJudgeForm";
 import Modal from "../Modal";
+import { T } from "../theme";
 
-
-
-const T = {
-  // Backgrounds
-  bg:        "#0D0D0D",   // page background
-  surface:   "#1A1A1A",   // card / sidebar background
-  surfaceHi: "#242424",   // elevated card, hover surface
-  border:    "#2E2E2E",   // subtle dividers
-  // Brand
-  pink:      "#FF2D78",   // primary CTA / active state
-  pinkDim:   "#3D0F22",   // pink tint background (accessible)
-  // Text — all WCAG AA on #1A1A1A
-  textPrimary:  "#F0F0F0",  // 15.3:1 on surface
-  textSecond:   "#A0A0A0",  // 5.9:1 on surface — AA large
-  textMuted:    "#6B6B6B",  // decorative only
-  // Status
-  activeGreen:  "#22C55E",
-  activeBg:     "#052512",
-  upBlue:       "#60A5FA",
-  upBg:         "#0A1628",
-  draftGray:    "#A0A0A0",
-  draftBg:      "#222222",
-  closedRed:    "#F87171",
-  closedBg:     "#200B0B",
-};
 
 const QUICK_ACTIONS = [
-  { id: 1, icon: <Plus size={16}/>, label: "Create Event" },
-  { id: 2, icon: <Handshake size={16}/>, label: "Invite Judge"},
-  { id: 3, icon: <FiBarChart2 size={16}/>, label: "View Leaderboard"},
+  { id: 1, icon: <Plus size={16} />, label: "Create Event" },
+  { id: 2, icon: <Handshake size={16} />, label: "Invite Judge" },
+  { id: 3, icon: <FiBarChart2 size={16} />, label: "View Leaderboard" },
 ];
 
 function QuickActions({ setActiveTab }) {
@@ -68,8 +44,8 @@ function QuickActions({ setActiveTab }) {
         break;
     }
   };
-     return(
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 28 }}>
+  return (
+    <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 28 }}>
       {QUICK_ACTIONS.map((action, i) => (
         <button key={action.id} style={{
           display: "flex", alignItems: "center", gap: 8,
@@ -80,15 +56,15 @@ function QuickActions({ setActiveTab }) {
           fontFamily: "Poppins", fontSize: 13.5, fontWeight: 500,
           transition: "all 0.18s",
         }}
-        onMouseEnter={e => {
-          if (i !== 0) { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.borderColor = T.borderHi; e.currentTarget.style.color = T.textPrimary; }
-          else { e.currentTarget.style.opacity = "0.85"; }
-        }}
-        onMouseLeave={e => {
-          if (i !== 0) { e.currentTarget.style.background = T.surface; e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textSecond; }
-          else { e.currentTarget.style.opacity = "1"; }
-        }}
-        onClick={() => buttonAction(action.id)}
+          onMouseEnter={e => {
+            if (i !== 0) { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.borderColor = T.borderHi; e.currentTarget.style.color = T.textPrimary; }
+            else { e.currentTarget.style.opacity = "0.85"; }
+          }}
+          onMouseLeave={e => {
+            if (i !== 0) { e.currentTarget.style.background = T.surface; e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textSecond; }
+            else { e.currentTarget.style.opacity = "1"; }
+          }}
+          onClick={() => buttonAction(action.id)}
         >
           <div>{action.icon}</div>
           {action.label}
@@ -108,9 +84,9 @@ function QuickActions({ setActiveTab }) {
 
     </div>
 
-     );   
-        
-    
+  );
+
+
 }
 
 
