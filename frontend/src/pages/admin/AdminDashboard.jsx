@@ -33,9 +33,9 @@ function AdminDashboard() {
             <div className="admin-content flex-1 ml-[220px] ">
                 {/* Breadcrumb */}
                 <div className="breadcrumb ml-12 py-4">
-                    <span className="text-[#A0A0A0]" onClick={() => navigate("/")}>
+                    <button className="text-[#A0A0A0]" onClick={() => navigate("/")}>
                         Home
-                    </span> / <span className="text-[#F0F0F0]">{activeTab}</span>
+                    </button> / <span className="text-[#F0F0F0] text-xl font-medium">{activeTab}</span>
                 </div>
                 {renderContent(activeTab, setActiveTab)}
             </div>

@@ -1,5 +1,6 @@
 import { User, CalendarDots, Paperclip, HandHeart, ClockClockwise } from "@phosphor-icons/react";
-import Section from "./Section";
+import SectionHeader from "../SectionHeader";
+import Card from "./Card";
 import { T } from "../theme";
 
 
@@ -50,11 +51,16 @@ function ActivityRow({ item, isLast }) {
 
 function RecentActivity(){
   return (
-    <Section icon= <ClockClockwise size = {24} /> title="Recent Activity">
+    <Card>
+    <SectionHeader
+        icon= {<ClockClockwise size = {16} />}
+        title="Recent Activities"
+        action="View all"
+      />
         {RECENT_ACTIVITY.map((item, i) => (
           <ActivityRow key={item.id} item={item} isLast={i === RECENT_ACTIVITY.length - 1} />
         ))}
-      </Section>
+      </Card>
   );
 }
 

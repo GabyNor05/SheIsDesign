@@ -279,7 +279,7 @@ function UpcomingEvents() {
   return (
     <div >
       <SectionHeader
-        icon=<CalendarDots />
+        icon={<CalendarDots />}
         title="Upcoming Events"
         badge={`${openCount} open`}
         action="View all"
@@ -297,7 +297,7 @@ function UpcomingEvents() {
           gap: 14,
           paddingBottom: 4,
           scrollbarWidth: "thin",
-          scrollbarColor: `${T.border} transparent`,
+          scrollbarColor: `${T.border} `,
         }}
       >
         {UPCOMING_EVENTS.map((ev) => (
