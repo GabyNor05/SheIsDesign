@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/common/Sidebar";
 import Overview from "./Overview";
-import Events from "./ManageEvents";
+import ManageEvents from "./events/ManageEvents";
 import Leaderboard from "./Leaderboard";
 
 /* The structure for this component is a flex container with a sidebar and main content area:
@@ -13,7 +13,7 @@ function renderContent(activeTab, setActiveTab) {
         case "Dashboard":
             return <Overview setActiveTab={setActiveTab} />;
         case "Events":
-            return <Events />;
+            return <ManageEvents />;
         case "Leaderboard":
             return <Leaderboard />;
         default:

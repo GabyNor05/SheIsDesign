@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { T, STATUS_STYLES } from "../../components/admin/theme";
+import { T, STATUS_STYLES } from "../../../components/admin/theme";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS

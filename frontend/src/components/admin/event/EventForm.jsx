@@ -1,5 +1,5 @@
 import { useState} from "react"
-import { T } from "../theme";
+import { T} from "../theme";
 
 const CATEGORIES = ["Branding", "Motion", "UI/UX", "Typography", "Illustration", "Packaging", "Photography", "Web Design", "Other"];
 const STATUSES   = ["OPEN", "DRAFT", "CLOSED", "UPCOMING"];
@@ -11,6 +11,8 @@ const EMPTY_FORM = {
   max_entries: "", category: "Branding", points_reward: "",
   status: "DRAFT", image_link: "", entry_count: 0, submissions: 0,
 };
+
+
 
 function Field({ label, required, children, hint }) {
   return (
