@@ -1,10 +1,4 @@
-import {
-  CalendarDots,
-  CalendarBlank,
-  Plus,
-  Pencil,
-  Trash,
-} from "@phosphor-icons/react";
+import { CalendarDots, CalendarBlank, Plus, Pencil, Trash} from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
 import Card from "./Card";
 
@@ -87,7 +81,7 @@ const UPCOMING_EVENTS = [
 ];
 
 const STATUS_MAP = {
-  ACTIVE: { bg: "#10e26633", color: T.activeGreen, dot: T.activeGreen },
+  OPEN: { bg: "#10e26633", color: T.activeGreen, dot: T.activeGreen },
   UPCOMING: { bg: T.upBg, color: T.upBlue, dot: T.upBlue },
   DRAFT: { bg: T.draftBg, color: T.draftGray, dot: T.draftGray },
   CLOSED: { bg: T.closedBg, color: T.closedRed, dot: T.closedRed },
@@ -139,7 +133,7 @@ function EventCard({ event }) {
         border: `1px solid ${T.border}`,
         borderRadius: 14,
         padding: "18px 20px",
-        maxHeight: "167.891px",
+        maxHeight: "170px",
         minWidth: 230,
         maxWidth: 260,
         flex: "0 0 240px",
@@ -168,11 +162,13 @@ function EventCard({ event }) {
           gap: 8,
         }}
       >
-        <div className="w-full">
+        <div className="">
+
           <div
             style={{
+              display:"flex",
               fontFamily: "Syne, sans-serif",
-              
+              flexWrap: "wrap",
               fontWeight: 700,
               fontSize: 14.5,
               color: T.textPrimary,
@@ -183,6 +179,7 @@ function EventCard({ event }) {
             {event.title}
           </div>
         </div>
+        
         <StatusBadge status={event.status} />
       </div>
           <div
@@ -284,25 +281,24 @@ function UpcomingEvents() {
         badge={`${openCount} open`}
         action="View all"
       />
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          height: "167.891px",
-          overflow: "hidden",
-          overflowX: "scroll",
-
-          alignItems: "flex-start",
-          alignSelf: "stretch",
-          gap: 14,
-          paddingBottom: 4,
-          scrollbarWidth: "thin",
-          scrollbarColor: `${T.border} `,
-        }}
-      >
-        {UPCOMING_EVENTS.map((ev) => (
-          <EventCard key={ev.id} event={ev} />
-        ))}
+      <div>
+        <div
+          style={{
+            display: "flex",
+            width: "1020px",
+            height: "180px",
+            overflowX: "auto",
+            overflowY: "hidden",
+            alignItems: "space-between",
+            whiteSpace: "nowrap",
+            gap: 14,
+            padding: 4,
+          }}
+        >
+          {UPCOMING_EVENTS.map((ev) => (
+            <EventCard key={ev.id} event={ev} />
+          ))}
+        </div>
       </div>
     </div>
   );
