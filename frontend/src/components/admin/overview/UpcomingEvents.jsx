@@ -9,6 +9,17 @@ import SectionHeader from "../SectionHeader";
 import Card from "./Card";
 
 import { T } from "../theme";
+import { eventService } from "../../../services/eventService";
+import { useEffect } from "react";
+
+const loadUpcomingEvents = async () => {
+    try {
+        const upcoming = await eventService.getUpcomingEvents();
+        console.log("Next events:", upcoming);
+    } catch (err) {
+        console.error("Failed to load events", err);
+    }
+};
 
 const UPCOMING_EVENTS = [
   {
