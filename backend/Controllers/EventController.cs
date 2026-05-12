@@ -87,7 +87,7 @@ namespace backend.Controllers
             return Ok(DTO);
         }
 
-        [HttpGet("upcoming")]
+        [HttpGet("Upcoming")]
         public async Task<ActionResult<IEnumerable<EventReadDTO>>> GetUpcomingEvents()
         {
             var today = DateOnly.FromDateTime(DateTime.Now);

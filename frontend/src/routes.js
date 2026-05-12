@@ -14,11 +14,7 @@ import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage"
 import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import ManageEventsPage from "./pages/admin/ManageEventsPage";
-import ManageParticipantsPage from "./pages/admin/ManageParticipantsPage";
-import ManageDonationsPage from "./pages/admin/ManageDonationsPage";
-import ManageGalleryPage from "./pages/admin/ManageGalleryPage";
-import ManageLeaderboardPage from "./pages/admin/ManageLeaderboardPage";
+
 
 //Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
@@ -56,11 +52,6 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "dashboard", element: <AdminDashboard /> },
-      { path: "events", element: <ManageEventsPage /> },
-      { path: "participants", element: <ManageParticipantsPage /> },
-      { path: "donations", element: <ManageDonationsPage /> },
-      { path: "gallery", element: <ManageGalleryPage /> },
-      { path: "leaderboard", element: <ManageLeaderboardPage /> },
     ],
   },
   {

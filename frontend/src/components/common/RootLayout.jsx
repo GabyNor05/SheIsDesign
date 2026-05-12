@@ -8,7 +8,7 @@ import Footer from "./Footer";
 function renderNavigation(){
   const path = window.location.pathname;
   if (path.startsWith("/admin/") || path.startsWith("/judge/")) {
-    return <Sidebar />;
+    return null;
   } else {
     return <Navbar />;
   }
