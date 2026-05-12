@@ -8,7 +8,7 @@ import {
 } from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
 import Card from "./Card";
-import { eventService } from "../../../services/eventService";
+import { getUpcomingEvents } from "../../../services/eventService";
 
 import { T } from "../theme";
 
@@ -206,7 +206,7 @@ function UpcomingEvents() {
   const loadEvents = async () => {
     try {
       setLoading(true);
-      const upcoming = await eventService.getUpcomingEvents();
+const upcoming = await getUpcomingEvents();
       console.log("Next events:", upcoming);
       setEvents(upcoming);
       setError(null);
@@ -264,19 +264,19 @@ function UpcomingEvents() {
         action="View all"
       />
       <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          height: "167.891px",
-          overflow: "hidden",
-          overflowX: "scroll",
-          alignItems: "flex-start",
-          alignSelf: "stretch",
-          gap: 14,
-          paddingBottom: 4,
-          scrollbarWidth: "thin",
-          scrollbarColor: `${T.border} `,
-        }}
+  style={{
+    display: "flex",
+    flexWrap: "nowrap",
+    height: "167.891px",
+    overflow: "hidden",
+    overflowX: "scroll",
+    alignItems: "flex-start",
+    alignSelf: "stretch",
+    gap: 14,
+    paddingBottom: 4,
+    scrollbarWidth: "thin",
+    scrollbarColor: `${T.border} `,
+  }}
       >
         {events.length > 0 ? (
           events.map((ev) => <EventCard key={ev.id} event={ev} />)

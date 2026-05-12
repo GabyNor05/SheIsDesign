@@ -80,7 +80,7 @@
 
 /* --- Events grid --- */
 .events-grid {
-    display: grid;
+    /* display: grid; */
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
 }
