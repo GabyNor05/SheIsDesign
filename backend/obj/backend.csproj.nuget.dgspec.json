@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SheIsDesign\\backend\\backend.csproj": {}
+    "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj": {}
   },
   "projects": {
-    "D:\\SheIsDesign\\backend\\backend.csproj": {
+    "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SheIsDesign\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "D:\\SheIsDesign\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\wow\\.nuget\\packages\\",
-        "outputPath": "D:\\SheIsDesign\\backend\\obj\\",
+        "projectPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\wow\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"

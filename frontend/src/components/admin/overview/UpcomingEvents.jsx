@@ -8,7 +8,7 @@ import {
 } from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
 import Card from "./Card";
-import { eventService } from "../../../services/eventService";
+import { getUpcomingEvents } from "../../../services/eventService";
 
 import { T } from "../theme";
 
@@ -206,7 +206,7 @@ function UpcomingEvents() {
   const loadEvents = async () => {
     try {
       setLoading(true);
-      const upcoming = await eventService.getUpcomingEvents();
+      const upcoming = await getUpcomingEvents();
       console.log("Next events:", upcoming);
       setEvents(upcoming);
       setError(null);
