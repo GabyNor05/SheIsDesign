@@ -35,33 +35,6 @@
     filter: blur(40px);
 }
 
-/* Subtle rect — keep one shape but clean */
-.events-hero-new__shape-rect {
-    position: absolute;
-    bottom: 140px;
-    right: 80px;
-    width: 90px;
-    height: 55px;
-    border-radius: 10px;
-    background: rgba(196, 18, 98, 0.08);
-    border: 1px solid rgba(196, 18, 98, 0.18);
-    transform: rotate(-6deg);
-    opacity: 0;
-    animation: hv-fade-in 0.6s ease forwards 3.0s;
-}
-
-.events-hero-new__shape-slash {
-    position: absolute;
-    top: 40%;
-    left: 72px;
-    width: 48px;
-    height: 1.5px;
-    background: linear-gradient(90deg, rgba(254, 64, 129, 0.55), transparent);
-    border-radius: 999px;
-    transform: rotate(30deg);
-    opacity: 0;
-    animation: hv-fade-in 0.5s ease forwards 2.9s;
-}
 
 /* ── Main text container ── */
 .events-hero-new__text {
