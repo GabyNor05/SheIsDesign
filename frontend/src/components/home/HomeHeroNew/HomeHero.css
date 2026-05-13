@@ -1,4 +1,3 @@
-/* ─── Home Hero ──────────────────────────────────────────────────────────────── */
 .home-hero {
     position: relative;
     width: 100%;
@@ -13,7 +12,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* ─── Particle canvas ─────────────────────────────────────────────────────────── */
 .home-hero__canvas {
     position: absolute;
     inset: 0;
@@ -23,7 +21,7 @@
     pointer-events: none;
 }
 
-/* ─── Background gradients ────────────────────────────────────────────────────── */
+/*  Background gradients  */
 .home-hero__bg {
     position: absolute;
     inset: 0;
@@ -104,7 +102,7 @@
     }
 }
 
-/* ─── Diagonal rules ──────────────────────────────────────────────────────────── */
+/*  Diagonal rules  */
 .home-hero__rules {
     position: absolute;
     inset: 0;
@@ -149,7 +147,7 @@
     }
 }
 
-/* ─── Centre content ──────────────────────────────────────────────────────────── */
+/*  Centre content  */
 .home-hero__center {
     position: relative;
     z-index: 2;
@@ -161,7 +159,7 @@
     padding-bottom: 120px;
 }
 
-/* ─── Eyebrow ─────────────────────────────────────────────────────────────────── */
+/*  Eyebrow  */
 .home-hero__eyebrow {
     display: flex;
     align-items: center;
@@ -193,7 +191,7 @@
     background: linear-gradient(270deg, transparent, rgba(196, 18, 98, 0.7));
 }
 
-/* ─── Headline ────────────────────────────────────────────────────────────────── */
+/*  Headline  */
 .home-hero__headline {
     font-family: 'Poppins', sans-serif;
     font-size: clamp(72px, 13vw, 160px);
@@ -237,7 +235,7 @@
     }
 }
 
-/* ─── Tagline ─────────────────────────────────────────────────────────────────── */
+/*  Tagline  */
 .home-hero__tagline {
     font-size: clamp(16px, 2.2vw, 22px);
     font-weight: 400;
@@ -279,7 +277,7 @@
     transform: scaleX(1);
 }
 
-/* ─── CTA row ─────────────────────────────────────────────────────────────────── */
+/*  CTA row  */
 .home-hero__cta-row {
     display: flex;
     gap: 14px;
@@ -335,7 +333,7 @@
     transform: translateY(-2px);
 }
 
-/* ─── Scroll cue ──────────────────────────────────────────────────────────────── */
+/*  Scroll cue  */
 .home-hero__scroll {
     position: absolute;
     bottom: 36px;
@@ -405,7 +403,7 @@
     color: rgba(255, 255, 255, 0.3);
 }
 
-/* ─── Marquee ─────────────────────────────────────────────────────────────────── */
+/*  Marquee  */
 .home-hero__marquee-wrap {
     position: absolute;
     bottom: 0;
@@ -473,7 +471,7 @@
     font-size: 8px;
 }
 
-/* ─── Responsive ──────────────────────────────────────────────────────────────── */
+/*  Responsiveness  */
 @media (max-width: 768px) {
     .home-hero__headline {
         letter-spacing: -2px;

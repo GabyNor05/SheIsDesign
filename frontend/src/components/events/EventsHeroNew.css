@@ -12,7 +12,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Rich background gradient */
+/*  background gradient */
 .events-hero-new__bg-gradient {
     position: absolute;
     inset: 0;
@@ -36,7 +36,7 @@
 }
 
 
-/* ── Main text container ── */
+/*  Main text container  */
 .events-hero-new__text {
     position: relative;
     z-index: 2;
@@ -46,7 +46,7 @@
     align-items: center;
 }
 
-/* ── Eyebrow ── */
+/*  Eyebrow  */
 .events-hero-new__eyebrow {
     font-size: clamp(18px, 2.2vw, 20px);
     font-weight: 700;
@@ -71,7 +71,7 @@
     background: rgba(255, 255, 255, 0.35);
 }
 
-/* ── Stacked phase ── */
+/*  Stacked phase  */
 .events-hero-new__stacked {
     display: flex;
     flex-direction: column;
@@ -106,7 +106,7 @@
     animation: hv-word-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards 1.0s;
 }
 
-/* ── Inline phase ── */
+/*  Inline phase  */
 .events-hero-new__inline {
     display: flex;
     gap: clamp(12px, 2vw, 28px);
@@ -142,7 +142,7 @@
     animation: hv-inline-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.35s;
 }
 
-/* ── Scroll CTA ── */
+/*  Scroll CTA  */
 .events-hero-new__scroll {
     position: absolute;
     bottom: 40px;
@@ -191,7 +191,7 @@
     border-color: rgba(196, 18, 98, 0.5);
 }
 
-/* ── Responsive ── */
+/*  Responsiveness  */
 @media (max-width: 1280px) {
     .events-hero-new__shape-rect {
         right: 40px;
