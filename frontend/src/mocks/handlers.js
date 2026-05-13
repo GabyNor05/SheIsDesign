@@ -11,7 +11,7 @@ export const handlers = [
     res(ctx.status(200), ctx.json({ id: 1, email: 'test@test.com', dateCreated: '2026-01-01', role: 'user' }))
   ),
 
-  rest.post(`${API_BASE}/Mentee`, (req, res, ctx) =>
+  rest.post(`${API_BASE}/Student`, (req, res, ctx) =>
     res(ctx.status(201), ctx.json({ id: 1, fullname: 'Jane Doe', university: 'UCT', year_of_study: 2, field_of_study: 'CS' }))
   ),
 
