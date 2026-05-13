@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj": {}
+    "C:\\Users\\KB\\Documents\\GitHub\\Clones\\SheIsDesign\\backend\\backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj": {
+    "C:\\Users\\KB\\Documents\\GitHub\\Clones\\SheIsDesign\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
+        "projectUniqueName": "C:\\Users\\KB\\Documents\\GitHub\\Clones\\SheIsDesign\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\Documents\\GitHub\\SheIsDesign\\backend\\obj\\",
+        "projectPath": "C:\\Users\\KB\\Documents\\GitHub\\Clones\\SheIsDesign\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\KB\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\KB\\Documents\\GitHub\\Clones\\SheIsDesign\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\KB\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -54,7 +54,7 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[10.0.6, )"
+              "version": "[10.0.8, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
