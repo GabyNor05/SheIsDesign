@@ -1,304 +1,372 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  Trophy,
+  Medal,
+  Star,
+  TrendUp,
+  Users,
+  Lightning,
+  Crown,
+} from "@phosphor-icons/react";
+import { fetchLeaderboard } from "../../services/leaderboardService";
+import "./LeaderboardPage.css";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CONSTANTS
-// ─────────────────────────────────────────────────────────────────────────────
-
-const APP_NAME_WHITE = "Shels";
-const APP_NAME_PINK  = "Design";
-
-const HEADLINE_LINE1  = "Something";
-const HEADLINE_LINE2  = "Beautiful";
-const HEADLINE_ACCENT = "Is Coming.";
-
-const SUBTITLE = "ShelsDesign is a platform built to celebrate, challenge, and elevate female students in design. We're putting the finishing touches on something special.";
-
-const LAUNCH_DATE = new Date("2025-10-01T00:00:00");
-
-const STATS = [
-  { value: "1,200+", label: "Designers waiting" },
-  { value: "48",     label: "Events planned" },
-  { value: "320+",   label: "Mentors joining" },
+// ─── Dummy data (used if API fails) ───────────────────────────────────────────
+const DUMMY = [
+  { rank: 1,  fullname: "Priya Shankar",    event: "UX Redesign Sprint",            category: "UX / Product Design",  university: "UCT",       points: 980 },
+  { rank: 2,  fullname: "Maya Osei",        event: "Brand Identity Challenge 2026",  category: "Brand Identity",        university: "Wits",      points: 945 },
+  { rank: 3,  fullname: "Fatima Al-Hassan", event: "Typography & Layout Sprint",     category: "Editorial Design",      university: "CPUT",      points: 912 },
+  { rank: 4,  fullname: "Zoe Müller",       event: "Packaging Design Brief",         category: "Print & Packaging",     university: "Stellenbosch", points: 874 },
+  { rank: 5,  fullname: "Amara Diallo",     event: "Motion & Animation Challenge",   category: "Motion Design",         university: "DUT",       points: 860 },
+  { rank: 6,  fullname: "Laila Nkosi",      event: "Poster Design Open",             category: "Graphic Design",        university: "UJ",        points: 843, isCurrentUser: true },
+  { rank: 7,  fullname: "Nina Ferreira",    event: "Social Media Kit Open",          category: "Brand / Marketing",     university: "UKZN",      points: 821 },
+  { rank: 8,  fullname: "Chidi Eze",        event: "App Icon Design Challenge",      category: "UI Design",             university: "UPR",       points: 798 },
+  { rank: 9,  fullname: "Sasha Kim",        event: "Typography & Layout Sprint",     category: "Graphic Design",        university: "Rhodes",    points: 774 },
+  { rank: 10, fullname: "Ines Rodrigues",   event: "Brand Identity Challenge 2026",  category: "Brand Identity",        university: "Unisa",     points: 751 },
+  { rank: 11, fullname: "Aisha Mensah",     event: "UX Redesign Sprint",             category: "UX / Product Design",   university: "UCT",       points: 728 },
+  { rank: 12, fullname: "Yuki Tanaka",      event: "Motion & Animation Challenge",   category: "Motion Design",         university: "TUT",       points: 705 },
+  { rank: 13, fullname: "Sofia Papadaki",   event: "Poster Design Open",             category: "Graphic Design",        university: "NWU",       points: 689 },
+  { rank: 14, fullname: "Camille Dubois",   event: "Packaging Design Brief",         category: "Print & Packaging",     university: "UFS",       points: 667 },
+  { rank: 15, fullname: "Rania Khalil",     event: "App Icon Design Challenge",      category: "UI Design",             university: "Wits",      points: 644 },
 ];
 
-const NOTIFY_PLACEHOLDER = "Enter your email address";
-const NOTIFY_CTA         = "Notify Me";
-const NOTIFY_SUCCESS     = "You're on the list! We'll be in touch.";
-
-const NAV_LINKS = ["Events", "Gallery", "Leaderboard", "Donate", "Volunteer"];
-
-const SOCIAL_LINKS = [
-  { label: "Instagram", href: "#" },
-  { label: "Behance",   href: "#" },
-  { label: "LinkedIn",  href: "#" },
-];
-
-// ─────────────────────────────────────────────────────────────────────────────
-// COUNTDOWN HOOK
-// ─────────────────────────────────────────────────────────────────────────────
-
-function useCountdown(target) {
-  const calc = () => {
-    const diff = target - Date.now();
-    if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    return {
-      days:    Math.floor(diff / 86400000),
-      hours:   Math.floor((diff % 86400000) / 3600000),
-      minutes: Math.floor((diff % 3600000)  / 60000),
-      seconds: Math.floor((diff % 60000)    / 1000),
-    };
-  };
-  const [time, setTime] = useState(calc);
-  useEffect(() => {
-    const id = setInterval(() => setTime(calc()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return time;
+// ─── Avatar initials ──────────────────────────────────────────────────────────
+function initials(name) {
+  return name
+    .split(" ")
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ANIMATED BACKGROUND BLOBS
-// ─────────────────────────────────────────────────────────────────────────────
-
-function BackgroundBlobs() {
-  return (
-    <div aria-hidden="true" style={{ position: "fixed", inset: 0, zIndex: 0, overflow: "hidden", pointerEvents: "none" }}>
-      {/* Large magenta blob top-left */}
-      <div style={{
-        position: "absolute", top: "-180px", left: "-120px",
-        width: 600, height: 600, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(255,45,120,0.28) 0%, transparent 70%)",
-        animation: "blobPulse 8s ease-in-out infinite",
-      }} />
-      {/* Smaller blob bottom-right */}
-      <div style={{
-        position: "absolute", bottom: "-100px", right: "-80px",
-        width: 480, height: 480, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(255,45,120,0.18) 0%, transparent 70%)",
-        animation: "blobPulse 10s ease-in-out infinite reverse",
-      }} />
-      {/* Midpoint faint blob */}
-      <div style={{
-        position: "absolute", top: "40%", left: "50%",
-        width: 300, height: 300, borderRadius: "50%", transform: "translate(-50%,-50%)",
-        background: "radial-gradient(circle, rgba(155,10,60,0.12) 0%, transparent 70%)",
-        animation: "blobPulse 12s ease-in-out infinite",
-      }} />
-      <style>{`
-        @keyframes blobPulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.12); }
-        }
-      `}</style>
-    </div>
-  );
+// Deterministic hue from name so every person gets a consistent colour
+function avatarHue(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return Math.abs(hash) % 360;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// COUNTDOWN UNIT
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Podium (top 3) ───────────────────────────────────────────────────────────
+function PodiumCard({ entry, position }) {
+  // position: "left" (rank 2) | "center" (rank 1) | "right" (rank 3)
+  const isCenter = position === "center";
+  const hue = avatarHue(entry.fullname);
 
-function CountUnit({ value, label }) {
-  const display = String(value).padStart(2, "0");
+  const rankIcon =
+    entry.rank === 1 ? <Crown size={isCenter ? 22 : 18} weight="fill" color="#FFD700" /> :
+    entry.rank === 2 ? <Medal size={18} weight="fill" color="#C0C0C0" /> :
+                       <Trophy size={16} weight="fill" color="#CD7F32" />;
+
   return (
-    <div style={{ textAlign: "center", minWidth: 72 }}>
-      <div style={{
-        background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,45,120,0.25)",
-        borderRadius: 12, padding: "16px 20px", marginBottom: 8,
-        backdropFilter: "blur(8px)",
-      }}>
-        <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 38, color: "#FF2D78", lineHeight: 1, display: "block" }}>
-          {display}
-        </span>
+    <div className={`lb-podium-card lb-podium-card--${position}`}>
+      {isCenter && <div className="lb-podium-card__glow" />}
+
+      {/* Rank badge */}
+      <div className="lb-podium-card__rank-badge">
+        {rankIcon}
+        <span className="lb-podium-card__rank-num">{entry.rank}</span>
       </div>
-      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6B6B6B" }}>
-        {label}
-      </span>
-    </div>
-  );
-}
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EMAIL FORM
-// ─────────────────────────────────────────────────────────────────────────────
-
-function NotifyForm() {
-  const [email, setEmail]     = useState("");
-  const [done, setDone]       = useState(false);
-  const [focused, setFocused] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (email.includes("@")) setDone(true);
-  };
-
-  if (done) return (
-    <div style={{
-      display: "flex", alignItems: "center", gap: 10,
-      background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.3)",
-      borderRadius: 50, padding: "14px 24px",
-    }}>
-      <span style={{ fontSize: 16 }}>✅</span>
-      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: "#22C55E" }}>{NOTIFY_SUCCESS}</span>
-    </div>
-  );
-
-  return (
-    <form onSubmit={handleSubmit} style={{ display: "flex", gap: 0, maxWidth: 460, width: "100%" }}>
-      <input
-        type="email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        placeholder={NOTIFY_PLACEHOLDER}
-        aria-label="Email address for launch notification"
-        required
-        style={{
-          flex: 1, background: "rgba(255,255,255,0.07)",
-          border: `1px solid ${focused ? "#FF2D78" : "rgba(255,255,255,0.15)"}`,
-          borderRight: "none", borderRadius: "10px 0 0 10px",
-          padding: "14px 20px", color: "#F0F0F0",
-          fontFamily: "'DM Sans', sans-serif", fontSize: 14,
-          outline: "none", transition: "border-color 0.2s",
-        }}
-      />
-      <button
-        type="submit"
-        style={{
-          background: "#FF2D78", border: "none", borderRadius: "0 10px 10px 0",
-          padding: "14px 24px", color: "#fff", cursor: "pointer",
-          fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 14,
-          letterSpacing: "0.04em", whiteSpace: "nowrap", transition: "opacity 0.2s",
-        }}
-        onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
-        onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+      {/* Avatar */}
+      <div
+        className="lb-podium-card__avatar"
+        style={{ background: `linear-gradient(135deg, hsl(${hue},55%,28%), hsl(${hue},65%,18%))`, borderColor: `hsl(${hue},50%,38%)` }}
       >
-        {NOTIFY_CTA}
-      </button>
-    </form>
+        <span className="lb-podium-card__initials">{initials(entry.fullname)}</span>
+      </div>
+
+      {/* Name + meta */}
+      <div className="lb-podium-card__info">
+        <span className="lb-podium-card__name">{entry.fullname}</span>
+        <span className="lb-podium-card__category">{entry.category}</span>
+        {entry.university && (
+          <span className="lb-podium-card__university">{entry.university}</span>
+        )}
+      </div>
+
+      {/* Points */}
+      <div className="lb-podium-card__points-wrap">
+        <span className="lb-podium-card__points">{entry.points.toLocaleString()}</span>
+        <span className="lb-podium-card__pts-label">pts</span>
+      </div>
+
+      {/* Podium base bar */}
+      <div className={`lb-podium-card__base lb-podium-card__base--${position}`}>
+        <span className="lb-podium-card__base-rank">{entry.rank}</span>
+      </div>
+    </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MAIN PAGE
-// ─────────────────────────────────────────────────────────────────────────────
-
-export default function ComingSoon() {
-  const countdown = useCountdown(LAUNCH_DATE);
+// ─── Table row ─────────────────────────────────────────────────────────────────
+function TableRow({ entry, index, isCurrentUser }) {
+  const hue = avatarHue(entry.fullname);
 
   return (
-    <>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+    <div
+      className={`lb-row ${isCurrentUser ? "lb-row--you" : ""}`}
+      style={{ animationDelay: `${index * 40}ms` }}
+    >
+      <div className="lb-row__rank">
+        <span className="lb-row__rank-num">{entry.rank}</span>
+      </div>
 
-      <div style={{ minHeight: "100vh", background: "#0D0D0D", color: "#F0F0F0", position: "relative", overflow: "hidden" }}>
-        <BackgroundBlobs />
+      <div className="lb-row__student">
+        <div
+          className="lb-row__avatar"
+          style={{ background: `linear-gradient(135deg, hsl(${hue},55%,28%), hsl(${hue},65%,18%))`, borderColor: `hsl(${hue},45%,35%)` }}
+        >
+          <span>{initials(entry.fullname)}</span>
+        </div>
+        <div className="lb-row__student-info">
+          <span className="lb-row__name">
+            {entry.fullname}
+            {isCurrentUser && <span className="lb-row__you-badge">You</span>}
+          </span>
+          {entry.university && (
+            <span className="lb-row__university">{entry.university}</span>
+          )}
+        </div>
+      </div>
 
+      <div className="lb-row__event">
+        <span>{entry.event}</span>
+        <span className="lb-row__category">{entry.category}</span>
+      </div>
 
-        {/* ── HERO ── */}
-        <main style={{
-          position: "relative", zIndex: 10,
-          display: "flex", flexDirection: "column", alignItems: "center",
-          textAlign: "center", padding: "80px 32px 60px",
-          maxWidth: 820, margin: "0 auto",
-        }}>
-          {/* Badge */}
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            background: "rgba(255,45,120,0.12)", border: "1px solid rgba(255,45,120,0.3)",
-            borderRadius: 50, padding: "7px 18px", marginBottom: 36,
-          }}>
-            <span style={{
-              width: 7, height: 7, borderRadius: "50%", background: "#FF2D78",
-              display: "inline-block", animation: "ping 1.5s ease-in-out infinite",
-            }} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, letterSpacing: "0.15em", textTransform: "uppercase", color: "#FF2D78", fontWeight: 600 }}>
-              A Community For Designers
+      <div className="lb-row__points">
+        <span className="lb-row__points-val">{entry.points.toLocaleString()}</span>
+        <span className="lb-row__pts">pts</span>
+      </div>
+    </div>
+  );
+}
+
+// ─── Skeleton ──────────────────────────────────────────────────────────────────
+function SkeletonRow() {
+  return (
+    <div className="lb-row lb-skeleton">
+      <div className="lb-sk lb-sk--rank" />
+      <div className="lb-sk lb-sk--avatar" />
+      <div className="lb-sk lb-sk--name" />
+      <div className="lb-sk lb-sk--event" />
+      <div className="lb-sk lb-sk--pts" />
+    </div>
+  );
+}
+
+// ─── How it works cards ────────────────────────────────────────────────────────
+const HOW_ITEMS = [
+  { icon: <Lightning size={18} weight="fill" />, step: "01", title: "Enter an event", body: "Every event you join earns base participation points — just showing up counts." },
+  { icon: <Star size={18} weight="fill" />,      step: "02", title: "Compete & place", body: "Strong submissions and community recognition earn bonus points. Top 3 placements carry serious weight." },
+  { icon: <TrendUp size={18} weight="fill" />,   step: "03", title: "Stay consistent", body: "Points compound across the full season. Regular participation beats single-event spikes." },
+  { icon: <Users size={18} weight="fill" />,     step: "04", title: "Gain visibility", body: "Top-ranked students get featured to industry sponsors and unlock mentorship access curated by SheisDesign." },
+];
+
+// ─── Main page ─────────────────────────────────────────────────────────────────
+export default function LeaderboardPage() {
+  const [entries, setEntries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [usingDummy, setUsingDummy] = useState(false);
+
+  useEffect(() => {
+    fetchLeaderboard()
+      .then((data) => {
+        if (data && data.length > 0) {
+          setEntries(data);
+        } else {
+          setEntries(DUMMY);
+          setUsingDummy(true);
+        }
+      })
+      .catch(() => {
+        setEntries(DUMMY);
+        setUsingDummy(true);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const top3 = entries.slice(0, 3);
+  const rest = entries.slice(3);
+  // Podium order: 2nd left, 1st centre, 3rd right
+  const podiumOrder = top3.length === 3
+    ? [{ entry: top3[1], pos: "left" }, { entry: top3[0], pos: "center" }, { entry: top3[2], pos: "right" }]
+    : top3.map((e, i) => ({ entry: e, pos: i === 0 ? "center" : i === 1 ? "left" : "right" }));
+
+  return (
+    <div className="lb-page">
+      {/* Ambient glows */}
+      <div className="lb-glow lb-glow--top-left" />
+      <div className="lb-glow lb-glow--mid-right" />
+
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      <header className="lb-header">
+        <div className="lb-header__bg-gradient" />
+        <div className="lb-header__orb" />
+        <div className="lb-header__orb2" />
+        <div className="lb-header__inner">
+          <div className="lb-header__body">
+            {/* Left */}
+            <div className="lb-header__left">
+              <div className="lb-header__pill">
+                <Trophy size={11} weight="fill" color="#FE4081" />
+                <span>Season 2026</span>
+              </div>
+              <h1 className="lb-header__title">
+                Leaderboard
+              </h1>
+              <p className="lb-header__sub">
+                See who's rising to the top. Points update after every event — compete, place, and get noticed by industry.
+              </p>
+            </div>
+
+            {/* Right — stats */}
+            <div className="lb-header__stats">
+              {[
+                { value: usingDummy || loading ? "1,200+" : `${entries.length}`, label: "Participants" },
+                { value: "48",           label: "Events hosted" },
+                { value: "Season 2026",  label: "Current season" },
+              ].map((s) => (
+                <div key={s.label} className="lb-stat">
+                  <span className="lb-stat__value">{s.value}</span>
+                  <span className="lb-stat__label">{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      {/* ── Podium ─────────────────────────────────────────────────────────── */}
+      <section className="lb-podium-section">
+        <div className="lb-podium-section__inner">
+          <div className="lb-section-label">
+            <Crown size={13} weight="fill" color="#FE4081" />
+            <span>Top performers</span>
+          </div>
+
+          {loading ? (
+            <div className="lb-podium-skeleton">
+              {[0, 1, 2].map((i) => <div key={i} className="lb-podium-sk" />)}
+            </div>
+          ) : (
+            <div className="lb-podium">
+              {podiumOrder.map(({ entry, pos }) => (
+                <PodiumCard key={entry.rank} entry={entry} position={pos} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── Full table ─────────────────────────────────────────────────────── */}
+      <section className="lb-table-section">
+        <div className="lb-table-section__inner">
+          <div className="lb-table-header">
+            <div className="lb-section-label">
+              <Star size={13} weight="fill" color="#FE4081" />
+              <span>Full rankings</span>
+            </div>
+            <span className="lb-table-count">
+              Showing {loading ? "—" : entries.length} participants
             </span>
           </div>
 
-          {/* Headline */}
-          <h1 style={{
-            fontFamily: "Syne, sans-serif", fontWeight: 800,
-            fontSize: "clamp(52px, 9vw, 88px)", lineHeight: 0.95,
-            margin: "0 0 28px", letterSpacing: "-0.03em",
-          }}>
-            <span style={{ display: "block", color: "#F0F0F0" }}>{HEADLINE_LINE1}</span>
-            <span style={{ display: "block", color: "#F0F0F0" }}>{HEADLINE_LINE2}</span>
-            <span style={{ display: "block", color: "#FF2D78" }}>{HEADLINE_ACCENT}</span>
-          </h1>
-
-          {/* Subtitle */}
-          <p style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 300,
-            fontSize: 17, lineHeight: 1.7, color: "#A0A0A0",
-            maxWidth: 580, margin: "0 0 52px",
-          }}>
-            {SUBTITLE}
-          </p>
-
-          {/* Countdown */}
-          <div style={{ display: "flex", gap: 16, alignItems: "center", marginBottom: 52, flexWrap: "wrap", justifyContent: "center" }} aria-label="Countdown to launch">
-            <CountUnit value={countdown.days}    label="Days" />
-            <span style={{ color: "#FF2D78", fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 28, marginBottom: 24 }}>:</span>
-            <CountUnit value={countdown.hours}   label="Hours" />
-            <span style={{ color: "#FF2D78", fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 28, marginBottom: 24 }}>:</span>
-            <CountUnit value={countdown.minutes} label="Minutes" />
-            <span style={{ color: "#FF2D78", fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 28, marginBottom: 24 }}>:</span>
-            <CountUnit value={countdown.seconds} label="Seconds" />
+          {/* Column headers */}
+          <div className="lb-table-cols">
+            <span>Rank</span>
+            <span>Student</span>
+            <span>Event / Discipline</span>
+            <span>Points</span>
           </div>
 
-          {/* Email form */}
-          <NotifyForm />
+          {/* Top 3 condensed in table */}
+          {!loading && top3.map((entry, i) => (
+            <TableRow
+              key={entry.rank}
+              entry={entry}
+              index={i}
+              isCurrentUser={!!entry.isCurrentUser}
+            />
+          ))}
 
           {/* Divider */}
-          <div style={{ width: "100%", maxWidth: 480, height: 1, background: "rgba(255,255,255,0.08)", margin: "52px 0" }} />
+          {!loading && <div className="lb-table-divider" />}
 
-          {/* Stats */}
-          <div style={{ display: "flex", gap: 48, justifyContent: "center", flexWrap: "wrap" }}>
-            {STATS.map(s => (
-              <div key={s.label} style={{ textAlign: "center" }}>
-                <div style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 30, color: "#FF2D78", marginBottom: 4 }}>{s.value}</div>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, color: "#6B6B6B", letterSpacing: "0.04em" }}>{s.label}</div>
+          {/* Rows 4+ */}
+          {loading
+            ? Array.from({ length: 8 }).map((_, i) => <SkeletonRow key={i} />)
+            : rest.map((entry, i) => (
+                <TableRow
+                  key={entry.rank}
+                  entry={entry}
+                  index={i + 3}
+                  isCurrentUser={!!entry.isCurrentUser}
+                />
+              ))
+          }
+        </div>
+      </section>
+
+      {/* ── How it works ───────────────────────────────────────────────────── */}
+      <section className="lb-how-section">
+        <div className="lb-how-section__inner">
+          <div className="lb-how-header">
+            <div className="lb-section-label">
+              <TrendUp size={13} weight="fill" color="#FE4081" />
+              <span>Scoring system</span>
+            </div>
+            <h2 className="lb-how-title">
+              How rankings <span className="lb-how-title--accent">work</span>
+            </h2>
+            <p className="lb-how-sub">
+              Points are awarded for event participation and competition performance. The top-ranked students gain visibility with industry sponsors.
+            </p>
+          </div>
+
+          <div className="lb-how-grid">
+            {HOW_ITEMS.map((item) => (
+              <div key={item.step} className="lb-how-card">
+                <div className="lb-how-card__top">
+                  <div className="lb-how-card__icon">{item.icon}</div>
+                  <span className="lb-how-card__step">{item.step}</span>
+                </div>
+                <span className="lb-how-card__title">{item.title}</span>
+                <p className="lb-how-card__body">{item.body}</p>
               </div>
             ))}
           </div>
-        </main>
 
-        {/* ── FOOTER ── */}
-        <footer style={{
-          position: "relative", zIndex: 10,
-          borderTop: "1px solid rgba(255,255,255,0.06)",
-          padding: "24px 48px",
-          display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12,
-        }}>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, color: "#4A4A4A" }}>
-            © 2025 ShelsDesign. All rights reserved.
-          </span>
-          <div style={{ display: "flex", gap: 24 }}>
-            {SOCIAL_LINKS.map(s => (
-              <a key={s.label} href={s.href} style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, color: "#4A4A4A",
-                textDecoration: "none", transition: "color 0.15s",
-              }}
-              onMouseEnter={e => e.target.style.color = "#FF2D78"}
-              onMouseLeave={e => e.target.style.color = "#4A4A4A"}
-              >
-                {s.label}
-              </a>
+          {/* Points table */}
+          <div className="lb-pts-table">
+            <div className="lb-pts-table__head">
+              {["Action", "Base Points", "Bonus Points"].map((col) => (
+                <span key={col}>{col}</span>
+              ))}
+            </div>
+            {[
+              { action: "Event Participation",  base: "+50 pts",  bonus: "—" },
+              { action: "Submission Accepted",   base: "+100 pts", bonus: "—" },
+              { action: "Community Pick Award",  base: "+100 pts", bonus: "+75 pts" },
+              { action: "Top Entry Award",       base: "+100 pts", bonus: "+150 pts" },
+              { action: "1st Place Finish",      base: "+100 pts", bonus: "+300 pts" },
+              { action: "2nd Place Finish",      base: "+100 pts", bonus: "+200 pts" },
+              { action: "3rd Place Finish",      base: "+100 pts", bonus: "+100 pts" },
+            ].map((row, i, arr) => (
+              <div key={row.action} className={`lb-pts-row ${i === arr.length - 1 ? "lb-pts-row--last" : ""}`}>
+                <span className="lb-pts-row__action">{row.action}</span>
+                <span className="lb-pts-row__base">{row.base}</span>
+                <span className={`lb-pts-row__bonus ${row.bonus === "—" ? "lb-pts-row__bonus--none" : ""}`}>
+                  {row.bonus}
+                </span>
+              </div>
             ))}
           </div>
-        </footer>
-
-        <style>{`
-          @keyframes ping {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.3); }
-          }
-          input::placeholder { color: #4A4A4A; }
-          * { box-sizing: border-box; }
-        `}</style>
-      </div>
-    </>
+        </div>
+      </section>
+    </div>
   );
 }

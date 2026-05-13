@@ -3,6 +3,9 @@
     background: #0D0608;
     font-family: 'Poppins', sans-serif;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+    box-sizing: border-box;
+    /* add this */
 }
 
 .events-grid__inner {
@@ -45,7 +48,7 @@
 
 .events-grid__cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
 }
 

@@ -1,9 +1,3 @@
-/* ══════════════════════════════════════════════════════════════
-   Navbar.css
-   Default: transparent so it bleeds into any page background
-   .navbar--solid: used on non-auth pages or on scroll
-   ══════════════════════════════════════════════════════════════ */
-
 .navbar-custom {
     position: sticky;
     top: 0;
@@ -14,7 +8,7 @@
     padding: 0 32px;
     height: 64px;
 
-    /* Dark base — always visible, always on-brand */
+    /* Dark background */
     background: rgba(6, 2, 4, 0.96);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -40,13 +34,13 @@
         inset 0 -1px 0 rgba(196, 18, 98, 0.1);
 }
 
-/* Solid variant — same dark but fully opaque for non-auth pages */
+/* Solid variant */
 .navbar-custom.navbar-custom--solid {
     background: #0D0608;
     border-bottom: 1px solid rgba(196, 18, 98, 0.2);
 }
 
-/* ── Logo ── */
+/*  Logo  */
 .navbar-custom__logo {
     flex: 1;
     font-family: 'Poppins', sans-serif;
@@ -71,7 +65,7 @@
     color: rgba(255, 255, 255, 0.75);
 }
 
-/* ── Nav links ── */
+/*  Nav links  */
 .navbar-custom__links {
     display: flex;
     align-items: center;
@@ -119,7 +113,7 @@
     background: #FE7FAB;
 }
 
-/* ── Join button ── */
+/*  Join button  */
 .navbar-custom__cta {
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
@@ -148,7 +142,7 @@
     transform: translateY(0);
 }
 
-/* ── Mobile hide ── */
+/*  Mobile hide  */
 @media (max-width: 768px) {
     .navbar-custom__links {
         display: none;
@@ -159,9 +153,7 @@
     }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   USER AVATAR + DROPDOWN
-   ══════════════════════════════════════════════════════════════ */
+/* User Avatar and dropdown */
 .nav-avatar {
     position: relative;
 }
@@ -225,7 +217,7 @@
     border: 2px solid rgba(6, 2, 4, 0.96);
 }
 
-/* ── Dropdown ── */
+/*  Dropdown  */
 .nav-avatar__dropdown {
     position: absolute;
     top: calc(100% + 12px);

@@ -1,4 +1,4 @@
-import HeroSection from "../../components/home/HeroSection/HeroSection";
+import HeroSection from "../../components/home/HomeHeroNew/HomeHero";
 import WhatWeDoSection from "../../components/home/WhatWeDoSection/WhatWeDoSection";
 import EventsSection from "../../components/home/EventsSection/EventsSection";
 import LeaderboardSection from "../../components/home/LeaderboardSection/LeaderboardSection";
