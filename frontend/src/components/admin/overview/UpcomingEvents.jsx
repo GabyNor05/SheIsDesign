@@ -1,84 +1,16 @@
-import { CalendarDots, CalendarBlank, Plus, Pencil, Trash} from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
+import {
+  CalendarDots,
+  CalendarBlank,
+  Plus,
+  Pencil,
+  Trash,
+} from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
 import Card from "./Card";
+import { getUpcomingEvents } from "../../../services/eventService";
 
 import { T } from "../theme";
-
-const UPCOMING_EVENTS = [
-  {
-    id: "evt-001",
-    title: "Brand Identity Challenge",
-    category: "BRAND IDENTITY",
-    status: "OPEN",
-    dateRange: "1–12 Mar 2026",
-    entries: 84,
-    maxEntries: 100,
-  },
-  {
-    id: "evt-002",
-    title: "Motion Design Bootcamp",
-    category: "MOTION DESIGN",
-    status: "OPEN",
-    dateRange: "10–20 Mar 2026",
-    entries: 41,
-    maxEntries: 60,
-  },
-  {
-    id: "evt-003",
-    title: "UI/UX Hackathon 2026",
-    category: "UX DESIGN",
-    status: "OPEN",
-    dateRange: "1–5 Apr 2026",
-    entries: 112,
-    maxEntries: 150,
-  },
-  {
-    id: "evt-004",
-    title: "Typography Sprint",
-    category: "GRAPHIC DESIGN",
-    status: "UPCOMING",
-    dateRange: "12–18 Apr 2026",
-    entries: 29,
-    maxEntries: 60,
-  },
-  {
-    id: "evt-005",
-    title: "Typography Sprint",
-    category: "GRAPHIC DESIGN",
-    status: "UPCOMING",
-    dateRange: "12–18 Apr 2026",
-    entries: 29,
-    maxEntries: 60,
-  },
-  {
-    id: "evt-006",
-    title: "Motion Design Bootcamp",
-    category: "MOTION DESIGN",
-    status: "OPEN",
-    dateRange: "10–20 Mar 2026",
-    entries: 41,
-    maxEntries: 60,
-  },
-   {
-    id: "evt-004",
-    title: "Typography Sprint",
-    category: "GRAPHIC DESIGN",
-    status: "UPCOMING",
-    dateRange: "12–18 Apr 2026",
-    entries: 29,
-    maxEntries: 60,
-  },
-  {
-    id: "evt-005",
-    title: "Typography Sprint",
-    category: "GRAPHIC DESIGN",
-    status: "UPCOMING",
-    dateRange: "12–18 Apr 2026",
-    entries: 29,
-    maxEntries: 60,
-  },
-  
-];
 
 const STATUS_MAP = {
   OPEN: { bg: "#10e26633", color: T.activeGreen, dot: T.activeGreen },
@@ -272,9 +204,64 @@ function EventCard({ event }) {
 }
 
 function UpcomingEvents() {
-  const openCount = UPCOMING_EVENTS.filter((e) => e.status === "OPEN").length;
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const loadEvents = async () => {
+    try {
+      setLoading(true);
+      const upcoming = await getUpcomingEvents();
+      console.log("Next events:", upcoming);
+      setEvents(upcoming);
+      setError(null);
+    } catch (err) {
+      console.error("Failed to load events", err);
+      setError(err.message);
+      setEvents([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
+  if (loading) {
+    return (
+      <div>
+        <SectionHeader
+          icon={<CalendarDots />}
+          title="Upcoming Events"
+          badge="Loading..."
+        />
+        <div style={{ padding: "20px", textAlign: "center", color: T.textMuted }}>
+          Loading events...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <SectionHeader
+          icon={<CalendarDots />}
+          title="Upcoming Events"
+          badge="Error"
+        />
+        <div style={{ padding: "20px", textAlign: "center", color: T.closedRed }}>
+          Failed to load events: {error}
+        </div>
+      </div>
+    );
+  }
+
+  const openCount = events.filter((e) => e.status === "OPEN").length;
+
   return (
-    <div >
+    <div>
       <SectionHeader
         icon={<CalendarDots />}
         title="Upcoming Events"
