@@ -10,8 +10,8 @@ import Modal from "./Modal";
 import EventForm from "./EventForm";
 import EventDetail from "./EventDetail";
 import ConfirmDelete from "./ConfirmDelete";
-import { getUpcomingEvents } from "../../../services/eventService";
 import { loadEvents, saveEvents, genId, fmtDate } from "./utils";
+import { getUpcomingEvents } from "../../../services/eventService";
 
 const SEED_EVENTS = [
   {
@@ -74,12 +74,39 @@ const SEED_EVENTS = [
 ];
 
 export default function LiveEvents() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(() => loadEvents(SEED_EVENTS));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [modal, setModal] = useState(null);
   const [active, setActive] = useState(null);
   const [detailId, setDetail] = useState(null);
+
+  // Load events from API on component mount
+  useEffect(() => {
+    const loadUpcomingEvents = async () => {
+      try {
+        setLoading(true);
+        const upcomingEvents = await getUpcomingEvents();
+        console.log("Upcoming events loaded:", upcomingEvents);
+        if (upcomingEvents && upcomingEvents.length > 0) {
+          setEvents(upcomingEvents);
+          saveEvents(upcomingEvents);
+        } else {
+          setEvents(SEED_EVENTS);
+        }
+        setError(null);
+      } catch (err) {
+        console.error("Failed to load upcoming events:", err);
+        setError(err.message);
+        // Fallback to seed events or cached events
+        setEvents(loadEvents(SEED_EVENTS));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUpcomingEvents();
+  }, []);
 
   useEffect(() => {
     saveEvents(events);
@@ -88,6 +115,11 @@ export default function LiveEvents() {
   const persist = (next) => {
     setEvents(next);
     saveEvents(next);
+  };
+
+  const handleCreate = (data) => {
+    persist([{ ...data, EventID: genId() }, ...events]);
+    setModal(null);
   };
 
   const handleEdit = (data) => {
@@ -109,6 +141,13 @@ export default function LiveEvents() {
     setActive(null);
   };
 
+  const handleClose = (ev) => {
+    persist(
+      events.map((e) =>
+        e.EventID === ev.EventID ? { ...e, status: "CLOSED" } : e
+      )
+    );
+  };
 
   const liveOpen = events.filter((e) => e.status === "OPEN").slice(0, 3);
   const detailEv = detailId ? events.find((e) => e.EventID === detailId) : null;
@@ -137,57 +176,43 @@ export default function LiveEvents() {
       </div>
     );
   }
-  const loadEvents = async () => {
-    try {
-      setLoading(true);
-      const upcoming = await getUpcomingEvents();
-      console.log("Next events:", upcoming);
-      setEvents(upcoming);
-      setError(null);
-    } catch (err) {
-      console.error("Failed to load events", err);
-      setError(err.message);
-      setEvents([]);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    loadEvents();
-  }, []);
-
+  // Loading state
   if (loading) {
     return (
-      <div>
-        <SectionHeader
-          icon={<CalendarDots />}
-          title="Upcoming Events"
-          badge="Loading..."
-        />
-        <div style={{ padding: "20px", textAlign: "center", color: T.textMuted }}>
+      <section aria-label="Live and open events" style={{ marginBottom: 36 }}>
+        <div style={{ textAlign: "center", padding: "40px", color: T.textMuted }}>
           Loading events...
         </div>
-      </div>
+      </section>
     );
   }
 
+  // Error state
   if (error) {
     return (
-      <div>
-        <SectionHeader
-          icon={<CalendarDots />}
-          title="Upcoming Events"
-          badge="Error"
-        />
-        <div style={{ padding: "20px", textAlign: "center", color: T.closedRed }}>
-          Failed to load events: {error}
+      <section aria-label="Live and open events" style={{ marginBottom: 36 }}>
+        <div style={{ textAlign: "center", padding: "40px", color: T.closedRed }}>
+          <p>Failed to load events: {error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              padding: "8px 16px",
+              background: T.pink,
+              border: "none",
+              borderRadius: 8,
+              color: "#fff",
+              cursor: "pointer",
+              fontWeight: 600,
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            Try Again
+          </button>
         </div>
-      </div>
+      </section>
     );
   }
-
-  const openCount = events.filter((e) => e.status === "OPEN").length;
 
   return (
     <section aria-label="Live and open events" style={{ marginBottom: 36 }}>
@@ -337,8 +362,11 @@ export default function LiveEvents() {
                     flex: 1,
                     padding: "12px",
                     background: "none",
-                    border: "none",
+                    border: `1px solid ${T.border}`,
+                    borderLeft: "none",
                     borderRight: `1px solid ${T.border}`,
+                    borderBottom: "none",
+                    borderRadius: "0",
                     cursor: "pointer",
                     color: T.textSecond,
                     fontSize: 12,
@@ -372,6 +400,7 @@ export default function LiveEvents() {
                     padding: "12px",
                     background: T.pink,
                     border: "none",
+                    borderRadius: "0",
                     cursor: "pointer",
                     color: "#fff",
                     fontSize: 12,
