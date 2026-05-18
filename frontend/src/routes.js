@@ -18,7 +18,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 
 //Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
-import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
+import JudgeEvents from "./pages/judge/JudgeEvents";
 
 const router = createBrowserRouter([
   {
@@ -45,21 +45,8 @@ const router = createBrowserRouter([
       { path: "signup/details", element: <SignupDetailsPage /> },
       { path: "signup/success", element: <SignupSuccessPage /> },
       { path: "application-status", element: <ApplicationStatusPage /> },
-    ],
-  },
-  {
-    path: "/admin",
-    element: <RootLayout />,
-    children: [
-      { path: "dashboard", element: <AdminDashboard /> },
-    ],
-  },
-  {
-    path: "/judge",
-    element: <RootLayout />,
-    children: [
-      { path: "dashboard", element: <JudgeDashboard /> },
-      { path: "events", element: <JudgeEventsPage /> },
+      { path: "admin", element: <AdminDashboard /> },
+      { path: "judge", element: <JudgeDashboard /> },
     ],
   },
 ]);

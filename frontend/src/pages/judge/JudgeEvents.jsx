@@ -4,14 +4,14 @@ import { T } from "../../components/admin/theme";
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
-const PAGE_LABEL    = "Manage Gallery · Coming Soon";
+const PAGE_LABEL    = "Events · Coming Soon";
 const HEADLINE_1    = "Under";
 const HEADLINE_2    = "Construction";
-const SUBTEXT       = "We're building something beautiful. This section of the admin panel is being crafted with care and will be ready soon.";
-const PROGRESS_PCT  = 25;
+const SUBTEXT       = "We're building something beautiful. This section of the judge panel is being crafted with care and will be ready soon.";
+const PROGRESS_PCT  = 67;
 const PROGRESS_LABEL = "Build progress";
 const ETA_LABEL     = "Estimated completion";
-const ETA_DATE      = "July 2026";
+const ETA_DATE      = "June 2026";
 
 const TASKS = [
   { label: "UI Design",          done: true  },
