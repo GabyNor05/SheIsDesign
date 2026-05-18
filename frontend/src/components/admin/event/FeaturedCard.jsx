@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { T } from "../theme";
 import Badge from "./Badge";
 import EventImage from "./EventImage";
@@ -5,8 +6,19 @@ import MetaRow from "./MetaRow";
 import JudgeAvatars from "./JudgeAvatars";
 import ProgressBar from "./ProgressBar";
 import Icon from "./Icon";
+import EventForm from "../event/EventForm";
+import Modal from "../Modal"
+import EventDetail from "./EventDetail";
 
-export default function FeaturedCard({ event, onManage, onView }) {
+
+
+ function FeaturedCard({ event, onManage, onView }) {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [modal, setModal] = useState(null);
+  const [active, setActive] = useState(null);
+  
   return (
     <div
       style={{
@@ -14,8 +26,8 @@ export default function FeaturedCard({ event, onManage, onView }) {
         border: `1px solid ${T.border}`,
         borderRadius: 14,
         padding: 20,
-        display: "grid",
-        gridTemplateColumns: "240px 1fr",
+        display: "flex",
+        flexDirection: "column",
         gap: 20,
         alignItems: "start",
       }}
@@ -113,3 +125,5 @@ export default function FeaturedCard({ event, onManage, onView }) {
     </div>
   );
 }
+
+export default FeaturedCard

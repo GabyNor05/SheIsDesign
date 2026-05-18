@@ -1,150 +1,371 @@
-import { T } from "../theme";
-import Badge from "./Badge";
-import MetaRow from "./MetaRow";
-import Icon from "./Icon";
+import { useState } from "react";
+import { T, STATUS_STYLES } from "../theme";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Gear,
+  Users,
+  Trash,
+  CalendarX,
+  Image,
+} from "@phosphor-icons/react";
+import EventImage from "./EventImage";
 
-export default function CompactCard({ event, onEdit, onDelete, onView, onCloseEvent }) {
+const JudgeCount = 0;
+
+function Badge({ status }) {
+  const s = STATUS_STYLES[status] || STATUS_STYLES.DRAFT;
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        background: s.bg,
+        color: s.color,
+        border: `1px solid ${s.color}40`,
+        borderRadius: 4,
+        padding: "3px 8px",
+        fontSize: 10,
+        fontWeight: 800,
+        fontFamily: "'DM Sans', sans-serif",
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+      }}
+    >
+      {status}
+    </span>
+  );
+}
+
+function ProgressBar({ count, max }) {
+  const p = max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0;
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div
+        style={{
+          height: 4,
+          background: T.surfaceHi,
+          borderRadius: 3,
+          overflow: "hidden",
+          flex: 1,
+        }}
+      >
+        <div
+          style={{
+            width: `${p}%`,
+            height: "100%",
+            background: `linear-gradient(90deg, ${T.pink}88, ${T.pink})`,
+            borderRadius: 3,
+            transition: "width .5s",
+          }}
+        />
+      </div>
+      <span
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 11,
+          color: T.textMuted,
+          minWidth: 45,
+        }}
+      >
+        {count} / {max}
+      </span>
+    </div>
+  );
+}
+
+const displayJudgeCount = (JudgeCount) => {
+  if (JudgeCount === 0){
+    return "";
+  } else if (JudgeCount === 1){
+    return JudgeCount + "Judge";
+  }else {
+    return JudgeCount + "Judges";
+  }
+}
+
+
+function CompactCard({ event, onView, onManage, onDelete, onClose }) {
+  const [hov, setHov] = useState(false);
+  const s = STATUS_STYLES[event.status] || STATUS_STYLES.DRAFT;
+
   return (
     <div
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
       style={{
         background: T.surface,
         border: `1px solid ${T.border}`,
         borderRadius: 10,
-        padding: 16,
-        display: "flex",
-        flexDirection: "column",
-        gap: 12,
-        transition: "border-color 0.2s",
+        overflow: "hidden",
+        transition: "all 0.2s",
+        boxShadow: hov ? `0 12px 32px rgba(0,0,0,0.1)` : "none",
       }}
-      onMouseEnter={e => { e.currentTarget.style.borderColor = T.pink + "44"; }}
-      onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; }}
     >
+      {/* Top Status Bar */}
       <div
         style={{
+          height: 4,
+          background: s.bg || T.pink,
+        }}
+      />
+
+      {/* Image Placeholder */}
+      <div
+        style={{
+          height: 140,
+          background: T.surfaceHi,
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "start",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <div>
-          <h4
+        {event.image_link === "" ? (
+          <img
+            src={event.image_link}
+            alt="Event"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        ) : (
+          <Image size={32} color={T.textMuted} />
+        )}
+      </div>
+
+      {/* Content Section */}
+      <div style={{ padding: 16 }}>
+        {/* Title & Category */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            marginBottom: 12,
+          }}
+        >
+          <h3
             style={{
-              fontSize: 13,
+              margin: 0,
+              fontFamily: "Syne, sans-serif",
+              fontSize: 16,
               fontWeight: 700,
               color: T.textPrimary,
-              margin: 0,
-              marginBottom: 4,
+              maxWidth: "70%",
             }}
           >
             {event.title}
-          </h4>
-          <div
+          </h3>
+          <span
             style={{
+              fontFamily: "'DM Sans', sans-serif",
               fontSize: 11,
               color: T.textMuted,
+              background: T.surfaceHi,
+              padding: "4px 8px",
+              borderRadius: 4,
             }}
           >
-            {event.categoryLabel || event.category}
+            {event.category}
+          </span>
+        </div>
+
+        {/* Meta Info Row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 12,
+            fontSize: 12,
+            color: T.textSecond,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Calendar size={14} color={T.textMuted} />
+            <span style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              {event.start_date || "TBD"}
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Clock size={14} color={T.textMuted} />
+            <span style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              {event.time || "00:00"}
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <MapPin size={14} color={T.textMuted} />
+            <span style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              {event.location || "123 Main Str"}
+            </span>
           </div>
         </div>
-        <Badge status={event.status} />
-      </div>
 
-      <MetaRow icon="cal" text={`${event.start_date} – ${event.end_date}`} />
-      <MetaRow icon="users" text={`${event.entry_count} / ${event.max_entries} entries`} />
+        {/* Progress Bar */}
+        <div style={{ marginBottom: 12 }}>
+          <ProgressBar count={event.entry_count} max={event.max_entries} />
+        </div>
 
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-        }}
-      >
-        <button
-          onClick={onEdit}
+            {/* Points & Judges */}
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <span className="w-fit py-1 px-3 rounded-full"
+                style={{
+                  background: T.textMuted ,
+                  fontFamily: "Syne, sans-serif",
+                  color: T.textPrimary,
+                  fontSize: 12,
+                }}
+              >
+                {event.points_reward} pts
+              </span>
+              <div className="text-xs  flex items-center gap-1"
+              style={{ display: "flex", alignItems: "center", gap: 6, color: T.textSecond}}>
+                <Users size={14}  />
+                {displayJudgeCount(JudgeCount)}
+              </div>
+            </div>
+        {/* Bottom Info & Actions */}
+        <div className="flex flex-row"
           style={{
-            flex: 1,
-            padding: "6px 12px",
-            background: T.surfaceBord,
-            border: "none",
-            borderRadius: 6,
-            color: T.textSecond,
-            cursor: "pointer",
-            fontSize: 11,
-            fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
-            display: "flex",
+            justifyContent: "space-between",
             alignItems: "center",
-            justifyContent: "center",
-            gap: 4,
+            paddingTop: 12,
+            borderTop: `1px solid ${T.border}`,
           }}
         >
-          <Icon name="edit" size={12} color={T.textSecond} /> Edit
-        </button>
-        <button
-          onClick={onView}
-          style={{
-            flex: 1,
-            padding: "6px 12px",
-            background: T.surfaceBord,
-            border: "none",
-            borderRadius: 6,
-            color: T.textSecond,
-            cursor: "pointer",
-            fontSize: 11,
-            fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 4,
-          }}
+
+          {/* Action Buttons */}
+          
+            <div>
+              {/* Close Event Button */}
+      {event.status !== "CLOSED" && (
+        <div
+          
         >
-          <Icon name="eye" size={12} color={T.textSecond} /> View
-        </button>
-        {event.status !== "CLOSED" && (
           <button
-            onClick={onCloseEvent}
+            onClick={onClose}
             style={{
-              flex: 1,
-              padding: "6px 12px",
-              background: T.surfaceBord,
-              border: "none",
-              borderRadius: 6,
-              color: T.textMuted,
-              cursor: "pointer",
-              fontSize: 11,
-              fontWeight: 600,
-              fontFamily: "'DM Sans', sans-serif",
+              width: "100%",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: 4,
+              gap: 8,
+              background: "none",
+              border: `1px solid ${T.border}`,
+              borderRadius: 6,
+              padding: "5px",
+              cursor: "pointer",
+              color: T.textSecond,
+              transition: "all 0.15s",
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13,
             }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = T.activeGreen + "20";
+              e.currentTarget.style.color = T.activeGreen;
+              e.currentTarget.style.borderColor = T.activeGreen;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "none";
+              e.currentTarget.style.color = T.textSecond;
+              e.currentTarget.style.borderColor = T.border;
+            }}
+            title="Close Event"
           >
-            <Icon name="x" size={12} color={T.textMuted} /> Close
+            <CalendarX size={16} color="currentColor" />
+            Close Event
           </button>
-        )}
-        <button
-          onClick={onDelete}
-          style={{
-            padding: "6px 12px",
-            background: T.closedBg,
-            border: "none",
-            borderRadius: 6,
-            color: T.closedRed,
-            cursor: "pointer",
-            fontSize: 11,
-            fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 4,
-          }}
-        >
-          <Icon name="trash" size={12} color={T.closedRed} />
-        </button>
+        </div>
+      )}
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button
+                onClick={onManage}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: T.surfaceHi,
+                  border: `1px solid ${T.border}`,
+                  borderRadius: 6,
+                  padding: "6px 8px",
+                  cursor: "pointer",
+                  color: T.textSecond,
+                  transition: "all 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = T.upBlue + "20";
+                  e.currentTarget.style.color = T.upBlue;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = T.surfaceHi;
+                  e.currentTarget.style.color = T.textSecond;
+                }}
+                title="Edit Event"
+              >
+                <Gear size={14} color="currentColor" />
+              </button>
+
+              <button
+                onClick={onView}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: T.surfaceHi,
+                  border: `1px solid ${T.border}`,
+                  borderRadius: 6,
+                  padding: "6px 8px",
+                  cursor: "pointer",
+                  color: T.textSecond,
+                  transition: "all 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = T.pink + "20";
+                  e.currentTarget.style.color = T.pink;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = T.surfaceHi;
+                  e.currentTarget.style.color = T.textSecond;
+                }}
+                title="View Details"
+              >
+                <Users size={14} color="currentColor" />
+              </button>
+
+              <button
+                onClick={onDelete}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: T.surfaceHi,
+                  border: `1px solid ${T.border}`,
+                  borderRadius: 6,
+                  padding: "6px 8px",
+                  cursor: "pointer",
+                  color: T.textSecond,
+                  transition: "all 0.15s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = T.closedRed + "20";
+                  e.currentTarget.style.color = T.closedRed;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = T.surfaceHi;
+                  e.currentTarget.style.color = T.textSecond;
+                }}
+                title="Delete Event"
+              >
+                <Trash size={14} color="currentColor" />
+              </button>
+            </div>
+          </div>
+       
       </div>
+
+      
     </div>
   );
 }
+
+export default CompactCard;

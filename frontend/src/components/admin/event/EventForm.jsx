@@ -104,6 +104,12 @@ export default function EventForm({ initial = null, onSave, onClose }) {
         />
       </FormField>
 
+      <div>
+        <FormField label="Image URL">
+          <input {...bindInput("image_link", "text", "https://example.com/image.jpg")} />
+        </FormField>
+      </div>
+
       <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", marginTop: 24 }}>
         <button
           onClick={onClose}
