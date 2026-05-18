@@ -8,7 +8,7 @@ import "./Sidebar.css";
 /* Sidebar Component
 --------------
 Sidebar is a functional component that renders a navigation sidebar. It uses the user's role to determine which navigation items to display. The component also manages the state of the active tab and provides a function to handle tab clicks. only visible on the dashboard which is for admins and judges */
-const setRole = localStorage.setItem("role", "admin"); // Set role to "admin" for testing purposes. Change to "judge" or remove for regular user.
+const setRole = localStorage.setItem("role", "judge"); // Set role to "admin" for testing purposes. Change to "judge" or remove for regular user.
 const role = localStorage.getItem("role");
 
 

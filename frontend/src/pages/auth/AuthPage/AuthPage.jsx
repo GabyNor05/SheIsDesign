@@ -258,6 +258,7 @@ function AuthCard() {
       const adminCheck = res.role === "admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
       const judgeCheck = res.role === "judge";
       setIsAdmin(adminCheck);
+      setIsJudge(judgeCheck);
       setModalStep(adminCheck ? "token" : "otp");
     } catch (err) {
       setLoginError(err.message || "Invalid email or password.");
@@ -277,7 +278,7 @@ function AuthCard() {
   function handleOtpVerified() {
     setModalStep(null);
     login(apiUser);
-    navigate(isAdmin ? "/admin/dashboard" : isJudge ? "/judge/dashboard" : "/");
+    navigate(isAdmin ? "/admin" : isJudge ? "/judge" : "/");
   }
 
   return (
