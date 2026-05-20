@@ -1,7 +1,5 @@
 import {useState} from "react";
-import {
-  Check, X, IdentificationCard
-} from "@phosphor-icons/react";
+import { Check, X } from "@phosphor-icons/react";
 import { RxPeople } from "react-icons/rx";
 import { T } from "../theme";
 import SectionHeader from "../SectionHeader";

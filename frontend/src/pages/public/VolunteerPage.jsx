@@ -1,11 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
-
-const APP_NAME_WHITE = "Shels";
-const APP_NAME_PINK  = "Design";
 
 const HEADLINE_LINE1  = "Something";
 const HEADLINE_LINE2  = "Beautiful";
@@ -24,8 +21,6 @@ const STATS = [
 const NOTIFY_PLACEHOLDER = "Enter your email address";
 const NOTIFY_CTA         = "Notify Me";
 const NOTIFY_SUCCESS     = "You're on the list! We'll be in touch.";
-
-const NAV_LINKS = ["Events", "Gallery", "Leaderboard", "Donate", "Volunteer"];
 
 const SOCIAL_LINKS = [
   { label: "Instagram", href: "#" },
@@ -52,6 +47,7 @@ function useCountdown(target) {
   useEffect(() => {
     const id = setInterval(() => setTime(calc()), 1000);
     return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return time;
 }

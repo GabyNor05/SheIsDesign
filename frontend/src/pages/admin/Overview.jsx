@@ -1,4 +1,3 @@
-import {useState} from "react";
 import {T} from "../../components/admin/theme";
 
 import Stats from "../../components/admin/overview/Stats";
@@ -14,7 +13,6 @@ const DAY_LABEL = "Wednesday, September 3, 2025";
 
 
 function Overview({ setActiveTab }) {
-    const [modal, setModal] = useState(null);
     return (
         <div className="flex flex-col gap-8 px-20 w-full font-poppins">
             <div className="flex flex-row justify-between items-baseline font-poppins ">
