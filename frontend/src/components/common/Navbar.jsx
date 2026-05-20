@@ -1,6 +1,12 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Navbar.jsx — Auth-aware navbar
+// Never logged in:    shows "Join"    → /signup
+// Returning user:     shows "Log In"  → /login
+// Logged in:          shows avatar/initials + dropdown with Profile + Log out
+// ─────────────────────────────────────────────────────────────────────────────
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MdLogout, MdAccountCircle } from "react-icons/md";
+import { MdPerson, MdLogout, MdAccountCircle } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
 
