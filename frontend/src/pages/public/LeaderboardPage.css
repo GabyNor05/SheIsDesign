@@ -51,7 +51,15 @@
     pointer-events: none;
 }
 
-/* Large orb that slowly drifts around the header */
+/*
+  Large orb that slowly drifts around the header.
+
+  The keyframes move the orb by changing its top and left position
+  across four waypoints, so it wanders in a loose path rather than
+  a straight line. scale() makes it subtly grow and shrink as it moves,
+  giving a breathing feel. ease-in-out keeps the motion smooth at each
+  end. The whole loop takes 9 seconds and repeats forever.
+*/
 .lb-header__orb {
     position: absolute;
     width: 420px;
@@ -96,7 +104,11 @@
     }
 }
 
-/* Smaller secondary orb for extra depth */
+/*
+  Smaller secondary orb for extra depth.
+  Follows a different path and takes 13s so it never perfectly
+  syncs with the main orb
+*/
 .lb-header__orb2 {
     position: absolute;
     width: 260px;
@@ -146,7 +158,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Centres and positions content above the background layers */
+/* Centres content and lifts it above the background layers */
 .lb-header__inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -326,7 +338,7 @@
     width: 240px;
 }
 
-/* Blurred glow that sits above the card */
+/* Blurred glow blob that floats above the 1st place card */
 .lb-podium-card__glow {
     position: absolute;
     top: -40px;
@@ -451,7 +463,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Coloured base bar at the bottom of each podium card, taller for higher ranks */
+/* Coloured base bar at the bottom of each card, taller for higher ranks */
 .lb-podium-card__base {
     width: 100%;
     display: flex;
@@ -496,6 +508,13 @@
     gap: 16px;
 }
 
+/*
+  Skeleton shimmer effect.
+  A light-to-lighter-to-light gradient is set as the background,
+  then background-position is animated from left to right.
+  Because background-size is fixed at 600px, the highlight sweeps
+  across the element giving the impression of a loading shimmer.
+*/
 .lb-podium-sk {
     border-radius: 24px 24px 0 0;
     background: rgba(255, 255, 255, 0.04);
@@ -589,7 +608,12 @@
     padding-left: 8px;
 }
 
-/* A single leaderboard row */
+/*
+  A single leaderboard row.
+  lb-row-in slides each row in from the left when it first appears.
+  animationDelay is set inline in JS so rows stagger one after another
+  rather than all appearing at once.
+*/
 .lb-row {
     display: grid;
     grid-template-columns: 80px 1fr 1fr 120px;
@@ -600,7 +624,6 @@
     border: 1px solid transparent;
     transition: background 0.18s, border-color 0.18s;
     animation: lb-row-in 0.35s ease both;
-    /* slides in from the left on mount */
     cursor: default;
 }
 
@@ -755,7 +778,11 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Shimmer animation for all skeleton elements */
+/*
+  Shimmer animation used on all skeleton elements.
+  The gradient background slides from -600px to +600px,
+  making it look like a highlight is sweeping across the block.
+*/
 @keyframes lb-shimmer {
     0% {
         background-position: -600px 0;
@@ -770,7 +797,7 @@
     pointer-events: none;
 }
 
-/* Base skeleton block style with a moving highlight */
+/* Base skeleton block with the moving shimmer highlight */
 .lb-sk {
     border-radius: 6px;
     background: linear-gradient(90deg,
@@ -988,12 +1015,12 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* Dimmed when there is no bonus for that action */
 .lb-pts-row__bonus--none {
     color: rgba(255, 255, 255, 0.2);
-    /* dimmed when there is no bonus */
 }
 
-/* Responsiveness - AI generated */
+/* Tablet (below 1024px) */
 @media (max-width: 1024px) {
     .lb-how-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1010,7 +1037,7 @@
     }
 }
 
-/* Responsive: mobile (below 768px) */
+/* Mobile (below 768px) */
 @media (max-width: 768px) {
 
     /* Reduce horizontal padding across all main sections */

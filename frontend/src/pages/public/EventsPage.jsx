@@ -13,14 +13,14 @@ import "./EventsPage.css";
 export default function EventsPage() {
   const { user } = useAuth();
 
-  // ── State ──────────────────────────────────────────────────────────────────
+  // State
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeFilter, setActiveFilter] = useState("all");
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  //  Fetch all events on mount 
+  // Fetch all events when the page first loads
   useEffect(() => {
     async function fetchEvents() {
       try {
@@ -36,51 +36,46 @@ export default function EventsPage() {
     fetchEvents();
   }, []);
 
-  //  Derived data 
-
-  // Unique categories for filter pills
+  // Build a unique list of categories for the filter pills
   const categories = useMemo(() => {
     const cats = [...new Set(events.map((e) => e.category).filter(Boolean))];
     return cats;
   }, [events]);
 
-  // Featured event: first open event with the most entries, or first upcoming
+  // Pick the featured event: busiest open event, or the soonest upcoming one
   const featuredEvent = useMemo(() => {
     const open = events
       .filter((e) => e.status?.toLowerCase() === "open")
       .sort((a, b) => (b.entry_count ?? 0) - (a.entry_count ?? 0));
     if (open.length > 0) return open[0];
 
-    // Fall back to the soonest upcoming event
     const upcoming = events
       .filter((e) => new Date(e.start_date) > new Date())
       .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
     return upcoming[0] ?? null;
   }, [events]);
 
-  // Recommended events: match against user's field_of_study
+  // Suggest events that match the logged-in user's field of study
   const recommendedEvents = useMemo(() => {
     if (!user) return [];
     const field = user.field_of_study?.toLowerCase() ?? "";
     if (!field) return [];
 
-    // Match by category containing any word from field_of_study
+    // Split field into keywords and match against event categories
     const keywords = field.split(/[\s,]+/).filter((w) => w.length > 2);
     return events.filter((e) =>
-      keywords.some((kw) =>
-        e.category?.toLowerCase().includes(kw)
-      )
+      keywords.some((kw) => e.category?.toLowerCase().includes(kw))
     ).slice(0, 3);
   }, [events, user]);
 
-  // Stats for the hero bar
+  // Numbers shown in the hero stats bar
   const heroStats = useMemo(() => ({
-    totalEvents: events.filter((e) => e.status?.toLowerCase() === "open").length,
+    totalEvents:  events.filter((e) => e.status?.toLowerCase() === "open").length,
     totalEntries: events.reduce((sum, e) => sum + (e.entry_count ?? 0), 0),
-    totalPoints: events.reduce((sum, e) => sum + (e.points_reward ?? 0), 0),
+    totalPoints:  events.reduce((sum, e) => sum + (e.points_reward ?? 0), 0),
   }), [events]);
 
-  //  Apply handler (login gate) 
+  // If the user is not logged in, show the login modal instead of applying
   function handleApply(event) {
     if (!user) {
       setShowLoginModal(true);
@@ -91,15 +86,14 @@ export default function EventsPage() {
     alert(`You are applying for: ${event.title}\n\n(Hook up submission logic here)`);
   }
 
-  //  Sync filter from hero pills into grid 
+  // Update the active filter and smooth-scroll down to the events grid
   function handleFilterChange(filter) {
     setActiveFilter(filter);
-    // Scroll to grid
     const gridEl = document.getElementById("events-grid");
     if (gridEl) gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  //  Render 
+  // Loading state
   if (loading) {
     return (
       <div className="events-page__loading">
@@ -111,6 +105,7 @@ export default function EventsPage() {
     );
   }
 
+  // Error state
   if (error) {
     return (
       <div className="events-page__error">
@@ -130,7 +125,8 @@ export default function EventsPage() {
 
   return (
     <div className="events-page">
-      {/* 1. Hero — headline, filter pills, live stats */}
+
+      {/* 1. Hero: headline, filter pills, live stats */}
       <EventsHeroNew
         activeFilter={activeFilter}
         onFilterChange={handleFilterChange}
@@ -139,11 +135,11 @@ export default function EventsPage() {
       />
 
       {/* 2. Featured event banner */}
-<div id="events-featured">
-  <FeaturedEvent event={featuredEvent} onApply={() => handleApply(featuredEvent)} />
-</div>
+      <div id="events-featured">
+        <FeaturedEvent event={featuredEvent} onApply={() => handleApply(featuredEvent)} />
+      </div>
 
-      {/* 3. All events grid with filter */}
+      {/* 3. Full events grid with active filter applied */}
       <div id="events-grid">
         <EventsGrid
           events={events}
@@ -152,20 +148,21 @@ export default function EventsPage() {
         />
       </div>
 
-      {/* 4. Recommended for you (logged-in users only) */}
+      {/* 4. Personalised recommendations, only shown to logged-in users */}
       <RecommendedEvents
         events={recommendedEvents}
         user={user}
         onApply={handleApply}
       />
 
-      {/* 5. Community impact stats
-      <CommunityImpact events={events} /> */}
+      {/* 5. Community impact stats (commented out for now) */}
+      {/* <CommunityImpact events={events} /> */}
 
-      {/* Login gate modal */}
+      {/* Login gate modal, shown when a guest tries to apply */}
       {showLoginModal && (
         <LoginPromptModal onClose={() => setShowLoginModal(false)} />
       )}
+
     </div>
   );
 }

@@ -18,7 +18,19 @@
     text-align: center;
 }
 
-/* Spinning circle loader */
+/*
+  Spinning circle loader.
+
+  The circle is made using two layered borders on the same element:
+    - "border" sets a faint pink ring all the way around
+    - "border-top" overrides just the top segment with a bright pink
+
+  Because only the top segment is bright, it looks like a single
+  coloured arc chasing itself around the ring.
+
+  The "events-spin" animation then rotates the whole element 360deg
+  on a linear loop, so the bright arc spins continuously.
+*/
 .events-page__spinner {
     width: 36px;
     height: 36px;
@@ -26,11 +38,16 @@
     border: 2px solid rgba(196, 18, 98, 0.2);
     /* faint full ring */
     border-top: 2px solid #C41262;
-    /* bright segment that spins */
+    /* bright arc on top segment */
     animation: events-spin 0.8s linear infinite;
     margin: 0 auto 16px;
 }
 
+/*
+  Rotates the spinner from 0 to 360deg.
+  "linear" keeps the speed constant so it looks like a smooth spin.
+  "infinite" loops it forever until the loading state is removed.
+*/
 @keyframes events-spin {
     to {
         transform: rotate(360deg);
