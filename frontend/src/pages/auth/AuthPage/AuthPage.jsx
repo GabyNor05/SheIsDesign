@@ -40,7 +40,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdLogin, MdPersonAdd, MdArrowForward } from "react-icons/md";
+import { MdLogin, MdPersonAdd } from "react-icons/md";
 import { FiMail } from "react-icons/fi";
 import { Field, PasswordField, OrDivider, GoogleButton } from "../../../components/ui/Fields/Field/Field";
 import FloatingCards from "../../../components/auth/FloatingCards/FloatingCards";
@@ -244,7 +244,7 @@ function AuthCard() {
   const [modalStep, setModalStep]   = useState(null);
   const [loginEmail, setLoginEmail] = useState("");
   const [isAdmin, setIsAdmin]       = useState(false);
-  const [isJudge, setIsJudge]       = useState(false);
+  const [isJudge]                   = useState(false);
   const [loginError, setLoginError]   = useState("");
   const [signupError, setSignupError] = useState("");
   const [apiUser, setApiUser]         = useState(null);
@@ -256,7 +256,6 @@ function AuthCard() {
       setApiUser(res);
       setLoginEmail(email);
       const adminCheck = res.role === "admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
-      const judgeCheck = res.role === "judge";
       setIsAdmin(adminCheck);
       setModalStep(adminCheck ? "token" : "otp");
     } catch (err) {

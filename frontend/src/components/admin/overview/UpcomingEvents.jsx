@@ -2,12 +2,8 @@ import { useEffect, useState } from "react";
 import {
   CalendarDots,
   CalendarBlank,
-  Plus,
-  Pencil,
-  Trash,
 } from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
-import Card from "./Card";
 import { getUpcomingEvents } from "../../../services/eventService";
 
 import { T } from "../theme";
