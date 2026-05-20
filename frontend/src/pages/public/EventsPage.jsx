@@ -20,7 +20,7 @@ export default function EventsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [showLoginModal, setShowLoginModal] = useState(false);
 
-  // ── Fetch all events on mount ──────────────────────────────────────────────
+  //  Fetch all events on mount 
   useEffect(() => {
     async function fetchEvents() {
       try {
@@ -36,7 +36,7 @@ export default function EventsPage() {
     fetchEvents();
   }, []);
 
-  // ── Derived data ───────────────────────────────────────────────────────────
+  //  Derived data 
 
   // Unique categories for filter pills
   const categories = useMemo(() => {
@@ -80,7 +80,7 @@ export default function EventsPage() {
     totalPoints: events.reduce((sum, e) => sum + (e.points_reward ?? 0), 0),
   }), [events]);
 
-  // ── Apply handler (login gate) ─────────────────────────────────────────────
+  //  Apply handler (login gate) 
   function handleApply(event) {
     if (!user) {
       setShowLoginModal(true);
@@ -91,7 +91,7 @@ export default function EventsPage() {
     alert(`You are applying for: ${event.title}\n\n(Hook up submission logic here)`);
   }
 
-  // ── Sync filter from hero pills into grid ──────────────────────────────────
+  //  Sync filter from hero pills into grid 
   function handleFilterChange(filter) {
     setActiveFilter(filter);
     // Scroll to grid
@@ -99,7 +99,7 @@ export default function EventsPage() {
     if (gridEl) gridEl.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  //  Render 
   if (loading) {
     return (
       <div className="events-page__loading">

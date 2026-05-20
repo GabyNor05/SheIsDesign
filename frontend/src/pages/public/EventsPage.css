@@ -1,8 +1,10 @@
+/* Full events page wrapper */
 .events-page {
     background: #0D0608;
     min-height: 100vh;
 }
 
+/* Full-screen loading state, shown while data is fetching */
 .events-page__loading {
     min-height: 100vh;
     background: #0D0608;
@@ -16,12 +18,15 @@
     text-align: center;
 }
 
+/* Spinning circle loader */
 .events-page__spinner {
     width: 36px;
     height: 36px;
     border-radius: 50%;
     border: 2px solid rgba(196, 18, 98, 0.2);
+    /* faint full ring */
     border-top: 2px solid #C41262;
+    /* bright segment that spins */
     animation: events-spin 0.8s linear infinite;
     margin: 0 auto 16px;
 }
@@ -38,6 +43,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* Full-screen error state, shown when the data fetch fails */
 .events-page__error {
     min-height: 100vh;
     background: #0D0608;
@@ -65,6 +71,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* Pink gradient retry button */
 .events-page__retry-btn {
     margin-top: 20px;
     padding: 9px 20px;
