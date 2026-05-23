@@ -1,0 +1,291 @@
+.events-hero-new {
+    background: #0D0608;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 160px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+}
+
+/*  background gradient */
+.events-hero-new__bg-gradient {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 60% 20%, rgba(196, 18, 98, 0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(254, 64, 129, 0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 90% 70%, rgba(196, 18, 98, 0.10) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Moving orb */
+.events-hero-new__orb {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.28) 0%, rgba(254, 64, 129, 0.12) 40%, transparent 70%);
+    pointer-events: none;
+    animation: hv-orb-move 8s ease-in-out infinite;
+    filter: blur(40px);
+}
+
+
+/*  Main text container  */
+.events-hero-new__text {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*  Eyebrow  */
+.events-hero-new__eyebrow {
+    font-size: clamp(18px, 2.2vw, 20px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    opacity: 0;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    animation: hv-fade-in 0.5s ease forwards 2.4s;
+}
+
+.events-hero-new__eyebrow::before,
+.events-hero-new__eyebrow::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1.5px;
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/*  Stacked phase  */
+.events-hero-new__stacked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.events-hero-new__word {
+    font-size: clamp(48px, 7.5vw, 110px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -3px;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    opacity: 0;
+    transform: translateY(36px);
+}
+
+.events-hero-new__word--accent {
+    color: #FE4081;
+}
+
+.events-hero-new__word--1 {
+    animation: hv-word-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.1s;
+}
+
+.events-hero-new__word--2 {
+    animation: hv-word-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.55s;
+}
+
+.events-hero-new__word--3 {
+    animation: hv-word-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards 1.0s;
+}
+
+/*  Inline phase  */
+.events-hero-new__inline {
+    display: flex;
+    gap: clamp(12px, 2vw, 28px);
+    align-items: baseline;
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.events-hero-new__inline-word {
+    font-size: clamp(26px, 3.8vw, 56px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+}
+
+.events-hero-new__inline-word--accent {
+    color: #FE4081;
+}
+
+/* Collapsed state */
+.events-hero-new__text--collapsed .events-hero-new__stacked {
+    animation: hv-stacked-out 0.45s cubic-bezier(0.4, 0, 1, 1) forwards 0s;
+}
+
+.events-hero-new__text--collapsed .events-hero-new__inline {
+    width: auto;
+    overflow: visible;
+    pointer-events: auto;
+    animation: hv-inline-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards 0.35s;
+}
+
+/*  Scroll CTA  */
+.events-hero-new__scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    z-index: 2;
+    animation: hv-fade-in 0.6s ease forwards 2.6s;
+}
+
+.events-hero-new__scroll-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.40);
+    font-family: 'Poppins', sans-serif;
+    transition: color 0.2s;
+}
+
+.events-hero-new__scroll:hover .events-hero-new__scroll-label {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.events-hero-new__scroll-arrow {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: hv-bounce 2s ease-in-out infinite 3.2s;
+    transition: border-color 0.2s;
+}
+
+.events-hero-new__scroll:hover .events-hero-new__scroll-arrow {
+    border-color: rgba(196, 18, 98, 0.5);
+}
+
+/*  Responsiveness  */
+@media (max-width: 1280px) {
+    .events-hero-new__shape-rect {
+        right: 40px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .events-hero-new__shape-rect {
+        display: none;
+    }
+}
+
+/* ── Keyframes ── */
+@keyframes hv-orb-move {
+    0% {
+        top: 10%;
+        left: 15%;
+        transform: scale(1);
+    }
+
+    25% {
+        top: 20%;
+        left: 60%;
+        transform: scale(1.1);
+    }
+
+    50% {
+        top: 50%;
+        left: 70%;
+        transform: scale(0.95);
+    }
+
+    75% {
+        top: 60%;
+        left: 20%;
+        transform: scale(1.05);
+    }
+
+    100% {
+        top: 10%;
+        left: 15%;
+        transform: scale(1);
+    }
+}
+
+@keyframes hv-word-in {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes hv-stacked-out {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(0.94);
+    }
+}
+
+@keyframes hv-inline-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes hv-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes hv-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(6px);
+    }
+}

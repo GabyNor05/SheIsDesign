@@ -16,9 +16,9 @@
     --sid-glow-btn: 0 4px 24px rgba(196, 18, 98, 0.35);
 
     --sid-text-primary: #ffffff;
-    --sid-text-secondary: rgba(255, 255, 255, 0.70);
-    --sid-text-muted: rgba(255, 255, 255, 0.50);
-    --sid-text-faint: rgba(255, 255, 255, 0.30);
+    --sid-text-secondary: rgba(255, 255, 255, 0.85);
+    --sid-text-muted: rgba(255, 255, 255, 0.70);
+    --sid-text-faint: rgba(255, 255, 255, 0.50);
     --sid-text-label: rgba(255, 255, 255, 0.40);
     --sid-text-error: rgba(254, 64, 129, 0.90);
     --sid-text-pink: #FE4081;

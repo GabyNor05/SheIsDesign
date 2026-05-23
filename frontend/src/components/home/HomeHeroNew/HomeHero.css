@@ -1,0 +1,528 @@
+.home-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 640px;
+    background: #0D0608;
+    /* near-black dark background */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.home-hero__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Background gradients */
+.home-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.home-hero__bg-grad {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    /* makes gradients soft and glowy */
+}
+
+/* Top-right pink glow */
+.home-hero__bg-grad--1 {
+    width: 55vw;
+    height: 55vw;
+    top: -20%;
+    right: -10%;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.18) 0%, transparent 65%);
+    animation: hero-float-1 9s ease-in-out infinite;
+}
+
+/* Bottom-left pink glow */
+.home-hero__bg-grad--2 {
+    width: 40vw;
+    height: 40vw;
+    bottom: -10%;
+    left: -5%;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.12) 0%, transparent 65%);
+    animation: hero-float-2 11s ease-in-out infinite;
+}
+
+/* Subtle centre glow */
+.home-hero__bg-grad--3 {
+    width: 30vw;
+    height: 30vw;
+    top: 40%;
+    left: 35%;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.07) 0%, transparent 65%);
+    animation: hero-float-3 7s ease-in-out infinite;
+}
+
+/* Each glow blob slowly drifts around */
+@keyframes hero-float-1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(-3%, 4%) scale(1.05);
+    }
+
+    66% {
+        transform: translate(3%, -2%) scale(0.97);
+    }
+}
+
+@keyframes hero-float-2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(4%, -6%) scale(1.08);
+    }
+}
+
+@keyframes hero-float-3 {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-3%, 5%);
+    }
+}
+
+/* Diagonal rules (thin lines across the hero) */
+.home-hero__rules {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.home-hero__rule {
+    position: absolute;
+    width: 200%;
+    /* wider than screen so the line spans edge to edge */
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.12), transparent);
+    transform-origin: left center;
+}
+
+.home-hero__rule--1 {
+    top: 28%;
+    left: -50%;
+    transform: rotate(-8deg);
+    animation: hero-rule-drift 14s ease-in-out infinite;
+}
+
+.home-hero__rule--2 {
+    top: 68%;
+    left: -50%;
+    transform: rotate(5deg);
+    animation: hero-rule-drift 18s ease-in-out infinite reverse;
+}
+
+/* Lines slowly shift opacity and slide sideways */
+@keyframes hero-rule-drift {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: rotate(-8deg) translateX(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: rotate(-8deg) translateX(3%);
+    }
+}
+
+/* Centre content wrapper */
+.home-hero__center {
+    position: relative;
+    z-index: 2;
+    /* sits above background elements */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 24px;
+    padding-bottom: 120px;
+    /* space for the marquee at the bottom */
+}
+
+/* Small label above the headline, hidden by default then fades in via JS */
+.home-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 28px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.home-hero__eyebrow--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Short decorative lines either side of the eyebrow text */
+.home-hero__eyebrow-line {
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.7));
+}
+
+.home-hero__eyebrow-line:last-child {
+    background: linear-gradient(270deg, transparent, rgba(196, 18, 98, 0.7));
+    /* flipped for the right side */
+}
+
+/* Main headline */
+.home-hero__headline {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(72px, 13vw, 160px);
+    /* scales with screen size, between 72px and 160px */
+    font-weight: 800;
+    letter-spacing: -4px;
+    margin: 0 0 32px;
+    margin-top: -30px;
+    display: flex;
+    gap: 0.18em;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Each word wraps its characters so they can animate in individually */
+.home-hero__word {
+    display: inline-flex;
+    overflow: hidden;
+}
+
+/* Outlined/stroke style for accent words */
+.home-hero__word--accent {
+    color: transparent;
+    -webkit-text-stroke: 2px #C41262;
+}
+
+/* Each character starts hidden and rotated, then animates into place */
+.home-hero__char {
+    display: inline-block;
+    color: #F8EBED;
+    opacity: 0;
+    transform: translateY(60px) rotate(6deg);
+    animation: hero-char-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.home-hero__word--accent .home-hero__char {
+    color: transparent;
+    /* keeps the stroke-only look on accent chars */
+}
+
+@keyframes hero-char-in {
+    to {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+/* Subheading below the headline, fades in via JS */
+.home-hero__tagline {
+    font-size: clamp(16px, 2.2vw, 22px);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 0.01em;
+    line-height: 1.5;
+    margin: 0 0 40px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.home-hero__tagline--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Highlighted word inside the tagline */
+.home-hero__tagline-accent {
+    color: #FE4081;
+    font-weight: 600;
+    position: relative;
+    display: inline-block;
+}
+
+/* Underline that slides in after the tagline becomes visible */
+.home-hero__tagline-accent::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #C41262, #FE7FAB);
+    transform: scaleX(0);
+    /* hidden to start */
+    transform-origin: left;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+}
+
+.home-hero__tagline--visible .home-hero__tagline-accent::after {
+    transform: scaleX(1);
+    /* slides in from left */
+}
+
+/* Row of CTA buttons, fades in via JS */
+.home-hero__cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.home-hero__cta-row--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Base button styles */
+.home-hero__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* Solid pink gradient button */
+.home-hero__btn--primary {
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(196, 18, 98, 0.35);
+}
+
+.home-hero__btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(196, 18, 98, 0.45);
+    opacity: 0.92;
+}
+
+/* Transparent button with a subtle border */
+.home-hero__btn--ghost {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.home-hero__btn--ghost:hover {
+    border-color: rgba(196, 18, 98, 0.5);
+    color: #fff;
+    background: rgba(196, 18, 98, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Scroll down arrow at the bottom of the hero */
+.home-hero__scroll {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    /* centres it horizontally */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.home-hero__scroll--visible {
+    opacity: 1;
+    animation: hero-scroll-appear 0.6s ease forwards, hero-scroll-bob 2.2s ease-in-out 1s infinite;
+}
+
+/* Fades and slides up into place */
+@keyframes hero-scroll-appear {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Gentle bobbing loop */
+@keyframes hero-scroll-bob {
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(6px);
+    }
+}
+
+/* Circle around the scroll arrow icon */
+.home-hero__scroll-ring {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s;
+}
+
+.home-hero__scroll:hover .home-hero__scroll-ring {
+    border-color: rgba(196, 18, 98, 0.5);
+}
+
+.home-hero__scroll-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Scrolling text banner pinned to the bottom of the hero */
+.home-hero__marquee-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.home-hero__marquee-wrap--visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.home-hero__marquee {
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid rgba(196, 18, 98, 0.12);
+    padding: 10px 0;
+    background: rgba(13, 6, 8, 0.6);
+    backdrop-filter: blur(6px);
+    /* frosted glass effect */
+}
+
+/* Runs the marquee in reverse for a second row going the other way */
+.home-hero__marquee--reverse .home-hero__marquee-track {
+    animation-direction: reverse;
+}
+
+/* The actual moving strip of text items */
+.home-hero__marquee-track {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    animation: hero-marquee-scroll var(--speed, 36s) linear infinite;
+}
+
+/* Scrolls the track exactly half its width, then loops seamlessly */
+@keyframes hero-marquee-scroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+.home-hero__marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 28px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35);
+    white-space: nowrap;
+}
+
+/* Pink dot used as a separator between marquee items */
+.home-hero__marquee-dot {
+    color: rgba(196, 18, 98, 0.6);
+    font-size: 8px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .home-hero__headline {
+        letter-spacing: -2px;
+    }
+
+    .home-hero__word--accent {
+        -webkit-text-stroke: 1.5px #C41262;
+        /* thinner stroke on mobile */
+    }
+
+    /* Stack buttons vertically on small screens */
+    .home-hero__cta-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .home-hero__btn {
+        width: 100%;
+        justify-content: center;
+        max-width: 280px;
+    }
+}
