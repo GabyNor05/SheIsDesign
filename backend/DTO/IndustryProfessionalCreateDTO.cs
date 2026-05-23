@@ -1,3 +1,4 @@
+
 namespace SheDesign.DTO
 {
     public class IndustryProfessionalCreateDTO

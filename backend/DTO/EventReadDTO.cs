@@ -1,3 +1,4 @@
+using System;
 namespace SheDesign.DTO
 {
     public class EventReadDTO
