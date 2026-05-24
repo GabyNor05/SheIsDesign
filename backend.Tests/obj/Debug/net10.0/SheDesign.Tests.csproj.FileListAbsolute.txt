@@ -4,8 +4,6 @@ C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\ne
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\xunit.abstractions.dll
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\backend.deps.json
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\backend.runtimeconfig.json
-C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\appsettings.Development.json
-C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\appsettings.json
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\package-lock.json
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\package.json
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\backend.staticwebassets.endpoints.json
