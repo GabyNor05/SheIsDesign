@@ -1,4 +1,4 @@
-/* Page shell */
+/* ─── Page shell ──────────────────────────────────────────────────────────────── */
 .lb-page {
     background: #0D0608;
     min-height: 100vh;
@@ -7,7 +7,7 @@
     overflow-x: hidden;
 }
 
-/* Soft ambient glow blobs used in sections below the header */
+/* Subtle ambient glow for sections below the header */
 .lb-glow {
     position: absolute;
     border-radius: 50%;
@@ -18,10 +18,10 @@
 
 .lb-glow--top-left {
     display: none;
-    /* replaced by the animated orb in the header */
 }
 
-/* Right-side glow blob that sits mid-page */
+/* replaced by animated orb in header */
+
 .lb-glow--mid-right {
     width: 400px;
     height: 400px;
@@ -30,7 +30,7 @@
     background: radial-gradient(circle, rgba(254, 64, 129, 0.08) 0%, transparent 70%);
 }
 
-/* Animated header */
+/* ─── Animated orb header (gallery-style) ─────────────────────────────────────── */
 .lb-header {
     position: relative;
     overflow: hidden;
@@ -40,7 +40,7 @@
     z-index: 1;
 }
 
-/* Layered radial gradients that form the header background glow */
+/* Multi-ellipse background gradient — same as gallery */
 .lb-header__bg-gradient {
     position: absolute;
     inset: 0;
@@ -51,15 +51,7 @@
     pointer-events: none;
 }
 
-/*
-  Large orb that slowly drifts around the header.
-
-  The keyframes move the orb by changing its top and left position
-  across four waypoints, so it wanders in a loose path rather than
-  a straight line. scale() makes it subtly grow and shrink as it moves,
-  giving a breathing feel. ease-in-out keeps the motion smooth at each
-  end. The whole loop takes 9 seconds and repeats forever.
-*/
+/* The freely-moving orb — same technique as gallery-hero__orb */
 .lb-header__orb {
     position: absolute;
     width: 420px;
@@ -104,11 +96,7 @@
     }
 }
 
-/*
-  Smaller secondary orb for extra depth.
-  Follows a different path and takes 13s so it never perfectly
-  syncs with the main orb
-*/
+/* Second smaller accent orb */
 .lb-header__orb2 {
     position: absolute;
     width: 260px;
@@ -145,7 +133,7 @@
     }
 }
 
-/* Small uppercase label used in multiple sections */
+/* ─── Shared section label ────────────────────────────────────────────────────── */
 .lb-section-label {
     display: inline-flex;
     align-items: center;
@@ -158,7 +146,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Centres content and lifts it above the background layers */
 .lb-header__inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -166,7 +153,6 @@
     z-index: 1;
 }
 
-/* Side-by-side layout: title on the left, stats on the right */
 .lb-header__body {
     display: flex;
     align-items: flex-end;
@@ -180,7 +166,6 @@
     gap: 16px;
 }
 
-/* Small rounded pill label above the title */
 .lb-header__pill {
     display: inline-flex;
     align-items: center;
@@ -198,7 +183,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Large responsive headline */
 .lb-header__title {
     font-size: clamp(52px, 8vw, 88px);
     font-weight: 800;
@@ -218,7 +202,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Stat numbers pinned to the bottom-right of the header */
 .lb-header__stats {
     display: flex;
     gap: 40px;
@@ -251,7 +234,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Banner shown when the leaderboard is displaying placeholder/dummy data */
+/* Dummy data notice */
 .lb-dummy-notice {
     display: flex;
     align-items: center;
@@ -266,7 +249,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Small pink dot inside the dummy notice */
 .lb-dummy-notice__dot {
     width: 6px;
     height: 6px;
@@ -275,7 +257,6 @@
     flex-shrink: 0;
 }
 
-/* Inline code style for the variable name inside the notice */
 .lb-dummy-notice code {
     background: rgba(255, 255, 255, 0.08);
     padding: 1px 6px;
@@ -284,7 +265,7 @@
     color: #FE7FAB;
 }
 
-/* Podium section (top 3 cards) */
+/* ─── Podium section ──────────────────────────────────────────────────────────── */
 .lb-podium-section {
     position: relative;
     z-index: 1;
@@ -300,7 +281,6 @@
     gap: 40px;
 }
 
-/* Aligns the three podium cards so they bottom-align like a real podium */
 .lb-podium {
     display: flex;
     align-items: flex-end;
@@ -308,7 +288,7 @@
     gap: 16px;
 }
 
-/* Base card shared by all three podium positions */
+/* Podium card */
 .lb-podium-card {
     position: relative;
     display: flex;
@@ -325,7 +305,6 @@
     transform: translateY(-4px);
 }
 
-/* 1st place card is wider and has a pink tinted background */
 .lb-podium-card--center {
     width: 300px;
     border-color: rgba(196, 18, 98, 0.3);
@@ -338,7 +317,6 @@
     width: 240px;
 }
 
-/* Blurred glow blob that floats above the 1st place card */
 .lb-podium-card__glow {
     position: absolute;
     top: -40px;
@@ -366,7 +344,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Circular avatar with a coloured border */
 .lb-podium-card__avatar {
     width: 72px;
     height: 72px;
@@ -378,7 +355,6 @@
     margin: 16px 0 12px;
 }
 
-/* 1st place avatar is bigger */
 .lb-podium-card--center .lb-podium-card__avatar {
     width: 88px;
     height: 88px;
@@ -445,7 +421,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* 1st place points use a pink gradient text effect */
 .lb-podium-card--center .lb-podium-card__points {
     font-size: 40px;
     background: linear-gradient(135deg, #C41262, #FE4081, #FE7FAB);
@@ -463,7 +438,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Coloured base bar at the bottom of each card, taller for higher ranks */
+/* Podium base bar */
 .lb-podium-card__base {
     width: 100%;
     display: flex;
@@ -500,7 +475,7 @@
     color: rgba(255, 255, 255, 0.4);
 }
 
-/* Skeleton placeholders shown while the podium data loads */
+/* Skeleton */
 .lb-podium-skeleton {
     display: flex;
     align-items: flex-end;
@@ -508,13 +483,6 @@
     gap: 16px;
 }
 
-/*
-  Skeleton shimmer effect.
-  A light-to-lighter-to-light gradient is set as the background,
-  then background-position is animated from left to right.
-  Because background-size is fixed at 600px, the highlight sweeps
-  across the element giving the impression of a loading shimmer.
-*/
 .lb-podium-sk {
     border-radius: 24px 24px 0 0;
     background: rgba(255, 255, 255, 0.04);
@@ -522,7 +490,6 @@
     background-size: 600px 100%;
 }
 
-/* Each skeleton block is a different height to mimic the podium steps */
 .lb-podium-sk:nth-child(1) {
     width: 240px;
     height: 280px;
@@ -538,7 +505,7 @@
     height: 260px;
 }
 
-/* Table section (ranks 4 and below) */
+/* ─── Table section ───────────────────────────────────────────────────────────── */
 .lb-table-section {
     position: relative;
     z-index: 1;
@@ -564,7 +531,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Column heading labels above the rows */
+/* Column labels */
 .lb-table-cols {
     display: grid;
     grid-template-columns: 80px 1fr 1fr 120px;
@@ -583,7 +550,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Thin line that visually separates the top 3 from the rest */
+/* Divider between top 3 and rest */
 .lb-table-divider {
     height: 1px;
     background: rgba(196, 18, 98, 0.15);
@@ -591,7 +558,6 @@
     position: relative;
 }
 
-/* "Ranks 4+" label attached to the right end of the divider */
 .lb-table-divider::before {
     content: "Ranks 4+";
     position: absolute;
@@ -608,12 +574,7 @@
     padding-left: 8px;
 }
 
-/*
-  A single leaderboard row.
-  lb-row-in slides each row in from the left when it first appears.
-  animationDelay is set inline in JS so rows stagger one after another
-  rather than all appearing at once.
-*/
+/* Row */
 .lb-row {
     display: grid;
     grid-template-columns: 80px 1fr 1fr 120px;
@@ -644,7 +605,6 @@
     border-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Highlighted style for the current user's row */
 .lb-row--you {
     background: rgba(196, 18, 98, 0.07);
     border-color: rgba(196, 18, 98, 0.2) !important;
@@ -666,12 +626,10 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Current user's rank number is pink */
 .lb-row--you .lb-row__rank-num {
     color: #C41262;
 }
 
-/* Avatar + name + university grouped together */
 .lb-row__student {
     display: flex;
     align-items: center;
@@ -709,7 +667,6 @@
     gap: 8px;
 }
 
-/* Small "YOU" badge shown next to the current user's name */
 .lb-row__you-badge {
     font-size: 9px;
     font-weight: 700;
@@ -761,7 +718,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Current user's points get a pink gradient text */
 .lb-row--you .lb-row__points-val {
     background: linear-gradient(135deg, #C41262, #FE4081);
     -webkit-background-clip: text;
@@ -778,11 +734,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/*
-  Shimmer animation used on all skeleton elements.
-  The gradient background slides from -600px to +600px,
-  making it look like a highlight is sweeping across the block.
-*/
+/* ─── Skeleton ────────────────────────────────────────────────────────────────── */
 @keyframes lb-shimmer {
     0% {
         background-position: -600px 0;
@@ -797,7 +749,6 @@
     pointer-events: none;
 }
 
-/* Base skeleton block with the moving shimmer highlight */
 .lb-sk {
     border-radius: 6px;
     background: linear-gradient(90deg,
@@ -808,7 +759,6 @@
     animation: lb-shimmer 1.6s infinite linear;
 }
 
-/* Skeleton blocks sized to match the real content they replace */
 .lb-sk--rank {
     width: 28px;
     height: 20px;
@@ -836,7 +786,7 @@
     height: 20px;
 }
 
-/* "How it works" explainer section */
+/* ─── How it works ────────────────────────────────────────────────────────────── */
 .lb-how-section {
     position: relative;
     z-index: 1;
@@ -866,7 +816,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Pink gradient on the accent part of the title */
 .lb-how-title--accent {
     background: linear-gradient(135deg, #C41262, #FE4081, #FE7FAB);
     -webkit-background-clip: text;
@@ -882,7 +831,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* 4-column grid of step cards */
 .lb-how-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -906,14 +854,12 @@
     background: rgba(196, 18, 98, 0.04);
 }
 
-/* Icon on the left and large step number on the right */
 .lb-how-card__top {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-/* Small icon box */
 .lb-how-card__icon {
     width: 40px;
     height: 40px;
@@ -926,7 +872,6 @@
     color: #FE4081;
 }
 
-/* Large faint step number, purely decorative */
 .lb-how-card__step {
     font-size: 28px;
     font-weight: 800;
@@ -951,14 +896,13 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Points breakdown table */
+/* Points table */
 .lb-pts-table {
     border-radius: 18px;
     border: 1px solid rgba(255, 255, 255, 0.07);
     overflow: hidden;
 }
 
-/* Table column headings */
 .lb-pts-table__head {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -976,7 +920,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* A single points table row */
 .lb-pts-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -1015,16 +958,14 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Dimmed when there is no bonus for that action */
 .lb-pts-row__bonus--none {
     color: rgba(255, 255, 255, 0.2);
 }
 
-/* Tablet (below 1024px) */
+/* ─── Responsive ──────────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
     .lb-how-grid {
         grid-template-columns: repeat(2, 1fr);
-        /* 4 cols becomes 2 */
     }
 
     .lb-podium-card--center {
@@ -1037,10 +978,8 @@
     }
 }
 
-/* Mobile (below 768px) */
 @media (max-width: 768px) {
 
-    /* Reduce horizontal padding across all main sections */
     .lb-header,
     .lb-podium-section,
     .lb-table-section,
@@ -1049,7 +988,6 @@
         padding-right: 24px;
     }
 
-    /* Stack header content vertically */
     .lb-header__body {
         flex-direction: column;
         align-items: flex-start;
@@ -1059,12 +997,10 @@
         gap: 24px;
     }
 
-    /* Align stats to the left on mobile */
     .lb-stat {
         align-items: flex-start;
     }
 
-    /* Stack podium cards vertically instead of side by side */
     .lb-podium {
         flex-direction: column;
         align-items: center;
@@ -1078,29 +1014,24 @@
         border-radius: 20px;
     }
 
-    /* Hide the base bars since the cards are stacked, not on a podium */
     .lb-podium-card__base {
         display: none;
     }
 
-    /* Collapse the table to 3 columns */
     .lb-table-cols,
     .lb-row {
         grid-template-columns: 48px 1fr 120px;
     }
 
-    /* Hide the event column on small screens */
     .lb-table-cols span:nth-child(3),
     .lb-row__event {
         display: none;
     }
 
-    /* Stack the how-it-works cards into a single column */
     .lb-how-grid {
         grid-template-columns: 1fr;
     }
 
-    /* Compact the points table */
     .lb-pts-table__head,
     .lb-pts-row {
         grid-template-columns: 1fr 80px 80px;
