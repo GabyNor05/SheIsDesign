@@ -7,7 +7,7 @@ import Footer from "./Footer";
 /* Hides Navbar on pages that don't' have "/admin" or "/judge", those pages show the Sidebar instead */
 function renderNavigation(){
   const path = window.location.pathname;
-  if (path.startsWith("/admin/") || path.startsWith("/judge/")) {
+  if (path.startsWith("/admin") || path.startsWith("/judge")) {
     return null;
   } else {
     return <Navbar />;
@@ -17,7 +17,7 @@ function renderNavigation(){
 /* Hides footer when the Sidebar is visible */
 function shouldShowFooter() {
   const path = window.location.pathname;
-  return !(path.startsWith("/admin/") || path.startsWith("/judge/"));
+  return !(path.startsWith("/admin") || path.startsWith("/judge"));
 }
 
 function RootLayout() {
