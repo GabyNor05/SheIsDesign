@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { getAllEvents } from "../../services/eventService";
+import { eventService } from "../../services/eventService";
 
 import EventsHeroNew from "../../components/events/EventsHeroNew";
 import FeaturedEvent from "../../components/events/FeaturedEvent";
@@ -25,7 +25,7 @@ export default function EventsPage() {
     async function fetchEvents() {
       try {
         setLoading(true);
-        const data = await getAllEvents();
+        const data = await eventService.getAllEvents();
         setEvents(data);
       } catch (err) {
         setError(err.message);
