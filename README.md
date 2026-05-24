@@ -1,4 +1,4 @@
-![banner](./documentation/tutorAidHeader.png)
+![banner](./documentation/sheIsDesugnHeader.png)
 
 - - - -
 
@@ -61,7 +61,7 @@ The public-facing side allows students and industry professionals to register, e
 
 **Style Tile**
 
-\*insert Style Tile image
+![banner](./documentation/styleTile.png)
 
 ---
 ## 💡 Key Features
