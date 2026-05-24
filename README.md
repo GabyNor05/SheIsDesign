@@ -1,4 +1,5 @@
-![banner](./documentation/sheIsDesugnHeader.png)
+<img width="1920" height="583" alt="header" src="https://github.com/user-attachments/assets/22849e46-aaf5-46f7-805b-38831701a09b" />
+
 
 - - - -
 
