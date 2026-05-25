@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import RootLayout from "./components/common/RootLayout";
 // Public pages
 import HomePage from "./pages/public/HomePage";
@@ -18,7 +18,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 //Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <RootLayout />,
