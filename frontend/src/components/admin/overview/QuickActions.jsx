@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Plus, Handshake } from "@phosphor-icons/react";
+import { Plus, IdentificationCard, Handshake } from "@phosphor-icons/react";
 import { FiBarChart2 } from "react-icons/fi";
 import EventForm from "../event/EventForm";
 import InviteJudgeForm from "../event/InviteJudgeForm";

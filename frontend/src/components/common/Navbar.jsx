@@ -1,6 +1,12 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Navbar.jsx — Auth-aware navbar
+// Never logged in:    shows "Join"    → /signup
+// Returning user:     shows "Log In"  → /login
+// Logged in:          shows avatar/initials + dropdown with Profile + Log out
+// ─────────────────────────────────────────────────────────────────────────────
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MdLogout, MdAccountCircle } from "react-icons/md";
+import { MdPerson, MdLogout, MdAccountCircle } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
 
@@ -117,20 +123,21 @@ export default function Navbar({ solid = false }) {
 
       {/* Nav links */}
       <div className="navbar-custom__links">
-{[
-  { to: "/events",      label: "Events"      },
-  { to: "/gallery",     label: "Gallery"     },
-  { to: "/leaderboard", label: "Leaderboard" },
-  { to: "/donate",      label: "Donate"      },
-].map(({ to, label }) => (
-  <Link
-    key={to}
-    to={to}
-    className={`navbar-custom__link ${isActive(to) ? "navbar-custom__link--active" : ""}`}
-  >
-    {label}
-  </Link>
-))}
+        {[
+          { to: "/events",      label: "Events"      },
+          { to: "/gallery",     label: "Gallery"     },
+          { to: "/leaderboard", label: "Leaderboard" },
+          { to: "/donate",      label: "Donate"      },
+          { to: "/volunteer",   label: "Volunteer"   },
+        ].map(({ to, label }) => (
+          <Link
+            key={to}
+            to={to}
+            className={`navbar-custom__link ${isActive(to) ? "navbar-custom__link--active" : ""}`}
+          >
+            {label}
+          </Link>
+        ))}
       </div>
 
       {/* Right side — Avatar, Log In, or Join */}
