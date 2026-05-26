@@ -131,6 +131,56 @@ namespace backend.Controllers
             });
         }
 
+        [HttpPost("GoogleLogin")]
+        public async Task<ActionResult<UserReadDTO>> GoogleLogin([FromBody] GoogleLoginDTO dto)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", dto.AccessToken);
+
+            var googleResponse = await httpClient.GetAsync("https://www.googleapis.com/oauth2/v3/userinfo");
+            if (!googleResponse.IsSuccessStatusCode)
+                return Unauthorized("Invalid Google token");
+
+            var json = await googleResponse.Content.ReadAsStringAsync();
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            var email      = root.GetProperty("email").GetString() ?? "";
+            var givenName  = root.TryGetProperty("given_name",  out var gn) ? gn.GetString() ?? "" : "";
+            var familyName = root.TryGetProperty("family_name", out var fn) ? fn.GetString() ?? "" : "";
+
+            if (string.IsNullOrEmpty(email))
+                return Unauthorized("Could not retrieve email from Google");
+
+            bool isNewUser = false;
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
+            {
+                isNewUser = true;
+                user = new User
+                {
+                    Email        = email,
+                    PasswordHash = string.Empty,
+                    DateCreated  = DateTime.UtcNow,
+                    Role         = "User"
+                };
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new UserReadDTO
+            {
+                Id          = user.Id,
+                Email       = user.Email,
+                Role        = user.Role,
+                DateCreated = user.DateCreated,
+                IsNewUser   = isNewUser,
+                GivenName   = givenName,
+                FamilyName  = familyName,
+            });
+        }
+
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)

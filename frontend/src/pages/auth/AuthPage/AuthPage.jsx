@@ -47,7 +47,8 @@ import FloatingCards from "../../../components/auth/FloatingCards/FloatingCards"
 import TokenModal from "../../../components/auth/TokenModal/TokenModal";
 import OtpModal from "../../../components/auth/OtpModal/OtpModal";
 import { useAuth } from "../../../context/AuthContext";
-import { loginUser, registerUser } from "../../../services/authService";
+import { useGoogleLogin } from "@react-oauth/google";
+import { loginUser, registerUser, googleLoginUser } from "../../../services/authService";
 import "./AuthPage.css";
 
 // 🔌 Replace with role check from API response (UserReadDTO.cs)
@@ -91,7 +92,7 @@ function AuthToggle({ mode, onChange }) {
 }
 
 // ── Login fields ──────────────────────────────────────────────────────────────
-function LoginFields({ onSubmit, error }) {
+function LoginFields({ onSubmit, error, onGoogleClick, googleLoading, googleError }) {
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
 
@@ -145,14 +146,19 @@ function LoginFields({ onSubmit, error }) {
 
       <div className="auth-card__google-group">
         <OrDivider />
-        <GoogleButton />
+        <GoogleButton
+          onClick={onGoogleClick}
+          disabled={googleLoading}
+          label={googleLoading ? "Signing in..." : "Continue with Google"}
+        />
+        {googleError && <p className="auth-card__error">{googleError}</p>}
       </div>
     </>
   );
 }
 
 // ── Signup fields ─────────────────────────────────────────────────────────────
-function SignupFields({ onSubmit, error }) {
+function SignupFields({ onSubmit, error, onGoogleClick, googleLoading, googleError }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName]   = useState("");
   const [email, setEmail]         = useState("");
@@ -218,7 +224,12 @@ function SignupFields({ onSubmit, error }) {
 
       <div className="auth-card__google-group">
         <OrDivider />
-        <GoogleButton label="Sign up with Google" />
+        <GoogleButton
+          onClick={onGoogleClick}
+          disabled={googleLoading}
+          label={googleLoading ? "Signing in..." : "Sign up with Google"}
+        />
+        {googleError && <p className="auth-card__error">{googleError}</p>}
       </div>
 
       <p className="auth-card__terms">
@@ -248,6 +259,40 @@ function AuthCard() {
   const [loginError, setLoginError]   = useState("");
   const [signupError, setSignupError] = useState("");
   const [apiUser, setApiUser]         = useState(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError]     = useState("");
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setGoogleLoading(true);
+      setGoogleError("");
+      try {
+        const res = await googleLoginUser(tokenResponse.access_token);
+        if (res.isNewUser) {
+          navigate("/signup/details", {
+            state: {
+              firstName: res.givenName  || "",
+              lastName:  res.familyName || "",
+              email:     res.email,
+              userId:    res.id,
+            },
+          });
+        } else {
+          login(res);
+          navigate(
+            res.role === "admin" ? "/admin/dashboard"
+            : res.role === "judge" ? "/judge/dashboard"
+            : "/"
+          );
+        }
+      } catch (err) {
+        setGoogleError(err.message || "Google sign-in failed. Please try again.");
+      } finally {
+        setGoogleLoading(false);
+      }
+    },
+    onError: () => setGoogleError("Google sign-in was cancelled or failed."),
+  });
 
   async function handleLoginSubmit({ email, password }) {
     setLoginError("");
@@ -297,9 +342,21 @@ function AuthCard() {
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             >
               {mode === "login" ? (
-                <LoginFields onSubmit={handleLoginSubmit} error={loginError} />
+                <LoginFields
+                  onSubmit={handleLoginSubmit}
+                  error={loginError}
+                  onGoogleClick={googleLogin}
+                  googleLoading={googleLoading}
+                  googleError={googleError}
+                />
               ) : (
-                <SignupFields onSubmit={handleSignupSubmit} error={signupError} />
+                <SignupFields
+                  onSubmit={handleSignupSubmit}
+                  error={signupError}
+                  onGoogleClick={googleLogin}
+                  googleLoading={googleLoading}
+                  googleError={googleError}
+                />
               )}
             </motion.div>
           </AnimatePresence>
