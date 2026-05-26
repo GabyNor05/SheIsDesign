@@ -1,7 +1,5 @@
 import {useState} from "react";
 import {T} from "../../components/admin/theme";
-
-import Stats from "../../components/admin/overview/Stats";
 import QuickActions from "../../components/admin/overview/QuickActions";
 import UpcomingEvents from "../../components/admin/overview/UpcomingEvents";
 import RecentActivity from "../../components/admin/overview/RecentActivity";
@@ -10,11 +8,13 @@ import PendingApplicattions from "../../components/admin/overview/PendingApplica
 
 
 const STATUS_BADGE = "System Online";
-const DAY_LABEL = "Wednesday, September 3, 2025";
+
+const DayLabel = () => (
+    new Date().toLocaleDateString("en-UK", { month: "long", day: "numeric", year: "numeric" })
+)
 
 
 function Overview({ setActiveTab }) {
-    const [modal, setModal] = useState(null);
     return (
         <div className="flex flex-col gap-8 px-20 w-full font-poppins">
             <div className="flex flex-row justify-between items-baseline font-poppins ">
@@ -23,7 +23,7 @@ function Overview({ setActiveTab }) {
                     <p className="text-sm text-[#A0A0A0]">Manage events, participants, and competitions.</p>
                 </div>
                 <div className="flex flex-col justify-left items-end gap-2">
-                    <h3 className="text-[12px]  mb-1" style={{ color: T.textSecond }}>{DAY_LABEL}</h3>
+                    <h3 className="text-[12px]  mb-1" style={{ color: T.textSecond }}>{DayLabel()}</h3>
                     <span className="rounded-[20px] w-fit" style={{
                         background: T.activeBg, color: T.activeGreen, borderRadius: 20,
                         padding: "4px 12px", fontSize: 12, fontWeight: 600,
@@ -41,7 +41,6 @@ function Overview({ setActiveTab }) {
                     <PendingApplicattions />
                 <RecentActivity />
                 </div>
-                <Stats />
 
         </div>
     );
