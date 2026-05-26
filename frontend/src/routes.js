@@ -27,6 +27,8 @@ import ManageDonations from "./pages/admin/ManageDonationsPage";
 
 // Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
+import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
+import JudgeScoringPage from "./pages/judge/JudgeScoringPage";
 
 const Routes = createBrowserRouter([
   {
@@ -68,6 +70,8 @@ const Routes = createBrowserRouter([
 
       // ── Judge ─────────────────────────────────────────────────────────────
       { path: "judge", element: <JudgeDashboard /> },
+      { path: "judge/events", element: <JudgeEventsPage /> },
+      { path: "judge/score/:eventId", element: <JudgeScoringPage /> },
     ],
   },
 ]);
