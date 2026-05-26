@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import emailjs from '@emailjs/browser';
 import { Plus, IdentificationCard, Handshake } from "@phosphor-icons/react";
 import { FiBarChart2 } from "react-icons/fi";
 import EventForm from "../event/EventForm";

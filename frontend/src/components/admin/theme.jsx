@@ -13,8 +13,8 @@ export const T = {
   borderHi:    "#3A3A3A",   // hover border
 
   // Brand
-  pink:        "#FF2D78",   // primary CTA / active state
-  pinkDim:     "#3D0F22",   // pink tint background (accessible)
+  pink:        "#E8186E",   // primary CTA / active state
+  pinkDim:     "#230512",   // pink tint background (accessible)
   pinkGlow:    "rgba(255,45,120,0.15)",
 
   // Text — all WCAG AA on #1A1A1A
