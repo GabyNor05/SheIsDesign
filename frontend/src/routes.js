@@ -20,10 +20,10 @@ import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/Applicatio
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDashboardV2 from "./pages/admin/template/AdminDashboardV2";
 import ManageEvents from "./pages/admin/template/Events";
-// import ManageParticipants from "./pages/admin/ManageParticipantsPage";
+import ManageParticipantsPage from "./pages/admin/ManageParticipantsPage";
+import ManageLeaderboardPage from "./pages/admin//ManageLeaderboardPage";
 // import ManageDonations from "./pages/admin/ManageDonationsPage";
 // import ManageGallery from "./pages/admin/ManageGalleryPage";
-// import Leaderboard from "./pages/admin/Leaderboard";
 
 // Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
@@ -59,8 +59,8 @@ const Routes = createBrowserRouter([
         children: [
           { index: true, element: <AdminDashboardV2 /> },
           { path: "events", element: <ManageEvents /> },
-          // { path: "participants",element: <ManageParticipants /> },
-          // { path: "leaderboard", element: <Leaderboard /> },
+          { path: "participants", element: <ManageParticipantsPage /> },
+          { path: "leaderboard", element: <ManageLeaderboardPage /> },
           // { path: "gallery",     element: <ManageGallery /> },
           // { path: "donations",   element: <ManageDonations /> },
         ],

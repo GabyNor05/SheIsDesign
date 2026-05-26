@@ -36,7 +36,7 @@
     overflow: hidden;
     background: #0D0608;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 80px 48px 72px;
+    padding: 0px 0px 22px;
     z-index: 1;
 }
 
@@ -509,7 +509,6 @@
 .lb-table-section {
     position: relative;
     z-index: 1;
-    padding: 48px 48px 64px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
