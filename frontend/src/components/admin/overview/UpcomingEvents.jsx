@@ -8,16 +8,23 @@ import {
 } from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
 import Card from "./Card";
-import { eventService } from "../../../services/eventService";
+import { getUpcomingEvents } from "../../../services/eventService";
 
 import { T } from "../theme";
 
 const STATUS_MAP = {
-  ACTIVE: { bg: "#10e26633", color: T.activeGreen, dot: T.activeGreen },
+  OPEN: { bg: "#10e26633", color: T.activeGreen, dot: T.activeGreen },
   UPCOMING: { bg: T.upBg, color: T.upBlue, dot: T.upBlue },
   DRAFT: { bg: T.draftBg, color: T.draftGray, dot: T.draftGray },
   CLOSED: { bg: T.closedBg, color: T.closedRed, dot: T.closedRed },
 };
+
+const UPCOMING_EVENTS = [
+  { id: "evt-001", title: "Brand Identity Challenge", category: "BRAND IDENTITY", status: "OPEN",   dateRange: "1–12 Mar 2026",  entries: 84,  maxEntries: 100 },
+  { id: "evt-002", title: "Motion Design Bootcamp",   category: "MOTION DESIGN",  status: "OPEN",   dateRange: "10–20 Mar 2026", entries: 41,  maxEntries: 60  },
+  { id: "evt-003", title: "UI/UX Hackathon 2026",     category: "UX DESIGN",      status: "OPEN",   dateRange: "1–5 Apr 2026",   entries: 112, maxEntries: 150 },
+  { id: "evt-004", title: "Typography Sprint",        category: "GRAPHIC DESIGN", status: "UPCOMING",dateRange: "12–18 Apr 2026", entries: 29,  maxEntries: 60  },
+];
 
 function StatusBadge({ status }) {
   const s = STATUS_MAP[status] || STATUS_MAP.DRAFT;
@@ -65,7 +72,7 @@ function EventCard({ event }) {
         border: `1px solid ${T.border}`,
         borderRadius: 14,
         padding: "18px 20px",
-        maxHeight: "167.891px",
+        maxHeight: "170px",
         minWidth: 230,
         maxWidth: 260,
         flex: "0 0 240px",
@@ -84,44 +91,49 @@ function EventCard({ event }) {
         e.currentTarget.style.transform = "translateY(0)";
       }}
     >
-      <div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            gap: 8,
-          }}
-        >
-          <div className="w-full">
-            <div
-              style={{
-                fontFamily: "Syne, sans-serif",
-                fontWeight: 700,
-                fontSize: 14.5,
-                color: T.textPrimary,
-                marginBottom: 4,
-                lineHeight: 1.3,
-              }}
-            >
-              {event.title}
-            </div>
+        <div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <div className="">
+
+          <div
+            style={{
+              display:"flex",
+              fontFamily: "Syne, sans-serif",
+              flexWrap: "wrap",
+              fontWeight: 700,
+              fontSize: 14.5,
+              color: T.textPrimary,
+              marginBottom: 4,
+              lineHeight: 1.3,
+            }}
+          >
+            {event.title}
           </div>
-          <StatusBadge status={event.status} />
         </div>
-        <div
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            width: "100%",
-            fontSize: 10.5,
-            color: T.textMuted,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-          }}
-        >
-          {event.category}
-        </div>
+        
+        <StatusBadge status={event.status} />
       </div>
+          <div
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              width: "100%",
+              fontSize: 10.5,
+              color: T.textMuted,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+            }}
+          >
+            {event.category}
+          </div>
+        </div>
 
       <div
         style={{
@@ -206,7 +218,7 @@ function UpcomingEvents() {
   const loadEvents = async () => {
     try {
       setLoading(true);
-const upcoming = await eventService.getUpcomingEvents();
+      const upcoming = await getUpcomingEvents();
       console.log("Next events:", upcoming);
       setEvents(upcoming);
       setError(null);
@@ -263,28 +275,24 @@ const upcoming = await eventService.getUpcomingEvents();
         badge={`${openCount} open`}
         action="View all"
       />
-      <div
-  style={{
-    display: "flex",
-    flexWrap: "nowrap",
-    height: "167.891px",
-    overflow: "hidden",
-    overflowX: "scroll",
-    alignItems: "flex-start",
-    alignSelf: "stretch",
-    gap: 14,
-    paddingBottom: 4,
-    scrollbarWidth: "thin",
-    scrollbarColor: `${T.border} `,
-  }}
-      >
-        {events.length > 0 ? (
-          events.map((ev) => <EventCard key={ev.id} event={ev} />)
-        ) : (
-          <div style={{ padding: "20px", color: T.textMuted }}>
-            No upcoming events
-          </div>
-        )}
+      <div>
+        <div
+          style={{
+            display: "flex",
+            width: "1020px",
+            height: "180px",
+            overflowX: "auto",
+            overflowY: "hidden",
+            alignItems: "space-between",
+            whiteSpace: "nowrap",
+            gap: 14,
+            padding: 4,
+          }}
+        >
+          {events.map((ev) => (
+            <EventCard key={ev.id} event={ev} />
+          ))}
+        </div>
       </div>
     </div>
   );

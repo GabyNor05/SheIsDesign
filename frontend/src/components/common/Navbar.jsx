@@ -123,20 +123,21 @@ export default function Navbar({ solid = false }) {
 
       {/* Nav links */}
       <div className="navbar-custom__links">
-{[
-  { to: "/events",      label: "Events"      },
-  { to: "/gallery",     label: "Gallery"     },
-  { to: "/leaderboard", label: "Leaderboard" },
-  { to: "/donate",      label: "Donate"      },
-].map(({ to, label }) => (
-  <Link
-    key={to}
-    to={to}
-    className={`navbar-custom__link ${isActive(to) ? "navbar-custom__link--active" : ""}`}
-  >
-    {label}
-  </Link>
-))}
+        {[
+          { to: "/events",      label: "Events"      },
+          { to: "/gallery",     label: "Gallery"     },
+          { to: "/leaderboard", label: "Leaderboard" },
+          { to: "/donate",      label: "Donate"      },
+          { to: "/volunteer",   label: "Volunteer"   },
+        ].map(({ to, label }) => (
+          <Link
+            key={to}
+            to={to}
+            className={`navbar-custom__link ${isActive(to) ? "navbar-custom__link--active" : ""}`}
+          >
+            {label}
+          </Link>
+        ))}
       </div>
 
       {/* Right side — Avatar, Log In, or Join */}

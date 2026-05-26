@@ -109,7 +109,7 @@ function PendingApplications() {
   const list  = tab === "students" ? PENDING_STUDENTS : PENDING_PROFESSIONALS;
 
   return (
-    <Card>
+    <Card style={{width: "100%"}}>
       <SectionHeader
         icon= {<RxPeople size = {16} />}
         title="Pending Applications"
@@ -118,7 +118,7 @@ function PendingApplications() {
       />
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 0, marginBottom: 16, borderBottom: `1px solid ${T.border}` }}>
+      <div style={{ width: "422.39px", display: "flex", gap: 0, marginBottom: 16, borderBottom: `1px solid ${T.border}` }}>
         {[
           { key: "students",      label: "Students",             count: PENDING_STUDENTS.length },
           { key: "professionals", label: "Industry Professionals",count: PENDING_PROFESSIONALS.length },
