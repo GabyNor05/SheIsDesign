@@ -1,6 +1,5 @@
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
-
 import { T, INPUT_STYLES } from "../theme";
 
 function InviteJudgeForm({ onSave, onClose }) {
@@ -15,22 +14,16 @@ function InviteJudgeForm({ onSave, onClose }) {
     return Object.keys(e).length === 0;
   };
 
-  function configEmailJS(){
-      emailjs.init({
-        publicKey: "N8hgLvHSjKw4sAw8T",
-      });
-    }
+  function configEmailJS() {
+    emailjs.init({ publicKey: "N8hgLvHSjKw4sAw8T" });
+  }
 
   const handleSubmit = () => {
     configEmailJS();
     if (!validate()) return;
     emailjs.send("service_7s2q8fk", "sheIsDesignJudgeInvite", { email }).then(
-      (response) => {
-        console.log("SUCCESS!", response.status, response.text);
-      },
-      (error) => {
-        console.log("FAILED...", error);
-      },
+      (response) => console.log("SUCCESS!", response.status, response.text),
+      (error) => console.log("FAILED...", error)
     );
   };
 
@@ -39,7 +32,7 @@ function InviteJudgeForm({ onSave, onClose }) {
       <div style={{ marginBottom: 18 }}>
         <label
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",  // ✅ was 'DM Sans'
             fontSize: 12,
             fontWeight: 600,
             color: T.textSecond,
@@ -62,14 +55,7 @@ function InviteJudgeForm({ onSave, onClose }) {
           }}
         />
         {errors.email && (
-          <span
-            style={{
-              fontSize: 11,
-              color: T.closedRed,
-              marginTop: 4,
-              display: "block",
-            }}
-          >
+          <span style={{ fontSize: 11, color: T.closedRed, marginTop: 4, display: "block" }}>
             {errors.email}
           </span>
         )}
@@ -93,32 +79,27 @@ function InviteJudgeForm({ onSave, onClose }) {
             padding: "10px 20px",
             color: T.textSecond,
             cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",  // ✅ was 'DM Sans'
             fontSize: 14,
             fontWeight: 500,
             transition: "all 0.15s",
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = T.border;
-            e.currentTarget.style.color = T.textPrimary;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = T.border;
-            e.currentTarget.style.color = T.textSecond;
-          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = T.textPrimary)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = T.textSecond)}
         >
           Cancel
         </button>
+
         <button
           onClick={handleSubmit}
           style={{
-            background: T.pink,
+            background: "linear-gradient(135deg, #C41262, #FE4081)",  // ✅ was T.pink flat colour
             border: "none",
             borderRadius: 8,
             padding: "10px 24px",
             color: "#fff",
             cursor: "pointer",
-            fontFamily: "Syne, sans-serif",
+            fontFamily: "'Poppins', sans-serif",  // ✅ was Syne
             fontSize: 14,
             fontWeight: 700,
             transition: "opacity 0.15s",

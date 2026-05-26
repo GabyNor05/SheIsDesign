@@ -14,6 +14,7 @@ import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage"
 import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminDashboardV2 from "./pages/admin/template/AdminDashboardV2";
 
 //Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       { path: "signup/success", element: <SignupSuccessPage /> },
       { path: "application-status", element: <ApplicationStatusPage /> },
       { path: "admin", element: <AdminDashboard /> },
+      { path: "admin-v2", element: <AdminDashboardV2 /> },
       { path: "judge", element: <JudgeDashboard /> },
     ],
   },
