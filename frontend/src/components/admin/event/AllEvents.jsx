@@ -7,7 +7,7 @@ import Modal from "../Modal";
 import EventForm from "./EventForm";
 import ConfirmDelete from "./ConfirmDelete";
 import Searchbar from "./Searchbar";
-import { getAllEvents } from "../../../services/eventService";
+import { eventService } from "../../../services/eventService";
 
 const STATUS_TABS = ["ALL", "OPEN", "DRAFT", "UPCOMING", "CLOSED"];
 
@@ -29,7 +29,7 @@ function AllEvents() {
   const loadEvents = async () => {
     try {
       setLoading(true);
-      const data = await getAllEvents();
+      const data = await eventService.getAllEvents();
       setEvents(data || []);
       setError(null);
     } catch (err) {

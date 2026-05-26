@@ -365,3 +365,5 @@ C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\obj\Debug\ne
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.pdb
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.genruntimeconfig.cache
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\obj\Debug\net10.0\ref\SheDesign.Tests.dll
+C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\appsettings.Development.json
+C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\bin\Debug\net10.0\appsettings.json

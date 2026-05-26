@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { T, STATUS_STYLES } from "../theme";
 import { Eye, Gear } from "@phosphor-icons/react";
-import { getUpcomingEvents } from "../../../services/eventService";
+import { eventService } from "../../../services/eventService";
 import EventForm from "./EventForm";
 import EventDetail from "./EventDetail";
 import FeaturedCard from "./FeaturedCard";
@@ -146,7 +146,7 @@ export default function LiveEvents() {
       setLoading(true);
       setError(null);
       try {
-        const data = await getUpcomingEvents();
+        const data = await eventService.getUpcomingEvents();
         console.log("Fetched upcoming events from API:", data);
         setEvents(data || []);
         saveEvents(data || []);

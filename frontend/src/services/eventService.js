@@ -31,6 +31,24 @@ export const eventService = {
 
     getUpcomingEvents: () => apiClient.get('/Upcoming'),
 
+    /*
+    create event needs these variables
+
+    -----
+      {
+        "title": "string",
+        "start_date": "2026-05-26", -- DateTime
+        "end_date": "2026-05-26", -- DateTTime
+        "description": "string",
+        "max_entry": 0,
+        "category": "string",
+        "points_reward": 0,
+        "status": "string",
+        "image_link": "string"
+      }
+    -----
+
+    */
     createEvent: (eventData) => apiClient.post('/', eventData),
 
     updateEvent: (id, eventData) => apiClient.put(`/${id}`, { ...eventData, id }),
