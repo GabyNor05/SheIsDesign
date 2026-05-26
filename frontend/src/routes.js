@@ -22,7 +22,7 @@ import AdminDashboardV2 from "./pages/admin/template/AdminDashboardV2";
 import ManageEvents from "./pages/admin/template/Events";
 import ManageParticipantsPage from "./pages/admin/ManageParticipantsPage";
 import ManageLeaderboardPage from "./pages/admin//ManageLeaderboardPage";
-// import ManageDonations from "./pages/admin/ManageDonationsPage";
+import ManageDonations from "./pages/admin/ManageDonationsPage";
 // import ManageGallery from "./pages/admin/ManageGalleryPage";
 
 // Judge pages
@@ -62,7 +62,7 @@ const Routes = createBrowserRouter([
           { path: "participants", element: <ManageParticipantsPage /> },
           { path: "leaderboard", element: <ManageLeaderboardPage /> },
           // { path: "gallery",     element: <ManageGallery /> },
-          // { path: "donations",   element: <ManageDonations /> },
+          { path: "donations", element: <ManageDonations /> },
         ],
       },
 
