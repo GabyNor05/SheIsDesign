@@ -1,0 +1,18 @@
+/* ── AdminLayout.css ───────────────────────────────────────────────────────────
+   Wraps all admin pages: sidebar (fixed 220px) + scrollable content area
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #0D0D0D;
+}
+
+/* Push content to the right of the fixed 220px sidebar */
+.admin-layout__content {
+    margin-left: 220px;
+    flex: 1;
+    min-height: 100vh;
+    overflow-y: auto;
+    background: #0D0D0D;
+}

@@ -1,5 +1,33 @@
-import { useState, useEffect } from "react";
-import { T, STATUS_STYLES } from "../../../components/admin/theme";
+import { useState, useEffect, useRef } from "react";
+import "./Events.css";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DESIGN TOKENS (CSS-var aligned)
+// ─────────────────────────────────────────────────────────────────────────────
+const T = {
+  bg:          "#0D0D0D",
+  surface:     "#1A1A1A",
+  surfaceHi:   "#242424",
+  surfaceBord: "#2A2A2A",
+  border:      "#2E2E2E",
+  borderHi:    "#3A3A3A",
+  pink:        "#C41262",
+  pinkHot:     "#FE4081",
+  pinkGrad:    "linear-gradient(135deg, #C41262, #FE4081)",
+  pinkDim:     "#2D0A1A",
+  textPrimary: "#F0F0F0",
+  textSecond:  "rgba(255,255,255,0.65)",
+  textMuted:   "rgba(255,255,255,0.45)",
+  activeGreen: "#22C55E",
+  activeBg:    "#052512",
+  upBlue:      "#60A5FA",
+  upBg:        "#0A1628",
+  draftGray:   "#A0A0A0",
+  draftBg:     "#222222",
+  closedRed:   "#F87171",
+  closedBg:    "#200B0B",
+  amber:       "#FBBF24",
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
@@ -7,175 +35,35 @@ import { T, STATUS_STYLES } from "../../../components/admin/theme";
 const STORAGE_KEY = "sheisdesign_events";
 
 const CATEGORIES = [
-  "Branding", "Motion", "UI/UX", "Typography",
-  "Illustration", "Packaging", "Photography", "Web Design", "Other",
+  "Branding","Motion","UI/UX","Typography",
+  "Illustration","Packaging","Photography","Web Design","Other",
 ];
-const STATUSES = ["OPEN", "DRAFT", "UPCOMING", "CLOSED"];
-const STATUS_TABS = ["DRAFT", "UPCOMING", "OPEN", "CLOSED"];
+const STATUSES    = ["OPEN","DRAFT","UPCOMING","CLOSED"];
+const STATUS_TABS = ["DRAFT","UPCOMING","OPEN","CLOSED"];
+
+const STATUS_STYLES = {
+  OPEN:     { bg: "#052512", color: "#22C55E" },
+  UPCOMING: { bg: "#0A1628", color: "#60A5FA" },
+  DRAFT:    { bg: "#222222", color: "#A0A0A0" },
+  CLOSED:   { bg: "#200B0B", color: "#F87171" },
+};
 
 const SEED_EVENTS = [
-  {
-    EventID: "evt-001",
-    title: "Brand Identity Challenge",
-    category: "Branding",
-    categoryLabel: "Brand Identity",
-    start_date: "2025-03-12",
-    end_date: "2025-03-10",
-    entry_count: 84,
-    max_entries: 92,
-    description:
-      "A comprehensive brand identity challenge where participants design a full visual identity system for a fictional female-led startup. Includes logo, colour palette, typography, and brand guidelines.",
-    points_reward: 500,
-    status: "OPEN",
-    image_link: "",
-    submissions: 66,
-    location: "Online",
-    time: "09:00",
-    judges: 6,
-  },
-  {
-    EventID: "evt-002",
-    title: "Motion Design Bootcamp",
-    category: "Motion",
-    categoryLabel: "Motion Design",
-    start_date: "2025-03-20",
-    end_date: "2025-03-18",
-    entry_count: 41,
-    max_entries: 60,
-    description:
-      "An intensive motion design bootcamp focused on animated brand assets, type animation, and logo reveals.",
-    points_reward: 300,
-    status: "OPEN",
-    image_link: "",
-    submissions: 28,
-    location: "Online",
-    time: "10:00",
-    judges: 3,
-  },
-  {
-    EventID: "evt-003",
-    title: "UI/UX Hackathon 2026",
-    category: "UI/UX",
-    categoryLabel: "UX Design",
-    start_date: "2025-04-05",
-    end_date: "2025-04-03",
-    entry_count: 61,
-    max_entries: 75,
-    description:
-      "A 48-hour hackathon challenging participants to redesign a real app for accessibility and inclusivity.",
-    points_reward: 750,
-    status: "OPEN",
-    image_link: "",
-    submissions: 47,
-    location: "Wits University, Johannesburg",
-    time: "08:00",
-    judges: 4,
-  },
-  {
-    EventID: "evt-004",
-    title: "Illustration Open Brief",
-    category: "Illustration",
-    categoryLabel: "Illustration",
-    start_date: "2025-05-02",
-    end_date: "2025-04-28",
-    entry_count: 67,
-    max_entries: 80,
-    description:
-      "An open illustration brief celebrating African femininity. Submit a single editorial illustration inspired by 'She Leads'.",
-    points_reward: 400,
-    status: "OPEN",
-    image_link: "",
-    submissions: 51,
-    location: "Online",
-    time: "09:00",
-    judges: 3,
-  },
-  {
-    EventID: "evt-005",
-    title: "Typography Sprint",
-    category: "Typography",
-    categoryLabel: "Typography",
-    start_date: "2025-04-18",
-    end_date: "2025-04-15",
-    entry_count: 29,
-    max_entries: 60,
-    description:
-      "A focused sprint on editorial typography — design a double-page spread for a fictional design magazine.",
-    points_reward: 200,
-    status: "DRAFT",
-    image_link: "",
-    submissions: 0,
-    location: "Online",
-    time: "10:00",
-    judges: 2,
-  },
-  {
-    EventID: "evt-006",
-    title: "Packaging Design Sprint",
-    category: "Packaging",
-    categoryLabel: "Packaging",
-    start_date: "2025-05-15",
-    end_date: "2025-05-12",
-    entry_count: 0,
-    max_entries: 75,
-    description:
-      "Design sustainable packaging for a female-founded skincare brand. Includes front, back, and side panels plus a 3D mockup.",
-    points_reward: 350,
-    status: "UPCOMING",
-    image_link: "",
-    submissions: 0,
-    location: "Online",
-    time: "10:00",
-    judges: 2,
-  },
-  {
-    EventID: "evt-007",
-    title: "Annual Design Awards 2025",
-    category: "Other",
-    categoryLabel: "Awards",
-    start_date: "2025-10-14",
-    end_date: "2025-10-10",
-    entry_count: 203,
-    max_entries: 300,
-    description:
-      "The flagship annual awards celebrating the best work across all ShelsDesign events throughout 2025.",
-    points_reward: 1000,
-    status: "CLOSED",
-    image_link: "",
-    submissions: 187,
-    location: "Online",
-    time: "10:00",
-    judges: 8,
-  },
-  {
-    EventID: "evt-008",
-    title: "Poster Design Challenge",
-    category: "Illustration",
-    categoryLabel: "Illustration",
-    start_date: "2025-09-05",
-    end_date: "2025-09-03",
-    entry_count: 76,
-    max_entries: 100,
-    description:
-      "A bold poster challenge themed 'Future Female'. Submit an A2 print-ready poster of empowerment.",
-    points_reward: 250,
-    status: "CLOSED",
-    image_link: "",
-    submissions: 69,
-    location: "Online",
-    time: "10:00",
-    judges: 3,
-  },
+  { EventID:"evt-001", title:"Brand Identity Challenge",  category:"Branding",     categoryLabel:"Brand Identity",  start_date:"2025-03-12", end_date:"2025-03-10", entry_count:84,  max_entries:92,  description:"A comprehensive brand identity challenge where participants design a full visual identity system for a fictional female-led startup.",  points_reward:500,  status:"OPEN",     image_link:"", submissions:66, location:"Online", time:"09:00", judges:6 },
+  { EventID:"evt-002", title:"Motion Design Bootcamp",    category:"Motion",       categoryLabel:"Motion Design",   start_date:"2025-03-20", end_date:"2025-03-18", entry_count:41,  max_entries:60,  description:"An intensive motion design bootcamp focused on animated brand assets, type animation, and logo reveals.",                            points_reward:300,  status:"OPEN",     image_link:"", submissions:28, location:"Online", time:"10:00", judges:3 },
+  { EventID:"evt-003", title:"UI/UX Hackathon 2026",      category:"UI/UX",        categoryLabel:"UX Design",       start_date:"2025-04-05", end_date:"2025-04-03", entry_count:61,  max_entries:75,  description:"A 48-hour hackathon challenging participants to redesign a real app for accessibility and inclusivity.",                              points_reward:750,  status:"OPEN",     image_link:"", submissions:47, location:"Wits University, Johannesburg", time:"08:00", judges:4 },
+  { EventID:"evt-004", title:"Illustration Open Brief",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-05-02", end_date:"2025-04-28", entry_count:67,  max_entries:80,  description:"An open illustration brief celebrating African femininity. Submit a single editorial illustration inspired by 'She Leads'.",           points_reward:400,  status:"OPEN",     image_link:"", submissions:51, location:"Online", time:"09:00", judges:3 },
+  { EventID:"evt-005", title:"Typography Sprint",         category:"Typography",   categoryLabel:"Typography",      start_date:"2025-04-18", end_date:"2025-04-15", entry_count:29,  max_entries:60,  description:"A focused sprint on editorial typography — design a double-page spread for a fictional design magazine.",                            points_reward:200,  status:"DRAFT",    image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
+  { EventID:"evt-006", title:"Packaging Design Sprint",   category:"Packaging",    categoryLabel:"Packaging",       start_date:"2025-05-15", end_date:"2025-05-12", entry_count:0,   max_entries:75,  description:"Design sustainable packaging for a female-founded skincare brand.",                                                                    points_reward:350,  status:"UPCOMING", image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
+  { EventID:"evt-007", title:"Annual Design Awards 2025", category:"Other",        categoryLabel:"Awards",          start_date:"2025-10-14", end_date:"2025-10-10", entry_count:203, max_entries:300, description:"The flagship annual awards celebrating the best work across all ShelsDesign events throughout 2025.",                               points_reward:1000, status:"CLOSED",   image_link:"", submissions:187,location:"Online", time:"10:00", judges:8 },
+  { EventID:"evt-008", title:"Poster Design Challenge",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-09-05", end_date:"2025-09-03", entry_count:76,  max_entries:100, description:"A bold poster challenge themed 'Future Female'. Submit an A2 print-ready poster of empowerment.",                                     points_reward:250,  status:"CLOSED",   image_link:"", submissions:69, location:"Online", time:"10:00", judges:3 },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 function loadEvents() {
-  try {
-    const r = localStorage.getItem(STORAGE_KEY);
-    if (r) return JSON.parse(r);
-  } catch {}
+  try { const r = localStorage.getItem(STORAGE_KEY); if (r) return JSON.parse(r); } catch {}
   return SEED_EVENTS;
 }
 function saveEvents(evs) {
@@ -184,15 +72,9 @@ function saveEvents(evs) {
 function genId() { return "evt-" + Date.now().toString(36); }
 function fmtDate(d) {
   if (!d) return "—";
-  try {
-    return new Date(d + "T00:00:00").toLocaleDateString("en-ZA", {
-      day: "numeric", month: "short", year: "numeric",
-    });
-  } catch { return d; }
+  try { return new Date(d + "T00:00:00").toLocaleDateString("en-ZA", { day:"numeric", month:"short", year:"numeric" }); } catch { return d; }
 }
-function calcPct(count, max) {
-  return max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0;
-}
+function calcPct(count, max) { return max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0; }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ICON
@@ -217,8 +99,7 @@ function Ic({ n, s = 16, c = "currentColor" }) {
   };
   return (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none"
-      stroke={c} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round"
-      aria-hidden="true">
+      stroke={c} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {paths[n]}
     </svg>
   );
@@ -230,15 +111,7 @@ function Ic({ n, s = 16, c = "currentColor" }) {
 function Badge({ status }) {
   const s = STATUS_STYLES[status] || STATUS_STYLES.DRAFT;
   return (
-    <span style={{
-      display: "inline-flex", alignItems: "center",
-      background: s.bg, color: s.color,
-      border: `1px solid ${s.color}40`,
-      borderRadius: 4, padding: "3px 8px",
-      fontSize: 10, fontWeight: 800,
-      fontFamily: "'DM Sans', sans-serif",
-      letterSpacing: "0.1em", textTransform: "uppercase",
-    }}>
+    <span className="ev-badge" style={{ background: s.bg, color: s.color, borderColor: `${s.color}40` }}>
       {status}
     </span>
   );
@@ -252,21 +125,15 @@ function ProgressBar({ count, max, showLabel = true }) {
   return (
     <div>
       {showLabel && (
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, color: T.textSecond }}>
-            {count} / {max} entries
-          </span>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, fontWeight: 700, color: p >= 80 ? T.pink : T.textSecond }}>
+        <div className="progress-label">
+          <span className="progress-label__count">{count} / {max} entries</span>
+          <span className="progress-label__pct" style={{ color: p >= 80 ? T.pinkHot : T.textSecond }}>
             {p}% full
           </span>
         </div>
       )}
-      <div style={{ height: showLabel ? 5 : 4, background: T.surfaceHi, borderRadius: 3, overflow: "hidden" }}>
-        <div style={{
-          width: `${p}%`, height: "100%",
-          background: `linear-gradient(90deg, ${T.pink}88, ${T.pink})`,
-          borderRadius: 3, transition: "width .5s",
-        }} />
+      <div className="progress-track" style={{ height: showLabel ? 5 : 4 }}>
+        <div className="progress-fill" style={{ width: `${p}%` }} />
       </div>
     </div>
   );
@@ -277,56 +144,50 @@ function ProgressBar({ count, max, showLabel = true }) {
 // ─────────────────────────────────────────────────────────────────────────────
 function JudgeAvatars({ count }) {
   if (!count) return null;
-  const colors = [T.pink, T.upBlue, T.activeGreen, "#FBBF24"];
+  const colors = [T.pink, T.upBlue, T.activeGreen, T.amber];
   const show = Math.min(count, 4);
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <div style={{ display: "flex" }}>
+    <div className="judge-avatars">
+      <div className="judge-avatar-stack">
         {Array.from({ length: show }).map((_, i) => (
-          <div key={i} style={{
-            width: 20, height: 20, borderRadius: "50%",
+          <div key={i} className="judge-avatar" style={{
             background: colors[i % 4] + "30",
-            border: `1.5px solid ${T.surface}`,
+            color: colors[i % 4],
             marginLeft: i ? -6 : 0,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 7, fontWeight: 800, color: colors[i % 4],
-            fontFamily: "Syne, sans-serif",
           }}>J</div>
         ))}
       </div>
-      {count > 4 && (
-        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: T.textMuted }}>
-          +{count - 4}
-        </span>
-      )}
+      {count > 4 && <span className="judge-overflow">+{count - 4}</span>}
     </div>
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// IMAGE PLACEHOLDER / REAL IMAGE
+// EVENT IMAGE
 // ─────────────────────────────────────────────────────────────────────────────
 function EventImage({ url, height = 180 }) {
-  if (url) {
-    return (
-      <img src={url} alt=""
-        style={{ width: "100%", height, objectFit: "cover", display: "block" }} />
-    );
-  }
+  if (url) return <img src={url} alt="" style={{ width:"100%", height, objectFit:"cover", display:"block" }} />;
   return (
-    <div style={{
-      width: "100%", height,
-      background: T.surfaceHi,
-      display: "flex", alignItems: "center", justifyContent: "center",
-      borderBottom: `1px solid ${T.border}`,
-    }}>
+    <div className="ev-img-placeholder" style={{ height }}>
       <Ic n="img" s={28} c={T.textMuted} />
     </div>
   );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MODAL SHELL
+// META ROW
+// ─────────────────────────────────────────────────────────────────────────────
+function MetaRow({ icon, text }) {
+  return (
+    <div className="meta-row">
+      <Ic n={icon} s={12} c={T.textMuted} />
+      <span>{text}</span>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MODAL
 // ─────────────────────────────────────────────────────────────────────────────
 function Modal({ title, onClose, children, wide }) {
   useEffect(() => {
@@ -336,52 +197,32 @@ function Modal({ title, onClose, children, wide }) {
   }, [onClose]);
 
   return (
-    <div
-      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
-      role="dialog" aria-modal="true" aria-label={title}
-      style={{
-        position: "fixed", inset: 0, zIndex: 1000,
-        background: "rgba(0,0,0,0.80)", backdropFilter: "blur(6px)",
-        display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
-      }}
-    >
-      <div style={{
-        background: T.surface,
-        border: `1px solid ${T.border}`,
-        borderRadius: 16,
-        width: "100%",
-        maxWidth: wide ? 780 : 520,
-        maxHeight: "90vh",
-        overflowY: "auto",
-        boxShadow: "0 40px 100px rgba(0,0,0,.75)",
-        animation: "mIn .2s cubic-bezier(.34,1.56,.64,1)",
-      }}>
-        {/* Header */}
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "18px 24px", borderBottom: `1px solid ${T.border}`,
-          position: "sticky", top: 0, background: T.surface, zIndex: 2,
-          borderRadius: "16px 16px 0 0",
-        }}>
-          <h2 style={{ margin: 0, fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 17, color: T.textPrimary }}>
-            {title}
-          </h2>
-          <button onClick={onClose}
-            aria-label="Close"
-            style={{
-              background: T.surfaceHi, border: "none", borderRadius: 8, cursor: "pointer",
-              width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center",
-              color: T.textSecond, transition: "all .15s",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = T.closedBg; e.currentTarget.style.color = T.closedRed; }}
-            onMouseLeave={e => { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.color = T.textSecond; }}
-          >
+    <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog" aria-modal="true" aria-label={title}>
+      <div className={`modal-box ${wide ? "modal-box--wide" : "modal-box--narrow"}`}>
+        <div className="modal-header">
+          <h2 className="modal-title">{title}</h2>
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close">
             <Ic n="close" s={14} c="currentColor" />
           </button>
         </div>
         {children}
       </div>
-      <style>{`@keyframes mIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}`}</style>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FORM FIELD
+// ─────────────────────────────────────────────────────────────────────────────
+function FormField({ label, required, error, children }) {
+  return (
+    <div className="form-field">
+      <label className="form-label">
+        {label}{required && <span className="form-label__required"> *</span>}
+      </label>
+      {children}
+      {error && <span className="form-error">{error}</span>}
     </div>
   );
 }
@@ -390,41 +231,11 @@ function Modal({ title, onClose, children, wide }) {
 // EVENT FORM
 // ─────────────────────────────────────────────────────────────────────────────
 const EMPTY_FORM = {
-  title: "", start_date: "", end_date: "", description: "",
-  max_entries: "", category: "Branding", points_reward: "",
-  status: "DRAFT", image_link: "", location: "Online", time: "10:00",
-  entry_count: 0, submissions: 0, judges: 0, categoryLabel: "",
+  title:"", start_date:"", end_date:"", description:"",
+  max_entries:"", category:"Branding", points_reward:"",
+  status:"DRAFT", image_link:"", location:"Online", time:"10:00",
+  entry_count:0, submissions:0, judges:0, categoryLabel:"",
 };
-
-const inpBase = {
-  background: T.surfaceHi,
-  border: `1px solid ${T.border}`,
-  borderRadius: 8,
-  padding: "10px 13px",
-  color: T.textPrimary,
-  fontFamily: "'DM Sans', sans-serif",
-  fontSize: 13.5,
-  outline: "none",
-  width: "100%",
-  boxSizing: "border-box",
-  transition: "border-color .15s",
-};
-
-function FormField({ label, required, error, children }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-      <label style={{
-        fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600,
-        color: T.textSecond, letterSpacing: "0.08em", textTransform: "uppercase",
-      }}>
-        {label}
-        {required && <span style={{ color: T.pink }}> *</span>}
-      </label>
-      {children}
-      {error && <span style={{ fontSize: 11, color: T.closedRed }}>{error}</span>}
-    </div>
-  );
-}
 
 function EventForm({ initial, onSave, onClose }) {
   const [form, setForm] = useState(initial ? { ...initial } : { ...EMPTY_FORM });
@@ -434,145 +245,92 @@ function EventForm({ initial, onSave, onClose }) {
 
   const validate = () => {
     const e = {};
-    if (!form.title.trim())                                    e.title        = "Required";
-    if (!form.start_date)                                      e.start_date   = "Required";
-    if (!form.end_date)                                        e.end_date     = "Required";
-    if (!form.description.trim())                              e.description  = "Required";
-    if (!form.max_entries || +form.max_entries < 1)            e.max_entries  = "Must be ≥ 1";
-    if (form.points_reward === "" || +form.points_reward < 0)  e.points_reward = "Required";
+    if (!form.title.trim())                                   e.title         = "Required";
+    if (!form.start_date)                                     e.start_date    = "Required";
+    if (!form.end_date)                                       e.end_date      = "Required";
+    if (!form.description.trim())                             e.description   = "Required";
+    if (!form.max_entries || +form.max_entries < 1)           e.max_entries   = "Must be ≥ 1";
+    if (form.points_reward === "" || +form.points_reward < 0) e.points_reward = "Required";
     setErrors(e);
     return !Object.keys(e).length;
   };
 
   const submit = () => {
     if (!validate()) return;
-    onSave({
-      ...form,
-      max_entries: +form.max_entries,
-      points_reward: +form.points_reward,
-      categoryLabel: form.categoryLabel || form.category,
-    });
+    onSave({ ...form, max_entries: +form.max_entries, points_reward: +form.points_reward, categoryLabel: form.categoryLabel || form.category });
   };
 
-  const bindInput = (key, type = "text", placeholder = "") => ({
-    type,
-    placeholder,
+  const inp = (key, type = "text", placeholder = "") => ({
+    type, placeholder,
     value: form[key] ?? "",
     onChange: e => set(key, e.target.value),
-    style: { ...inpBase, borderColor: errors[key] ? T.closedRed : T.border },
+    className: `form-input${errors[key] ? " form-input--error" : ""}`,
     onFocus: e => { e.target.style.borderColor = T.pink; },
     onBlur:  e => { e.target.style.borderColor = errors[key] ? T.closedRed : T.border; },
   });
 
   return (
-    <div style={{ padding: 24 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
-
-        <div style={{ gridColumn: "1/-1" }}>
+    <div className="modal-body">
+      <div className="form-grid">
+        <div className="form-grid__full">
           <FormField label="Event Title" required error={errors.title}>
-            <input {...bindInput("title", "text", "e.g. Brand Identity Challenge")} />
+            <input {...inp("title","text","e.g. Brand Identity Challenge")} />
           </FormField>
         </div>
-
         <FormField label="Start Date" required error={errors.start_date}>
-          <input {...bindInput("start_date", "date")} />
+          <input {...inp("start_date","date")} />
         </FormField>
-
         <FormField label="Submission Deadline" required error={errors.end_date}>
-          <input {...bindInput("end_date", "date")} />
+          <input {...inp("end_date","date")} />
         </FormField>
-
         <FormField label="Category" required>
-          <select
-            value={form.category}
-            onChange={e => set("category", e.target.value)}
-            style={{ ...inpBase, appearance: "none" }}
+          <select className="form-select" value={form.category} onChange={e => set("category", e.target.value)}
             onFocus={e => { e.target.style.borderColor = T.pink; }}
-            onBlur={e  => { e.target.style.borderColor = T.border; }}
-          >
-            {CATEGORIES.map(c => (
-              <option key={c} value={c} style={{ background: T.surfaceHi }}>{c}</option>
-            ))}
+            onBlur={e  => { e.target.style.borderColor = T.border; }}>
+            {CATEGORIES.map(c => <option key={c} value={c} style={{ background: T.surfaceHi }}>{c}</option>)}
           </select>
         </FormField>
-
         <FormField label="Status" required>
-          <select
-            value={form.status}
-            onChange={e => set("status", e.target.value)}
-            style={{ ...inpBase, appearance: "none" }}
+          <select className="form-select" value={form.status} onChange={e => set("status", e.target.value)}
             onFocus={e => { e.target.style.borderColor = T.pink; }}
-            onBlur={e  => { e.target.style.borderColor = T.border; }}
-          >
-            {STATUSES.map(s => (
-              <option key={s} value={s} style={{ background: T.surfaceHi }}>{s}</option>
-            ))}
+            onBlur={e  => { e.target.style.borderColor = T.border; }}>
+            {STATUSES.map(s => <option key={s} value={s} style={{ background: T.surfaceHi }}>{s}</option>)}
           </select>
         </FormField>
-
         <FormField label="Max Entries" required error={errors.max_entries}>
-          <input {...bindInput("max_entries", "number", "e.g. 100")} />
+          <input {...inp("max_entries","number","e.g. 100")} />
         </FormField>
-
         <FormField label="Points Reward" required error={errors.points_reward}>
-          <input {...bindInput("points_reward", "number", "e.g. 500")} />
+          <input {...inp("points_reward","number","e.g. 500")} />
         </FormField>
-
         <FormField label="Location">
-          <input {...bindInput("location", "text", "e.g. Online")} />
+          <input {...inp("location","text","e.g. Online")} />
         </FormField>
-
         <FormField label="Time">
-          <input {...bindInput("time", "time")} />
+          <input {...inp("time","time")} />
         </FormField>
-
-        <div style={{ gridColumn: "1/-1" }}>
+        <div className="form-grid__full">
           <FormField label="Description" required error={errors.description}>
             <textarea
               rows={4}
               value={form.description}
               onChange={e => set("description", e.target.value)}
               placeholder="Describe the event, rules, and deliverables..."
-              style={{
-                ...inpBase,
-                resize: "vertical",
-                lineHeight: 1.6,
-                borderColor: errors.description ? T.closedRed : T.border,
-              }}
+              className={`form-textarea${errors.description ? " form-input--error" : ""}`}
               onFocus={e => { e.target.style.borderColor = T.pink; }}
               onBlur={e  => { e.target.style.borderColor = errors.description ? T.closedRed : T.border; }}
             />
           </FormField>
         </div>
-
-        <div style={{ gridColumn: "1/-1" }}>
+        <div className="form-grid__full">
           <FormField label="Banner Image URL">
-            <input {...bindInput("image_link", "url", "https://...")} />
+            <input {...inp("image_link","url","https://...")} />
           </FormField>
         </div>
       </div>
-
-      <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", paddingTop: 12, borderTop: `1px solid ${T.border}` }}>
-        <button onClick={onClose}
-          style={{
-            background: "none", border: `1px solid ${T.border}`, borderRadius: 8,
-            padding: "10px 20px", color: T.textSecond, cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13, transition: "all .15s",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.color = T.textPrimary; }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = T.border;  e.currentTarget.style.color = T.textSecond; }}
-        >
-          Cancel
-        </button>
-        <button onClick={submit}
-          style={{
-            background: T.pink, border: "none", borderRadius: 8,
-            padding: "10px 24px", color: "#fff", cursor: "pointer",
-            fontFamily: "Syne, sans-serif", fontSize: 13, fontWeight: 700, transition: "opacity .15s",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.opacity = ".85"; }}
-          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-        >
+      <div className="form-footer">
+        <button className="btn-ghost" onClick={onClose}>Cancel</button>
+        <button className="btn-primary" onClick={submit}>
           {initial ? "Save Changes" : "Create Event"}
         </button>
       </div>
@@ -586,27 +344,15 @@ function EventForm({ initial, onSave, onClose }) {
 function ConfirmDelete({ event, onConfirm, onClose }) {
   return (
     <Modal title="Delete Event" onClose={onClose}>
-      <div style={{ padding: 24 }}>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: T.textSecond, lineHeight: 1.7, marginBottom: 24 }}>
+      <div className="modal-body">
+        <p className="confirm-text">
           Are you sure you want to delete{" "}
-          <strong style={{ color: T.textPrimary }}>{event.title}</strong>?
+          <strong>{event.title}</strong>?
           This action cannot be undone.
         </p>
-        <div style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-          <button onClick={onClose}
-            style={{
-              background: "none", border: `1px solid ${T.border}`, borderRadius: 8,
-              padding: "10px 20px", color: T.textSecond, cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif", fontSize: 13,
-            }}
-          >Cancel</button>
-          <button onClick={onConfirm}
-            style={{
-              background: T.closedBg, border: `1px solid ${T.closedRed}44`,
-              borderRadius: 8, padding: "10px 20px", color: T.closedRed,
-              cursor: "pointer", fontFamily: "Syne, sans-serif", fontSize: 13, fontWeight: 700,
-            }}
-          >Delete Event</button>
+        <div className="form-footer">
+          <button className="btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn-danger" onClick={onConfirm}>Delete Event</button>
         </div>
       </div>
     </Modal>
@@ -614,101 +360,34 @@ function ConfirmDelete({ event, onConfirm, onClose }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// FEATURED CARD  (Live & Open row — tall card matching wireframe)
+// FEATURED CARD
 // ─────────────────────────────────────────────────────────────────────────────
 function FeaturedCard({ event, onManage, onView }) {
-  const [hov, setHov] = useState(false);
-
   return (
-    <div
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        background: T.surface,
-        border: `1px solid ${hov ? T.pink + "66" : T.border}`,
-        borderRadius: 14,
-        overflow: "hidden",
-        flex: "1 1 280px",
-        minWidth: 280,
-        maxWidth: 360,
-        display: "flex",
-        flexDirection: "column",
-        transition: "border-color .2s, transform .2s, box-shadow .2s",
-        transform: hov ? "translateY(-4px)" : "none",
-        boxShadow: hov ? `0 16px 48px rgba(255,45,120,0.12)` : "none",
-      }}
-    >
-      {/* ── Top badge row */}
-      <div style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "10px 12px 8px",
-      }}>
+    <div className="feat-card">
+      <div className="feat-card__topbar">
         <Badge status={event.status} />
-        <span style={{
-          fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 11,
-          color: T.pink, letterSpacing: "0.06em",
-        }}>
-          {event.points_reward} PTS
-        </span>
+        <span className="feat-card__pts">{event.points_reward} PTS</span>
       </div>
-
-      {/* ── Image */}
       <EventImage url={event.image_link} height={160} />
-
-      {/* ── Body */}
-      <div style={{ padding: "14px 16px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
-        {/* Title + category */}
+      <div className="feat-card__body">
         <div>
-          <p style={{ margin: "0 0 2px", fontFamily: "'DM Sans', sans-serif", fontSize: 10.5, color: T.textMuted, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-            {event.categoryLabel || event.category}
-          </p>
-          <h3 style={{ margin: 0, fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 15.5, color: T.textPrimary, lineHeight: 1.25 }}>
-            {event.title}
-          </h3>
+          <p className="feat-card__category">{event.categoryLabel || event.category}</p>
+          <h3 className="feat-card__title">{event.title}</h3>
         </div>
-
-        {/* Meta rows */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-          <MetaRow icon="cal" text={`${fmtDate(event.start_date)} — ${fmtDate(event.end_date)}`} />
-          <MetaRow icon="pin" text={event.location || "Online"} />
+        <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
+          <MetaRow icon="cal"   text={`${fmtDate(event.start_date)} — ${fmtDate(event.end_date)}`} />
+          <MetaRow icon="pin"   text={event.location || "Online"} />
           {event.time && <MetaRow icon="clock" text={event.time} />}
         </div>
-
-        {/* Entries + progress */}
         <ProgressBar count={event.entry_count} max={event.max_entries} />
-
-        {/* Judge avatars */}
         <JudgeAvatars count={event.judges} />
       </div>
-
-      {/* ── Action row */}
-      <div style={{ display: "flex", borderTop: `1px solid ${T.border}` }}>
-        <button
-          onClick={onView}
-          style={{
-            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-            background: "none", border: "none", borderRight: `1px solid ${T.border}`,
-            padding: "12px 0", cursor: "pointer", color: T.textSecond,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
-            transition: "all .15s",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.color = T.textPrimary; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = T.textSecond; }}
-        >
+      <div className="feat-card__actions">
+        <button className="feat-card__view-btn" onClick={onView}>
           <Ic n="eye" s={13} c="currentColor" /> View Details
         </button>
-        <button
-          onClick={onManage}
-          style={{
-            flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-            background: T.pink, border: "none",
-            padding: "12px 0", cursor: "pointer", color: "#fff",
-            fontFamily: "Syne, sans-serif", fontSize: 13, fontWeight: 700,
-            transition: "opacity .15s",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.opacity = ".85"; }}
-          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-        >
+        <button className="feat-card__manage-btn" onClick={onManage}>
           <Ic n="gear" s={13} c="#fff" /> Manage
         </button>
       </div>
@@ -716,145 +395,83 @@ function FeaturedCard({ event, onManage, onView }) {
   );
 }
 
-// small meta row helper
-function MetaRow({ icon, text }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <Ic n={icon} s={12} c={T.textMuted} />
-      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.textSecond }}>
-        {text}
-      </span>
-    </div>
-  );
-}
-
 // ─────────────────────────────────────────────────────────────────────────────
-// COMPACT CARD  (All Events grid — matches wireframe exactly)
+// COMPACT CARD
 // ─────────────────────────────────────────────────────────────────────────────
 function CompactCard({ event, onEdit, onDelete, onView, onCloseEvent }) {
-  const [hov, setHov] = useState(false);
+  const iconBtns = [
+    { n:"eye",   fn:onView,   hBg:T.upBg,      hC:T.upBlue      },
+    { n:"edit",  fn:onEdit,   hBg:T.surfaceHi, hC:T.textPrimary },
+    { n:"trash", fn:onDelete, hBg:T.closedBg,  hC:T.closedRed   },
+  ];
 
   return (
-    <div
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        background: T.surface,
-        border: `1px solid ${hov ? T.borderHi || "#3A3A3A" : T.border}`,
-        borderRadius: 12,
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        transition: "transform .2s, box-shadow .2s, border-color .2s",
-        transform: hov ? "translateY(-2px)" : "none",
-        boxShadow: hov ? "0 8px 24px rgba(0,0,0,.35)" : "none",
-      }}
-    >
-      {/* Image with status badge overlay */}
-      <div style={{ position: "relative" }}>
-        <EventImage url={event.image_link} height={100} />
-        <div style={{ position: "absolute", top: 8, right: 8 }}>
-          <Badge status={event.status} />
+    <div className="compact-card">
+      <div className="compact-card__img-wrap">
+        <div className="compact-card__img-inner">
+          <EventImage url={event.image_link} height={100} />
         </div>
+        <div className="compact-card__badge-overlay"><Badge status={event.status} /></div>
       </div>
-
-      {/* Body */}
-      <div style={{ padding: "12px 14px", flex: 1, display: "flex", flexDirection: "column", gap: 7 }}>
-
-        {/* Title row */}
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
-          <h3 style={{ margin: 0, fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 13.5, color: T.textPrimary, lineHeight: 1.3, flex: 1 }}>
-            {event.title}
-          </h3>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9.5, color: T.textMuted, letterSpacing: "0.07em", textTransform: "uppercase", whiteSpace: "nowrap", flexShrink: 0, paddingTop: 2 }}>
-            {event.categoryLabel || event.category}
-          </span>
+      <div className="compact-card__body">
+        <div className="compact-card__title-row">
+          <h3 className="compact-card__title">{event.title}</h3>
+          <span className="compact-card__cat">{event.categoryLabel || event.category}</span>
         </div>
-
-        {/* Meta */}
-        <div style={{ display: "flex", flexWrap: "wrap", columnGap: 12, rowGap: 3 }}>
+        <div className="compact-card__meta">
           {[
-            { icon: "cal",   val: fmtDate(event.start_date) },
-            { icon: "clock", val: event.time },
-            { icon: "pin",   val: event.location },
+            { icon:"cal",   val:fmtDate(event.start_date) },
+            { icon:"clock", val:event.time },
+            { icon:"pin",   val:event.location },
           ].map(r => r.val && (
-            <span key={r.icon} style={{ display: "flex", alignItems: "center", gap: 4, fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, color: T.textSecond }}>
+            <span key={r.icon} className="compact-card__meta-item">
               <Ic n={r.icon} s={11} c={T.textMuted} /> {r.val}
             </span>
           ))}
         </div>
-
-        {/* Entries */}
-        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, color: T.textSecond, display: "flex", alignItems: "center", gap: 4 }}>
+        <span className="compact-card__entries">
           <Ic n="users" s={11} c={T.textMuted} />
           {event.entry_count} / {event.max_entries} entries
         </span>
-
-        {/* Thin progress */}
         <ProgressBar count={event.entry_count} max={event.max_entries} showLabel={false} />
-
-        {/* Points + judges */}
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 12.5, color: T.pink }}>
-            {event.points_reward} pts
-          </span>
+        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+          <span className="compact-card__pts">{event.points_reward} pts</span>
           {event.judges > 0 && (
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, color: T.textMuted }}>
-              · {event.judges} judge{event.judges !== 1 ? "s" : ""}
-            </span>
+            <span className="compact-card__judges">· {event.judges} judge{event.judges !== 1 ? "s" : ""}</span>
           )}
         </div>
       </div>
-
-      {/* Bottom action bar */}
-      <div style={{
-        borderTop: `1px solid ${T.border}`,
-        padding: "9px 14px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}>
-        {/* Close / status label */}
+      <div className="compact-card__footer">
         {event.status === "OPEN" ? (
-          <button
-            onClick={onCloseEvent}
-            style={{
-              display: "flex", alignItems: "center", gap: 5,
-              background: "none", border: `1px solid ${T.border}`, borderRadius: 7,
-              padding: "5px 11px", cursor: "pointer", color: T.textSecond,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, fontWeight: 500,
-              transition: "all .15s",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = T.closedRed + "77"; e.currentTarget.style.color = T.closedRed; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textSecond; }}
-          >
+          <button className="compact-card__close-btn" onClick={onCloseEvent}>
             <Ic n="lock" s={11} c="currentColor" /> Close Event
           </button>
+        ) : event.status === "CLOSED" ? (
+          <button className="compact-card__close-btn" onClick={onCloseEvent}
+            style={{ borderColor:"rgba(96,165,250,0.4)", color:"#60A5FA" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(96,165,250,0.6)"; e.currentTarget.style.color="#93C5FD"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(96,165,250,0.4)"; e.currentTarget.style.color="#60A5FA"; }}
+          >
+            <Ic n="eye" s={11} c="currentColor" /> Reopen
+          </button>
+        ) : event.status === "DRAFT" ? (
+          <button className="compact-card__close-btn" onClick={onCloseEvent}
+            style={{ borderColor:"rgba(196,18,98,0.4)", color:"#FE4081" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(196,18,98,0.6)"; e.currentTarget.style.color="#C41262"; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(196,18,98,0.4)"; e.currentTarget.style.color="#FE4081"; }}
+          >
+            <Ic n="plus" s={11} c="currentColor" /> Publish
+          </button>
         ) : (
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, color: T.textMuted, fontStyle: "italic" }}>
+          <span className="compact-card__status-label">
             {event.status.charAt(0) + event.status.slice(1).toLowerCase()}
           </span>
         )}
-
-        {/* Icon buttons */}
-        <div style={{ display: "flex", gap: 4 }}>
-          {[
-            { n: "eye",   fn: onView,   hBg: T.upBg,      hC: T.upBlue       },
-            { n: "edit",  fn: onEdit,   hBg: T.surfaceHi, hC: T.textPrimary  },
-            { n: "trash", fn: onDelete, hBg: T.closedBg,  hC: T.closedRed    },
-          ].map(btn => (
-            <button
-              key={btn.n}
-              onClick={btn.fn}
-              aria-label={btn.n}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                color: T.textMuted, padding: 6, borderRadius: 6,
-                display: "flex", transition: "all .15s",
-              }}
+        <div className="compact-card__icon-btns">
+          {iconBtns.map(btn => (
+            <button key={btn.n} className="compact-card__icon-btn" onClick={btn.fn} aria-label={btn.n}
               onMouseEnter={e => { e.currentTarget.style.background = btn.hBg; e.currentTarget.style.color = btn.hC; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "none";  e.currentTarget.style.color = T.textMuted; }}
-            >
+              onMouseLeave={e => { e.currentTarget.style.background = "none";  e.currentTarget.style.color = T.textMuted; }}>
               <Ic n={btn.n} s={14} c="currentColor" />
             </button>
           ))}
@@ -865,128 +482,91 @@ function CompactCard({ event, onEdit, onDelete, onView, onCloseEvent }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// EVENT DETAIL (single view)
+// EVENT DETAIL
 // ─────────────────────────────────────────────────────────────────────────────
 function EventDetail({ event, onBack, onEdit }) {
   const p = calcPct(event.entry_count, event.max_entries);
+  const stats = [
+    { label:"Participants", value:event.entry_count,     icon:"users" },
+    { label:"Submissions",  value:event.submissions || 0,icon:"file"  },
+    { label:"Points",       value:event.points_reward,   icon:"award" },
+    { label:"Max Entries",  value:event.max_entries,     icon:"users" },
+  ];
+  const infoRows = [
+    { label:"Start Date", val:fmtDate(event.start_date) },
+    { label:"Deadline",   val:fmtDate(event.end_date)   },
+    { label:"Location",   val:event.location || "Online"},
+    { label:"Time",       val:event.time || "—"         },
+  ];
+
   return (
-    <div style={{ padding: "32px 36px", maxWidth: 860, margin: "0 auto" }}>
-      <button
-        onClick={onBack}
-        style={{
-          display: "flex", alignItems: "center", gap: 8, background: "none", border: "none",
-          cursor: "pointer", color: T.textSecond, fontFamily: "'DM Sans', sans-serif",
-          fontSize: 13, padding: 0, marginBottom: 28, transition: "color .15s",
-        }}
-        onMouseEnter={e => { e.currentTarget.style.color = T.textPrimary; }}
-        onMouseLeave={e => { e.currentTarget.style.color = T.textSecond; }}
-      >
-        ← Back to Events
-      </button>
+    <div className="ev-detail">
+      <button className="ev-detail__back-btn" onClick={onBack}>← Back to Events</button>
 
       {/* Banner */}
-      <div style={{
-        borderRadius: 14, overflow: "hidden", marginBottom: 24, height: 200,
+      <div className="ev-detail__banner" style={{
+        height: 200,
         background: event.image_link
           ? `url(${event.image_link}) center/cover`
           : `linear-gradient(135deg, ${T.pinkDim}, #1a1a1a)`,
-        border: `1px solid ${T.border}`,
-        display: "flex", alignItems: "flex-end",
       }}>
-        <div style={{ width: "100%", padding: 24, background: "linear-gradient(to top, rgba(0,0,0,.85), transparent)" }}>
-          <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+        <div className="ev-detail__banner-overlay">
+          <div className="ev-detail__banner-tags">
             <Badge status={event.status} />
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 10.5, color: T.textSecond,
-              background: T.surfaceHi, borderRadius: 4, padding: "3px 8px",
-              letterSpacing: "0.08em", textTransform: "uppercase",
-            }}>
-              {event.categoryLabel || event.category}
-            </span>
+            <span className="ev-detail__banner-cat">{event.categoryLabel || event.category}</span>
           </div>
-          <h1 style={{ margin: 0, fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 28, color: "#fff" }}>
-            {event.title}
-          </h1>
+          <h1 className="ev-detail__banner-title">{event.title}</h1>
         </div>
       </div>
 
-      {/* ID + Edit */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22 }}>
-        <code style={{ fontFamily: "monospace", fontSize: 12, color: T.pink, background: T.pinkDim, borderRadius: 4, padding: "3px 10px" }}>
-          {event.EventID}
-        </code>
-        <button
-          onClick={onEdit}
-          style={{
-            display: "flex", alignItems: "center", gap: 7, background: T.pink, border: "none",
-            borderRadius: 8, padding: "9px 18px", color: "#fff", cursor: "pointer",
-            fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 13, transition: "opacity .15s",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.opacity = ".85"; }}
-          onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-        >
+      {/* ID + edit */}
+      <div className="ev-detail__id-row">
+        <code className="ev-detail__id">{event.EventID}</code>
+        <button className="btn-primary" onClick={onEdit}>
           <Ic n="edit" s={13} c="#fff" /> Edit Event
         </button>
       </div>
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
-        {[
-          { label: "Participants", value: event.entry_count,    icon: "users" },
-          { label: "Submissions",  value: event.submissions||0, icon: "file"  },
-          { label: "Points",       value: event.points_reward,  icon: "award" },
-          { label: "Max Entries",  value: event.max_entries,    icon: "users" },
-        ].map(st => (
-          <div key={st.label} style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 10, padding: "14px 16px" }}>
-            <Ic n={st.icon} s={15} c={T.pink} />
-            <div style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 22, color: T.textPrimary, margin: "6px 0 2px" }}>
-              {st.value}
-            </div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.textSecond }}>{st.label}</div>
+      <div className="ev-detail__stats">
+        {stats.map(st => (
+          <div key={st.label} className="ev-detail__stat-card">
+            <Ic n={st.icon} s={15} c={T.pinkHot} />
+            <div className="ev-detail__stat-value">{st.value}</div>
+            <div className="ev-detail__stat-label">{st.label}</div>
           </div>
         ))}
       </div>
 
       {/* Progress */}
-      <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 10, padding: "16px 18px", marginBottom: 14 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: T.textPrimary }}>Registration Progress</span>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: T.pink, fontWeight: 700 }}>{p}%</span>
+      <div className="ev-detail__progress-card">
+        <div className="ev-detail__progress-header">
+          <span className="ev-detail__progress-title">Registration Progress</span>
+          <span className="ev-detail__progress-pct">{p}%</span>
         </div>
-        <div style={{ height: 7, background: T.surfaceHi, borderRadius: 4, overflow: "hidden" }}>
-          <div style={{ width: `${p}%`, height: "100%", background: `linear-gradient(90deg,${T.pink}88,${T.pink})`, borderRadius: 4 }} />
+        <div className="progress-track" style={{ height:7 }}>
+          <div className="progress-fill" style={{ width:`${p}%` }} />
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: T.textMuted }}>{event.entry_count} registered</span>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: T.textMuted }}>{event.max_entries} max</span>
+        <div className="ev-detail__progress-foot">
+          <span>{event.entry_count} registered</span>
+          <span>{event.max_entries} max</span>
         </div>
       </div>
 
       {/* Info grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
-        {[
-          { label: "Start Date",  val: fmtDate(event.start_date) },
-          { label: "Deadline",    val: fmtDate(event.end_date)   },
-          { label: "Location",    val: event.location || "Online"},
-          { label: "Time",        val: event.time || "—"         },
-        ].map(it => (
-          <div key={it.label} style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 10, padding: "14px 16px" }}>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 600, color: T.textMuted, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 6 }}>
-              {it.label}
-            </div>
-            <div style={{ fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 15, color: T.textPrimary }}>
-              {it.val}
-            </div>
+      <div className="ev-detail__info-grid">
+        {infoRows.map(it => (
+          <div key={it.label} className="ev-detail__info-card">
+            <div className="ev-detail__info-label">{it.label}</div>
+            <div className="ev-detail__info-value">{it.val}</div>
           </div>
         ))}
       </div>
 
       {/* Description */}
-      <div style={{ background: T.surface, border: `1px solid ${T.border}`, borderRadius: 10, padding: "16px 18px" }}>
-        <div style={{ fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 14, color: T.textPrimary, marginBottom: 10 }}>Description</div>
-        <p style={{ margin: 0, fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: T.textSecond, lineHeight: 1.75 }}>
-          {event.description || "No description provided."}
-        </p>
+      <div className="ev-detail__desc-card">
+        <div className="ev-detail__desc-title">Description</div>
+        <p className="ev-detail__desc-text">{event.description || "No description provided."}</p>
       </div>
     </div>
   );
@@ -995,224 +575,189 @@ function EventDetail({ event, onBack, onEdit }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN PAGE
 // ─────────────────────────────────────────────────────────────────────────────
+const PAGE_SIZE = 9;
+
 export default function ManageEvents() {
-  const [events,  setEvents]  = useState(() => loadEvents());
-  const [search,  setSearch]  = useState("");
-  const [tab,     setTab]     = useState("OPEN");
-  const [modal,   setModal]   = useState(null); // "create"|"edit"|"delete"
-  const [active,  setActive]  = useState(null);
-  const [detailId,setDetail]  = useState(null);
+  const [events,   setEvents]  = useState(() => loadEvents());
+  const [search,   setSearch]  = useState("");
+  const [tab,      setTab]     = useState("OPEN");
+  const [modal,    setModal]   = useState(null);
+  const [active,   setActive]  = useState(null);
+  const [detailId, setDetail]  = useState(null);
+  const [page,     setPage]    = useState(1);
+
+  // Drag-to-scroll for live events
+  const scrollRef = useRef(null);
+  const drag = useRef({ active: false, startX: 0, scrollLeft: 0 });
+  const onMouseDown = e => { drag.current = { active: true, startX: e.pageX - scrollRef.current.offsetLeft, scrollLeft: scrollRef.current.scrollLeft }; };
+  const onMouseMove = e => { if (!drag.current.active) return; e.preventDefault(); const x = e.pageX - scrollRef.current.offsetLeft; scrollRef.current.scrollLeft = drag.current.scrollLeft - (x - drag.current.startX) * 1.5; };
+  const onMouseUp   = () => { drag.current.active = false; };
 
   useEffect(() => { saveEvents(events); }, [events]);
+  // Reset to page 1 when tab or search changes
+  useEffect(() => { setPage(1); }, [tab, search]);
 
-  const persist = next => { setEvents(next); saveEvents(next); };
+  const persist      = next => { setEvents(next); saveEvents(next); };
+  const handleCreate = data => { persist([{ ...data, EventID: genId() }, ...events]); setModal(null); };
+  const handleEdit   = data => { persist(events.map(e => e.EventID === active.EventID ? { ...data, EventID: active.EventID } : e)); setModal(null); setActive(null); };
+  const handleDelete = ()   => { persist(events.filter(e => e.EventID !== active.EventID)); if (detailId === active.EventID) setDetail(null); setModal(null); setActive(null); };
 
-  const handleCreate = data  => { persist([{ ...data, EventID: genId() }, ...events]); setModal(null); };
-  const handleEdit   = data  => { persist(events.map(e => e.EventID === active.EventID ? { ...data, EventID: active.EventID } : e)); setModal(null); setActive(null); };
-  const handleDelete = ()    => { persist(events.filter(e => e.EventID !== active.EventID)); if (detailId === active.EventID) setDetail(null); setModal(null); setActive(null); };
-  const handleClose  = ev   => persist(events.map(e => e.EventID === ev.EventID ? { ...e, status: "CLOSED" } : e));
+  // Close open event → CLOSED; reopen closed → OPEN; publish draft → OPEN
+  const handleStatusToggle = ev => {
+    const next =
+      ev.status === "OPEN"     ? "CLOSED" :
+      ev.status === "CLOSED"   ? "OPEN"   :
+      ev.status === "DRAFT"    ? "OPEN"   :
+      ev.status === "UPCOMING" ? "OPEN"   : ev.status;
+    persist(events.map(e => e.EventID === ev.EventID ? { ...e, status: next } : e));
+  };
 
-  const liveOpen  = events.filter(e => e.status === "OPEN").slice(0, 3);
-  const filtered  = events.filter(e => e.status === tab && e.title.toLowerCase().includes(search.toLowerCase()));
-  const tabCounts = STATUS_TABS.reduce((a, s) => { a[s] = events.filter(e => e.status === s).length; return a; }, {});
-  const detailEv  = detailId ? events.find(e => e.EventID === detailId) : null;
+  const liveOpen   = events.filter(e => e.status === "OPEN").slice(0, 3);
+  const allFiltered = events.filter(e => e.status === tab && e.title.toLowerCase().includes(search.toLowerCase()));
+  const totalPages = Math.max(1, Math.ceil(allFiltered.length / PAGE_SIZE));
+  const filtered   = allFiltered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const tabCounts  = STATUS_TABS.reduce((a, s) => { a[s] = events.filter(e => e.status === s).length; return a; }, {});
+  const detailEv   = detailId ? events.find(e => e.EventID === detailId) : null;
 
   // ── Detail view
   if (detailEv) return (
-    <>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-      <div style={{ minHeight: "100vh", background: T.bg, color: T.textPrimary }}>
-        <EventDetail
-          event={detailEv}
-          onBack={() => setDetail(null)}
-          onEdit={() => { setActive(detailEv); setModal("edit"); }}
-        />
-      </div>
+    <div className="events-root">
+      <EventDetail event={detailEv} onBack={() => setDetail(null)} onEdit={() => { setActive(detailEv); setModal("edit"); }} />
       {modal === "edit" && active && (
         <Modal title="Edit Event" onClose={() => setModal(null)} wide>
           <EventForm initial={active} onSave={handleEdit} onClose={() => setModal(null)} />
         </Modal>
       )}
-    </>
+    </div>
   );
 
   return (
-    <>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-      <style>{`
-        * { box-sizing: border-box; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: ${T.surface}; }
-        ::-webkit-scrollbar-thumb { background: ${T.border}; border-radius: 4px; }
-        @keyframes fu { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-        @keyframes ping { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.5; transform:scale(1.5); } }
-        .fu { animation: fu .35s ease both; }
-      `}</style>
+    <div className="events-root">
+      <div className="events-inner">
 
-      <div style={{ minHeight: "100vh", background: T.bg, color: T.textPrimary, fontFamily: "'DM Sans', sans-serif" }}>
-        <div style={{ padding: "30px 32px", maxWidth: 1160, margin: "0 auto" }}>
-
-          {/* ── Page header */}
-          <div className="fu" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 28, flexWrap: "wrap", gap: 14 }}>
-            <div>
-              <p style={{ margin: "0 0 4px", fontSize: 11, color: T.textMuted, letterSpacing: "0.12em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ width: 18, height: 1, background: T.textMuted, display: "inline-block" }} />
-                Admin · Events
-              </p>
-              <h1 style={{ margin: "0 0 4px", fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 32, color: T.textPrimary, letterSpacing: "-0.02em" }}>
-                Manage Events
-              </h1>
-              <p style={{ margin: 0, fontSize: 14, color: T.textSecond }}>
-                Create, manage and monitor all SheIsDesign events.
-              </p>
-            </div>
-
-            {/* Search + CTA */}
-            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-              <div style={{ position: "relative" }}>
-                <span style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
-                  <Ic n="search" s={14} c={T.textMuted} />
-                </span>
-                <input
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  placeholder="Search events..."
-                  aria-label="Search events"
-                  style={{
-                    background: T.surface, border: `1px solid ${T.border}`,
-                    borderRadius: 9, padding: "10px 14px 10px 36px",
-                    color: T.textPrimary, fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13.5, outline: "none", width: 220, transition: "border-color .15s",
-                  }}
-                  onFocus={e => { e.target.style.borderColor = T.pink; }}
-                  onBlur={e  => { e.target.style.borderColor = T.border; }}
-                />
-              </div>
-              <button
-                onClick={() => setModal("create")}
-                style={{
-                  display: "flex", alignItems: "center", gap: 8,
-                  background: T.pink, border: "none", borderRadius: 9,
-                  padding: "10px 20px", color: "#fff", cursor: "pointer",
-                  fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 13.5,
-                  transition: "opacity .15s", whiteSpace: "nowrap",
-                }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = ".85"; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
-              >
-                <Ic n="plus" s={15} c="#fff" /> Create Event
-              </button>
-            </div>
+        {/* ── Page header */}
+        <div className="ev-page-header fu">
+          <div>
+            <p className="ev-page-header__eyebrow">
+              <span className="ev-page-header__eyebrow-line" />
+              Admin · Events
+            </p>
+            <h1 className="ev-page-header__title">Manage Events</h1>
+            <p className="ev-page-header__sub">Create, manage and monitor all SheIsDesign events.</p>
           </div>
+          <div className="ev-page-header__actions">
+            <div className="ev-search-wrap">
+              <span className="ev-search-icon"><Ic n="search" s={14} c={T.textMuted} /></span>
+              <input
+                className="ev-search-input"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search events..."
+                aria-label="Search events"
+              />
+            </div>
+            <button className="btn-primary" onClick={() => setModal("create")}>
+              <Ic n="plus" s={15} c="#fff" /> Create Event
+            </button>
+          </div>
+        </div>
 
-          {/* ── Live & Open */}
-          {liveOpen.length > 0 && (
-            <section className="fu" style={{ marginBottom: 36, animationDelay: "60ms" }} aria-label="Live and open events">
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <span style={{
-                    width: 8, height: 8, borderRadius: "50%",
-                    background: T.activeGreen, display: "inline-block",
-                    animation: "ping 1.8s ease-in-out infinite",
-                  }} />
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, fontWeight: 600, color: T.textSecond, letterSpacing: "0.06em" }}>
-                    LIVE &amp; OPEN
-                  </span>
-                  <span style={{ background: T.activeBg, color: T.activeGreen, borderRadius: 20, padding: "2px 9px", fontSize: 11, fontWeight: 700 }}>
-                    {liveOpen.length}
-                  </span>
-                </div>
-                <button style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.pink, fontWeight: 600 }}>
-                  View all open
-                </button>
+        {/* ── Live & Open */}
+        {liveOpen.length > 0 && (
+          <section className="live-section fu" style={{ animationDelay:"60ms" }} aria-label="Live and open events">
+            <div className="live-section__header">
+              <div className="live-section__left">
+                <span className="live-dot" />
+                <span className="live-label">LIVE &amp; OPEN</span>
+                <span className="live-count">{liveOpen.length}</span>
               </div>
 
-              <div style={{ display: "flex", gap: 18, overflowX: "auto", paddingBottom: 6, scrollbarWidth: "none" }}>
-                {liveOpen.map(ev => (
-                  <FeaturedCard
-                    key={ev.EventID}
-                    event={ev}
+            </div>
+            <div className="live-scroll-wrap">
+              <div className="live-scroll" ref={scrollRef} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
+                {events.filter(e => e.status === "OPEN").map(ev => (
+                  <FeaturedCard key={ev.EventID} event={ev}
                     onView={() => setDetail(ev.EventID)}
                     onManage={() => { setActive(ev); setModal("edit"); }}
                   />
                 ))}
               </div>
-            </section>
-          )}
-
-          {/* ── All Events */}
-          <section className="fu" style={{ animationDelay: "120ms" }} aria-label="All events">
-            {/* Section header + tabs */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 15, color: T.textPrimary }}>
-                  All Events
-                </span>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.textMuted, background: T.surfaceHi, borderRadius: 20, padding: "2px 9px" }}>
-                  {events.length}
-                </span>
-              </div>
-
-              {/* Status tabs */}
-              <div style={{ display: "flex", gap: 6 }}>
-                {STATUS_TABS.map(s => {
-                  const isActive = s === tab;
-                  const sc = STATUS_STYLES[s] || {};
-                  return (
-                    <button
-                      key={s}
-                      onClick={() => setTab(s)}
-                      style={{
-                        background: isActive ? sc.bg : "none",
-                        border: `1px solid ${isActive ? sc.color + "55" : T.border}`,
-                        borderRadius: 8, padding: "6px 14px", cursor: "pointer",
-                        color: isActive ? sc.color : T.textSecond,
-                        fontFamily: "'DM Sans', sans-serif", fontSize: 12,
-                        fontWeight: isActive ? 700 : 400,
-                        transition: "all .15s",
-                        display: "flex", alignItems: "center", gap: 6,
-                      }}
-                      onMouseEnter={e => { if (!isActive) { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.color = T.textPrimary; } }}
-                      onMouseLeave={e => { if (!isActive) { e.currentTarget.style.background = "none"; e.currentTarget.style.color = T.textSecond; } }}
-                    >
-                      {s}
-                      {tabCounts[s] > 0 && (
-                        <span style={{
-                          fontSize: 10, fontWeight: 700,
-                          background: isActive ? sc.color + "33" : T.surfaceHi,
-                          color: isActive ? sc.color : T.textMuted,
-                          borderRadius: 20, padding: "1px 6px",
-                        }}>
-                          {tabCounts[s]}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
             </div>
+          </section>
+        )}
 
-            {/* Grid */}
-            {filtered.length === 0 ? (
-              <div style={{ padding: "60px 0", textAlign: "center", color: T.textMuted, fontSize: 14 }}>
-                No {tab.toLowerCase()} events{search ? ` matching "${search}"` : ""}.
-              </div>
-            ) : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
+        {/* ── All Events */}
+        <section className="fu" style={{ animationDelay:"120ms" }} aria-label="All events">
+          <div className="all-events-header">
+            <div className="all-events-title">
+              <span className="all-events-title__text">All Events</span>
+              <span className="all-events-title__count">{events.length}</span>
+            </div>
+            <div className="status-tabs">
+              {STATUS_TABS.map(s => {
+                const isActive = s === tab;
+                const sc = STATUS_STYLES[s] || {};
+                return (
+                  <button key={s} onClick={() => setTab(s)}
+                    className={`status-tab${isActive ? " status-tab--active" : ""}`}
+                    style={isActive ? { background: sc.bg, borderColor: `${sc.color}55`, color: sc.color } : {}}>
+                    {s}
+                    {tabCounts[s] > 0 && (
+                      <span className="status-tab__count" style={{
+                        background: isActive ? `${sc.color}33` : T.surfaceHi,
+                        color:      isActive ? sc.color : T.textMuted,
+                      }}>
+                        {tabCounts[s]}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {allFiltered.length === 0 ? (
+            <div className="events-empty">
+              No {tab.toLowerCase()} events{search ? ` matching "${search}"` : ""}.
+            </div>
+          ) : (
+            <>
+              <div className="events-grid">
                 {filtered.map(ev => (
-                  <CompactCard
-                    key={ev.EventID}
-                    event={ev}
+                  <CompactCard key={ev.EventID} event={ev}
                     onView={() => setDetail(ev.EventID)}
                     onEdit={() => { setActive(ev); setModal("edit"); }}
                     onDelete={() => { setActive(ev); setModal("delete"); }}
-                    onCloseEvent={() => handleClose(ev)}
+                    onCloseEvent={() => handleStatusToggle(ev)}
                   />
                 ))}
               </div>
-            )}
-          </section>
-        </div>
+
+              {totalPages > 1 && (
+                <div className="pagination">
+                  <span className="pagination__info">
+                    Showing {((page - 1) * PAGE_SIZE) + 1}–{Math.min(page * PAGE_SIZE, allFiltered.length)} of {allFiltered.length} events
+                  </span>
+                  <div className="pagination__controls">
+                    <button className="pagination__btn" onClick={() => setPage(p => p - 1)} disabled={page === 1}>
+                      ← Prev
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                      <button key={p}
+                        className={`pagination__page${p === page ? " pagination__page--active" : ""}`}
+                        onClick={() => setPage(p)}>
+                        {p}
+                      </button>
+                    ))}
+                    <button className="pagination__btn" onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>
+                      Next →
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </section>
       </div>
 
       {/* ── Modals */}
@@ -1229,6 +774,6 @@ export default function ManageEvents() {
       {modal === "delete" && active && (
         <ConfirmDelete event={active} onConfirm={handleDelete} onClose={() => { setModal(null); setActive(null); }} />
       )}
-    </>
+    </div>
   );
 }
