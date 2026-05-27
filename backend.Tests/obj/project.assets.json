@@ -8657,19 +8657,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/anika.debeer/.nuget/packages/": {}
+    "C:\\Users\\keaga\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/anika.debeer/Downloads/SheIsDesign/backend.Tests/SheDesign.Tests.csproj",
+      "projectUniqueName": "C:\\Users\\keaga\\Documents\\GitHub\\Ctrl Alt Dlt Github\\SheIsDesign\\backend.Tests\\SheDesign.Tests.csproj",
       "projectName": "SheDesign.Tests",
-      "projectPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend.Tests/SheDesign.Tests.csproj",
-      "packagesPath": "/Users/anika.debeer/.nuget/packages/",
-      "outputPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend.Tests/obj/",
+      "projectPath": "C:\\Users\\keaga\\Documents\\GitHub\\Ctrl Alt Dlt Github\\SheIsDesign\\backend.Tests\\SheDesign.Tests.csproj",
+      "packagesPath": "C:\\Users\\keaga\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\keaga\\Documents\\GitHub\\Ctrl Alt Dlt Github\\SheIsDesign\\backend.Tests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/anika.debeer/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\keaga\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -8681,8 +8681,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj": {
-              "projectPath": "/Users/anika.debeer/Downloads/SheIsDesign/backend/backend.csproj"
+            "C:\\Users\\keaga\\Documents\\GitHub\\Ctrl Alt Dlt Github\\SheIsDesign\\backend\\backend.csproj": {
+              "projectPath": "C:\\Users\\keaga\\Documents\\GitHub\\Ctrl Alt Dlt Github\\SheIsDesign\\backend\\backend.csproj"
             }
           }
         }
@@ -8740,7 +8740,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
