@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {
-  Check, X, IdentificationCard
+  Check, X
 } from "@phosphor-icons/react";
 import { RxPeople } from "react-icons/rx";
 import { T } from "../theme";

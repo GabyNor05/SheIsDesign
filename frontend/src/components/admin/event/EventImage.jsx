@@ -1,6 +1,5 @@
 import { T } from "../theme";
 import {Image} from "@phosphor-icons/react";
-import Icon from "./Icon";
 
 export default function EventImage({ url, height = 180 }) {
   return (

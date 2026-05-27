@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { T } from "../theme";
 import Badge from "./Badge";
 import EventImage from "./EventImage";
@@ -6,19 +5,8 @@ import MetaRow from "./MetaRow";
 import JudgeAvatars from "./JudgeAvatars";
 import ProgressBar from "./ProgressBar";
 import Icon from "./Icon";
-import EventForm from "../event/EventForm";
-import Modal from "../Modal"
-import EventDetail from "./EventDetail";
 
-
-
- function FeaturedCard({ event, onManage, onView }) {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [modal, setModal] = useState(null);
-  const [active, setActive] = useState(null);
-  
+function FeaturedCard({ event, onManage, onView }) {
   return (
     <div
       style={{
@@ -126,4 +114,4 @@ import EventDetail from "./EventDetail";
   );
 }
 
-export default FeaturedCard
+export default FeaturedCard;

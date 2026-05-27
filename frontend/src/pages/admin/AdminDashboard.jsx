@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Plus, ArrowClockwise} from "@phosphor-icons/react"
+import {ArrowClockwise} from "@phosphor-icons/react"
 import Sidebar from "../../components/common/Sidebar";
 import Overview from "./Overview";
 import ManageEvents from "./ManageEvents";
 import Leaderboard from "./ManageLeaderboardPage";
-import { T } from "../../components/admin/theme";
 /* The structure for this component is a flex container with a sidebar and main content area:
 Each page content will be an imported component, in this folder. It must check what tab.name is being recieved from the sideboard to decided what mainContent is being rendered*/
 

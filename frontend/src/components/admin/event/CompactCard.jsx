@@ -10,33 +10,8 @@ import {
   CalendarX,
   Image,
 } from "@phosphor-icons/react";
-import EventImage from "./EventImage";
 
 const JudgeCount = 0;
-
-function Badge({ status }) {
-  const s = STATUS_STYLES[status] || STATUS_STYLES.DRAFT;
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        background: s.bg,
-        color: s.color,
-        border: `1px solid ${s.color}40`,
-        borderRadius: 4,
-        padding: "3px 8px",
-        fontSize: 10,
-        fontWeight: 800,
-        fontFamily: "'DM Sans', sans-serif",
-        letterSpacing: "0.1em",
-        textTransform: "uppercase",
-      }}
-    >
-      {status}
-    </span>
-  );
-}
 
 function ProgressBar({ count, max }) {
   const p = max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0;

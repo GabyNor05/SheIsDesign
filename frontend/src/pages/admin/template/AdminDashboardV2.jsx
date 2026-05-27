@@ -4,8 +4,7 @@ import "./AdminDashboardV2.css";
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
-const ADMIN_NAME  = "Admin";
-const ADMIN_EMAIL = "admin@sheisdesign.co.za";
+
 const TODAY       = "Monday, 4 May 2025";
 const PAGE_TITLE  = "Overview";
 const PAGE_SUB    = "Manage events, participants, and competitions.";
