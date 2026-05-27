@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SheDesign.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+52eaadb0f1ae962c1f199360a1f5f08487c9a0ad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2710d09633ba82d18b2c3f282c2f249eaedd68ee")]
 [assembly: System.Reflection.AssemblyProductAttribute("SheDesign.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SheDesign.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
