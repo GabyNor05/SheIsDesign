@@ -1320,8 +1320,6 @@ C:\Users\User\Documents\GitHub\SheIsDesign\backend\obj\Debug\net10.0\refint\back
 C:\Users\User\Documents\GitHub\SheIsDesign\backend\obj\Debug\net10.0\backend.pdb
 C:\Users\User\Documents\GitHub\SheIsDesign\backend\obj\Debug\net10.0\backend.genruntimeconfig.cache
 C:\Users\User\Documents\GitHub\SheIsDesign\backend\obj\Debug\net10.0\ref\backend.dll
-C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\bin\Debug\net10.0\appsettings.Development.json
-C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\bin\Debug\net10.0\appsettings.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\bin\Debug\net10.0\package-lock.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\bin\Debug\net10.0\package.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\bin\Debug\net10.0\backend.staticwebassets.endpoints.json
@@ -1613,3 +1611,6 @@ C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\obj\Debu
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\obj\Debug\net10.0\backend.pdb
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\obj\Debug\net10.0\backend.genruntimeconfig.cache
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\obj\Debug\net10.0\ref\backend.dll
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.InMemory.dll
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\bin\Debug\net10.0\appsettings.development.json
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend\bin\Debug\net10.0\appsettings.json
