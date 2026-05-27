@@ -365,17 +365,20 @@ C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\obj\Debug\ne
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.pdb
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.genruntimeconfig.cache
 C:\Users\burnt\Documents\GitHub\SheDesign\SheIsDesign\backend.Tests\obj\Debug\net10.0\ref\SheDesign.Tests.dll
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.dll
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\refint\SheDesign.Tests.dll
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.pdb
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\.msCoverageSourceRootsMapping_SheDesign.Tests
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\CoverletSourceRootsMapping_SheDesign.Tests
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\package-lock.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\package.json
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\backend.staticwebassets.endpoints.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\testhost.exe
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\testhost.dll
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\xunit.abstractions.dll
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\xunit.runner.visualstudio.testadapter.dll
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\backend.deps.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\backend.runtimeconfig.json
-C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\backend.staticwebassets.endpoints.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\backend.exe
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\SheDesign.Tests.deps.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\SheDesign.Tests.runtimeconfig.json
@@ -736,8 +739,5 @@ C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\ob
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.csproj.CoreCompileInputs.cache
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.sourcelink.json
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesig.95F8F4CE.Up2Date
-C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.dll
-C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\refint\SheDesign.Tests.dll
-C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.pdb
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.genruntimeconfig.cache
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\ref\SheDesign.Tests.dll

@@ -8,7 +8,6 @@ import EventsPage from "./pages/public/EventsPage";
 import GalleryPage from "./pages/public/GalleryPage";
 import LeaderboardPage from "./pages/public/LeaderboardPage";
 import DonatePage from "./pages/public/DonatePage";
-import VolunteerPage from "./pages/public/VolunteerPage";
 
 // Auth pages
 import AuthPage from "./pages/auth/AuthPage/AuthPage";
@@ -27,6 +26,8 @@ import ManageDonations from "./pages/admin/ManageDonationsPage";
 
 // Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
+import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
+import JudgeScoringPage from "./pages/judge/JudgeScoringPage";
 
 const Routes = createBrowserRouter([
   {
@@ -39,7 +40,6 @@ const Routes = createBrowserRouter([
       { path: "gallery", element: <GalleryPage /> },
       { path: "leaderboard", element: <LeaderboardPage /> },
       { path: "donate", element: <DonatePage /> },
-      { path: "volunteer", element: <VolunteerPage /> },
 
       // ── Auth ──────────────────────────────────────────────────────────────
       { path: "auth", element: <AuthPage /> },
@@ -68,6 +68,8 @@ const Routes = createBrowserRouter([
 
       // ── Judge ─────────────────────────────────────────────────────────────
       { path: "judge", element: <JudgeDashboard /> },
+      { path: "judge/events", element: <JudgeEventsPage /> },
+      { path: "judge/score/:eventId", element: <JudgeScoringPage /> },
     ],
   },
 ]);

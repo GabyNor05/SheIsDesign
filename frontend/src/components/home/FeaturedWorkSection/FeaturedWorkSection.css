@@ -6,7 +6,7 @@
 /* --- Section wrapper --- */
 .featured-section {
     font-family: 'Poppins', sans-serif;
-    background-color: #0D0608;
+    background: rgba(13, 6, 8, 0.55);
     border-top: 1px solid rgba(248, 235, 237, 0.06);
     position: relative;
     overflow: hidden;
