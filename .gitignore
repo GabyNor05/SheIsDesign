@@ -27,4 +27,7 @@ frontend/yarn-error.log*
 .claude/
 .vscode/
 .DS_Store
-Thumbs.db
+Thumbs.dbbackend.Tests/obj/
+backend.Tests/bin/
+backend.Tests/obj/
+backend.Tests/bin/
