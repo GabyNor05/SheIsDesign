@@ -128,7 +128,6 @@ export default function Navbar({ solid = false }) {
           { to: "/gallery",     label: "Gallery"     },
           { to: "/leaderboard", label: "Leaderboard" },
           { to: "/donate",      label: "Donate"      },
-          { to: "/volunteer",   label: "Volunteer"   },
         ].map(({ to, label }) => (
           <Link
             key={to}
