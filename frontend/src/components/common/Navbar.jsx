@@ -6,7 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { MdPerson, MdLogout, MdAccountCircle } from "react-icons/md";
+import { MdLogout, MdAccountCircle } from "react-icons/md";
 import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
 

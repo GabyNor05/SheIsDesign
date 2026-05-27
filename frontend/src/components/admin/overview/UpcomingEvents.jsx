@@ -2,12 +2,8 @@ import { useEffect, useState } from "react";
 import {
   CalendarDots,
   CalendarBlank,
-  Plus,
-  Pencil,
-  Trash,
 } from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
-import Card from "./Card";
 import { getUpcomingEvents } from "../../../services/eventService";
 
 import { T } from "../theme";
@@ -18,13 +14,6 @@ const STATUS_MAP = {
   DRAFT: { bg: T.draftBg, color: T.draftGray, dot: T.draftGray },
   CLOSED: { bg: T.closedBg, color: T.closedRed, dot: T.closedRed },
 };
-
-const UPCOMING_EVENTS = [
-  { id: "evt-001", title: "Brand Identity Challenge", category: "BRAND IDENTITY", status: "OPEN",   dateRange: "1–12 Mar 2026",  entries: 84,  maxEntries: 100 },
-  { id: "evt-002", title: "Motion Design Bootcamp",   category: "MOTION DESIGN",  status: "OPEN",   dateRange: "10–20 Mar 2026", entries: 41,  maxEntries: 60  },
-  { id: "evt-003", title: "UI/UX Hackathon 2026",     category: "UX DESIGN",      status: "OPEN",   dateRange: "1–5 Apr 2026",   entries: 112, maxEntries: 150 },
-  { id: "evt-004", title: "Typography Sprint",        category: "GRAPHIC DESIGN", status: "UPCOMING",dateRange: "12–18 Apr 2026", entries: 29,  maxEntries: 60  },
-];
 
 function StatusBadge({ status }) {
   const s = STATUS_MAP[status] || STATUS_MAP.DRAFT;

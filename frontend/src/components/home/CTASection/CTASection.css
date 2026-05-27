@@ -1,7 +1,7 @@
 /* CTA Section */
 .cta-section {
     font-family: 'Poppins', sans-serif;
-    background: #0D0608;
+    background: rgba(13, 6, 8, 0.55);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
     overflow: hidden;
@@ -9,6 +9,14 @@
     opacity: 0;
     transform: translateY(32px);
     transition: opacity 0.9s ease, transform 0.9s ease;
+    -webkit-transform: translateY(32px);
+    -moz-transform: translateY(32px);
+    -ms-transform: translateY(32px);
+    -o-transform: translateY(32px);
+    -webkit-transition: opacity 0.9s ease, transform 0.9s ease;
+    -moz-transition: opacity 0.9s ease, transform 0.9s ease;
+    -ms-transition: opacity 0.9s ease, transform 0.9s ease;
+    -o-transition: opacity 0.9s ease, transform 0.9s ease;
 }
 
 .cta-section--visible {

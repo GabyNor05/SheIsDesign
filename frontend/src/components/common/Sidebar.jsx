@@ -1,5 +1,5 @@
 /* The purpose of the Sidebar has changed instead of navigating to a different page it just storing what the active tab is so that the AdminDashboard knows what to render. The Sidebar will now act as a control panel for the AdminDashboard, managing the state of the active tab and providing a way for the user to switch between different sections of the dashboard. */
-import { Navigate, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SquaresFour, CalendarDots, UsersThree, Trophy, Images, HandHeart, Question, SignOut } from "@phosphor-icons/react";
 import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
@@ -8,7 +8,7 @@ import "./Sidebar.css";
 /* Sidebar Component
 --------------
 Sidebar is a functional component that renders a navigation sidebar. It uses the user's role to determine which navigation items to display. The component also manages the state of the active tab and provides a function to handle tab clicks. only visible on the dashboard which is for admins and judges */
-const setRole = localStorage.setItem("role", "admin"); // Set role to "admin" for testing purposes. Change to "judge" or remove for regular user.
+// Set role to "admin" for testing purposes. Change to "judge" or remove for regular user.
 const role = localStorage.getItem("role");
 
 
