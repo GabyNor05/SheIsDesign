@@ -1,11 +1,8 @@
 import { useState, useEffect } from "react";
-import { T, STATUS_STYLES } from "../theme";
-import { Eye, Gear } from "@phosphor-icons/react";
-import { eventService } from "../../../services/eventService";
+import { T } from "../theme";
+import { getUpcomingEvents } from "../../../services/eventService";
 import EventForm from "./EventForm";
-import EventDetail from "./EventDetail";
 import FeaturedCard from "./FeaturedCard";
-
 import Modal from "../Modal";
 
 const STORAGE_KEY = "sheisdesign_events";
@@ -70,35 +67,12 @@ const SEED_EVENTS = [
   },
 ];
 
-// ─────────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────────
 function saveEvents(evs) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(evs));
   } catch {}
 }
 
-function fmtDate(d) {
-  if (!d) return "—";
-  try {
-    return new Date(d + "T00:00:00").toLocaleDateString("en-ZA", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
-  } catch {
-    return d;
-  }
-}
-
-function calcPct(count, max) {
-  return max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0;
-}
-
-// ─────────────────────────────────────────────────────────────────
-// MAIN COMPONENT
-// ─────────────────────────────────────────────────────────────────
 export default function LiveEvents() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -106,55 +80,20 @@ export default function LiveEvents() {
   const [modal, setModal] = useState(null);
   const [active, setActive] = useState(null);
 
-  function onView() {
-    // Open event detail view based on event ID
-    //Because of current structure we cannot use router it will show up as a full page modal to look like it is separate page.
-    /* return (
-      <div style={{ minHeight: "100vh", background: T.bg, color: T.textPrimary }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", padding: "32px" }}>
-          <EventDetail
-            event={detailEv}
-            onBack={() => setDetail(null)}
-            onEdit={() => {
-              setActive(detailEv);
-              setModal("edit");
-            }}
-          />
-        </div>
+  function onView() {}
+  function onManage() {}
 
-        {modal === "edit" && active && (
-          <Modal title="Edit Event" onClose={() => setModal(null)} wide>
-            <EventForm
-              initial={active}
-              onSave={handleEdit}
-              onClose={() => setModal(null)}
-            />
-          </Modal>
-        )}
-      </div>
-    ); */
-  }
-
-  function onManage() {
-    //Open Event Form
-
-  }
-
-  // Fetch upcoming events from API
   useEffect(() => {
     const loadUpcomingEvents = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await eventService.getUpcomingEvents();
-        console.log("Fetched upcoming events from API:", data);
+        const data = await getUpcomingEvents();
         setEvents(data || []);
         saveEvents(data || []);
       } catch (err) {
         console.error("Error fetching upcoming events:", err);
         setError(err.message || "Failed to load events");
-
-        // Fallback to SEED_EVENTS
         setEvents(SEED_EVENTS);
         saveEvents(SEED_EVENTS);
       } finally {
@@ -177,14 +116,7 @@ export default function LiveEvents() {
 
   if (loading) {
     return (
-      <div
-        style={{
-          padding: 32,
-          textAlign: "center",
-          color: T.textSecond,
-          fontSize: 14,
-        }}
-      >
+      <div style={{ padding: 32, textAlign: "center", color: T.textSecond, fontSize: 14 }}>
         Loading upcoming events...
       </div>
     );
@@ -192,14 +124,7 @@ export default function LiveEvents() {
 
   if (error) {
     return (
-      <div
-        style={{
-          padding: 32,
-          textAlign: "center",
-          color: T.closedRed,
-          fontSize: 14,
-        }}
-      >
+      <div style={{ padding: 32, textAlign: "center", color: T.closedRed, fontSize: 14 }}>
         <p>Error: {error}</p>
         <button
           onClick={() => window.location.reload()}
@@ -223,20 +148,12 @@ export default function LiveEvents() {
 
   if (events.length === 0) {
     return (
-      <div
-        style={{
-          padding: 32,
-          textAlign: "center",
-          color: T.textMuted,
-          fontSize: 14,
-        }}
-      >
+      <div style={{ padding: 32, textAlign: "center", color: T.textMuted, fontSize: 14 }}>
         No upcoming events at this time.
       </div>
     );
   }
 
-  // Show max 4 upcoming events
   const displayEvents = events.slice(0, 4);
 
   return (
@@ -297,28 +214,21 @@ export default function LiveEvents() {
           }}
         >
           {displayEvents.map((ev) => (
-            <FeaturedCard key={ev.EventID} event={ev} onView={onView()} onManage={onManage()} />
+            <FeaturedCard key={ev.EventID} event={ev} onView={onView} onManage={onManage} />
           ))}
         </div>
       </section>
 
-      {/* Edit Modal */}
       {modal === "edit" && active && (
         <Modal
           title="Edit Event"
-          onClose={() => {
-            setModal(null);
-            setActive(null);
-          }}
+          onClose={() => { setModal(null); setActive(null); }}
           wide
         >
           <EventForm
             initial={active}
             onSave={handleEdit}
-            onClose={() => {
-              setModal(null);
-              setActive(null);
-            }}
+            onClose={() => { setModal(null); setActive(null); }}
           />
         </Modal>
       )}

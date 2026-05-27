@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import React, { } from "react";
+import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 
 /* Hides Navbar on pages that don't' have "/admin" or "/judge", those pages show the Sidebar instead */

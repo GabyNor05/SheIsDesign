@@ -4,8 +4,7 @@ import "./AdminDashboardV2.css";
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
-const ADMIN_NAME  = "Admin";
-const ADMIN_EMAIL = "admin@sheisdesign.co.za";
+
 const TODAY       = "Monday, 4 May 2025";
 const PAGE_TITLE  = "Overview";
 const PAGE_SUB    = "Manage events, participants, and competitions.";
@@ -144,33 +143,33 @@ function Card({ children, style = {}, glow = false }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // TOPBAR
 // ─────────────────────────────────────────────────────────────────────────────
-function Topbar() {
-  return (
-    <header className="topbar">
-      <span className="topbar__logo">
-        Shels<span>Design</span>
-      </span>
-      <div className="topbar__right">
-        <button className="topbar__notif-btn" aria-label="Notifications">
-          <Icon name="bell" size={18} color="var(--text-second)" />
-          <span className="topbar__notif-dot" />
-        </button>
-        <div className="topbar__user">
-          <div className="topbar__avatar">
-            <span>A</span>
-          </div>
-          <div>
-            <div className="topbar__user-name">{ADMIN_NAME}</div>
-            <div className="topbar__user-email">{ADMIN_EMAIL}</div>
-          </div>
-        </div>
-        <button className="topbar__logout-btn">
-          <Icon name="logout" size={13} color="currentColor" /> Logout
-        </button>
-      </div>
-    </header>
-  );
-}
+// function Topbar() {
+//   return (
+//     <header className="topbar">
+//       <span className="topbar__logo">
+//         Shels<span>Design</span>
+//       </span>
+//       <div className="topbar__right">
+//         <button className="topbar__notif-btn" aria-label="Notifications">
+//           <Icon name="bell" size={18} color="var(--text-second)" />
+//           <span className="topbar__notif-dot" />
+//         </button>
+//         <div className="topbar__user">
+//           <div className="topbar__avatar">
+//             <span>A</span>
+//           </div>
+//           <div>
+//             <div className="topbar__user-name">{ADMIN_NAME}</div>
+//             <div className="topbar__user-email">{ADMIN_EMAIL}</div>
+//           </div>
+//         </div>
+//         <button className="topbar__logout-btn">
+//           <Icon name="logout" size={13} color="currentColor" /> Logout
+//         </button>
+//       </div>
+//     </header>
+//   );
+// }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PAGE HEADER
@@ -407,7 +406,7 @@ function PlatformSummary() {
 export default function AdminDashboardV2() {
   return (
     <div className="dash-root">
-      <Topbar />
+      {/* <Topbar /> */}
       <main className="dash-main">
         <div className="dash-section" style={{ animationDelay: "0ms" }}>
           <PageHeader />

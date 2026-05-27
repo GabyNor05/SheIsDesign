@@ -8,7 +8,6 @@ import EventsPage from "./pages/public/EventsPage";
 import GalleryPage from "./pages/public/GalleryPage";
 import LeaderboardPage from "./pages/public/LeaderboardPage";
 import DonatePage from "./pages/public/DonatePage";
-import VolunteerPage from "./pages/public/VolunteerPage";
 
 // Auth pages
 import AuthPage from "./pages/auth/AuthPage/AuthPage";
@@ -22,11 +21,13 @@ import AdminDashboardV2 from "./pages/admin/template/AdminDashboardV2";
 import ManageEvents from "./pages/admin/template/Events";
 import ManageParticipantsPage from "./pages/admin/ManageParticipantsPage";
 import ManageLeaderboardPage from "./pages/admin//ManageLeaderboardPage";
-// import ManageDonations from "./pages/admin/ManageDonationsPage";
+import ManageDonations from "./pages/admin/ManageDonationsPage";
 // import ManageGallery from "./pages/admin/ManageGalleryPage";
 
 // Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
+import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
+import JudgeScoringPage from "./pages/judge/JudgeScoringPage";
 
 const Routes = createBrowserRouter([
   {
@@ -39,7 +40,6 @@ const Routes = createBrowserRouter([
       { path: "gallery", element: <GalleryPage /> },
       { path: "leaderboard", element: <LeaderboardPage /> },
       { path: "donate", element: <DonatePage /> },
-      { path: "volunteer", element: <VolunteerPage /> },
 
       // ── Auth ──────────────────────────────────────────────────────────────
       { path: "auth", element: <AuthPage /> },
@@ -62,12 +62,14 @@ const Routes = createBrowserRouter([
           { path: "participants", element: <ManageParticipantsPage /> },
           { path: "leaderboard", element: <ManageLeaderboardPage /> },
           // { path: "gallery",     element: <ManageGallery /> },
-          // { path: "donations",   element: <ManageDonations /> },
+          { path: "donations", element: <ManageDonations /> },
         ],
       },
 
       // ── Judge ─────────────────────────────────────────────────────────────
       { path: "judge", element: <JudgeDashboard /> },
+      { path: "judge/events", element: <JudgeEventsPage /> },
+      { path: "judge/score/:eventId", element: <JudgeScoringPage /> },
     ],
   },
 ]);
