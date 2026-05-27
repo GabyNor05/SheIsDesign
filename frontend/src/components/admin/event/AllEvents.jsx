@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { T, STATUS_STYLES } from "../theme";
+import { T } from "../theme";
 import { Plus } from "@phosphor-icons/react";
 import CompactCard from "./CompactCard";
 import EventDetail from "./EventDetail";
 import Modal from "../Modal";
 import EventForm from "./EventForm";
 import ConfirmDelete from "./ConfirmDelete";
-import Searchbar from "./Searchbar";
 import { getAllEvents } from "../../../services/eventService";
 
 const STATUS_TABS = ["ALL", "OPEN", "DRAFT", "UPCOMING", "CLOSED"];
@@ -21,7 +20,6 @@ function AllEvents() {
   const [active, setActive] = useState(null);
   const [detailId, setDetailId] = useState(null);
 
-  // Load events from API
   useEffect(() => {
     loadEvents();
   }, []);
@@ -40,7 +38,6 @@ function AllEvents() {
     }
   };
 
-  // Calculate tab counts
   const tabCounts = {
     ALL: events.length,
     OPEN: events.filter(e => e.status === "OPEN").length,
@@ -49,30 +46,24 @@ function AllEvents() {
     CLOSED: events.filter(e => e.status === "CLOSED").length,
   };
 
-  // Filter events by tab and search
   const filtered = events.filter(e => {
     const matchTab = tab === "ALL" || e.status === tab;
-    const matchSearch = 
+    const matchSearch =
       e.title.toLowerCase().includes(search.toLowerCase()) ||
       e.category.toLowerCase().includes(search.toLowerCase());
     return matchTab && matchSearch;
   });
 
   const handleCreate = (data) => {
-    const newEvent = {
-      ...data,
-      EventID: "evt-" + Date.now().toString(36),
-    };
+    const newEvent = { ...data, EventID: "evt-" + Date.now().toString(36) };
     setEvents([newEvent, ...events]);
     setModal(null);
   };
 
   const handleEdit = (data) => {
-    setEvents(
-      events.map(e =>
-        e.EventID === active.EventID ? { ...data, EventID: active.EventID } : e
-      )
-    );
+    setEvents(events.map(e =>
+      e.EventID === active.EventID ? { ...data, EventID: active.EventID } : e
+    ));
     setModal(null);
     setActive(null);
   };
@@ -85,16 +76,15 @@ function AllEvents() {
   };
 
   const handleCloseEvent = (eventId) => {
-    setEvents(
-      events.map(e =>
-        e.EventID === eventId ? { ...e, status: "CLOSED" } : e
-      )
-    );
+    setEvents(events.map(e =>
+      e.EventID === eventId ? { ...e, status: "CLOSED" } : e
+    ));
   };
 
   const detailEvent = events.find(e => e.EventID === detailId);
 
   if (loading) return <div style={{ padding: 24, color: T.textSecond }}>Loading events...</div>;
+  if (error) return <div style={{ padding: 24, color: "red" }}>Error: {error}</div>;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
@@ -132,23 +122,29 @@ function AllEvents() {
                 border: `1px solid ${tab === t ? T.pink : T.border}`,
                 borderRadius: 6, padding: "8px 12px",
                 fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
-                cursor: "pointer", transition: "all 0.15s",
-                whiteSpace: "nowrap",
+                cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap",
               }}
             >
               {t} ({tabCounts[t]})
             </button>
           ))}
         </div>
-        
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search events..."
+          style={{
+            background: T.surface, border: `1px solid ${T.border}`,
+            borderRadius: 8, padding: "8px 12px", color: T.textPrimary,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 13, width: 200,
+          }}
+        />
       </div>
 
       {/* Events List */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
         {filtered.length === 0 ? (
-          <div style={{ padding: 24, textAlign: "center", color: T.textMuted }}>
-            No events found
-          </div>
+          <div style={{ padding: 24, textAlign: "center", color: T.textMuted }}>No events found</div>
         ) : (
           filtered.map(event => (
             <CompactCard
@@ -163,7 +159,6 @@ function AllEvents() {
         )}
       </div>
 
-      {/* Modals */}
       {modal === "create" && (
         <Modal title="Create New Event" onClose={() => setModal(null)} wide>
           <EventForm onSave={handleCreate} onClose={() => setModal(null)} />
@@ -178,7 +173,6 @@ function AllEvents() {
         <ConfirmDelete event={active} onConfirm={handleDelete} onClose={() => { setModal(null); setActive(null); }} />
       )}
 
-      {/* Event Detail Modal */}
       {detailId && detailEvent && (
         <EventDetail event={detailEvent} onClose={() => setDetailId(null)} />
       )}

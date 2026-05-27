@@ -146,11 +146,7 @@ export default function JudgeScoringPage() {
     if (!allScored) return;
     setSubmitting(true);
 
-    const payload = submissions.map(s => ({
-      submissionId: s.id,
-      score:        Number(scores[s.id]?.score),
-      comment:      scores[s.id]?.comment || "",
-    }));
+
 
     // 🔌 API CONNECTION: send scores to backend
     // await fetch(`/api/judge/events/${id}/scores`, {

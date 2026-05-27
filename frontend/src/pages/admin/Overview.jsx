@@ -1,18 +1,14 @@
-import {useState} from "react";
 import {T} from "../../components/admin/theme";
 import QuickActions from "../../components/admin/overview/QuickActions";
 import UpcomingEvents from "../../components/admin/overview/UpcomingEvents";
 import RecentActivity from "../../components/admin/overview/RecentActivity";
 import PendingApplicattions from "../../components/admin/overview/PendingApplications";
 
-
-
 const STATUS_BADGE = "System Online";
 
 const DayLabel = () => (
     new Date().toLocaleDateString("en-UK", { month: "long", day: "numeric", year: "numeric" })
 )
-
 
 function Overview({ setActiveTab }) {
     return (
@@ -23,7 +19,7 @@ function Overview({ setActiveTab }) {
                     <p className="text-sm text-[#A0A0A0]">Manage events, participants, and competitions.</p>
                 </div>
                 <div className="flex flex-col justify-left items-end gap-2">
-                    <h3 className="text-[12px]  mb-1" style={{ color: T.textSecond }}>{DayLabel()}</h3>
+                    <h3 className="text-[12px] mb-1" style={{ color: T.textSecond }}>{DayLabel()}</h3>
                     <span className="rounded-[20px] w-fit" style={{
                         background: T.activeBg, color: T.activeGreen, borderRadius: 20,
                         padding: "4px 12px", fontSize: 12, fontWeight: 600,
@@ -34,14 +30,13 @@ function Overview({ setActiveTab }) {
                     </span>
                 </div>
             </div>
-            
-                <QuickActions setActiveTab={setActiveTab} />
-                <UpcomingEvents />
-                <div style= {{ display: "flex", flex: "1 0 0", gap: 24}}>
-                    <PendingApplicattions />
-                <RecentActivity />
-                </div>
 
+            <QuickActions setActiveTab={setActiveTab} />
+            <UpcomingEvents />
+            <div style={{ display: "flex", flex: "1 0 0", gap: 24 }}>
+                <PendingApplicattions />
+                <RecentActivity />
+            </div>
         </div>
     );
 }

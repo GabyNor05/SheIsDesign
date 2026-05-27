@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MdCheckCircle, MdArrowForward, MdExplore } from "react-icons/md";
-import { FiClock } from "react-icons/fi";
 import "./SignupSuccessPage.css";
 
 const REDIRECT_SECONDS = 15;
