@@ -28,3 +28,5 @@ frontend/yarn-error.log*
 .vscode/
 .DS_Store
 Thumbs.db
+backend.Tests/bin/Debug/net10.0/appsettings.development.json
+backend.Tests/bin/Debug/net10.0/appsettings.json

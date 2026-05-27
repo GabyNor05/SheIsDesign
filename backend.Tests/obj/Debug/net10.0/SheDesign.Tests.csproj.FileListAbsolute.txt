@@ -741,3 +741,5 @@ C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\ob
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesig.95F8F4CE.Up2Date
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\SheDesign.Tests.genruntimeconfig.cache
 C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\obj\Debug\net10.0\ref\SheDesign.Tests.dll
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\appsettings.development.json
+C:\Users\keaga\Documents\GitHub\Ctrl Alt Dlt Github\SheIsDesign\backend.Tests\bin\Debug\net10.0\appsettings.json
