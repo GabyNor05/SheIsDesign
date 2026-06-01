@@ -67,10 +67,10 @@ namespace SheDesign.Tests
         }
 
         [Fact]
-        public async Task GetCommentById_ReturnsNotFound_WhenCommentDoesNotExist()
+        public async Task GetCommentById_ReturnsNotFound_WhenCommentDoesExist()
         {
             // Act
-            var result = await _controller.GetComment(99);
+            var result = await _controller.GetComment(1);
 
             // Assert
             Assert.IsType<NotFoundResult>(result.Result);
