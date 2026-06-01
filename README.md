@@ -148,9 +148,9 @@ One major challenge was deployment, managing the frontend, backend, and SQL data
 - **Solutions**: 
 
 **Keabetswe Olifant**
-- **Challenges**:
+- **Challenges**: The challenges that this project has produced, at least the ones discovered by me, were the database structure changes. Seen as the database structure is permanent, it is not easy to make changes to it. Unit Testing has also been a hard part of development due to the sheer amount of tests that need to be conducted because of a large code base, and many parts that need testing.
 - **Solutions**: 
-
+My Solutions to the database issue, was to attempt to manipulate the migrations feature to undo the structures and redo them with a few commands from the command line. This has been my method of improvisation. Furthermore, a library for unit testing was used to see just how much of the codebase has been unit tested in order to determine just how much more testing was needed, and also close communication with my teammates was crucial for this part to avoid conflicts and to work efficiently.
 ---
 
 ## 📽️ Demo & Promo Videos
