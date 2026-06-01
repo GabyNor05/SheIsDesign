@@ -293,9 +293,9 @@ var assemblies = [
       { "name": "backend.Controllers.CommentController", "rp": "backend_CommentController.html", "cl": 40, "ucl": 2, "cal": 42, "tl": 99, "cb": 7, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "backend.Controllers.DonationController", "rp": "backend_DonationController.html", "cl": 80, "ucl": 7, "cal": 87, "tl": 147, "cb": 4, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "backend.Controllers.EventController", "rp": "backend_EventController.html", "cl": 82, "ucl": 41, "cal": 123, "tl": 206, "cb": 6, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Controllers.IndustryProfessionalController", "rp": "backend_IndustryProfessionalController.html", "cl": 0, "ucl": 30, "cal": 30, "tl": 66, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Controllers.LeaderboardController", "rp": "backend_LeaderboardController.html", "cl": 0, "ucl": 26, "cal": 26, "tl": 55, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "backend.Controllers.ParticipantController", "rp": "backend_ParticipantController.html", "cl": 0, "ucl": 43, "cal": 43, "tl": 79, "cb": 0, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "backend.Controllers.IndustryProfessionalController", "rp": "backend_IndustryProfessionalController.html", "cl": 30, "ucl": 0, "cal": 30, "tl": 66, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "backend.Controllers.LeaderboardController", "rp": "backend_LeaderboardController.html", "cl": 26, "ucl": 0, "cal": 26, "tl": 55, "cb": 4, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "backend.Controllers.ParticipantController", "rp": "backend_ParticipantController.html", "cl": 43, "ucl": 0, "cal": 43, "tl": 79, "cb": 14, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "backend.Controllers.PostController", "rp": "backend_PostController.html", "cl": 32, "ucl": 10, "cal": 42, "tl": 99, "cb": 5, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "backend.Controllers.StudentController", "rp": "backend_StudentController.html", "cl": 57, "ucl": 2, "cal": 59, "tl": 121, "cb": 7, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "backend.Controllers.SubmissionController", "rp": "backend_SubmissionController.html", "cl": 95, "ucl": 7, "cal": 102, "tl": 167, "cb": 9, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -306,12 +306,12 @@ var assemblies = [
       { "name": "SheDesign.DTO.EventReadDTO", "rp": "backend_EventReadDTO.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.DTO.EventStatisticsDTO", "rp": "backend_EventStatisticsDTO.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 9, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.DTO.GoogleLoginDTO", "rp": "backend_GoogleLoginDTO.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "SheDesign.DTO.IndustryProfessionalCreateDTO", "rp": "backend_IndustryProfessionalCreateDTO.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SheDesign.DTO.IndustryProfessionalCreateDTO", "rp": "backend_IndustryProfessionalCreateDTO.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.DTO.LeaderboardTotalReadDTO", "rp": "backend_LeaderboardTotalReadDTO.html", "cl": 6, "ucl": 0, "cal": 6, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.DTO.LoginDTO", "rp": "backend_LoginDTO.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.DTO.MenteeCreateDTO", "rp": "backend_MenteeCreateDTO.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "SheDesign.DTO.ParticipantEventStatusDTO", "rp": "backend_ParticipantEventStatusDTO.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "SheDesign.DTO.ParticipantProfileDTO", "rp": "backend_ParticipantProfileDTO.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SheDesign.DTO.ParticipantEventStatusDTO", "rp": "backend_ParticipantEventStatusDTO.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SheDesign.DTO.ParticipantProfileDTO", "rp": "backend_ParticipantProfileDTO.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.DTO.StudentCreateDTO", "rp": "backend_StudentCreateDTO.html", "cl": 6, "ucl": 0, "cal": 6, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.DTO.StudentReadDTO", "rp": "backend_StudentReadDTO.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.DTO.SubmissionCreateDTO", "rp": "backend_SubmissionCreateDTO.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 9, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -325,8 +325,8 @@ var assemblies = [
       { "name": "SheDesign.Models.Comment", "rp": "backend_Comment.html", "cl": 5, "ucl": 2, "cal": 7, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.Models.Donation", "rp": "backend_Donation.html", "cl": 6, "ucl": 1, "cal": 7, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.Models.Event", "rp": "backend_Event.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 19, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "SheDesign.Models.IndustryProfessional", "rp": "backend_IndustryProfessional.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "SheDesign.Models.Post", "rp": "backend_Post.html", "cl": 11, "ucl": 2, "cal": 13, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SheDesign.Models.IndustryProfessional", "rp": "backend_IndustryProfessional.html", "cl": 4, "ucl": 1, "cal": 5, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "SheDesign.Models.Post", "rp": "backend_Post.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.Models.Student", "rp": "backend_Student.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.Models.Submission", "rp": "backend_Submission.html", "cl": 9, "ucl": 1, "cal": 10, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "SheDesign.Models.User", "rp": "backend_User.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -348,18 +348,6 @@ var riskHotspots = [
     "metrics": [
       { "value": 272, "exceeded": true },
       { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "backend", "class": "backend.Controllers.ParticipantController", "reportPath": "backend_ParticipantController.html", "methodName": "GetParticipantProfile()", "methodShortName": "GetParticipantProfile()", "fileIndex": 0, "line": 24,
-    "metrics": [
-      { "value": 210, "exceeded": true },
-      { "value": 14, "exceeded": false },
-    ]},
-  {
-    "assembly": "backend", "class": "backend.Controllers.ParticipantController", "reportPath": "backend_ParticipantController.html", "methodName": "GetParticipantEventStatus()", "methodShortName": "GetParticipantEventStatus()", "fileIndex": 0, "line": 60,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
     ]},
 ];
 
