@@ -47,7 +47,7 @@ namespace backend.Controllers
                 TotalEventsJoined = posts.Select(p => p.eventId).Distinct().Count(),
                 TotalScore = submissions.Sum(s => s.points),
                 MostRecentEventTitle = mostRecentPost?.Event?.Title,
-                MostRecentEventDate = mostRecentPost?.Event?.Start_date
+                MostRecentEventDate = mostRecentPost?.Event?.Start_date != null ? DateOnly.FromDateTime(mostRecentPost.Event.Start_date) : null
             };
 
             return Ok(dto);

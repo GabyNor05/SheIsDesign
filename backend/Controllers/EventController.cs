@@ -90,7 +90,7 @@ namespace backend.Controllers
         [HttpGet("Upcoming")]
         public async Task<ActionResult<IEnumerable<EventReadDTO>>> GetUpcomingEvents()
         {
-            var today = DateOnly.FromDateTime(DateTime.Now);
+            var today = DateTime.UtcNow;
 
             var upcomingEvents = await _context.Event
                 .Where(e => e.Start_date > today)

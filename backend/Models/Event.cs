@@ -4,8 +4,8 @@ namespace SheDesign.Models
     {
         public int Id { get; set; }
         public string Title { get; set; } = String.Empty;
-        public DateOnly Start_date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-        public DateOnly End_date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateTime Start_date { get; set; } = DateTime.UtcNow;
+        public DateTime End_date { get; set; } = DateTime.UtcNow;
         public int? Entry_count { get; set; }
         public string Description { get; set; } = String.Empty;
         public int Max_entry { get; set; }

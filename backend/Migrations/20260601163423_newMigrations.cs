@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backend.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateEventStructure : Migration
+    public partial class newMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,8 +19,8 @@ namespace backend.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false),
-                    Start_date = table.Column<DateOnly>(type: "date", nullable: false),
-                    End_date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Start_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    End_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Entry_count = table.Column<int>(type: "integer", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: false),
                     Max_entry = table.Column<int>(type: "integer", nullable: false),
@@ -56,11 +56,11 @@ namespace backend.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    donor_name = table.Column<string>(type: "text", nullable: false),
+                    donor_name = table.Column<string>(type: "text", nullable: true),
                     eventId = table.Column<int>(type: "integer", nullable: false),
                     amount = table.Column<float>(type: "real", nullable: false),
                     date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    notes = table.Column<string>(type: "text", nullable: false)
+                    notes = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -188,6 +188,7 @@ namespace backend.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     studentId = table.Column<int>(type: "integer", nullable: false),
+                    eventId = table.Column<int>(type: "integer", nullable: false),
                     title = table.Column<string>(type: "text", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
                     points = table.Column<int>(type: "integer", nullable: false),
@@ -197,6 +198,12 @@ namespace backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Submission", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Submission_Event_eventId",
+                        column: x => x.eventId,
+                        principalTable: "Event",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Submission_Student_studentId",
                         column: x => x.studentId,
@@ -239,6 +246,11 @@ namespace backend.Migrations
                 name: "IX_Student_userId",
                 table: "Student",
                 column: "userId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Submission_eventId",
+                table: "Submission",
+                column: "eventId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Submission_studentId",
