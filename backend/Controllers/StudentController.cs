@@ -71,17 +71,17 @@ namespace backend.Controllers
         // POST: api/Student
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<StudentReadDTO>> PostStudent(StudentCreateDTO dto)
+        public async Task<ActionResult<StudentCreateDTO>> PostStudent(StudentCreateDTO dto)
         {
-            var existingUser = _context.Users.Find(dto.UserID);
+            var existingUser = _context.Users.Find(dto.userID);
 
             var student = new Student
             {
-                fullname = dto.Fullname,
-                university = dto.University,
-                year_of_study = dto.Year_of_study,
-                field_of_study = dto.Field_of_study,
-                userId = dto.UserID,
+                fullname = dto.fullname,
+                university = dto.university,
+                year_of_study = dto.year_of_study,
+                field_of_study = dto.field_of_study,
+                userId = dto.userID,
                 User = existingUser
             };
 
@@ -89,7 +89,7 @@ namespace backend.Controllers
             await _context.SaveChangesAsync();
 
             // Mapping to ReadDTO
-            var result = new StudentReadDTO
+            var result = new StudentCreateDTO
             {
                 fullname = student.fullname,
                 university = student.university,

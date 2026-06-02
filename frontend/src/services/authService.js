@@ -30,8 +30,21 @@ export async function loginUser(email, password) {
   return response.json();
 }
 
+export async function googleLoginUser(accessToken) {
+  const response = await fetch(`${API_BASE}/User/GoogleLogin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ accessToken }),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || "Google sign-in failed");
+  }
+  return response.json();
+}
+
 export async function createMentee({ fullname, university, year_of_study, field_of_study, student_number, wants_volunteer, userId }) {
-  const response = await fetch(`${API_BASE}/Mentee`, {
+  const response = await fetch(`${API_BASE}/Student`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ fullname, university, year_of_study, field_of_study, student_number, wants_volunteer, userId }),

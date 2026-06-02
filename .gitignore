@@ -9,6 +9,8 @@ backend/obj/
 *.cache
 backend/appsettings.Development.json
 backend/appsettings.json
+backend/.env
+.env
 
 # ─── React / Node Frontend ───────────────────────────────────
 frontend/node_modules/
