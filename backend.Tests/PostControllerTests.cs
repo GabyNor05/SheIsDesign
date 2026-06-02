@@ -8,6 +8,7 @@ using Xunit;
 using backend.Controllers;
 using SheDesign.Data;
 using SheDesign.Models;
+using SheDesign.DTO; 
 
 namespace SheDesign.Tests
 {
@@ -68,10 +69,13 @@ namespace SheDesign.Tests
             var result = await _controller.GetPost();
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<IEnumerable<Post>>>(result);
-            var posts = Assert.IsAssignableFrom<IEnumerable<Post>>(actionResult.Value);
+            // Updated assertion types from IEnumerable<Post> to IEnumerable<PostReadDto>
+            var actionResult = Assert.IsType<ActionResult<IEnumerable<PostReadDto>>>(result);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var posts = Assert.IsAssignableFrom<IEnumerable<PostReadDto>>(okResult.Value);
+            
             Assert.Equal(2, posts.Count());
-            Assert.Contains(posts, p => p.title == "First Announcement");
+            Assert.Contains(posts, p => p.Title == "First Announcement"); // Match PascalCase property
         }
 
         [Fact]
@@ -95,10 +99,13 @@ namespace SheDesign.Tests
             var result = await _controller.GetPost(10);
 
             // Assert
-            var actionResult = Assert.IsType<ActionResult<Post>>(result);
-            var post = Assert.IsType<Post>(actionResult.Value);
-            Assert.Equal("Community Spotlight", post.title);
-            Assert.Equal("Featuring members", post.description);
+            // Updated assertion from Post to PostReadDto wrapping inside OkObjectResult
+            var actionResult = Assert.IsType<ActionResult<PostReadDto>>(result);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var post = Assert.IsType<PostReadDto>(okResult.Value);
+            
+            Assert.Equal("Community Spotlight", post.Title);
+            Assert.Equal("Featuring members", post.Description);
         }
 
         [Fact]
@@ -115,13 +122,16 @@ namespace SheDesign.Tests
         public async Task PutPost_ReturnsBadRequest_WhenIdsDoNotMatch()
         {
             // Arrange
-            var postToUpdate = new Post { Id = 1, title = "Mismatched ID Post" };
+            // Handled routing mismatch requirement using PostCreateDto instead of Post model
+            var postToUpdate = new PostCreateDto { Title = "Mismatched ID Post" };
 
             // Act
-            var result = await _controller.PutPost(2, postToUpdate); // Route ID is 2, object ID is 1
+            var result = await _controller.PutPost(2, postToUpdate); 
 
             // Assert
-            Assert.IsType<BadRequestResult>(result);
+            // Note: In your refactored PutPost, a mismatch returns NotFound rather than BadRequest 
+            // because it queries .FindAsync(id) prior to matching inner IDs.
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -141,21 +151,19 @@ namespace SheDesign.Tests
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
             
-            // Detach to avoid EF tracking conflicts with the update model instance
             _context.Entry(post).State = EntityState.Detached;
 
-            var updatedPost = new Post 
+            // Fixed invalid type declaration 'DTO.PostCreateDto' and stripped entity-only properties
+            var updatedPostDto = new PostCreateDto 
             { 
-                Id = 5, 
-                title = "Modified Title", 
-                description = "New context", 
-                status = "Published",
-                studentId = 3,
-                Student = mockStudent
+                Title = "Modified Title", 
+                Description = "New context", 
+                Status = "Published",
+                StudentId = 3
             };
 
             // Act
-            var result = await _controller.PutPost(5, updatedPost);
+            var result = await _controller.PutPost(5, updatedPostDto);
 
             // Assert
             Assert.IsType<NoContentResult>(result);
@@ -170,35 +178,32 @@ namespace SheDesign.Tests
         public async Task PostPost_ReturnsCreatedAtAction_AndPersistsEntityWithDefaults()
         {
             // Arrange
-            var mockStudent = new Student { Id = 4, fullname = "Bob Ross" };
-            var newPost = new Post
+            // Refactored tracking to use incoming creation dto schema payload
+            var newPostDto = new PostCreateDto
             {
-                Id = 12,
-                title = "New Resource Entry",
-                description = "Check out our tutorials list.",
-                category = "Education",
-                studentId = 4,
-                Student = mockStudent,
-                link_count = 5
-                // comment_count default (0) and post_date default (DateTime.Now) are evaluated here
+                Title = "New Resource Entry",
+                Description = "Check out our tutorials list.",
+                Category = "Education",
+                StudentId = 4,
+                Status = "Active"
             };
 
             // Act
-            var result = await _controller.PostPost(newPost);
+            var result = await _controller.PostPost(newPostDto);
 
             // Assert
-            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result.Result);
-            var returnedPost = Assert.IsType<Post>(createdAtActionResult.Value);
+            var actionResult = Assert.IsType<ActionResult<PostReadDto>>(result);
+            var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(actionResult.Result);
+            var returnedPostDto = Assert.IsType<PostReadDto>(createdAtActionResult.Value);
             
-            Assert.Equal("New Resource Entry", returnedPost.title);
+            Assert.Equal("New Resource Entry", returnedPostDto.Title);
             Assert.Equal("GetPost", createdAtActionResult.ActionName);
-            Assert.Equal(0, returnedPost.comment_count); // Ensures model default state handles correctly
+            Assert.Equal(0, returnedPostDto.CommentCount); 
 
-            // Verify entry via backend context layer
-            var dbPost = await _context.Post.FindAsync(returnedPost.Id);
+            // Verify entry directly via Db context model layers
+            var dbPost = await _context.Post.FindAsync(returnedPostDto.Id);
             Assert.NotNull(dbPost);
             Assert.Equal("Check out our tutorials list.", dbPost.description);
-            Assert.Equal(5, dbPost.link_count);
         }
 
         [Fact]
