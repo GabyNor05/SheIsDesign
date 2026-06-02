@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5160/api/Student'; // Update port as needed
+const API_BASE_URL = 'http://localhost:5160/api/Post'; 
 
-// Create an Axios instance with base configuration
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
     headers: {
@@ -10,50 +9,41 @@ const apiClient = axios.create({
     },
 });
 
-// Response interceptor to format data or catch errors globally (Optional but highly recommended)
 apiClient.interceptors.response.use(
     (response) => {
-        // Axios returns the parsed JSON in the `data` property
-        // For 204 No Content, Axios data will be empty string or null/undefined
         return response.status === 204 ? null : response.data;
     },
     (error) => {
-        // Axios automatically traps non-2xx status codes here
+        // Catch error payloads from backend, fallback to generic message
         const errorText = error.response?.data || error.message;
-        return Promise.reject(new Error(errorText || `Network response was not ok: ${error.status}`));
+        return Promise.reject(new Error(errorText || `Request failed with status ${error.response?.status}`));
     }
 );
 
-export const studentService = {
-    getAllStudents: () => {
-        return apiClient.get('/');
-    },
+export const postService = {
+    getAllPosts: () => apiClient.get('/'),
 
-    getStudentById: (id) => {
-        return apiClient.get(`/${id}`);
-    },
+    getPostById: (id) => apiClient.get(`/${id}`),
 
-    /**
-     * POST: api/Student
-     * Creates a new student record using StudentCreateDTO
-     * @param {Object} studentDto - { fullname, university, year_of_study, field_of_study, userID }
-     */
-    createStudent: (studentDto) => {
-        // Axios handles JSON.stringify() automatically under the hood
-        return apiClient.post('/', studentDto);
-    },
+    /*
+    create/update post needs these variables (PostCreateDto mapping)
 
-    /**
-     * PUT: api/Student/{id}
-     * Updates an existing student record
-     * @param {number} id - The student ID
-     * @param {Object} studentData - Full Student object including the ID
-     */
-    updateStudent: (id, studentData) => {
-        return apiClient.put(`/${id}`, { ...studentData, id });
-    },
+    -----
+      {
+        "title": "string",
+        "studentId": 0,
+        "imageFileLink": "string",
+        "category": "string",
+        "eventId": 0,
+        "description": "string",
+        "status": "string"
+      }
+    -----
+    */
+    createPost: (postData) => apiClient.post('/', postData),
 
-    deleteStudent: (id) => {
-        return apiClient.delete(`/${id}`);
-    }
+    // In your refactored controller, PutPost maps directly from PostCreateDto without requiring an inline ID body property mismatch check.
+    updatePost: (id, postData) => apiClient.put(`/${id}`, postData),
+
+    deletePost: (id) => apiClient.delete(`/${id}`)
 };
