@@ -8,6 +8,7 @@ import EventsPage from "./pages/public/EventsPage";
 import GalleryPage from "./pages/public/GalleryPage";
 import LeaderboardPage from "./pages/public/LeaderboardPage";
 import DonatePage from "./pages/public/DonatePage";
+import ProfilePage from "./pages/public/ProfilePage/ProfilePage";
 
 // Auth pages
 import AuthPage from "./pages/auth/AuthPage/AuthPage";
@@ -40,6 +41,7 @@ const Routes = createBrowserRouter([
       { path: "gallery", element: <GalleryPage /> },
       { path: "leaderboard", element: <LeaderboardPage /> },
       { path: "donate", element: <DonatePage /> },
+      { path: "profile", element: <ProfilePage /> },
 
       // ── Auth ──────────────────────────────────────────────────────────────
       { path: "auth", element: <AuthPage /> },
