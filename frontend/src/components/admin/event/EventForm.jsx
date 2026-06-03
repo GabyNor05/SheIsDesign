@@ -2,7 +2,7 @@ import { useState } from "react";
 import { T } from "../theme";
 import FormField from "./FormField";
 import { eventService } from "../../../services/eventService";
-import { cloudinaryService } from "../../../services/cloudinaryService";
+import { cloudinaryService } from "../../../services/CloudinaryService.js";
 
 const inputStyle = {
   fontFamily: "'DM Sans', sans-serif",

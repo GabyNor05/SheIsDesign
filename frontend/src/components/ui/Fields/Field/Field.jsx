@@ -136,9 +136,12 @@ export function TagInput({ label = "Skills & Specialities", initialTags = [] }) 
         {tags.map((tag) => (
           <div key={tag} className="sid-field__tag">
             <span>{tag}</span>
-            <button type="button" onClick={() => removeTag(tag)} className="sid-field__tag-remove">
-              <span className="material-icons" style={{ fontSize: "14px" }}>close</span>
-            </button>
+<button type="button" onClick={() => removeTag(tag)} className="sid-field__tag-remove" aria-label={`Remove ${tag}`}>
+  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+</button>
           </div>
         ))}
         <input

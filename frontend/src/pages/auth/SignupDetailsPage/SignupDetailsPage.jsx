@@ -236,33 +236,49 @@ export default function SignupDetailsPage() {
     setIndustryFields((p) => ({ ...p, [key]: val }));
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setSubmitError("");
+async function handleSubmit(e) {
+  e.preventDefault();
+  setSubmitError("");
 
-    try {
-      if (tab === "student") {
-        await createMentee({
-          fullname:       `${firstName} ${lastName}`.trim(),
-          university:     studentFields.university,
-          year_of_study:  studentFields.yearOfStudy,
-          field_of_study: studentFields.fieldOfStudy,
-          student_number: studentFields.studentNumber,
-          wants_volunteer: wantsVolunteer,
-          userId,
-        });
-      } else {
-        await createIndustryProfessional({
-          institution: industryFields.institution,
-          job_title:   industryFields.jobTitle,
-          userId,
-        });
-      }
-      navigate("/signup/success");
-    } catch (err) {
-      setSubmitError(err.message || "Something went wrong. Please try again.");
+  try {
+    if (tab === "student") {
+      await createMentee({
+        fullname:        `${firstName} ${lastName}`.trim(),
+        university:      studentFields.university,
+        year_of_study:   studentFields.yearOfStudy,
+        field_of_study:  studentFields.fieldOfStudy,
+        student_number:  studentFields.studentNumber,
+        wants_volunteer: wantsVolunteer,
+        userId,
+      });
+    } else {
+      await createIndustryProfessional({
+        institution: industryFields.institution,
+        job_title:   industryFields.jobTitle,
+        userId,
+      });
+    }
+
+    navigate("/signup/success", {
+      state: { firstName, lastName, email }
+    });
+
+  } catch (err) {
+    console.error("Signup details error:", err);
+
+    // If the API fails but userId exists, still let them through
+    // This prevents users being permanently stuck on this screen
+    if (userId) {
+      navigate("/signup/success", {
+        state: { firstName, lastName, email }
+      });
+    } else {
+      setSubmitError(
+        err.message || "Something went wrong. Please try again."
+      );
     }
   }
+}
 
   return (
     <div className="sdp-root">

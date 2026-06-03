@@ -9,47 +9,46 @@ import {
   Crown,
 } from "@phosphor-icons/react";
 import { fetchLeaderboard } from "../../services/leaderboardService";
+import { useAuth } from "../../context/AuthContext";
 import "./LeaderboardPage.css";
 
-// ─── Dummy data (used if API fails) ───────────────────────────────────────────
 const DUMMY = [
-  { rank: 1,  fullname: "Priya Shankar",    event: "UX Redesign Sprint",            category: "UX / Product Design",  university: "UCT",       points: 980 },
-  { rank: 2,  fullname: "Maya Osei",        event: "Brand Identity Challenge 2026",  category: "Brand Identity",        university: "Wits",      points: 945 },
-  { rank: 3,  fullname: "Fatima Al-Hassan", event: "Typography & Layout Sprint",     category: "Editorial Design",      university: "CPUT",      points: 912 },
+  { rank: 1,  fullname: "Priya Shankar",    event: "UX Redesign Sprint",            category: "UX / Product Design",  university: "UCT",          points: 980 },
+  { rank: 2,  fullname: "Maya Osei",        event: "Brand Identity Challenge 2026",  category: "Brand Identity",        university: "Wits",         points: 945 },
+  { rank: 3,  fullname: "Fatima Al-Hassan", event: "Typography & Layout Sprint",     category: "Editorial Design",      university: "CPUT",         points: 912 },
   { rank: 4,  fullname: "Zoe Müller",       event: "Packaging Design Brief",         category: "Print & Packaging",     university: "Stellenbosch", points: 874 },
-  { rank: 5,  fullname: "Amara Diallo",     event: "Motion & Animation Challenge",   category: "Motion Design",         university: "DUT",       points: 860 },
-  { rank: 6,  fullname: "Laila Nkosi",      event: "Poster Design Open",             category: "Graphic Design",        university: "UJ",        points: 843, isCurrentUser: true },
-  { rank: 7,  fullname: "Nina Ferreira",    event: "Social Media Kit Open",          category: "Brand / Marketing",     university: "UKZN",      points: 821 },
-  { rank: 8,  fullname: "Chidi Eze",        event: "App Icon Design Challenge",      category: "UI Design",             university: "UPR",       points: 798 },
-  { rank: 9,  fullname: "Sasha Kim",        event: "Typography & Layout Sprint",     category: "Graphic Design",        university: "Rhodes",    points: 774 },
-  { rank: 10, fullname: "Ines Rodrigues",   event: "Brand Identity Challenge 2026",  category: "Brand Identity",        university: "Unisa",     points: 751 },
-  { rank: 11, fullname: "Aisha Mensah",     event: "UX Redesign Sprint",             category: "UX / Product Design",   university: "UCT",       points: 728 },
-  { rank: 12, fullname: "Yuki Tanaka",      event: "Motion & Animation Challenge",   category: "Motion Design",         university: "TUT",       points: 705 },
-  { rank: 13, fullname: "Sofia Papadaki",   event: "Poster Design Open",             category: "Graphic Design",        university: "NWU",       points: 689 },
-  { rank: 14, fullname: "Camille Dubois",   event: "Packaging Design Brief",         category: "Print & Packaging",     university: "UFS",       points: 667 },
-  { rank: 15, fullname: "Rania Khalil",     event: "App Icon Design Challenge",      category: "UI Design",             university: "Wits",      points: 644 },
+  { rank: 5,  fullname: "Amara Diallo",     event: "Motion & Animation Challenge",   category: "Motion Design",         university: "DUT",          points: 860 },
+  { rank: 6,  fullname: "Laila Nkosi",      event: "Poster Design Open",             category: "Graphic Design",        university: "UJ",           points: 843 },
+  { rank: 7,  fullname: "Nina Ferreira",    event: "Social Media Kit Open",          category: "Brand / Marketing",     university: "UKZN",         points: 821 },
+  { rank: 8,  fullname: "Chidi Eze",        event: "App Icon Design Challenge",      category: "UI Design",             university: "UPR",          points: 798 },
+  { rank: 9,  fullname: "Sasha Kim",        event: "Typography & Layout Sprint",     category: "Graphic Design",        university: "Rhodes",       points: 774 },
+  { rank: 10, fullname: "Ines Rodrigues",   event: "Brand Identity Challenge 2026",  category: "Brand Identity",        university: "Unisa",        points: 751 },
+  { rank: 11, fullname: "Aisha Mensah",     event: "UX Redesign Sprint",             category: "UX / Product Design",   university: "UCT",          points: 728 },
+  { rank: 12, fullname: "Yuki Tanaka",      event: "Motion & Animation Challenge",   category: "Motion Design",         university: "TUT",          points: 705 },
+  { rank: 13, fullname: "Sofia Papadaki",   event: "Poster Design Open",             category: "Graphic Design",        university: "NWU",          points: 689 },
+  { rank: 14, fullname: "Camille Dubois",   event: "Packaging Design Brief",         category: "Print & Packaging",     university: "UFS",          points: 667 },
+  { rank: 15, fullname: "Rania Khalil",     event: "App Icon Design Challenge",      category: "UI Design",             university: "Wits",         points: 644 },
 ];
 
-// ─── Avatar initials ──────────────────────────────────────────────────────────
 function initials(name) {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
+  return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
 
-// Deterministic hue from name so every person gets a consistent colour
 function avatarHue(name) {
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return Math.abs(hash) % 360;
 }
 
-// ─── Podium (top 3) ───────────────────────────────────────────────────────────
-function PodiumCard({ entry, position }) {
-  // position: "left" (rank 2) | "center" (rank 1) | "right" (rank 3)
+function isCurrentUserEntry(entry, user) {
+  if (!user) return false;
+  if (entry.userId && user.id && entry.userId === user.id) return true;
+  const entryName = entry.fullname?.toLowerCase().trim() || "";
+  const userName = (user.fullname || user.name || "").toLowerCase().trim();
+  return entryName.length > 0 && userName.length > 0 && entryName === userName;
+}
+
+function PodiumCard({ entry, position, isCurrentUser }) {
   const isCenter = position === "center";
   const hue = avatarHue(entry.fullname);
 
@@ -59,39 +58,40 @@ function PodiumCard({ entry, position }) {
                        <Trophy size={16} weight="fill" color="#CD7F32" />;
 
   return (
-    <div className={`lb-podium-card lb-podium-card--${position}`}>
+    <div className={`lb-podium-card lb-podium-card--${position} ${isCurrentUser ? "lb-podium-card--you" : ""}`}>
       {isCenter && <div className="lb-podium-card__glow" />}
 
-      {/* Rank badge */}
       <div className="lb-podium-card__rank-badge">
         {rankIcon}
         <span className="lb-podium-card__rank-num">{entry.rank}</span>
       </div>
 
-      {/* Avatar */}
       <div
         className="lb-podium-card__avatar"
-        style={{ background: `linear-gradient(135deg, hsl(${hue},55%,28%), hsl(${hue},65%,18%))`, borderColor: `hsl(${hue},50%,38%)` }}
+        style={{
+          background: `linear-gradient(135deg, hsl(${hue},55%,28%), hsl(${hue},65%,18%))`,
+          borderColor: `hsl(${hue},50%,38%)`,
+        }}
       >
         <span className="lb-podium-card__initials">{initials(entry.fullname)}</span>
       </div>
 
-      {/* Name + meta */}
       <div className="lb-podium-card__info">
-        <span className="lb-podium-card__name">{entry.fullname}</span>
+        <span className="lb-podium-card__name">
+          {entry.fullname}
+          {isCurrentUser && <span className="lb-row__you-badge">You</span>}
+        </span>
         <span className="lb-podium-card__category">{entry.category}</span>
         {entry.university && (
           <span className="lb-podium-card__university">{entry.university}</span>
         )}
       </div>
 
-      {/* Points */}
       <div className="lb-podium-card__points-wrap">
         <span className="lb-podium-card__points">{entry.points.toLocaleString()}</span>
         <span className="lb-podium-card__pts-label">pts</span>
       </div>
 
-      {/* Podium base bar */}
       <div className={`lb-podium-card__base lb-podium-card__base--${position}`}>
         <span className="lb-podium-card__base-rank">{entry.rank}</span>
       </div>
@@ -99,7 +99,6 @@ function PodiumCard({ entry, position }) {
   );
 }
 
-// ─── Table row ─────────────────────────────────────────────────────────────────
 function TableRow({ entry, index, isCurrentUser }) {
   const hue = avatarHue(entry.fullname);
 
@@ -115,7 +114,10 @@ function TableRow({ entry, index, isCurrentUser }) {
       <div className="lb-row__student">
         <div
           className="lb-row__avatar"
-          style={{ background: `linear-gradient(135deg, hsl(${hue},55%,28%), hsl(${hue},65%,18%))`, borderColor: `hsl(${hue},45%,35%)` }}
+          style={{
+            background: `linear-gradient(135deg, hsl(${hue},55%,28%), hsl(${hue},65%,18%))`,
+            borderColor: `hsl(${hue},45%,35%)`,
+          }}
         >
           <span>{initials(entry.fullname)}</span>
         </div>
@@ -143,7 +145,6 @@ function TableRow({ entry, index, isCurrentUser }) {
   );
 }
 
-// ─── Skeleton ──────────────────────────────────────────────────────────────────
 function SkeletonRow() {
   return (
     <div className="lb-row lb-skeleton">
@@ -156,19 +157,17 @@ function SkeletonRow() {
   );
 }
 
-// ─── How it works cards ────────────────────────────────────────────────────────
 const HOW_ITEMS = [
-  { icon: <Lightning size={18} weight="fill" />, step: "01", title: "Enter an event", body: "Every event you join earns base participation points — just showing up counts." },
+  { icon: <Lightning size={18} weight="fill" />, step: "01", title: "Enter an event",  body: "Every event you join earns base participation points — just showing up counts." },
   { icon: <Star size={18} weight="fill" />,      step: "02", title: "Compete & place", body: "Strong submissions and community recognition earn bonus points. Top 3 placements carry serious weight." },
   { icon: <TrendUp size={18} weight="fill" />,   step: "03", title: "Stay consistent", body: "Points compound across the full season. Regular participation beats single-event spikes." },
   { icon: <Users size={18} weight="fill" />,     step: "04", title: "Gain visibility", body: "Top-ranked students get featured to industry sponsors and unlock mentorship access curated by SheisDesign." },
 ];
 
-// ─── Main page ─────────────────────────────────────────────────────────────────
 export default function LeaderboardPage() {
+  const { user } = useAuth();
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [usingDummy, setUsingDummy] = useState(false);
 
   useEffect(() => {
     fetchLeaderboard()
@@ -177,69 +176,36 @@ export default function LeaderboardPage() {
           setEntries(data);
         } else {
           setEntries(DUMMY);
-          setUsingDummy(true);
         }
       })
-      .catch(() => {
-        setEntries(DUMMY);
-        setUsingDummy(true);
-      })
+      .catch(() => setEntries(DUMMY))
       .finally(() => setLoading(false));
   }, []);
 
   const top3 = entries.slice(0, 3);
   const rest = entries.slice(3);
-  // Podium order: 2nd left, 1st centre, 3rd right
   const podiumOrder = top3.length === 3
     ? [{ entry: top3[1], pos: "left" }, { entry: top3[0], pos: "center" }, { entry: top3[2], pos: "right" }]
     : top3.map((e, i) => ({ entry: e, pos: i === 0 ? "center" : i === 1 ? "left" : "right" }));
 
   return (
     <div className="lb-page">
-      {/* Ambient glows */}
-      <div className="lb-glow lb-glow--top-left" />
       <div className="lb-glow lb-glow--mid-right" />
 
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
+      {/* Header */}
       <header className="lb-header">
         <div className="lb-header__bg-gradient" />
         <div className="lb-header__orb" />
         <div className="lb-header__orb2" />
         <div className="lb-header__inner">
-          <div className="lb-header__body">
-            {/* Left */}
-            <div className="lb-header__left">
-              <div className="lb-header__pill">
-                <Trophy size={11} weight="fill" color="#FE4081" />
-                <span>Season 2026</span>
-              </div>
-              <h1 className="lb-header__title">
-                Leaderboard
-              </h1>
-              <p className="lb-header__sub">
-                See who's rising to the top. Points update after every event — compete, place, and get noticed by industry.
-              </p>
-            </div>
-
-            {/* Right — stats */}
-            <div className="lb-header__stats">
-              {[
-                { value: usingDummy || loading ? "1,200+" : `${entries.length}`, label: "Participants" },
-                { value: "48",           label: "Events hosted" },
-                { value: "Season 2026",  label: "Current season" },
-              ].map((s) => (
-                <div key={s.label} className="lb-stat">
-                  <span className="lb-stat__value">{s.value}</span>
-                  <span className="lb-stat__label">{s.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
+          <h1 className="lb-header__title">Leaderboard</h1>
+          <p className="lb-header__sub">
+            See who's rising to the top. Points update after every event — compete, place, and get noticed by industry.
+          </p>
         </div>
       </header>
 
-      {/* ── Podium ─────────────────────────────────────────────────────────── */}
+      {/* Podium */}
       <section className="lb-podium-section">
         <div className="lb-podium-section__inner">
           <div className="lb-section-label">
@@ -254,14 +220,19 @@ export default function LeaderboardPage() {
           ) : (
             <div className="lb-podium">
               {podiumOrder.map(({ entry, pos }) => (
-                <PodiumCard key={entry.rank} entry={entry} position={pos} />
+                <PodiumCard
+                  key={entry.rank}
+                  entry={entry}
+                  position={pos}
+                  isCurrentUser={isCurrentUserEntry(entry, user)}
+                />
               ))}
             </div>
           )}
         </div>
       </section>
 
-      {/* ── Full table ─────────────────────────────────────────────────────── */}
+      {/* Full table */}
       <section className="lb-table-section">
         <div className="lb-table-section__inner">
           <div className="lb-table-header">
@@ -274,7 +245,6 @@ export default function LeaderboardPage() {
             </span>
           </div>
 
-          {/* Column headers */}
           <div className="lb-table-cols">
             <span>Rank</span>
             <span>Student</span>
@@ -282,20 +252,17 @@ export default function LeaderboardPage() {
             <span>Points</span>
           </div>
 
-          {/* Top 3 condensed in table */}
           {!loading && top3.map((entry, i) => (
             <TableRow
               key={entry.rank}
               entry={entry}
               index={i}
-              isCurrentUser={!!entry.isCurrentUser}
+              isCurrentUser={isCurrentUserEntry(entry, user)}
             />
           ))}
 
-          {/* Divider */}
           {!loading && <div className="lb-table-divider" />}
 
-          {/* Rows 4+ */}
           {loading
             ? Array.from({ length: 8 }).map((_, i) => <SkeletonRow key={i} />)
             : rest.map((entry, i) => (
@@ -303,14 +270,14 @@ export default function LeaderboardPage() {
                   key={entry.rank}
                   entry={entry}
                   index={i + 3}
-                  isCurrentUser={!!entry.isCurrentUser}
+                  isCurrentUser={isCurrentUserEntry(entry, user)}
                 />
               ))
           }
         </div>
       </section>
 
-      {/* ── How it works ───────────────────────────────────────────────────── */}
+      {/* How it works */}
       <section className="lb-how-section">
         <div className="lb-how-section__inner">
           <div className="lb-how-header">
@@ -339,7 +306,6 @@ export default function LeaderboardPage() {
             ))}
           </div>
 
-          {/* Points table */}
           <div className="lb-pts-table">
             <div className="lb-pts-table__head">
               {["Action", "Base Points", "Bonus Points"].map((col) => (
