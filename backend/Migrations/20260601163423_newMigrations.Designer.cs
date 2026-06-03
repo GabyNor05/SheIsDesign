@@ -12,15 +12,15 @@ using SheDesign.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(SheDesignContext))]
-    [Migration("20260503201806_UpdateEventStructure")]
-    partial class UpdateEventStructure
+    [Migration("20260601163423_newMigrations")]
+    partial class newMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.6")
+                .HasAnnotation("ProductVersion", "10.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -74,7 +74,6 @@ namespace backend.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("donor_name")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("donor_name");
 
@@ -83,7 +82,6 @@ namespace backend.Migrations
                         .HasColumnName("eventId");
 
                     b.Property<string>("notes")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -109,8 +107,8 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateOnly>("End_date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("End_date")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("Entry_count")
                         .HasColumnType("integer");
@@ -124,8 +122,8 @@ namespace backend.Migrations
                     b.Property<int>("Points_reward")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("Start_date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Start_date")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -270,6 +268,9 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("eventId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("points")
                         .HasColumnType("integer");
 
@@ -292,6 +293,8 @@ namespace backend.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("eventId");
 
                     b.HasIndex("studentId");
 
@@ -402,11 +405,19 @@ namespace backend.Migrations
 
             modelBuilder.Entity("SheDesign.Models.Submission", b =>
                 {
+                    b.HasOne("SheDesign.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("eventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SheDesign.Models.Student", "Student")
                         .WithMany("Submissions")
                         .HasForeignKey("studentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Event");
 
                     b.Navigation("Student");
                 });

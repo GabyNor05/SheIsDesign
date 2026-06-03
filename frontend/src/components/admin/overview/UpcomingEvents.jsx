@@ -4,7 +4,7 @@ import {
   CalendarBlank,
 } from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
-import { getUpcomingEvents } from "../../../services/eventService";
+import { eventService } from "../../../services/eventService";
 
 import { T } from "../theme";
 
@@ -207,7 +207,7 @@ function UpcomingEvents() {
   const loadEvents = async () => {
     try {
       setLoading(true);
-      const upcoming = await getUpcomingEvents();
+      const upcoming = await eventService.getUpcomingEvents();
       console.log("Next events:", upcoming);
       setEvents(upcoming);
       setError(null);

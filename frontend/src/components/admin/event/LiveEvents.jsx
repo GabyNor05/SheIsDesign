@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { T } from "../theme";
-import { getUpcomingEvents } from "../../../services/eventService";
+import { eventService } from "../../../services/eventService";
 import EventForm from "./EventForm";
 import FeaturedCard from "./FeaturedCard";
 import Modal from "../Modal";
@@ -88,7 +88,7 @@ export default function LiveEvents() {
       setLoading(true);
       setError(null);
       try {
-        const data = await getUpcomingEvents();
+        const data = await eventService.getUpcomingEvents();
         setEvents(data || []);
         saveEvents(data || []);
       } catch (err) {

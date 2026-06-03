@@ -104,8 +104,8 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateOnly>("End_date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("End_date")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("Entry_count")
                         .HasColumnType("integer");
@@ -119,8 +119,8 @@ namespace backend.Migrations
                     b.Property<int>("Points_reward")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("Start_date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Start_date")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()

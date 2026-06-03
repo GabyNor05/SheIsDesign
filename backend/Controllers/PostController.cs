@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheDesign.Models;
 using SheDesign.Data;
+using SheDesign.DTO;
 
 namespace backend.Controllers
 {
@@ -23,30 +24,68 @@ namespace backend.Controllers
 
         // GET: api/Post
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPost()
+        public async Task<ActionResult<IEnumerable<PostReadDto>>> GetPost()
         {
-            return await _context.Post.ToListAsync();
+            var posts = await _context.Post.ToListAsync();
+
+            var postDtos = posts.Select(post => new PostReadDto
+            {
+                Id = post.Id,
+                Title = post.title,
+                StudentId = post.studentId,
+                ImageFileLink = post.image_file_link,
+                Category = post.category,
+                EventId = post.eventId,
+                LinkCount = post.link_count,
+                CommentCount = post.comment_count,
+                PostDate = post.post_date,
+                Description = post.description,
+                Status = post.status
+            }).ToList();
+
+            return Ok(postDtos);
         }
 
         // GET: api/Post/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id)
+        public async Task<ActionResult<PostReadDto>> GetPost(int id)
         {
             var post = await _context.Post.FindAsync(id);
 
             if (post == null) return NotFound();
 
-            return post;
+            var postDto = new PostReadDto
+            {
+                Id = post.Id,
+                Title = post.title,
+                StudentId = post.studentId,
+                ImageFileLink = post.image_file_link,
+                Category = post.category,
+                EventId = post.eventId,
+                LinkCount = post.link_count,
+                CommentCount = post.comment_count,
+                PostDate = post.post_date,
+                Description = post.description,
+                Status = post.status
+            };
+
+            return Ok(postDto);
         }
 
         // PUT: api/Post/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(int id, Post post)
+        public async Task<IActionResult> PutPost(int id, PostCreateDto postUpdateDto)
         {
-            if (id != post.Id) return BadRequest();
+            var postToUpdate = await _context.Post.FindAsync(id);
+            if (postToUpdate == null) return NotFound();
 
-            _context.Entry(post).State = EntityState.Modified;
+            postToUpdate.title = postUpdateDto.Title;
+            postToUpdate.studentId = postUpdateDto.StudentId;
+            postToUpdate.image_file_link = postUpdateDto.ImageFileLink;
+            postToUpdate.category = postUpdateDto.Category;
+            postToUpdate.eventId = postUpdateDto.EventId;
+            postToUpdate.description = postUpdateDto.Description;
+            postToUpdate.status = postUpdateDto.Status;
 
             try
             {
@@ -68,14 +107,41 @@ namespace backend.Controllers
         }
 
         // POST: api/Post
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<PostReadDto>> PostPost(PostCreateDto postCreateDto)
         {
-            _context.Post.Add(post);
+            var postEntity = new Post
+            {
+                title = postCreateDto.Title,
+                studentId = postCreateDto.StudentId,
+                image_file_link = postCreateDto.ImageFileLink,
+                category = postCreateDto.Category,
+                eventId = postCreateDto.EventId,
+                description = postCreateDto.Description,
+                status = postCreateDto.Status,
+                comment_count = 0,
+                post_date = DateTime.Now
+            };
+
+            _context.Post.Add(postEntity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            var postReadDto = new PostReadDto
+            {
+                Id = postEntity.Id,
+                Title = postEntity.title,
+                StudentId = postEntity.studentId,
+                ImageFileLink = postEntity.image_file_link,
+                Category = postEntity.category,
+                EventId = postEntity.eventId,
+                LinkCount = postEntity.link_count,
+                CommentCount = postEntity.comment_count,
+                PostDate = postEntity.post_date,
+                Description = postEntity.description,
+                Status = postEntity.status
+            };
+
+            return CreatedAtAction(nameof(GetPost), new { id = postReadDto.Id }, postReadDto);
         }
 
         // DELETE: api/Post/5
