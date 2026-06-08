@@ -12,6 +12,7 @@ import ProfilePage from "./pages/public/ProfilePage/ProfilePage";
 
 // Auth pages
 import AuthPage from "./pages/auth/AuthPage/AuthPage";
+import OtpPage from "./pages/auth/OtpPage/OtpPage";
 import SignupDetailsPage from "./pages/auth/SignupDetailsPage/SignupDetailsPage";
 import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage";
 import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
@@ -47,6 +48,7 @@ const Routes = createBrowserRouter([
       { path: "auth", element: <AuthPage /> },
       { path: "login", element: <AuthPage /> },
       { path: "signup", element: <AuthPage /> },
+      { path: "signup/verify", element: <OtpPage /> },
       { path: "signup/details", element: <SignupDetailsPage /> },
       { path: "signup/success", element: <SignupSuccessPage /> },
       { path: "application-status", element: <ApplicationStatusPage /> },

@@ -10,6 +10,7 @@ import OtpModal from "../../../components/auth/OtpModal/OtpModal";
 import { useAuth } from "../../../context/AuthContext";
 import { useGoogleLogin } from "@react-oauth/google";
 import { loginUser, registerUser, googleLoginUser } from "../../../services/authService";
+import { generateOtp, getExpiryTimestamp, sendVerificationEmail } from "../../../services/emailService";
 import "./AuthPage.css";
 
 const ADMIN_EMAILS = ["admin@sheisdesign.co.za", "superadmin@example.com"];
@@ -289,8 +290,13 @@ function AuthCard() {
   async function handleSignupSubmit({ firstName, lastName, email, password }) {
     setSignupError("");
     try {
-      const res = await registerUser(email, password);
-      navigate("/signup/details", { state: { firstName, lastName, email, userId: res.id } });
+      const res    = await registerUser(email, password);
+      const code   = generateOtp();
+      const expiry = getExpiryTimestamp();
+      await sendVerificationEmail(email, firstName, code, expiry);
+      navigate("/signup/verify", {
+        state: { firstName, lastName, email, userId: res.id, code, expiry },
+      });
     } catch (err) {
       setSignupError(sanitiseError(err));
     }
