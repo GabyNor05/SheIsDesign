@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { T } from "../theme";
 import FormField from "./FormField";
+import { eventService } from "../../../services/eventService";
+import { cloudinaryService } from "../../../services/CloudinaryService.js";
 
 const inputStyle = {
   fontFamily: "'DM Sans', sans-serif",
@@ -31,24 +33,79 @@ export default function EventForm({ initial = null, onSave, onClose }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+
     if (validate()) {
-      onSave(form);
+      let uploadedImageUrl = null;
+
+      try {
+        if (form.image_link && form.image_link instanceof File) {
+          console.log("Uploading image to Cloudinary...");
+          
+          uploadedImageUrl = await cloudinaryService.uploadImage(form.image_link, 'event_banners');
+          
+          if (!uploadedImageUrl) {
+            throw new Error("Failed to upload event image to Cloudinary.");
+          }
+        } else if (typeof form.image_link === 'string') {
+          uploadedImageUrl = form.image_link;
+        }
+
+        const utcStartDate = form.start_date ? new Date(form.start_date).toISOString() : null;
+        const utcEndDate = form.end_date ? new Date(form.end_date).toISOString() : null;
+
+        const eventDTO = {
+          title: form.title,
+          start_date: utcStartDate,
+          end_date: utcEndDate, 
+          description: form.description,
+          max_entry: Number(form.max_entries), 
+          category: form.category,
+          points_reward: Number(form.points_reward), 
+          status: form.status || "draft", 
+          image_link: uploadedImageUrl 
+        };
+
+        console.log("Submitting Event DTO:", eventDTO);
+
+        onSave(form);
+
+        const response = await eventService.createEvent(eventDTO);
+        console.log("Event created successfully:", response);
+
+      } catch (error) {
+        console.error("Form submission failed:", error);
+        alert(error.message || "An error occurred while creating the event.");
+      } 
     }
   };
 
-  const bindInput = (key, type = "text", placeholder = "") => ({
-    type,
-    placeholder,
-    value: form[key] || "",
-    onChange: e => set(key, e.target.value),
-    style: { ...inputStyle, borderColor: errors[key] ? T.closedRed : T.border },
-    onFocus: e => { e.target.style.borderColor = T.pink; },
-    onBlur: e => { e.target.style.borderColor = errors[key] ? T.closedRed : T.border; },
-  });
+  const bindInput = (key, type = "text", placeholder = "") => {
+    const inputProps = {
+      type,
+      placeholder,
+      onChange: e => {
+        if (type === "file") {
+          set(key, e.target.files[0]); 
+        } else {
+          set(key, e.target.value);
+        }
+      },
+      style: { ...inputStyle, borderColor: errors[key] ? T.closedRed : T.border },
+      onFocus: e => { e.target.style.borderColor = T.pink; },
+      onBlur: e => { e.target.style.borderColor = errors[key] ? T.closedRed : T.border; },
+    };
+
+    if (type !== "file") {
+      inputProps.value = form[key] || "";
+    }
+
+    return inputProps;
+  };
 
   return (
-    <div>
+    <div className="p-8">
       <FormField label="Event Title" required error={errors.title}>
         <input {...bindInput("title", "text", "E.g. Brand Identity Challenge")} />
       </FormField>
@@ -74,10 +131,10 @@ export default function EventForm({ initial = null, onSave, onClose }) {
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
         <FormField label="Start Date" required error={errors.start_date}>
-          <input {...bindInput("start_date", "date")} />
+          <input {...bindInput("start_date", "datetime-local")} />
         </FormField>
         <FormField label="End Date" required error={errors.end_date}>
-          <input {...bindInput("end_date", "date")} />
+          <input {...bindInput("end_date", "datetime-local")} />
         </FormField>
       </div>
 
@@ -105,8 +162,8 @@ export default function EventForm({ initial = null, onSave, onClose }) {
       </FormField>
 
       <div>
-        <FormField label="Image URL">
-          <input {...bindInput("image_link", "text", "https://example.com/image.jpg")} />
+        <FormField label="Upload Image">
+          <input {...bindInput("image_link", "file")} accept="image/*" />
         </FormField>
       </div>
 

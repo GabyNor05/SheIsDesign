@@ -3,8 +3,8 @@ namespace SheDesign.DTO
     public class EventCreateDTO
     {
         public string Title { get; set; } = string.Empty;
-        public DateOnly Start_date { get; set; }
-        public DateOnly End_date { get; set; }
+        public DateTime Start_date { get; set; }
+        public DateTime End_date { get; set; }
         public string Description { get; set; } = string.Empty;
         public int Max_entry { get; set; }
         public string Category { get; set; } = string.Empty;

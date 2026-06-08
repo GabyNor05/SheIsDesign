@@ -1,9 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "./Events.css";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// DESIGN TOKENS (CSS-var aligned)
-// ─────────────────────────────────────────────────────────────────────────────
 const T = {
   bg:          "#0D0D0D",
   surface:     "#1A1A1A",
@@ -29,9 +26,6 @@ const T = {
   amber:       "#FBBF24",
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CONSTANTS
-// ─────────────────────────────────────────────────────────────────────────────
 const STORAGE_KEY = "sheisdesign_events";
 
 const CATEGORIES = [
@@ -49,19 +43,16 @@ const STATUS_STYLES = {
 };
 
 const SEED_EVENTS = [
-  { EventID:"evt-001", title:"Brand Identity Challenge",  category:"Branding",     categoryLabel:"Brand Identity",  start_date:"2025-03-12", end_date:"2025-03-10", entry_count:84,  max_entries:92,  description:"A comprehensive brand identity challenge where participants design a full visual identity system for a fictional female-led startup.",  points_reward:500,  status:"OPEN",     image_link:"", submissions:66, location:"Online", time:"09:00", judges:6 },
-  { EventID:"evt-002", title:"Motion Design Bootcamp",    category:"Motion",       categoryLabel:"Motion Design",   start_date:"2025-03-20", end_date:"2025-03-18", entry_count:41,  max_entries:60,  description:"An intensive motion design bootcamp focused on animated brand assets, type animation, and logo reveals.",                            points_reward:300,  status:"OPEN",     image_link:"", submissions:28, location:"Online", time:"10:00", judges:3 },
-  { EventID:"evt-003", title:"UI/UX Hackathon 2026",      category:"UI/UX",        categoryLabel:"UX Design",       start_date:"2025-04-05", end_date:"2025-04-03", entry_count:61,  max_entries:75,  description:"A 48-hour hackathon challenging participants to redesign a real app for accessibility and inclusivity.",                              points_reward:750,  status:"OPEN",     image_link:"", submissions:47, location:"Wits University, Johannesburg", time:"08:00", judges:4 },
-  { EventID:"evt-004", title:"Illustration Open Brief",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-05-02", end_date:"2025-04-28", entry_count:67,  max_entries:80,  description:"An open illustration brief celebrating African femininity. Submit a single editorial illustration inspired by 'She Leads'.",           points_reward:400,  status:"OPEN",     image_link:"", submissions:51, location:"Online", time:"09:00", judges:3 },
-  { EventID:"evt-005", title:"Typography Sprint",         category:"Typography",   categoryLabel:"Typography",      start_date:"2025-04-18", end_date:"2025-04-15", entry_count:29,  max_entries:60,  description:"A focused sprint on editorial typography — design a double-page spread for a fictional design magazine.",                            points_reward:200,  status:"DRAFT",    image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
-  { EventID:"evt-006", title:"Packaging Design Sprint",   category:"Packaging",    categoryLabel:"Packaging",       start_date:"2025-05-15", end_date:"2025-05-12", entry_count:0,   max_entries:75,  description:"Design sustainable packaging for a female-founded skincare brand.",                                                                    points_reward:350,  status:"UPCOMING", image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
-  { EventID:"evt-007", title:"Annual Design Awards 2025", category:"Other",        categoryLabel:"Awards",          start_date:"2025-10-14", end_date:"2025-10-10", entry_count:203, max_entries:300, description:"The flagship annual awards celebrating the best work across all ShelsDesign events throughout 2025.",                               points_reward:1000, status:"CLOSED",   image_link:"", submissions:187,location:"Online", time:"10:00", judges:8 },
-  { EventID:"evt-008", title:"Poster Design Challenge",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-09-05", end_date:"2025-09-03", entry_count:76,  max_entries:100, description:"A bold poster challenge themed 'Future Female'. Submit an A2 print-ready poster of empowerment.",                                     points_reward:250,  status:"CLOSED",   image_link:"", submissions:69, location:"Online", time:"10:00", judges:3 },
+  { EventID:"evt-001", title:"Brand Identity Challenge",  category:"Branding",     categoryLabel:"Brand Identity",  start_date:"2025-03-12", end_date:"2025-03-10", entry_count:84,  max_entries:92,  description:"A comprehensive brand identity challenge.",  points_reward:500,  status:"OPEN",     image_link:"", submissions:66, location:"Online", time:"09:00", judges:6 },
+  { EventID:"evt-002", title:"Motion Design Bootcamp",    category:"Motion",       categoryLabel:"Motion Design",   start_date:"2025-03-20", end_date:"2025-03-18", entry_count:41,  max_entries:60,  description:"An intensive motion design bootcamp.",       points_reward:300,  status:"OPEN",     image_link:"", submissions:28, location:"Online", time:"10:00", judges:3 },
+  { EventID:"evt-003", title:"UI/UX Hackathon 2026",      category:"UI/UX",        categoryLabel:"UX Design",       start_date:"2025-04-05", end_date:"2025-04-03", entry_count:61,  max_entries:75,  description:"A 48-hour hackathon.",                       points_reward:750,  status:"OPEN",     image_link:"", submissions:47, location:"Wits University", time:"08:00", judges:4 },
+  { EventID:"evt-004", title:"Illustration Open Brief",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-05-02", end_date:"2025-04-28", entry_count:67,  max_entries:80,  description:"An open illustration brief.",                points_reward:400,  status:"OPEN",     image_link:"", submissions:51, location:"Online", time:"09:00", judges:3 },
+  { EventID:"evt-005", title:"Typography Sprint",         category:"Typography",   categoryLabel:"Typography",      start_date:"2025-04-18", end_date:"2025-04-15", entry_count:29,  max_entries:60,  description:"A focused sprint on editorial typography.",  points_reward:200,  status:"DRAFT",    image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
+  { EventID:"evt-006", title:"Packaging Design Sprint",   category:"Packaging",    categoryLabel:"Packaging",       start_date:"2025-05-15", end_date:"2025-05-12", entry_count:0,   max_entries:75,  description:"Design sustainable packaging.",              points_reward:350,  status:"UPCOMING", image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
+  { EventID:"evt-007", title:"Annual Design Awards 2025", category:"Other",        categoryLabel:"Awards",          start_date:"2025-10-14", end_date:"2025-10-10", entry_count:203, max_entries:300, description:"The flagship annual awards.",                points_reward:1000, status:"CLOSED",   image_link:"", submissions:187,location:"Online", time:"10:00", judges:8 },
+  { EventID:"evt-008", title:"Poster Design Challenge",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-09-05", end_date:"2025-09-03", entry_count:76,  max_entries:100, description:"A bold poster challenge.",                   points_reward:250,  status:"CLOSED",   image_link:"", submissions:69, location:"Online", time:"10:00", judges:3 },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────────────────────
 function loadEvents() {
   try { const r = localStorage.getItem(STORAGE_KEY); if (r) return JSON.parse(r); } catch {}
   return SEED_EVENTS;
@@ -76,9 +67,6 @@ function fmtDate(d) {
 }
 function calcPct(count, max) { return max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0; }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ICON
-// ─────────────────────────────────────────────────────────────────────────────
 function Ic({ n, s = 16, c = "currentColor" }) {
   const paths = {
     plus:   <><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>,
@@ -105,9 +93,6 @@ function Ic({ n, s = 16, c = "currentColor" }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STATUS BADGE
-// ─────────────────────────────────────────────────────────────────────────────
 function Badge({ status }) {
   const s = STATUS_STYLES[status] || STATUS_STYLES.DRAFT;
   return (
@@ -117,9 +102,6 @@ function Badge({ status }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PROGRESS BAR
-// ─────────────────────────────────────────────────────────────────────────────
 function ProgressBar({ count, max, showLabel = true }) {
   const p = calcPct(count, max);
   return (
@@ -139,9 +121,6 @@ function ProgressBar({ count, max, showLabel = true }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// JUDGE AVATARS
-// ─────────────────────────────────────────────────────────────────────────────
 function JudgeAvatars({ count }) {
   if (!count) return null;
   const colors = [T.pink, T.upBlue, T.activeGreen, T.amber];
@@ -162,9 +141,6 @@ function JudgeAvatars({ count }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EVENT IMAGE
-// ─────────────────────────────────────────────────────────────────────────────
 function EventImage({ url, height = 180 }) {
   if (url) return <img src={url} alt="" style={{ width:"100%", height, objectFit:"cover", display:"block" }} />;
   return (
@@ -174,9 +150,6 @@ function EventImage({ url, height = 180 }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// META ROW
-// ─────────────────────────────────────────────────────────────────────────────
 function MetaRow({ icon, text }) {
   return (
     <div className="meta-row">
@@ -186,9 +159,6 @@ function MetaRow({ icon, text }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MODAL
-// ─────────────────────────────────────────────────────────────────────────────
 function Modal({ title, onClose, children, wide }) {
   useEffect(() => {
     const h = e => { if (e.key === "Escape") onClose(); };
@@ -212,9 +182,6 @@ function Modal({ title, onClose, children, wide }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FORM FIELD
-// ─────────────────────────────────────────────────────────────────────────────
 function FormField({ label, required, error, children }) {
   return (
     <div className="form-field">
@@ -227,9 +194,6 @@ function FormField({ label, required, error, children }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EVENT FORM
-// ─────────────────────────────────────────────────────────────────────────────
 const EMPTY_FORM = {
   title:"", start_date:"", end_date:"", description:"",
   max_entries:"", category:"Branding", points_reward:"",
@@ -249,7 +213,7 @@ function EventForm({ initial, onSave, onClose }) {
     if (!form.start_date)                                     e.start_date    = "Required";
     if (!form.end_date)                                       e.end_date      = "Required";
     if (!form.description.trim())                             e.description   = "Required";
-    if (!form.max_entries || +form.max_entries < 1)           e.max_entries   = "Must be ≥ 1";
+    if (!form.max_entries || +form.max_entries < 1)           e.max_entries   = "Must be >= 1";
     if (form.points_reward === "" || +form.points_reward < 0) e.points_reward = "Required";
     setErrors(e);
     return !Object.keys(e).length;
@@ -338,17 +302,12 @@ function EventForm({ initial, onSave, onClose }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CONFIRM DELETE
-// ─────────────────────────────────────────────────────────────────────────────
 function ConfirmDelete({ event, onConfirm, onClose }) {
   return (
     <Modal title="Delete Event" onClose={onClose}>
       <div className="modal-body">
         <p className="confirm-text">
-          Are you sure you want to delete{" "}
-          <strong>{event.title}</strong>?
-          This action cannot be undone.
+          Are you sure you want to delete <strong>{event.title}</strong>? This action cannot be undone.
         </p>
         <div className="form-footer">
           <button className="btn-ghost" onClick={onClose}>Cancel</button>
@@ -359,9 +318,6 @@ function ConfirmDelete({ event, onConfirm, onClose }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FEATURED CARD
-// ─────────────────────────────────────────────────────────────────────────────
 function FeaturedCard({ event, onManage, onView }) {
   return (
     <div className="feat-card">
@@ -395,9 +351,6 @@ function FeaturedCard({ event, onManage, onView }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// COMPACT CARD
-// ─────────────────────────────────────────────────────────────────────────────
 function CompactCard({ event, onEdit, onDelete, onView, onCloseEvent }) {
   const iconBtns = [
     { n:"eye",   fn:onView,   hBg:T.upBg,      hC:T.upBlue      },
@@ -481,29 +434,24 @@ function CompactCard({ event, onEdit, onDelete, onView, onCloseEvent }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EVENT DETAIL
-// ─────────────────────────────────────────────────────────────────────────────
 function EventDetail({ event, onBack, onEdit }) {
   const p = calcPct(event.entry_count, event.max_entries);
   const stats = [
-    { label:"Participants", value:event.entry_count,     icon:"users" },
-    { label:"Submissions",  value:event.submissions || 0,icon:"file"  },
-    { label:"Points",       value:event.points_reward,   icon:"award" },
-    { label:"Max Entries",  value:event.max_entries,     icon:"users" },
+    { label:"Participants", value:event.entry_count,      icon:"users" },
+    { label:"Submissions",  value:event.submissions || 0, icon:"file"  },
+    { label:"Points",       value:event.points_reward,    icon:"award" },
+    { label:"Max Entries",  value:event.max_entries,      icon:"users" },
   ];
   const infoRows = [
-    { label:"Start Date", val:fmtDate(event.start_date) },
-    { label:"Deadline",   val:fmtDate(event.end_date)   },
-    { label:"Location",   val:event.location || "Online"},
-    { label:"Time",       val:event.time || "—"         },
+    { label:"Start Date", val:fmtDate(event.start_date)  },
+    { label:"Deadline",   val:fmtDate(event.end_date)    },
+    { label:"Location",   val:event.location || "Online" },
+    { label:"Time",       val:event.time || "—"          },
   ];
 
   return (
     <div className="ev-detail">
-      <button className="ev-detail__back-btn" onClick={onBack}>← Back to Events</button>
-
-      {/* Banner */}
+      <button className="ev-detail__back-btn" onClick={onBack}>Back to Events</button>
       <div className="ev-detail__banner" style={{
         height: 200,
         background: event.image_link
@@ -518,16 +466,12 @@ function EventDetail({ event, onBack, onEdit }) {
           <h1 className="ev-detail__banner-title">{event.title}</h1>
         </div>
       </div>
-
-      {/* ID + edit */}
       <div className="ev-detail__id-row">
         <code className="ev-detail__id">{event.EventID}</code>
         <button className="btn-primary" onClick={onEdit}>
           <Ic n="edit" s={13} c="#fff" /> Edit Event
         </button>
       </div>
-
-      {/* Stats */}
       <div className="ev-detail__stats">
         {stats.map(st => (
           <div key={st.label} className="ev-detail__stat-card">
@@ -537,8 +481,6 @@ function EventDetail({ event, onBack, onEdit }) {
           </div>
         ))}
       </div>
-
-      {/* Progress */}
       <div className="ev-detail__progress-card">
         <div className="ev-detail__progress-header">
           <span className="ev-detail__progress-title">Registration Progress</span>
@@ -552,8 +494,6 @@ function EventDetail({ event, onBack, onEdit }) {
           <span>{event.max_entries} max</span>
         </div>
       </div>
-
-      {/* Info grid */}
       <div className="ev-detail__info-grid">
         {infoRows.map(it => (
           <div key={it.label} className="ev-detail__info-card">
@@ -562,8 +502,6 @@ function EventDetail({ event, onBack, onEdit }) {
           </div>
         ))}
       </div>
-
-      {/* Description */}
       <div className="ev-detail__desc-card">
         <div className="ev-detail__desc-title">Description</div>
         <p className="ev-detail__desc-text">{event.description || "No description provided."}</p>
@@ -572,10 +510,7 @@ function EventDetail({ event, onBack, onEdit }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MAIN PAGE
-// ─────────────────────────────────────────────────────────────────────────────
-const PAGE_SIZE = 9;
+const PAGE_SIZE = 8;
 
 export default function ManageEvents() {
   const [events,   setEvents]  = useState(() => loadEvents());
@@ -586,7 +521,6 @@ export default function ManageEvents() {
   const [detailId, setDetail]  = useState(null);
   const [page,     setPage]    = useState(1);
 
-  // Drag-to-scroll for live events
   const scrollRef = useRef(null);
   const drag = useRef({ active: false, startX: 0, scrollLeft: 0 });
   const onMouseDown = e => { drag.current = { active: true, startX: e.pageX - scrollRef.current.offsetLeft, scrollLeft: scrollRef.current.scrollLeft }; };
@@ -594,7 +528,6 @@ export default function ManageEvents() {
   const onMouseUp   = () => { drag.current.active = false; };
 
   useEffect(() => { saveEvents(events); }, [events]);
-  // Reset to page 1 when tab or search changes
   useEffect(() => { setPage(1); }, [tab, search]);
 
   const persist      = next => { setEvents(next); saveEvents(next); };
@@ -602,7 +535,6 @@ export default function ManageEvents() {
   const handleEdit   = data => { persist(events.map(e => e.EventID === active.EventID ? { ...data, EventID: active.EventID } : e)); setModal(null); setActive(null); };
   const handleDelete = ()   => { persist(events.filter(e => e.EventID !== active.EventID)); if (detailId === active.EventID) setDetail(null); setModal(null); setActive(null); };
 
-  // Close open event → CLOSED; reopen closed → OPEN; publish draft → OPEN
   const handleStatusToggle = ev => {
     const next =
       ev.status === "OPEN"     ? "CLOSED" :
@@ -612,14 +544,13 @@ export default function ManageEvents() {
     persist(events.map(e => e.EventID === ev.EventID ? { ...e, status: next } : e));
   };
 
-  const liveOpen   = events.filter(e => e.status === "OPEN").slice(0, 3);
+  const liveOpen    = events.filter(e => e.status === "OPEN").slice(0, 3);
   const allFiltered = events.filter(e => e.status === tab && e.title.toLowerCase().includes(search.toLowerCase()));
-  const totalPages = Math.max(1, Math.ceil(allFiltered.length / PAGE_SIZE));
-  const filtered   = allFiltered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const tabCounts  = STATUS_TABS.reduce((a, s) => { a[s] = events.filter(e => e.status === s).length; return a; }, {});
-  const detailEv   = detailId ? events.find(e => e.EventID === detailId) : null;
+  const totalPages  = Math.max(1, Math.ceil(allFiltered.length / PAGE_SIZE));
+  const filtered    = allFiltered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const tabCounts   = STATUS_TABS.reduce((a, s) => { a[s] = events.filter(e => e.status === s).length; return a; }, {});
+  const detailEv    = detailId ? events.find(e => e.EventID === detailId) : null;
 
-  // ── Detail view
   if (detailEv) return (
     <div className="events-root">
       <EventDetail event={detailEv} onBack={() => setDetail(null)} onEdit={() => { setActive(detailEv); setModal("edit"); }} />
@@ -635,7 +566,6 @@ export default function ManageEvents() {
     <div className="events-root">
       <div className="events-inner">
 
-        {/* ── Page header */}
         <div className="ev-page-header fu">
           <div>
             <p className="ev-page-header__eyebrow">
@@ -662,7 +592,6 @@ export default function ManageEvents() {
           </div>
         </div>
 
-        {/* ── Live & Open */}
         {liveOpen.length > 0 && (
           <section className="live-section fu" style={{ animationDelay:"60ms" }} aria-label="Live and open events">
             <div className="live-section__header">
@@ -671,7 +600,6 @@ export default function ManageEvents() {
                 <span className="live-label">LIVE &amp; OPEN</span>
                 <span className="live-count">{liveOpen.length}</span>
               </div>
-
             </div>
             <div className="live-scroll-wrap">
               <div className="live-scroll" ref={scrollRef} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
@@ -686,7 +614,6 @@ export default function ManageEvents() {
           </section>
         )}
 
-        {/* ── All Events */}
         <section className="fu" style={{ animationDelay:"120ms" }} aria-label="All events">
           <div className="all-events-header">
             <div className="all-events-title">
@@ -722,7 +649,7 @@ export default function ManageEvents() {
             </div>
           ) : (
             <>
-              <div className="events-grid">
+              <div className="admin-events-grid">
                 {filtered.map(ev => (
                   <CompactCard key={ev.EventID} event={ev}
                     onView={() => setDetail(ev.EventID)}
@@ -740,7 +667,7 @@ export default function ManageEvents() {
                   </span>
                   <div className="pagination__controls">
                     <button className="pagination__btn" onClick={() => setPage(p => p - 1)} disabled={page === 1}>
-                      ← Prev
+                      Prev
                     </button>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
                       <button key={p}
@@ -750,7 +677,7 @@ export default function ManageEvents() {
                       </button>
                     ))}
                     <button className="pagination__btn" onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>
-                      Next →
+                      Next
                     </button>
                   </div>
                 </div>
@@ -760,7 +687,6 @@ export default function ManageEvents() {
         </section>
       </div>
 
-      {/* ── Modals */}
       {modal === "create" && (
         <Modal title="Create New Event" onClose={() => setModal(null)} wide>
           <EventForm onSave={handleCreate} onClose={() => setModal(null)} />

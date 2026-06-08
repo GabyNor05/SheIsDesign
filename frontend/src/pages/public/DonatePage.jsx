@@ -10,11 +10,8 @@ import {
   BookOpen,
   SignIn,
 } from "@phosphor-icons/react";
+import { useAuth } from "../../context/AuthContext";
 import "./DonatePage.css";
-
-// ─── Auth context hook — swap with your real useAuth() ───────────────────────
-// import { useAuth } from "../../context/AuthContext";
-const useAuth = () => ({ isLoggedIn: false }); // placeholder
 
 // ─── Preset amounts ───────────────────────────────────────────────────────────
 const PRESETS = ["R100", "R250", "R500", "R1 000", "R2 500", "R5 000"];
@@ -25,7 +22,7 @@ const ALLOCATION = [
   { icon: <Users size={16} weight="fill" />,     label: "Community Workshops",   pct: 15 },
 ];
 
-// ─── Login prompt modal (matches SheIsDesign dark modal style) ────────────────
+// ─── Login prompt modal ───────────────────────────────────────────────────────
 function LoginPromptModal({ onClose }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
@@ -40,26 +37,21 @@ function LoginPromptModal({ onClose }) {
   return (
     <div className="dp-modal-backdrop" onClick={onClose}>
       <div className="dp-modal" onClick={(e) => e.stopPropagation()}>
-        {/* Glow orb */}
         <div className="dp-modal__glow" />
 
-        {/* Close */}
         <button className="dp-modal__close" onClick={onClose}>
           <X size={15} />
         </button>
 
-        {/* Icon */}
         <div className="dp-modal__icon">
           <Heart size={22} weight="fill" color="#FE4081" />
         </div>
 
-        {/* Copy */}
         <h2 className="dp-modal__title">Log in to donate</h2>
         <p className="dp-modal__sub">
           You need a SheIsDesign account to make a donation. It only takes a minute to join.
         </p>
 
-        {/* Actions */}
         <div className="dp-modal__actions">
           <Link to="/login" className="dp-modal__btn-primary">
             <SignIn size={16} weight="bold" />
@@ -79,14 +71,15 @@ function LoginPromptModal({ onClose }) {
   );
 }
 
-// ─── Main page ─────────────────────────────────────────────────────────────────
+// ─── Main page ────────────────────────────────────────────────────────────────
 export default function DonatePage() {
-  const { isLoggedIn } = useAuth();
+  const { user } = useAuth();
 
   const [selected, setSelected] = useState(null);
   const [custom, setCustom] = useState("");
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [heroVisible, setHeroVisible] = useState(false);
+  const [amountError, setAmountError] = useState("");
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 80);
@@ -96,20 +89,30 @@ export default function DonatePage() {
   function handlePreset(val) {
     setSelected(val);
     setCustom("");
+    setAmountError("");
   }
 
   function handleCustom(val) {
     setSelected(null);
     setCustom(val);
+    setAmountError("");
+
+    const num = Number(val);
+    if (val && (num <= 0 || isNaN(num))) {
+      setAmountError("Please enter a valid amount greater than R0.");
+    }
   }
 
-  const activeAmount = selected ?? (custom ? `R ${custom}` : null);
+  const activeAmount = selected ?? (custom && Number(custom) > 0 ? `R ${custom}` : null);
 
   function handleContinue() {
-    if (!isLoggedIn) {
+    if (!user) {
       setShowLoginModal(true);
       return;
     }
+
+    if (!activeAmount) return;
+
     // TODO: wire to payment gateway
     alert(`Continuing to payment: ${activeAmount}`);
   }
@@ -123,7 +126,7 @@ export default function DonatePage() {
         <div className="dp-bg__gradient" />
       </div>
 
-      {/* ── Hero header ──────────────────────────────────────────────────── */}
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <header className={`dp-hero ${heroVisible ? "dp-hero--visible" : ""}`}>
         <div className="dp-hero__inner">
           <div className="dp-hero__eyebrow">
@@ -139,7 +142,6 @@ export default function DonatePage() {
             Every contribution goes directly towards events, student resources, and the SheIsDesign community. No fluff — just impact.
           </p>
 
-          {/* Trust row */}
           <div className="dp-hero__trust">
             {[
               { icon: <Lock size={12} />, label: "Secure checkout" },
@@ -155,7 +157,7 @@ export default function DonatePage() {
         </div>
       </header>
 
-      {/* ── Donation form + allocation side by side ───────────────────── */}
+      {/* ── Body ─────────────────────────────────────────────────────────── */}
       <section className="dp-body">
         <div className="dp-body__inner">
 
@@ -197,9 +199,14 @@ export default function DonatePage() {
                 placeholder="Enter amount"
                 value={custom}
                 onChange={(e) => handleCustom(e.target.value)}
-                className={`dp-input ${custom ? "dp-input--filled" : ""}`}
+                className={`dp-input ${custom && Number(custom) > 0 ? "dp-input--filled" : ""} ${amountError ? "dp-input--error" : ""}`}
               />
             </div>
+
+            {/* Amount validation error */}
+            {amountError && (
+              <p className="dp-amount-error">{amountError}</p>
+            )}
 
             {/* Selected summary */}
             {activeAmount && (
@@ -214,10 +221,10 @@ export default function DonatePage() {
             {/* CTA */}
             <button
               onClick={handleContinue}
-              disabled={!activeAmount}
-              className={`dp-cta ${!activeAmount ? "dp-cta--disabled" : ""}`}
+              disabled={!activeAmount || !!amountError}
+              className={`dp-cta ${!activeAmount || amountError ? "dp-cta--disabled" : ""}`}
             >
-              {!isLoggedIn ? (
+              {!user ? (
                 <>
                   <Lock size={15} weight="bold" />
                   Log in to donate
@@ -230,11 +237,11 @@ export default function DonatePage() {
               )}
             </button>
 
-            {!isLoggedIn && (
+            {!user && (
               <p className="dp-login-hint">
                 Don't have an account?{" "}
                 <Link to="/login?mode=signup" className="dp-login-hint__link">
-                  Sign up free
+                  Create an account
                 </Link>
               </p>
             )}
@@ -271,7 +278,6 @@ export default function DonatePage() {
               ))}
             </div>
 
-            {/* Secure note */}
             <div className="dp-secure-note">
               <Lock size={12} />
               <span>Secure payment · All contributions acknowledged via email</span>

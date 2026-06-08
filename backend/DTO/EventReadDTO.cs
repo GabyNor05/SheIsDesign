@@ -5,8 +5,8 @@ namespace SheDesign.DTO
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
-        public DateOnly Start_date { get; set; }
-        public DateOnly End_date { get; set; }
+        public DateTime Start_date { get; set; }
+        public DateTime End_date { get; set; }
         public int? Entry_count { get; set; }
         public string Description { get; set; } = string.Empty;
         public int Max_entry { get; set; }

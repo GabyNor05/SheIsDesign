@@ -7,7 +7,6 @@
     overflow-x: hidden;
 }
 
-/* Subtle ambient glow for sections below the header */
 .lb-glow {
     position: absolute;
     border-radius: 50%;
@@ -15,12 +14,6 @@
     filter: blur(90px);
     z-index: 0;
 }
-
-.lb-glow--top-left {
-    display: none;
-}
-
-/* replaced by animated orb in header */
 
 .lb-glow--mid-right {
     width: 400px;
@@ -30,17 +23,16 @@
     background: radial-gradient(circle, rgba(254, 64, 129, 0.08) 0%, transparent 70%);
 }
 
-/* ─── Animated orb header (gallery-style) ─────────────────────────────────────── */
+/* ─── Header ──────────────────────────────────────────────────────────────────── */
 .lb-header {
     position: relative;
     overflow: hidden;
     background: #0D0608;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 0px 0px 22px;
+    padding: 64px 48px 48px;
     z-index: 1;
 }
 
-/* Multi-ellipse background gradient — same as gallery */
 .lb-header__bg-gradient {
     position: absolute;
     inset: 0;
@@ -51,7 +43,6 @@
     pointer-events: none;
 }
 
-/* The freely-moving orb — same technique as gallery-hero__orb */
 .lb-header__orb {
     position: absolute;
     width: 420px;
@@ -96,7 +87,6 @@
     }
 }
 
-/* Second smaller accent orb */
 .lb-header__orb2 {
     position: absolute;
     width: 260px;
@@ -133,54 +123,14 @@
     }
 }
 
-/* ─── Shared section label ────────────────────────────────────────────────────── */
-.lb-section-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-    color: #FE4081;
-    font-family: 'Poppins', sans-serif;
-}
-
 .lb-header__inner {
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
     z-index: 1;
-}
-
-.lb-header__body {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 40px;
-}
-
-.lb-header__left {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-}
-
-.lb-header__pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    background: rgba(196, 18, 98, 0.12);
-    border: 1px solid rgba(196, 18, 98, 0.28);
-    border-radius: 999px;
-    padding: 5px 14px;
-    width: fit-content;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #FE7FAB;
-    font-family: 'Poppins', sans-serif;
+    gap: 18px;
 }
 
 .lb-header__title {
@@ -202,74 +152,24 @@
     font-family: 'Poppins', sans-serif;
 }
 
-.lb-header__stats {
-    display: flex;
-    gap: 40px;
-    flex-shrink: 0;
-    align-items: flex-end;
-    padding-bottom: 4px;
-}
-
-.lb-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 3px;
-}
-
-.lb-stat__value {
-    font-size: 26px;
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: -0.5px;
-    font-family: 'Poppins', sans-serif;
-}
-
-.lb-stat__label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.45);
-    font-family: 'Poppins', sans-serif;
-}
-
-/* Dummy data notice */
-.lb-dummy-notice {
-    display: flex;
+/* ─── Shared section label ────────────────────────────────────────────────────── */
+.lb-section-label {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 24px;
-    padding: 10px 16px;
-    border-radius: 10px;
-    background: rgba(254, 64, 129, 0.07);
-    border: 1px solid rgba(254, 64, 129, 0.2);
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.65);
+    gap: 7px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #FE4081;
     font-family: 'Poppins', sans-serif;
-}
-
-.lb-dummy-notice__dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #FE4081;
-    flex-shrink: 0;
-}
-
-.lb-dummy-notice code {
-    background: rgba(255, 255, 255, 0.08);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    color: #FE7FAB;
 }
 
 /* ─── Podium section ──────────────────────────────────────────────────────────── */
 .lb-podium-section {
     position: relative;
     z-index: 1;
-    padding: 64px 48px 48px;
+    padding: 48px 48px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -288,7 +188,6 @@
     gap: 16px;
 }
 
-/* Podium card */
 .lb-podium-card {
     position: relative;
     display: flex;
@@ -315,6 +214,10 @@
 .lb-podium-card--left,
 .lb-podium-card--right {
     width: 240px;
+}
+
+.lb-podium-card--you {
+    border-color: rgba(196, 18, 98, 0.5) !important;
 }
 
 .lb-podium-card__glow {
@@ -385,6 +288,11 @@
     font-weight: 700;
     color: #ffffff;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .lb-podium-card--center .lb-podium-card__name {
@@ -438,7 +346,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Podium base bar */
 .lb-podium-card__base {
     width: 100%;
     display: flex;
@@ -475,7 +382,6 @@
     color: rgba(255, 255, 255, 0.4);
 }
 
-/* Skeleton */
 .lb-podium-skeleton {
     display: flex;
     align-items: flex-end;
@@ -509,12 +415,13 @@
 .lb-table-section {
     position: relative;
     z-index: 1;
+    padding: 48px 48px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .lb-table-section__inner {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 0 100px;
 }
 
 .lb-table-header {
@@ -530,7 +437,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Column labels */
 .lb-table-cols {
     display: grid;
     grid-template-columns: 80px 1fr 1fr 120px;
@@ -549,7 +455,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Divider between top 3 and rest */
 .lb-table-divider {
     height: 1px;
     background: rgba(196, 18, 98, 0.15);
@@ -573,7 +478,6 @@
     padding-left: 8px;
 }
 
-/* Row */
 .lb-row {
     display: grid;
     grid-template-columns: 80px 1fr 1fr 120px;
@@ -690,7 +594,6 @@
     flex-direction: column;
     gap: 2px;
     font-size: 13px;
-    font-weight: 400;
     color: rgba(255, 255, 255, 0.65);
     font-family: 'Poppins', sans-serif;
 }
@@ -895,7 +798,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Points table */
+/* ─── Points table ────────────────────────────────────────────────────────────── */
 .lb-pts-table {
     border-radius: 18px;
     border: 1px solid rgba(255, 255, 255, 0.07);
@@ -985,19 +888,6 @@
     .lb-how-section {
         padding-left: 24px;
         padding-right: 24px;
-    }
-
-    .lb-header__body {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .lb-header__stats {
-        gap: 24px;
-    }
-
-    .lb-stat {
-        align-items: flex-start;
     }
 
     .lb-podium {

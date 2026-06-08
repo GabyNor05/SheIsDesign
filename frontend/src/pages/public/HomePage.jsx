@@ -25,8 +25,8 @@ function HomePage() {
         const progress = docH > 0 ? scrollY / docH : 0;
 
         // Orb travels from top-right → centre-left → bottom-right as you scroll
-        const x = 70 - progress * 60;   // 70vw → 10vw → back
-        const y = -10 + progress * 110; // -10vh → 100vh
+const x = 10 - progress * 1;
+const y = -10 + progress * 1;
 
         orbRef.current.style.transform = `translate(${x}vw, ${y}vh)`;
         ticking = false;

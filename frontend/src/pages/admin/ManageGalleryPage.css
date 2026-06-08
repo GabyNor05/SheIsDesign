@@ -1,0 +1,41 @@
+.mgp-root {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mgp-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.mgp-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    background: rgba(196, 18, 98, 0.08);
+    border: 1px solid rgba(196, 18, 98, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #C41262;
+    margin-bottom: 8px;
+}
+
+.mgp-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #F0F0F0;
+    margin: 0;
+}
+
+.mgp-sub {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+}

@@ -1,66 +1,57 @@
-const API_BASE = "http://localhost:5160/api";
+import axios from 'axios';
 
-// GET all events
-export async function getAllEvents() {
-  const response = await fetch(`${API_BASE}/Event`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || "Error fetching events");
-  }
-  return response.json();
-}
+const API_BASE_URL = 'http://localhost:5160/api/Event'; 
 
-// GET single event by ID
-export async function getEventById(id) {
-  const response = await fetch(`${API_BASE}/Event/${id}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || "Error fetching event");
-  }
-  return response.json();
-}
+const apiClient = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
-// GET upcoming events (start_date > today, ordered by date)
-export async function getUpcomingEvents() {
-  const response = await fetch(`${API_BASE}/Event/upcoming`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || "Error fetching upcoming events");
-  }
-  return response.json();
-}
+apiClient.interceptors.response.use(
+    (response) => {
+        return response.status === 204 ? null : response.data;
+    },
+    (error) => {
+        // Catch error payloads from backend, fallback to generic message
+        const errorText = error.response?.data || error.message;
+        return Promise.reject(new Error(errorText || `Request failed with status ${error.response?.status}`));
+    }
+);
 
-// GET events filtered by status ("open", "drafted", "closed")
-export async function getEventsByStatus(status) {
-  const response = await fetch(`${API_BASE}/Event/status/${status}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `Error fetching events with status: ${status}`);
-  }
-  return response.json();
-}
+export const eventService = {
+    getAllEvents: () => apiClient.get('/'),
 
-// GET event stats by category (returns openCount, draftCount, closedCount)
-export async function getEventStatsByCategory(category) {
-  const response = await fetch(`${API_BASE}/Event/category/${category}`, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || "Error fetching event statistics");
-  }
-  return response.json();
-}
+    getEventById: (id) => apiClient.get(`/${id}`),
+
+    getEventsByStatus: (status) => apiClient.get(`/status/${status}`),
+
+    getCategoryStats: (category) => apiClient.get(`/category/${category}`),
+
+    getUpcomingEvents: () => apiClient.get('/Upcoming'),
+
+    /*
+    create event needs these variables
+
+    -----
+      {
+        "title": "string",
+        "start_date": "2026-05-26", -- DateTime
+        "end_date": "2026-05-26", -- DateTTime
+        "description": "string",
+        "max_entry": 0,
+        "category": "string",
+        "points_reward": 0,
+        "status": "string",
+        "image_link": "string"
+      }
+    -----
+
+    */
+    createEvent: (eventData) => apiClient.post('/', eventData),
+
+    updateEvent: (id, eventData) => apiClient.put(`/${id}`, { ...eventData, id }),
+
+    deleteEvent: (id) => apiClient.delete(`/${id}`)
+};

@@ -1,42 +1,3 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// AuthPage.jsx — Unified login + signup page
-// One card, slider at top toggles between modes
-// Link here with: /auth?mode=signup  or  /auth?mode=login
-//
-// ┌─────────────────────────────────────────────────────────────────┐
-// │  BACKEND HANDOFF — lines marked 🔌 need changing when API ready │
-// │                                                                 │
-// │  SAFE TO CHANGE NOW (frontend only, backend doesn't care):      │
-// │    • All CSS / layout / animations                              │
-// │    • The toggle slider                                          │
-// │    • Component structure and file locations                     │
-// │    • Navigation after login (navigate("/"))                     │
-// │    • Mock OTP / token values used for UI testing                │
-// │                                                                 │
-// │  NEEDS BACKEND COORDINATION:                                    │
-// │  🔌 handleLoginSubmit — replace mock check with:               │
-// │       POST /api/auth/login                                      │
-// │       body: { email, password }  → matches LoginDTO.cs          │
-// │       response: user object      → matches UserReadDTO.cs        │
-// │                                                                 │
-// │  🔌 handleSignupSubmit — replace navigate() with:              │
-// │       POST /api/auth/register                                   │
-// │       body: { email, password }  → matches UserCreateDTO.cs     │
-// │       then POST /api/mentee with { fullname, userID }           │
-// │                                                                 │
-// │  🔌 handleOtpVerified — replace mock user with API response:   │
-// │       login(apiResponseUserObject)                              │
-// │       response shape: { id, email, role, fullname,              │
-// │                         profileImageUrl? }                      │
-// │                                                                 │
-// │  🔌 ADMIN_EMAILS — replace with role from UserReadDTO.cs:      │
-// │       if (res.role === "admin") setModalStep("token")           │
-// │       else setModalStep("otp")                                  │
-// │                                                                 │
-// │  🔌 MOCK_TOKEN / MOCK_OTP in TokenModal / OtpModal —           │
-// │       both will be verified server-side, not client-side        │
-// └─────────────────────────────────────────────────────────────────┘
-// ─────────────────────────────────────────────────────────────────────────────
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -51,8 +12,29 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { loginUser, registerUser, googleLoginUser } from "../../../services/authService";
 import "./AuthPage.css";
 
-// 🔌 Replace with role check from API response (UserReadDTO.cs)
 const ADMIN_EMAILS = ["admin@sheisdesign.co.za", "superadmin@example.com"];
+
+function sanitiseError(err) {
+  const msg = err?.message || "";
+  if (msg.toLowerCase().includes("bcrypt") ||
+      msg.toLowerCase().includes("system.") ||
+      msg.toLowerCase().includes("microsoft.") ||
+      msg.toLowerCase().includes("at lambda") ||
+      msg.toLowerCase().includes("stack") ||
+      msg.length > 200) {
+    return "Incorrect email or password. Please try again.";
+  }
+  if (msg.toLowerCase().includes("unauthorized") || msg.includes("401")) {
+    return "Incorrect email or password. Please try again.";
+  }
+  if (msg.toLowerCase().includes("not found") || msg.includes("404")) {
+    return "No account found with that email address.";
+  }
+  if (msg.toLowerCase().includes("network") || msg.toLowerCase().includes("fetch")) {
+    return "Connection error. Please check your internet and try again.";
+  }
+  return msg || "Something went wrong. Please try again.";
+}
 
 // ── Toggle slider ─────────────────────────────────────────────────────────────
 function AuthToggle({ mode, onChange }) {
@@ -134,9 +116,7 @@ function LoginFields({ onSubmit, error, onGoogleClick, googleLoading, googleErro
           </div>
         </div>
 
-        {error && (
-          <p className="auth-card__error">{error}</p>
-        )}
+        {error && <p className="auth-card__error">{error}</p>}
 
         <button type="submit" className="auth-card__submit">
           <MdLogin size={18} />
@@ -212,9 +192,7 @@ function SignupFields({ onSubmit, error, onGoogleClick, googleLoading, googleErr
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        {error && (
-          <p className="auth-card__error">{error}</p>
-        )}
+        {error && <p className="auth-card__error">{error}</p>}
 
         <button type="submit" className="auth-card__submit">
           <MdPersonAdd size={18} />
@@ -242,23 +220,23 @@ function SignupFields({ onSubmit, error, onGoogleClick, googleLoading, googleErr
   );
 }
 
-// ── Auth card — owns all modal + mode state ───────────────────────────────────
+// ── Auth card ─────────────────────────────────────────────────────────────────
 function AuthCard() {
-  const navigate      = useNavigate();
-  const { login }     = useAuth();
+  const navigate       = useNavigate();
+  const { login }      = useAuth();
   const [searchParams] = useSearchParams();
 
   const [mode, setMode] = useState(
     searchParams.get("mode") === "signup" ? "signup" : "login"
   );
 
-  const [modalStep, setModalStep]   = useState(null);
-  const [loginEmail, setLoginEmail] = useState("");
-  const [isAdmin, setIsAdmin]       = useState(false);
-const [isJudge] = useState(false);
-  const [loginError, setLoginError]   = useState("");
-  const [signupError, setSignupError] = useState("");
-  const [apiUser, setApiUser]         = useState(null);
+  const [modalStep, setModalStep]         = useState(null);
+  const [loginEmail, setLoginEmail]       = useState("");
+  const [isAdmin, setIsAdmin]             = useState(false);
+  const [isJudge]                         = useState(false);
+  const [loginError, setLoginError]       = useState("");
+  const [signupError, setSignupError]     = useState("");
+  const [apiUser, setApiUser]             = useState(null);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleError, setGoogleError]     = useState("");
 
@@ -286,7 +264,7 @@ const [isJudge] = useState(false);
           );
         }
       } catch (err) {
-        setGoogleError(err.message || "Google sign-in failed. Please try again.");
+        setGoogleError(sanitiseError(err));
       } finally {
         setGoogleLoading(false);
       }
@@ -300,11 +278,11 @@ const [isJudge] = useState(false);
       const res = await loginUser(email, password);
       setApiUser(res);
       setLoginEmail(email);
-const adminCheck = res.role === "admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
-setIsAdmin(adminCheck);
+      const adminCheck = res.role === "admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
+      setIsAdmin(adminCheck);
       setModalStep(adminCheck ? "token" : "otp");
     } catch (err) {
-      setLoginError(err.message || "Invalid email or password.");
+      setLoginError(sanitiseError(err));
     }
   }
 
@@ -314,7 +292,7 @@ setIsAdmin(adminCheck);
       const res = await registerUser(email, password);
       navigate("/signup/details", { state: { firstName, lastName, email, userId: res.id } });
     } catch (err) {
-      setSignupError(err.message || "Registration failed. Please try again.");
+      setSignupError(sanitiseError(err));
     }
   }
 
@@ -359,24 +337,6 @@ setIsAdmin(adminCheck);
               )}
             </motion.div>
           </AnimatePresence>
-
-          {/* <p className="auth-card__switch">
-            {mode === "login" ? (
-              <>
-                Don't have an account?{" "}
-                <button type="button" onClick={() => setMode("signup")} className="auth-card__switch-link">
-                  Sign up <MdArrowForward size={13} />
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{" "}
-                <button type="button" onClick={() => setMode("login")} className="auth-card__switch-link">
-                  Log in <MdArrowForward size={13} />
-                </button>
-              </>
-            )}
-          </p> */}
         </div>
       </div>
 

@@ -8,6 +8,7 @@ import EventsPage from "./pages/public/EventsPage";
 import GalleryPage from "./pages/public/GalleryPage";
 import LeaderboardPage from "./pages/public/LeaderboardPage";
 import DonatePage from "./pages/public/DonatePage";
+import ProfilePage from "./pages/public/ProfilePage/ProfilePage";
 
 // Auth pages
 import AuthPage from "./pages/auth/AuthPage/AuthPage";
@@ -16,13 +17,13 @@ import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage"
 import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
 
 // Admin pages
-import AdminDashboard from "./pages/admin/AdminDashboard";
+// import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDashboardV2 from "./pages/admin/template/AdminDashboardV2";
 import ManageEvents from "./pages/admin/template/Events";
 import ManageParticipantsPage from "./pages/admin/ManageParticipantsPage";
 import ManageLeaderboardPage from "./pages/admin//ManageLeaderboardPage";
 import ManageDonations from "./pages/admin/ManageDonationsPage";
-// import ManageGallery from "./pages/admin/ManageGalleryPage";
+import ManageGallery from "./pages/admin/ManageGalleryPage";
 
 // Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
@@ -40,6 +41,7 @@ const Routes = createBrowserRouter([
       { path: "gallery", element: <GalleryPage /> },
       { path: "leaderboard", element: <LeaderboardPage /> },
       { path: "donate", element: <DonatePage /> },
+      { path: "profile", element: <ProfilePage /> },
 
       // ── Auth ──────────────────────────────────────────────────────────────
       { path: "auth", element: <AuthPage /> },
@@ -50,18 +52,18 @@ const Routes = createBrowserRouter([
       { path: "application-status", element: <ApplicationStatusPage /> },
 
       // ── Old admin dashboard (kept for reference) ───────────────────────────
-      { path: "admin", element: <AdminDashboard /> },
+      // { path: "admin", element: <AdminDashboard /> },
 
       // ── New admin — all share the sidebar via AdminLayout ──────────────────
       {
-        path: "admin-v2",
+        path: "admin",
         element: <AdminLayout />,
         children: [
           { index: true, element: <AdminDashboardV2 /> },
           { path: "events", element: <ManageEvents /> },
           { path: "participants", element: <ManageParticipantsPage /> },
           { path: "leaderboard", element: <ManageLeaderboardPage /> },
-          // { path: "gallery",     element: <ManageGallery /> },
+          { path: "gallery", element: <ManageGallery /> },
           { path: "donations", element: <ManageDonations /> },
         ],
       },

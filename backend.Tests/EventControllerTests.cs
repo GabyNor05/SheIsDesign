@@ -122,7 +122,7 @@ namespace SheDesign.Tests
             {
                 Title = "Hackathon",
                 Status = "drafted",
-                Start_date = DateOnly.FromDateTime(DateTime.Now.AddDays(1))
+                Start_date = DateTime.UtcNow
             };
 
             // Act
