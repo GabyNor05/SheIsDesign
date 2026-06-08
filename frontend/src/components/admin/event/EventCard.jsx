@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { fmtDate } from "./utils";
+import EventImage from "./EventImage";
+import { Icon } from "../overview/Icon";
 import { T, STATUS_STYLES } from "../theme";
 import EventForm from "./EventForm"
 
@@ -19,6 +23,7 @@ function Badge({ status }) {
 }
 
 function ProgressBar({ count, max, showLabel = true }) {
+  function calcPct(count, max) { return max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0; }
   const p = calcPct(count, max);
   return (
     <div>
@@ -74,7 +79,7 @@ function JudgeAvatars({ count }) {
 function MetaRow({ icon, text }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-      <Ic n={icon} s={12} c={T.textMuted} />
+      <Icon n={icon} s={12} c={T.textMuted} />
       <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.textSecond }}>
         {text}
       </span>
@@ -161,7 +166,7 @@ function EventCard({ event, onManage, onView }) {
           onMouseEnter={e => { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.color = T.textPrimary; }}
           onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = T.textSecond; }}
         >
-          <Ic n="eye" s={13} c="currentColor" /> View Details
+          <Icon n="eye" s={13} c="currentColor" /> View Details
         </button>
         <button
           onClick={onManage}
@@ -175,7 +180,7 @@ function EventCard({ event, onManage, onView }) {
           onMouseEnter={e => { e.currentTarget.style.opacity = ".85"; }}
           onMouseLeave={e => { e.currentTarget.style.opacity = "1"; }}
         >
-          <Ic n="gear" s={13} c="#fff" /> Manage
+          <Icon n="gear" s={13} c="#fff" /> Manage
         </button>
       </div>
     </div>

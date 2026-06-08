@@ -25,6 +25,7 @@ function InviteJudgeForm({ onSave, onClose }) {
       (response) => console.log("SUCCESS!", response.status, response.text),
       (error) => console.log("FAILED...", error)
     );
+    onClose();
   };
 
   return (

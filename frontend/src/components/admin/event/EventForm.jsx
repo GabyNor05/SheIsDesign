@@ -5,7 +5,7 @@ import { eventService } from "../../../services/eventService";
 import { cloudinaryService } from "../../../services/CloudinaryService.js";
 
 const inputStyle = {
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Poppins', sans-serif",
   fontSize: 13,
   padding: "10px 12px",
   background: T.surface,
@@ -106,9 +106,28 @@ export default function EventForm({ initial = null, onSave, onClose }) {
 
   return (
     <div className="p-8">
-      <FormField label="Event Title" required error={errors.title}>
-        <input {...bindInput("title", "text", "E.g. Brand Identity Challenge")} />
+      <div className="grid grid-cols-2 gap-3">
+
+      <FormField  label="Event Title" required error={errors.title}>
+        <input className="" {...bindInput("title", "text", "E.g. Brand Identity Challenge")} />
       </FormField>
+      <FormField  label="Status">
+        <select
+        className=""
+          value={form.status || "draft"}
+          onChange={e => set("status", e.target.value)}
+          style={{
+            ...inputStyle,
+            borderColor: errors.status ? T.closedRed : T.border,
+            cursor: "pointer",
+          }}
+        >
+          <option value="draft">Draft</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </select>
+      </FormField>
+      </div>
 
       <FormField label="Category" required error={errors.category}>
         <select
@@ -168,6 +187,9 @@ export default function EventForm({ initial = null, onSave, onClose }) {
       </div>
 
       <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", marginTop: 24 }}>
+        <button onClick={e => set("status", "draft")} style={{ background: T.surfaceBord, border: "none", borderRadius: 8, padding: "10px 20px", color: T.textSecond, cursor: "pointer", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>
+          Save as Draft
+        </button>
         <button
           onClick={onClose}
           style={{

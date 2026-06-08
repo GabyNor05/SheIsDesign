@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./Events.css";
+import { eventService } from "../../../services/eventService";
+import AllEvents from "../../../components/admin/event/AllEvents";
 
 const T = {
   bg:          "#0D0D0D",
@@ -32,31 +34,27 @@ const CATEGORIES = [
   "Branding","Motion","UI/UX","Typography",
   "Illustration","Packaging","Photography","Web Design","Other",
 ];
-const STATUSES    = ["OPEN","DRAFT","UPCOMING","CLOSED"];
-const STATUS_TABS = ["DRAFT","UPCOMING","OPEN","CLOSED"];
+const STATUSES    = ["open","draft","upcoming","closed"];
+const STATUS_TABS = ["draft","upcoming","open","closed"];
 
 const STATUS_STYLES = {
-  OPEN:     { bg: "#052512", color: "#22C55E" },
-  UPCOMING: { bg: "#0A1628", color: "#60A5FA" },
-  DRAFT:    { bg: "#222222", color: "#A0A0A0" },
-  CLOSED:   { bg: "#200B0B", color: "#F87171" },
+  open:     { bg: "#052512", color: "#22C55E" },
+  upcoming: { bg: "#0A1628", color: "#60A5FA" },
+  draft:    { bg: "#222222", color: "#A0A0A0" },
+  closed:   { bg: "#200B0B", color: "#F87171" },
 };
 
 const SEED_EVENTS = [
-  { EventID:"evt-001", title:"Brand Identity Challenge",  category:"Branding",     categoryLabel:"Brand Identity",  start_date:"2025-03-12", end_date:"2025-03-10", entry_count:84,  max_entries:92,  description:"A comprehensive brand identity challenge.",  points_reward:500,  status:"OPEN",     image_link:"", submissions:66, location:"Online", time:"09:00", judges:6 },
-  { EventID:"evt-002", title:"Motion Design Bootcamp",    category:"Motion",       categoryLabel:"Motion Design",   start_date:"2025-03-20", end_date:"2025-03-18", entry_count:41,  max_entries:60,  description:"An intensive motion design bootcamp.",       points_reward:300,  status:"OPEN",     image_link:"", submissions:28, location:"Online", time:"10:00", judges:3 },
-  { EventID:"evt-003", title:"UI/UX Hackathon 2026",      category:"UI/UX",        categoryLabel:"UX Design",       start_date:"2025-04-05", end_date:"2025-04-03", entry_count:61,  max_entries:75,  description:"A 48-hour hackathon.",                       points_reward:750,  status:"OPEN",     image_link:"", submissions:47, location:"Wits University", time:"08:00", judges:4 },
-  { EventID:"evt-004", title:"Illustration Open Brief",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-05-02", end_date:"2025-04-28", entry_count:67,  max_entries:80,  description:"An open illustration brief.",                points_reward:400,  status:"OPEN",     image_link:"", submissions:51, location:"Online", time:"09:00", judges:3 },
-  { EventID:"evt-005", title:"Typography Sprint",         category:"Typography",   categoryLabel:"Typography",      start_date:"2025-04-18", end_date:"2025-04-15", entry_count:29,  max_entries:60,  description:"A focused sprint on editorial typography.",  points_reward:200,  status:"DRAFT",    image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
-  { EventID:"evt-006", title:"Packaging Design Sprint",   category:"Packaging",    categoryLabel:"Packaging",       start_date:"2025-05-15", end_date:"2025-05-12", entry_count:0,   max_entries:75,  description:"Design sustainable packaging.",              points_reward:350,  status:"UPCOMING", image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
-  { EventID:"evt-007", title:"Annual Design Awards 2025", category:"Other",        categoryLabel:"Awards",          start_date:"2025-10-14", end_date:"2025-10-10", entry_count:203, max_entries:300, description:"The flagship annual awards.",                points_reward:1000, status:"CLOSED",   image_link:"", submissions:187,location:"Online", time:"10:00", judges:8 },
-  { EventID:"evt-008", title:"Poster Design Challenge",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-09-05", end_date:"2025-09-03", entry_count:76,  max_entries:100, description:"A bold poster challenge.",                   points_reward:250,  status:"CLOSED",   image_link:"", submissions:69, location:"Online", time:"10:00", judges:3 },
+  { EventID:"evt-001", title:"Brand Identity Challenge",  category:"Branding",     categoryLabel:"Brand Identity",  start_date:"2025-03-12", end_date:"2025-03-10", entry_count:84,  max_entries:92,  description:"A comprehensive brand identity challenge.",  points_reward:500,  status:"open",     image_link:"", submissions:66, location:"Online", time:"09:00", judges:6 },
+  { EventID:"evt-002", title:"Motion Design Bootcamp",    category:"Motion",       categoryLabel:"Motion Design",   start_date:"2025-03-20", end_date:"2025-03-18", entry_count:41,  max_entries:60,  description:"An intensive motion design bootcamp.",       points_reward:300,  status:"open",     image_link:"", submissions:28, location:"Online", time:"10:00", judges:3 },
+  { EventID:"evt-003", title:"UI/UX Hackathon 2026",      category:"UI/UX",        categoryLabel:"UX Design",       start_date:"2025-04-05", end_date:"2025-04-03", entry_count:61,  max_entries:75,  description:"A 48-hour hackathon.",                       points_reward:750,  status:"open",     image_link:"", submissions:47, location:"Wits University", time:"08:00", judges:4 },
+  { EventID:"evt-004", title:"Illustration Open Brief",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-05-02", end_date:"2025-04-28", entry_count:67,  max_entries:80,  description:"An open illustration brief.",                points_reward:400,  status:"open",     image_link:"", submissions:51, location:"Online", time:"09:00", judges:3 },
+  { EventID:"evt-005", title:"Typography Sprint",         category:"Typography",   categoryLabel:"Typography",      start_date:"2025-04-18", end_date:"2025-04-15", entry_count:29,  max_entries:60,  description:"A focused sprint on editorial typography.",  points_reward:200,  status:"draft",    image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
+  { EventID:"evt-006", title:"Packaging Design Sprint",   category:"Packaging",    categoryLabel:"Packaging",       start_date:"2025-05-15", end_date:"2025-05-12", entry_count:0,   max_entries:75,  description:"Design sustainable packaging.",              points_reward:350,  status:"upcoming", image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
+  { EventID:"evt-007", title:"Annual Design Awards 2025", category:"Other",        categoryLabel:"Awards",          start_date:"2025-10-14", end_date:"2025-10-12", entry_count:287, max_entries:300, description:"The flagship annual awards.",                points_reward:1000, status:"closed",   image_link:"", submissions:187,location:"Online", time:"14:00", judges:8 },
+  { EventID:"evt-008", title:"Poster Design Challenge",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-06-01", end_date:"2025-05-30", entry_count:76,  max_entries:100, description:"A bold poster challenge.",                   points_reward:250,  status:"closed",   image_link:"", submissions:69, location:"Online", time:"10:00", judges:3 },
 ];
 
-function loadEvents() {
-  try { const r = localStorage.getItem(STORAGE_KEY); if (r) return JSON.parse(r); } catch {}
-  return SEED_EVENTS;
-}
 function saveEvents(evs) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(evs)); } catch {}
 }
@@ -395,11 +393,11 @@ function CompactCard({ event, onEdit, onDelete, onView, onCloseEvent }) {
         </div>
       </div>
       <div className="compact-card__footer">
-        {event.status === "OPEN" ? (
+        {event.status === "open" ? (
           <button className="compact-card__close-btn" onClick={onCloseEvent}>
             <Ic n="lock" s={11} c="currentColor" /> Close Event
           </button>
-        ) : event.status === "CLOSED" ? (
+        ) : event.status === "closed" ? (
           <button className="compact-card__close-btn" onClick={onCloseEvent}
             style={{ borderColor:"rgba(96,165,250,0.4)", color:"#60A5FA" }}
             onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(96,165,250,0.6)"; e.currentTarget.style.color="#93C5FD"; }}
@@ -407,7 +405,7 @@ function CompactCard({ event, onEdit, onDelete, onView, onCloseEvent }) {
           >
             <Ic n="eye" s={11} c="currentColor" /> Reopen
           </button>
-        ) : event.status === "DRAFT" ? (
+        ) : event.status === "draft" ? (
           <button className="compact-card__close-btn" onClick={onCloseEvent}
             style={{ borderColor:"rgba(196,18,98,0.4)", color:"#FE4081" }}
             onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(196,18,98,0.6)"; e.currentTarget.style.color="#C41262"; }}
@@ -512,14 +510,61 @@ function EventDetail({ event, onBack, onEdit }) {
 
 const PAGE_SIZE = 8;
 
+
+
 export default function ManageEvents() {
-  const [events,   setEvents]  = useState(() => loadEvents());
+  const [events,   setEvents]  = useState([]);
+  const [loading,  setLoading] = useState(false);
+  const [error,    setError]   = useState(null);
+  
+  useEffect(() => {
+    const loadUpcomingEvents = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await eventService.getUpcomingEvents();
+        setEvents(data || []);
+        saveEvents(data || []);
+      } catch (err) {
+        console.error("Error fetching upcoming events:", err);
+        setError(err.message || "Failed to load events");
+        setEvents(SEED_EVENTS);
+        saveEvents(SEED_EVENTS);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+     const loadAllEvents = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await eventService.getAllEvents();
+        setEvents(data || []);
+        saveEvents(data || []);
+      } catch (err) {
+        console.error("Error fetching all events:", err);
+        setError(err.message || "Failed to load events");
+        setEvents(SEED_EVENTS);
+        saveEvents(SEED_EVENTS);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadUpcomingEvents();
+      
+      loadAllEvents();
+  }, []);
+
+
   const [search,   setSearch]  = useState("");
-  const [tab,      setTab]     = useState("OPEN");
+  const [tab,      setTab]     = useState("all");
   const [modal,    setModal]   = useState(null);
   const [active,   setActive]  = useState(null);
   const [detailId, setDetail]  = useState(null);
   const [page,     setPage]    = useState(1);
+  
 
   const scrollRef = useRef(null);
   const drag = useRef({ active: false, startX: 0, scrollLeft: 0 });
@@ -537,18 +582,19 @@ export default function ManageEvents() {
 
   const handleStatusToggle = ev => {
     const next =
-      ev.status === "OPEN"     ? "CLOSED" :
-      ev.status === "CLOSED"   ? "OPEN"   :
-      ev.status === "DRAFT"    ? "OPEN"   :
-      ev.status === "UPCOMING" ? "OPEN"   : ev.status;
+      ev.status === "open"     ? "closed" :
+      ev.status === "closed"   ? "open"   :
+      ev.status === "draft"    ? "open"   :
+      ev.status === "upcoming" ? "open"   : ev.status;
     persist(events.map(e => e.EventID === ev.EventID ? { ...e, status: next } : e));
   };
 
-  const liveOpen    = events.filter(e => e.status === "OPEN").slice(0, 3);
+  const liveOpen    = events.filter(e => e.status === "open").slice(0, 3);
   const allFiltered = events.filter(e => e.status === tab && e.title.toLowerCase().includes(search.toLowerCase()));
   const totalPages  = Math.max(1, Math.ceil(allFiltered.length / PAGE_SIZE));
   const filtered    = allFiltered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const tabCounts   = STATUS_TABS.reduce((a, s) => { a[s] = events.filter(e => e.status === s).length; return a; }, {});
+  
   const detailEv    = detailId ? events.find(e => e.EventID === detailId) : null;
 
   if (detailEv) return (
@@ -561,6 +607,9 @@ export default function ManageEvents() {
       )}
     </div>
   );
+
+ const displayEvents = events;
+
 
   return (
     <div className="events-root">
@@ -592,7 +641,6 @@ export default function ManageEvents() {
           </div>
         </div>
 
-        {liveOpen.length > 0 && (
           <section className="live-section fu" style={{ animationDelay:"60ms" }} aria-label="Live and open events">
             <div className="live-section__header">
               <div className="live-section__left">
@@ -601,9 +649,10 @@ export default function ManageEvents() {
                 <span className="live-count">{liveOpen.length}</span>
               </div>
             </div>
+        {liveOpen.length > 0 && (
             <div className="live-scroll-wrap">
               <div className="live-scroll" ref={scrollRef} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
-                {events.filter(e => e.status === "OPEN").map(ev => (
+                {displayEvents.filter(e => e.status === "open" /* && e.Start_date > new Date() */).map(ev => (
                   <FeaturedCard key={ev.EventID} event={ev}
                     onView={() => setDetail(ev.EventID)}
                     onManage={() => { setActive(ev); setModal("edit"); }}
@@ -611,8 +660,8 @@ export default function ManageEvents() {
                 ))}
               </div>
             </div>
-          </section>
         )}
+        </section>
 
         <section className="fu" style={{ animationDelay:"120ms" }} aria-label="All events">
           <div className="all-events-header">
@@ -621,6 +670,10 @@ export default function ManageEvents() {
               <span className="all-events-title__count">{events.length}</span>
             </div>
             <div className="status-tabs">
+              <button className="status-tab" onClick={() => setTab("all")}
+                style={tab === "all" ? { background: T.surfaceHi, borderColor: T.surfaceHi, color: T.textPrimary } : {}}>
+                All
+              </button>
               {STATUS_TABS.map(s => {
                 const isActive = s === tab;
                 const sc = STATUS_STYLES[s] || {};
@@ -628,7 +681,7 @@ export default function ManageEvents() {
                   <button key={s} onClick={() => setTab(s)}
                     className={`status-tab${isActive ? " status-tab--active" : ""}`}
                     style={isActive ? { background: sc.bg, borderColor: `${sc.color}55`, color: sc.color } : {}}>
-                    {s}
+                    {s.toUpperCase()}
                     {tabCounts[s] > 0 && (
                       <span className="status-tab__count" style={{
                         background: isActive ? `${sc.color}33` : T.surfaceHi,
@@ -643,11 +696,21 @@ export default function ManageEvents() {
             </div>
           </div>
 
-          {allFiltered.length === 0 ? (
-            <div className="events-empty">
-              No {tab.toLowerCase()} events{search ? ` matching "${search}"` : ""}.
-            </div>
-          ) : (
+
+          {tab === "all" ? (
+            
+              <div className="admin-events-grid">
+                {events.map(ev => (
+                  <CompactCard key={ev.EventID} event={ev}
+                    onView={() => setDetail(ev.EventID)}
+                    onEdit={() => { setActive(ev); setModal("edit"); }}
+                    onDelete={() => { setActive(ev); setModal("delete"); }}
+                    onCloseEvent={() => handleStatusToggle(ev)}
+                  />
+                ))}
+              </div>
+            
+          )  : (
             <>
               <div className="admin-events-grid">
                 {filtered.map(ev => (
@@ -683,7 +746,48 @@ export default function ManageEvents() {
                 </div>
               )}
             </>
-          )}
+          )} 
+           {tab === "all" &&(<div className="admin-events-grid">
+                {events.filter(ev => ev.Status === "all").map(ev => (
+                  <CompactCard key={ev.EventID} event={ev}
+                    onView={() => setDetail(ev.EventID)}
+                    onEdit={() => { setActive(ev); setModal("edit"); }}
+                    onDelete={() => { setActive(ev); setModal("delete"); }}
+                    onCloseEvent={() => handleStatusToggle(ev)}
+                  />
+                ))}
+              </div>)} 
+              {tab === "open" &&(<div className="admin-events-grid">
+                {events.filter(ev => ev.Status === "open").map(ev => (
+                  <CompactCard key={ev.EventID} event={ev}
+                    onView={() => setDetail(ev.EventID)}
+                    onEdit={() => { setActive(ev); setModal("edit"); }}
+                    onDelete={() => { setActive(ev); setModal("delete"); }}
+                    onCloseEvent={() => handleStatusToggle(ev)}
+                  />
+                ))}
+              </div>)} 
+              {tab === "closed" &&(<div className="admin-events-grid">
+                {events.filter(ev => ev.Status === "closed").map(ev => (
+                  <CompactCard key={ev.EventID} event={ev}
+                    onView={() => setDetail(ev.EventID)}
+                    onEdit={() => { setActive(ev); setModal("edit"); }}
+                    onDelete={() => { setActive(ev); setModal("delete"); }}
+                    onCloseEvent={() => handleStatusToggle(ev)}
+                  />
+                ))}
+              </div>)} 
+              {tab === "DRAFT" &&(<div className="admin-events-grid">
+                {events.filter(ev => ev.Status === "draft").map(ev => (
+                  <CompactCard key={ev.EventID} event={ev}
+                    onView={() => setDetail(ev.EventID)}
+                    onEdit={() => { setActive(ev); setModal("edit"); }}
+                    onDelete={() => { setActive(ev); setModal("delete"); }}
+                    onCloseEvent={() => handleStatusToggle(ev)}
+                  />
+                ))}
+              </div>)} 
+
         </section>
       </div>
 
