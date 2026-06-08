@@ -60,7 +60,7 @@ function CTASection() {
             </p>
 
             <div className="cta-actions">
-              <Link to="/register" className="cta-btn cta-btn--primary">
+              <Link to="/signup" className="cta-btn cta-btn--primary">
                 <MdPersonAdd size={20} />
                 Create Your Free Account
               </Link>

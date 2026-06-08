@@ -153,7 +153,7 @@ function SupportSection() {
             benefits={volunteerBenefits}
             buttonLabel="Apply as Volunteer"
             buttonIcon={<MdHowToReg size={18} />}
-            buttonTo="/volunteer"
+            buttonTo="/signup"
           />
         </div>
       </div>

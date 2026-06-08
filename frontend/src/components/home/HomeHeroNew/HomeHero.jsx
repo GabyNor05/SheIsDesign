@@ -225,7 +225,7 @@ export default function HomeHero() {
 
         {/* CTA row */}
         <div className={`home-hero__cta-row ${phase >= 3 ? "home-hero__cta-row--visible" : ""}`}>
-          <Link to="/register" className="home-hero__btn home-hero__btn--primary">
+          <Link to="/signup" className="home-hero__btn home-hero__btn--primary">
             Join the Community
           </Link>
           <Link to="/events" className="home-hero__btn home-hero__btn--ghost">
@@ -250,8 +250,8 @@ export default function HomeHero() {
 
       {/* Bottom marquee strips */}
       <div className={`home-hero__marquee-wrap ${phase >= 3 ? "home-hero__marquee-wrap--visible" : ""}`}>
-        <MarqueeStrip speed={52} />
-        <MarqueeStrip reverse speed={46} />
+        <MarqueeStrip speed={100} />
+        <MarqueeStrip reverse speed={100} />
       </div>
 
     </section>
