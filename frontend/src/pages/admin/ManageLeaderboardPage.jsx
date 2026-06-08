@@ -1,53 +1,23 @@
 import { useState, useMemo, useEffect } from "react";
 import "./ManageLeaderboardPage.css";
+import {
+  fetchEvents,
+  fetchLeaderboardForEvent,
+  updateSubmission,
+} from "../../services/leaderboardService";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MOCK DATA
-// 🔌 API CONNECTION: replace EVENTS and SEED_SUBMISSIONS with real API calls
-// ─────────────────────────────────────────────────────────────────────────────
-const EVENTS = [
-  { id: 1, title: "Brand Identity Challenge",  date: "12 Mar 2026" },
-  { id: 2, title: "UI/UX Hackathon 2026",      date: "5 Apr 2026"  },
-  { id: 3, title: "Annual Design Awards 2025", date: "14 Oct 2025" },
-  { id: 4, title: "Motion Design Bootcamp",    date: "20 Mar 2026" },
-  { id: 5, title: "Illustration Open Brief",   date: "2 May 2026"  },
-];
-
-const SEED_SUBMISSIONS = [
-  { id: 101, eventId: 1, studentName: "Ayasha Dlamini",  studentEmail: "a.dlamini@uct.ac.za",  submissionTitle: "Verde — Sustainable Fashion Identity",  score: 92,  status: "Winner",   isWinner: true,  submittedAt: "10 Mar 2026", color: "#C41262" },
-  { id: 102, eventId: 1, studentName: "Zanele Mokoena",  studentEmail: "z.mokoena@uj.ac.za",   submissionTitle: "Aura Collective Brand System",          score: 87,  status: "Reviewed", isWinner: false, submittedAt: "10 Mar 2026", color: "#60A5FA" },
-  { id: 103, eventId: 1, studentName: "Priya Naidoo",    studentEmail: "p.naidoo@ukzn.ac.za",  submissionTitle: "Bloom & Earth — Visual Identity",       score: 83,  status: "Reviewed", isWinner: false, submittedAt: "9 Mar 2026",  color: "#22C55E" },
-  { id: 104, eventId: 1, studentName: "Amara Diallo",    studentEmail: "a.diallo@nmu.ac.za",   submissionTitle: "Umber Studio Branding Concept",         score: 79,  status: "Reviewed", isWinner: false, submittedAt: "9 Mar 2026",  color: "#FBBF24" },
-  { id: 105, eventId: 1, studentName: "Nomvula Khumalo", studentEmail: "n.khumalo@wits.ac.za", submissionTitle: "Sol Co. Identity System",               score: 74,  status: "Reviewed", isWinner: false, submittedAt: "8 Mar 2026",  color: "#a78bfa" },
-  { id: 106, eventId: 1, studentName: "Lerato Sithole",  studentEmail: "l.sithole@tut.ac.za",  submissionTitle: "The Form Collective — Brand Mark",      score: null,status: "Pending",  isWinner: false, submittedAt: "10 Mar 2026", color: "#34d399" },
-  { id: 201, eventId: 2, studentName: "Ayasha Dlamini",  studentEmail: "a.dlamini@uct.ac.za",  submissionTitle: "HealthLink — Community Mobile App",     score: 96,  status: "Winner",   isWinner: true,  submittedAt: "3 Apr 2026",  color: "#C41262" },
-  { id: 202, eventId: 2, studentName: "Lerato Sithole",  studentEmail: "l.sithole@tut.ac.za",  submissionTitle: "CareTrack Patient Dashboard",           score: 88,  status: "Reviewed", isWinner: false, submittedAt: "3 Apr 2026",  color: "#34d399" },
-  { id: 203, eventId: 2, studentName: "Amara Diallo",    studentEmail: "a.diallo@nmu.ac.za",   submissionTitle: "Vitals — Health Monitoring UI",         score: 84,  status: "Reviewed", isWinner: false, submittedAt: "2 Apr 2026",  color: "#FBBF24" },
-  { id: 204, eventId: 2, studentName: "Zanele Mokoena",  studentEmail: "z.mokoena@uj.ac.za",   submissionTitle: "Remedy App — Pharmacy UX Flow",         score: 76,  status: "Reviewed", isWinner: false, submittedAt: "2 Apr 2026",  color: "#60A5FA" },
-  { id: 205, eventId: 2, studentName: "Thandeka Zulu",   studentEmail: "t.zulu@dut.ac.za",     submissionTitle: "MediConnect Booking System",            score: null,status: "Pending",  isWinner: false, submittedAt: "3 Apr 2026",  color: "#f97316" },
-  { id: 301, eventId: 3, studentName: "Priya Naidoo",    studentEmail: "p.naidoo@ukzn.ac.za",  submissionTitle: "Afro-Futurist Packaging Series",        score: 94,  status: "Winner",   isWinner: true,  submittedAt: "9 Oct 2025",  color: "#22C55E" },
-  { id: 302, eventId: 3, studentName: "Ayasha Dlamini",  studentEmail: "a.dlamini@uct.ac.za",  submissionTitle: "Watershed — Environmental Campaign",    score: 91,  status: "Reviewed", isWinner: false, submittedAt: "9 Oct 2025",  color: "#C41262" },
-  { id: 303, eventId: 3, studentName: "Nomvula Khumalo", studentEmail: "n.khumalo@wits.ac.za", submissionTitle: "Frequency — Sound Brand Identity",      score: 85,  status: "Reviewed", isWinner: false, submittedAt: "8 Oct 2025",  color: "#a78bfa" },
-  { id: 304, eventId: 3, studentName: "Amara Diallo",    studentEmail: "a.diallo@nmu.ac.za",   submissionTitle: "Solstice Type Specimen Book",           score: 81,  status: "Reviewed", isWinner: false, submittedAt: "8 Oct 2025",  color: "#FBBF24" },
-  { id: 305, eventId: 3, studentName: "Zanele Mokoena",  studentEmail: "z.mokoena@uj.ac.za",   submissionTitle: "Ritual Objects — Illustration Set",     score: 77,  status: "Reviewed", isWinner: false, submittedAt: "7 Oct 2025",  color: "#60A5FA" },
-  { id: 306, eventId: 3, studentName: "Chidi Okonkwo",   studentEmail: "c.okonkwo@cput.ac.za", submissionTitle: "Grid Study — Architectural Type",       score: 70,  status: "Reviewed", isWinner: false, submittedAt: "7 Oct 2025",  color: "#fb7185" },
-  { id: 307, eventId: 3, studentName: "Lerato Sithole",  studentEmail: "l.sithole@tut.ac.za",  submissionTitle: "Signal — Poster Campaign",              score: null,status: "Pending",  isWinner: false, submittedAt: "10 Oct 2025", color: "#34d399" },
-  { id: 401, eventId: 4, studentName: "Nomvula Khumalo", studentEmail: "n.khumalo@wits.ac.za", submissionTitle: "Float — Product Launch Sequence",       score: 89,  status: "Winner",   isWinner: true,  submittedAt: "18 Mar 2026", color: "#a78bfa" },
-  { id: 402, eventId: 4, studentName: "Chidi Okonkwo",   studentEmail: "c.okonkwo@cput.ac.za", submissionTitle: "Kinetic — Brand Motion Reel",           score: 82,  status: "Reviewed", isWinner: false, submittedAt: "18 Mar 2026", color: "#fb7185" },
-  { id: 403, eventId: 4, studentName: "Amara Diallo",    studentEmail: "a.diallo@nmu.ac.za",   submissionTitle: "Tempo — Animated Type Study",           score: 75,  status: "Reviewed", isWinner: false, submittedAt: "17 Mar 2026", color: "#FBBF24" },
-  { id: 404, eventId: 4, studentName: "Thandeka Zulu",   studentEmail: "t.zulu@dut.ac.za",     submissionTitle: "Drift — Loop Animation Set",            score: null,status: "Pending",  isWinner: false, submittedAt: "18 Mar 2026", color: "#f97316" },
-  { id: 501, eventId: 5, studentName: "Ayasha Dlamini",  studentEmail: "a.dlamini@uct.ac.za",  submissionTitle: "Ancestors — Digital Mythology Series",  score: 90,  status: "Reviewed", isWinner: false, submittedAt: "28 Apr 2026", color: "#C41262" },
-  { id: 502, eventId: 5, studentName: "Zanele Mokoena",  studentEmail: "z.mokoena@uj.ac.za",   submissionTitle: "Ntu — Spirit of Ubuntu Illustrations",  score: 86,  status: "Reviewed", isWinner: false, submittedAt: "27 Apr 2026", color: "#60A5FA" },
-  { id: 503, eventId: 5, studentName: "Priya Naidoo",    studentEmail: "p.naidoo@ukzn.ac.za",  submissionTitle: "Alchemy — Afrofuturist Figures",        score: null,status: "Pending",  isWinner: false, submittedAt: "28 Apr 2026", color: "#22C55E" },
-  { id: 504, eventId: 5, studentName: "Thandeka Zulu",   studentEmail: "t.zulu@dut.ac.za",     submissionTitle: "Bloom — Botanical Mythology",           score: null,status: "Pending",  isWinner: false, submittedAt: "28 Apr 2026", color: "#f97316" },
-  { id: 505, eventId: 5, studentName: "Lerato Sithole",  studentEmail: "l.sithole@tut.ac.za",  submissionTitle: "Current — Water & Memory",              score: null,status: "Pending",  isWinner: false, submittedAt: "27 Apr 2026", color: "#34d399" },
-];
+// The page is now wired to the real backend API through the service layer.
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 function initials(name) {
-  return name.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase();
+  return name
+    .split(" ")
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
 }
 function rankSuffix(n) {
   if (n === 1) return "st";
@@ -57,9 +27,9 @@ function rankSuffix(n) {
 }
 
 const STATUS_CONFIG = {
-  Pending:  { bg: "#1C1200",              color: "#FBBF24", dot: "#FBBF24" },
-  Reviewed: { bg: "#0A1628",              color: "#60A5FA", dot: "#60A5FA" },
-  Winner:   { bg: "rgba(196,18,98,0.12)", color: "#FE4081", dot: "#C41262" },
+  Pending: { bg: "#1C1200", color: "#FBBF24", dot: "#FBBF24" },
+  Reviewed: { bg: "#0A1628", color: "#60A5FA", dot: "#60A5FA" },
+  Winner: { bg: "rgba(196,18,98,0.12)", color: "#FE4081", dot: "#C41262" },
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -67,23 +37,100 @@ const STATUS_CONFIG = {
 // ─────────────────────────────────────────────────────────────────────────────
 function Ic({ n, s = 16, c = "currentColor" }) {
   const paths = {
-    trophy:   <><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></>,
-    file:     <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></>,
-    check:    <><polyline points="20 6 9 17 4 12"/></>,
-    clock:    <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>,
-    star:     <><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>,
-    bar:      <><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></>,
-    refresh:  <><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></>,
-    cal:      <><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></>,
-    eye:      <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>,
-    close:    <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>,
-    img:      <><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></>,
-    inbox:    <><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></>,
-    desc:     <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></>,
+    trophy: (
+      <>
+        <circle cx="12" cy="8" r="6" />
+        <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+      </>
+    ),
+    file: (
+      <>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+      </>
+    ),
+    check: (
+      <>
+        <polyline points="20 6 9 17 4 12" />
+      </>
+    ),
+    clock: (
+      <>
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </>
+    ),
+    star: (
+      <>
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      </>
+    ),
+    bar: (
+      <>
+        <line x1="18" y1="20" x2="18" y2="10" />
+        <line x1="12" y1="20" x2="12" y2="4" />
+        <line x1="6" y1="20" x2="6" y2="14" />
+      </>
+    ),
+    refresh: (
+      <>
+        <polyline points="23 4 23 10 17 10" />
+        <polyline points="1 20 1 14 7 14" />
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+      </>
+    ),
+    cal: (
+      <>
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+      </>
+    ),
+    eye: (
+      <>
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+      </>
+    ),
+    close: (
+      <>
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </>
+    ),
+    img: (
+      <>
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <path d="M21 15l-5-5L5 21" />
+      </>
+    ),
+    inbox: (
+      <>
+        <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+        <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+      </>
+    ),
+    desc: (
+      <>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+      </>
+    ),
   };
   return (
-    <svg width={s} height={s} viewBox="0 0 24 24" fill="none"
-      stroke={c} strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width={s}
+      height={s}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={c}
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       {paths[n] || null}
     </svg>
   );
@@ -95,8 +142,19 @@ function Ic({ n, s = 16, c = "currentColor" }) {
 function Pill({ status }) {
   const s = STATUS_CONFIG[status] || STATUS_CONFIG.Pending;
   return (
-    <span className="lb-pill" style={{ background: s.bg, color: s.color, borderColor: `${s.color}40` }}>
-      <span style={{ width: 5, height: 5, borderRadius: "50%", background: s.dot, display: "inline-block" }} />
+    <span
+      className="lb-pill"
+      style={{ background: s.bg, color: s.color, borderColor: `${s.color}40` }}
+    >
+      <span
+        style={{
+          width: 5,
+          height: 5,
+          borderRadius: "50%",
+          background: s.dot,
+          display: "inline-block",
+        }}
+      />
       {status}
     </span>
   );
@@ -106,12 +164,25 @@ function Pill({ status }) {
 // RANK CELL
 // ─────────────────────────────────────────────────────────────────────────────
 function RankCell({ rank }) {
-  if (rank === null) return <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 13 }}>—</span>;
-  const cls = rank === 1 ? "lb-rank__badge--1" : rank === 2 ? "lb-rank__badge--2" : rank === 3 ? "lb-rank__badge--3" : "lb-rank__badge--n";
+  if (rank === null)
+    return (
+      <span style={{ color: "rgba(255,255,255,0.2)", fontSize: 13 }}>—</span>
+    );
+  const cls =
+    rank === 1
+      ? "lb-rank__badge--1"
+      : rank === 2
+        ? "lb-rank__badge--2"
+        : rank === 3
+          ? "lb-rank__badge--3"
+          : "lb-rank__badge--n";
   return (
     <div className="lb-rank">
       <div className={`lb-rank__badge ${cls}`}>{rank}</div>
-      <span className="lb-rank__suffix">{rank}{rankSuffix(rank)}</span>
+      <span className="lb-rank__suffix">
+        {rank}
+        {rankSuffix(rank)}
+      </span>
     </div>
   );
 }
@@ -123,13 +194,17 @@ function ScoreInput({ value, onChange }) {
   return (
     <div className="lb-score-wrap">
       <input
-        type="number" min={0} max={100}
+        type="number"
+        min={0}
+        max={100}
         value={value ?? ""}
         placeholder="—"
         className="lb-score-input"
-        onChange={e => {
+        onChange={(e) => {
           const v = e.target.value;
-          onChange(v === "" ? null : Math.min(100, Math.max(0, parseInt(v, 10))));
+          onChange(
+            v === "" ? null : Math.min(100, Math.max(0, parseInt(v, 10))),
+          );
         }}
       />
       <span className="lb-score-denom">/100</span>
@@ -142,13 +217,20 @@ function ScoreInput({ value, onChange }) {
 // ─────────────────────────────────────────────────────────────────────────────
 function WinnerModal({ submission, onConfirm, onCancel }) {
   useEffect(() => {
-    const h = e => { if (e.key === "Escape") onCancel(); };
+    const h = (e) => {
+      if (e.key === "Escape") onCancel();
+    };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
   }, [onCancel]);
 
   return (
-    <div className="lb-modal-overlay" onClick={e => { if (e.target === e.currentTarget) onCancel(); }}>
+    <div
+      className="lb-modal-overlay"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onCancel();
+      }}
+    >
       <div className="lb-modal">
         <div className="lb-modal__body">
           <div className="lb-modal__icon">
@@ -158,14 +240,21 @@ function WinnerModal({ submission, onConfirm, onCancel }) {
             <h3 className="lb-modal__title">Confirm Winner Selection?</h3>
             <p className="lb-modal__sub">
               You are about to mark{" "}
-              <strong style={{ color: "#F0F0F0" }}>{submission.studentName}</strong> as the winner for{" "}
-              <strong style={{ color: "#F0F0F0" }}>"{submission.submissionTitle}"</strong>.
-              Any existing winner will be replaced.
+              <strong style={{ color: "#F0F0F0" }}>
+                {submission.studentName}
+              </strong>{" "}
+              as the winner for{" "}
+              <strong style={{ color: "#F0F0F0" }}>
+                "{submission.submissionTitle}"
+              </strong>
+              . Any existing winner will be replaced.
             </p>
           </div>
         </div>
         <div className="lb-modal__footer">
-          <button className="lb-modal__cancel" onClick={onCancel}>Cancel</button>
+          <button className="lb-modal__cancel" onClick={onCancel}>
+            Cancel
+          </button>
           <button className="lb-modal__confirm" onClick={onConfirm}>
             <Ic n="trophy" s={14} c="#fff" /> Confirm Winner
           </button>
@@ -180,22 +269,44 @@ function WinnerModal({ submission, onConfirm, onCancel }) {
 // ─────────────────────────────────────────────────────────────────────────────
 function ViewModal({ submission, rank, onClose }) {
   useEffect(() => {
-    const h = e => { if (e.key === "Escape") onClose(); };
+    const h = (e) => {
+      if (e.key === "Escape") onClose();
+    };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
   }, [onClose]);
 
   return (
-    <div className="lb-modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+    <div
+      className="lb-modal-overlay"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div className="lb-modal lb-modal--wide">
         {/* Header */}
         <div className="lb-view-modal__header">
           <div className="lb-view-modal__student">
-            <div className="lb-avatar" style={{ background: `${submission.color}22`, color: submission.color }}>
+            <div
+              className="lb-avatar"
+              style={{
+                background: `${submission.color}22`,
+                color: submission.color,
+              }}
+            >
               {initials(submission.studentName)}
             </div>
             <div>
-              <div style={{ fontWeight: 700, fontSize: 15, color: "#F0F0F0", display: "flex", alignItems: "center", gap: 8 }}>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: 15,
+                  color: "#F0F0F0",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
                 {submission.studentName}
                 {submission.isWinner && (
                   <span className="lb-winner-tag">
@@ -203,7 +314,9 @@ function ViewModal({ submission, rank, onClose }) {
                   </span>
                 )}
               </div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{submission.studentEmail}</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
+                {submission.studentEmail}
+              </div>
             </div>
           </div>
           <button className="lb-view-modal__close" onClick={onClose}>
@@ -217,15 +330,26 @@ function ViewModal({ submission, rank, onClose }) {
             <div className="lb-view-card__label">
               <Ic n="desc" s={11} c="rgba(255,255,255,0.3)" /> Submission Title
             </div>
-            <div className="lb-view-card__value">{submission.submissionTitle}</div>
+            <div className="lb-view-card__value">
+              {submission.submissionTitle}
+            </div>
           </div>
 
           <div className="lb-view-meta-grid">
             {[
-              { label: "Score",        value: submission.score !== null ? `${submission.score} / 100` : "Not scored" },
-              { label: "Current Rank", value: rank !== null ? `#${rank}` : "Unranked" },
-              { label: "Submitted",    value: submission.submittedAt },
-            ].map(item => (
+              {
+                label: "Score",
+                value:
+                  submission.score !== null
+                    ? `${submission.score} / 100`
+                    : "Not scored",
+              },
+              {
+                label: "Current Rank",
+                value: rank !== null ? `#${rank}` : "Unranked",
+              },
+              { label: "Submitted", value: submission.submittedAt },
+            ].map((item) => (
               <div key={item.label} className="lb-view-card">
                 <div className="lb-view-card__label">{item.label}</div>
                 <div className="lb-view-card__value">{item.value}</div>
@@ -234,7 +358,15 @@ function ViewModal({ submission, rank, onClose }) {
           </div>
 
           <div>
-            <div className="lb-view-card__label" style={{ marginBottom: 8, display: "flex", alignItems: "center", gap: 5 }}>
+            <div
+              className="lb-view-card__label"
+              style={{
+                marginBottom: 8,
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+              }}
+            >
               <Ic n="img" s={11} c="rgba(255,255,255,0.3)" /> Submission Preview
             </div>
             <div className="lb-view-preview">
@@ -245,7 +377,13 @@ function ViewModal({ submission, rank, onClose }) {
         </div>
 
         <div className="lb-view-modal__footer">
-          <button className="lb-modal__confirm" style={{ maxWidth: 120 }} onClick={onClose}>Close</button>
+          <button
+            className="lb-modal__confirm"
+            style={{ maxWidth: 120 }}
+            onClick={onClose}
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -270,17 +408,26 @@ function Toast({ message, onClose }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // SUBMISSIONS TABLE
 // ─────────────────────────────────────────────────────────────────────────────
-function SubmissionsTable({ submissions, onScoreChange, onView, onMarkWinner }) {
-  const scored  = [...submissions].filter(s => s.score !== null).sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+function SubmissionsTable({
+  submissions,
+  onScoreChange,
+  onView,
+  onMarkWinner,
+}) {
+  const scored = [...submissions]
+    .filter((s) => s.score !== null)
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
   const rankMap = new Map();
   scored.forEach((s, i) => rankMap.set(s.id, i + 1));
-  const sorted  = [...scored, ...submissions.filter(s => s.score === null)];
+  const sorted = [...scored, ...submissions.filter((s) => s.score === null)];
 
   if (submissions.length === 0) {
     return (
       <div className="lb-table-wrap">
         <div className="lb-empty">
-          <div className="lb-empty__icon"><Ic n="inbox" s={36} c="rgba(255,255,255,0.15)" /></div>
+          <div className="lb-empty__icon">
+            <Ic n="inbox" s={36} c="rgba(255,255,255,0.15)" />
+          </div>
           No submissions yet — they will appear here once the event closes.
         </div>
       </div>
@@ -301,17 +448,22 @@ function SubmissionsTable({ submissions, onScoreChange, onView, onMarkWinner }) 
           </tr>
         </thead>
         <tbody>
-          {sorted.map(sub => {
+          {sorted.map((sub) => {
             const rank = rankMap.get(sub.id) ?? null;
             return (
               <tr key={sub.id} className={sub.isWinner ? "lb-row--winner" : ""}>
                 {/* Rank */}
-                <td><RankCell rank={rank} isWinner={sub.isWinner} /></td>
+                <td>
+                  <RankCell rank={rank} isWinner={sub.isWinner} />
+                </td>
 
                 {/* Student */}
                 <td>
                   <div className="lb-student">
-                    <div className="lb-avatar" style={{ background: `${sub.color}22`, color: sub.color }}>
+                    <div
+                      className="lb-avatar"
+                      style={{ background: `${sub.color}22`, color: sub.color }}
+                    >
                       {initials(sub.studentName)}
                     </div>
                     <div>
@@ -323,7 +475,9 @@ function SubmissionsTable({ submissions, onScoreChange, onView, onMarkWinner }) 
                           </span>
                         )}
                       </div>
-                      <div className="lb-student__email">{sub.studentEmail}</div>
+                      <div className="lb-student__email">
+                        {sub.studentEmail}
+                      </div>
                     </div>
                   </div>
                 </td>
@@ -334,28 +488,46 @@ function SubmissionsTable({ submissions, onScoreChange, onView, onMarkWinner }) 
                     <div className="lb-sub-title__icon">
                       <Ic n="file" s={13} c="rgba(255,255,255,0.3)" />
                     </div>
-                    <span className="lb-sub-title__text">{sub.submissionTitle}</span>
+                    <span className="lb-sub-title__text">
+                      {sub.submissionTitle}
+                    </span>
                   </div>
                 </td>
 
                 {/* Score */}
-                <td><ScoreInput value={sub.score} onChange={v => onScoreChange(sub.id, v)} /></td>
+                <td>
+                  <ScoreInput
+                    value={sub.score}
+                    onChange={(v) => onScoreChange(sub.id, v)}
+                  />
+                </td>
 
                 {/* Status */}
-                <td><Pill status={sub.status} /></td>
+                <td>
+                  <Pill status={sub.status} />
+                </td>
 
                 {/* Actions */}
                 <td>
                   <div className="lb-row-actions">
-                    <button className="lb-action-btn" onClick={() => onView(sub)}>
+                    <button
+                      className="lb-action-btn"
+                      onClick={() => onView(sub)}
+                    >
                       <Ic n="eye" s={13} c="currentColor" /> View
                     </button>
                     {!sub.isWinner ? (
-                      <button className="lb-action-btn lb-action-btn--winner" onClick={() => onMarkWinner(sub)}>
+                      <button
+                        className="lb-action-btn lb-action-btn--winner"
+                        onClick={() => onMarkWinner(sub)}
+                      >
                         <Ic n="trophy" s={13} c="currentColor" /> Set Winner
                       </button>
                     ) : (
-                      <button className="lb-action-btn lb-action-btn--confirmed" disabled>
+                      <button
+                        className="lb-action-btn lb-action-btn--confirmed"
+                        disabled
+                      >
                         <Ic n="check" s={13} c="currentColor" /> Winner
                       </button>
                     )}
@@ -374,17 +546,75 @@ function SubmissionsTable({ submissions, onScoreChange, onView, onMarkWinner }) 
 // MAIN PAGE
 // ─────────────────────────────────────────────────────────────────────────────
 export default function ManageLeaderboardPage() {
-  const [selectedEventId, setSelectedEventId] = useState(EVENTS[0].id);
-  const [submissions,     setSubmissions]      = useState(SEED_SUBMISSIONS);
-  const [winnerTarget,    setWinnerTarget]     = useState(null);
-  const [viewTarget,      setViewTarget]       = useState(null);
-  const [toast,           setToast]            = useState(null);
-  const [recalcFlash,     setRecalcFlash]      = useState(false);
+  const [events, setEvents] = useState([]);
+  const [selectedEventId, setSelectedEventId] = useState(null);
+  const [submissions, setSubmissions] = useState([]);
+  const [winnerTarget, setWinnerTarget] = useState(null);
+  const [viewTarget, setViewTarget] = useState(null);
+  const [toast, setToast] = useState(null);
+  const [recalcFlash, setRecalcFlash] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const selectedEvent = EVENTS.find(e => e.id === selectedEventId);
-  const eventSubs     = useMemo(
-    () => submissions.filter(s => s.eventId === selectedEventId),
-    [submissions, selectedEventId]
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadData() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const eventData = await fetchEvents();
+        if (!isMounted) return;
+
+        setEvents(eventData);
+        setSelectedEventId(eventData[0]?.id ?? null);
+      } catch (err) {
+        if (!isMounted) return;
+        console.error("Failed to load events:", err);
+        setError(err.message || "Unable to load events from the backend.");
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (selectedEventId === null) return;
+
+    let isMounted = true;
+
+    async function loadLeaderboard() {
+      try {
+        setLoading(true);
+        const data = await fetchLeaderboardForEvent(selectedEventId);
+        if (!isMounted) return;
+        setSubmissions(data);
+        setError("");
+      } catch (err) {
+        if (!isMounted) return;
+        console.error("Failed to load leaderboard:", err);
+        setError(err.message || "Unable to load leaderboard results.");
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    loadLeaderboard();
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedEventId]);
+
+  const selectedEvent = events.find((e) => e.id === selectedEventId);
+  const eventSubs = useMemo(
+    () => submissions.filter((s) => s.eventId === selectedEventId),
+    [submissions, selectedEventId],
   );
 
   function showToast(msg) {
@@ -394,25 +624,86 @@ export default function ManageLeaderboardPage() {
 
   // 🔌 API CONNECTION: wire up score update
   // e.g. await fetch(`/api/submissions/${id}/score`, { method: "PATCH", body: JSON.stringify({ score }) })
-  function handleScoreChange(id, score) {
-    setSubmissions(prev => prev.map(s =>
-      s.id === id
-        ? { ...s, score, status: score !== null && s.status === "Pending" ? "Reviewed" : s.status }
-        : s
-    ));
+  async function handleScoreChange(id, score) {
+    const current = submissions.find((s) => s.id === id);
+    if (!current) return;
+
+    const nextStatus =
+      score === null
+        ? "Pending"
+        : current.status === "Winner"
+          ? "Winner"
+          : "Reviewed";
+
+    setSubmissions((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, score, status: nextStatus } : s)),
+    );
+
+    try {
+      await updateSubmission(id, {
+        title: current.submissionTitle,
+        status: nextStatus,
+        points: score ?? 0,
+        rank: current.rank ?? 0,
+      });
+      showToast("Score updated successfully.");
+    } catch (err) {
+      console.error("Failed to update submission score:", err);
+      setSubmissions((prev) => prev.map((s) => (s.id === id ? current : s)));
+      setError(err.message || "Unable to save the score change.");
+    }
   }
 
   // 🔌 API CONNECTION: wire up winner selection
   // e.g. await fetch(`/api/submissions/${winnerTarget.id}/winner`, { method: "POST" })
-  function confirmWinner() {
+  async function confirmWinner() {
     if (!winnerTarget) return;
-    setSubmissions(prev => prev.map(s =>
-      s.eventId === selectedEventId
-        ? { ...s, isWinner: s.id === winnerTarget.id, status: s.id === winnerTarget.id ? "Winner" : s.status === "Winner" ? "Reviewed" : s.status }
-        : s
-    ));
-    showToast(`${winnerTarget.studentName} marked as winner.`);
-    setWinnerTarget(null);
+
+    try {
+      const eventEntries = submissions.filter(
+        (s) => s.eventId === selectedEventId,
+      );
+
+      await Promise.all(
+        eventEntries.map((entry) =>
+          updateSubmission(entry.id, {
+            title: entry.submissionTitle,
+            status:
+              entry.id === winnerTarget.id
+                ? "Winner"
+                : entry.status === "Winner"
+                  ? "Reviewed"
+                  : entry.status,
+            points: entry.score ?? 0,
+            rank: entry.rank ?? 0,
+          }),
+        ),
+      );
+
+      setSubmissions((prev) =>
+        prev.map((s) =>
+          s.eventId === selectedEventId
+            ? {
+                ...s,
+                isWinner: s.id === winnerTarget.id,
+                status:
+                  s.id === winnerTarget.id
+                    ? "Winner"
+                    : s.status === "Winner"
+                      ? "Reviewed"
+                      : s.status,
+              }
+            : s,
+        ),
+      );
+
+      showToast(`${winnerTarget.studentName} marked as winner.`);
+      setWinnerTarget(null);
+      setError("");
+    } catch (err) {
+      console.error("Failed to update winner selection:", err);
+      setError(err.message || "Unable to save the winner selection.");
+    }
   }
 
   function handleRecalculate() {
@@ -422,30 +713,39 @@ export default function ManageLeaderboardPage() {
   }
 
   const rankMap = useMemo(() => {
-    const scored = eventSubs.filter(s => s.score !== null).sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+    const scored = eventSubs
+      .filter((s) => s.score !== null)
+      .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
     const map = new Map();
     scored.forEach((s, i) => map.set(s.id, i + 1));
     return map;
   }, [eventSubs]);
 
-  const reviewed   = eventSubs.filter(s => s.status !== "Pending").length;
-  const pending    = eventSubs.filter(s => s.status === "Pending").length;
-  const scoredSubs = eventSubs.filter(s => s.score !== null);
-  const avgScore   = scoredSubs.length > 0
-    ? Math.round(scoredSubs.reduce((a, s) => a + (s.score ?? 0), 0) / scoredSubs.length)
-    : null;
-  const winner = eventSubs.find(s => s.isWinner);
+  const reviewed = eventSubs.filter((s) => s.status !== "Pending").length;
+  const pending = eventSubs.filter((s) => s.status === "Pending").length;
+  const scoredSubs = eventSubs.filter((s) => s.score !== null);
+  const avgScore =
+    scoredSubs.length > 0
+      ? Math.round(
+          scoredSubs.reduce((a, s) => a + (s.score ?? 0), 0) /
+            scoredSubs.length,
+        )
+      : null;
+  const winner = eventSubs.find((s) => s.isWinner);
 
   const STATS = [
-    { icon: "file",  label: "Total Submissions", value: eventSubs.length              },
-    { icon: "check", label: "Reviewed",          value: reviewed                      },
-    { icon: "clock", label: "Pending Review",    value: pending                       },
-    { icon: "star",  label: "Avg Score",         value: avgScore !== null ? avgScore : "—" },
+    { icon: "file", label: "Total Submissions", value: eventSubs.length },
+    { icon: "check", label: "Reviewed", value: reviewed },
+    { icon: "clock", label: "Pending Review", value: pending },
+    {
+      icon: "star",
+      label: "Avg Score",
+      value: avgScore !== null ? avgScore : "—",
+    },
   ];
 
   return (
     <div className="lb-root">
-
       {/* ── Page header */}
       <div className="lb-header lb-anim" style={{ animationDelay: "0ms" }}>
         <div className="lb-header__left">
@@ -454,7 +754,9 @@ export default function ManageLeaderboardPage() {
             Admin · Leaderboard
           </p>
           <h1 className="lb-header__title">Leaderboard Management</h1>
-          <p className="lb-header__sub">Review submissions and assign competition scores.</p>
+          <p className="lb-header__sub">
+            Review submissions and assign competition scores.
+          </p>
         </div>
 
         <div className="lb-header__right">
@@ -464,37 +766,83 @@ export default function ManageLeaderboardPage() {
               <select
                 className="lb-event-select"
                 value={selectedEventId}
-                onChange={e => setSelectedEventId(Number(e.target.value))}
+                onChange={(e) => setSelectedEventId(Number(e.target.value))}
               >
-                {EVENTS.map(ev => (
-                  <option key={ev.id} value={ev.id} style={{ background: "#1A1A1A" }}>{ev.title}</option>
+                {events.map((ev) => (
+                  <option
+                    key={ev.id}
+                    value={ev.id}
+                    style={{ background: "#1A1A1A" }}
+                  >
+                    {ev.title}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
           <div className="lb-event-date-pill">
             <Ic n="cal" s={13} c="rgba(255,255,255,0.4)" />
-            {selectedEvent?.date}
+            {selectedEvent?.date ?? "—"}
           </div>
         </div>
       </div>
 
+      {error && (
+        <div
+          className="lb-winner-banner lb-anim"
+          style={{
+            animationDelay: "40ms",
+            background: "rgba(248,113,113,0.08)",
+            border: "1px solid rgba(248,113,113,0.2)",
+          }}
+        >
+          <div className="lb-winner-banner__icon">
+            <Ic n="clock" s={18} c="#F87171" />
+          </div>
+          <div>
+            <div
+              className="lb-winner-banner__label"
+              style={{ color: "#FCA5A5" }}
+            >
+              Live data notice
+            </div>
+            <div style={{ color: "rgba(255,255,255,0.75)" }}>{error}</div>
+          </div>
+        </div>
+      )}
+
       {/* ── Winner banner */}
       {winner && (
-        <div className="lb-winner-banner lb-anim" style={{ animationDelay: "50ms" }}>
+        <div
+          className="lb-winner-banner lb-anim"
+          style={{ animationDelay: "50ms" }}
+        >
           <div className="lb-winner-banner__icon">
             <Ic n="trophy" s={20} c="#fff" />
           </div>
           <div>
             <div className="lb-winner-banner__label">Current Winner</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <span className="lb-winner-banner__name">{winner.studentName}</span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                flexWrap: "wrap",
+              }}
+            >
+              <span className="lb-winner-banner__name">
+                {winner.studentName}
+              </span>
               <span style={{ color: "rgba(255,255,255,0.3)" }}>·</span>
-              <span className="lb-winner-banner__title">{winner.submissionTitle}</span>
+              <span className="lb-winner-banner__title">
+                {winner.submissionTitle}
+              </span>
               {winner.score !== null && (
                 <>
                   <span style={{ color: "rgba(255,255,255,0.3)" }}>·</span>
-                  <span className="lb-winner-banner__score">{winner.score} / 100</span>
+                  <span className="lb-winner-banner__score">
+                    {winner.score} / 100
+                  </span>
                 </>
               )}
             </div>
@@ -507,7 +855,7 @@ export default function ManageLeaderboardPage() {
 
       {/* ── Stats */}
       <div className="lb-stats lb-anim" style={{ animationDelay: "80ms" }}>
-        {STATS.map(s => (
+        {STATS.map((s) => (
           <div key={s.label} className="lb-stat">
             <div className="lb-stat__icon">
               <Ic n={s.icon} s={18} c="#FE4081" />
@@ -521,7 +869,10 @@ export default function ManageLeaderboardPage() {
       </div>
 
       {/* ── Table section */}
-      <div className="lb-table-section lb-anim" style={{ animationDelay: "120ms" }}>
+      <div
+        className="lb-table-section lb-anim"
+        style={{ animationDelay: "120ms" }}
+      >
         <div className="lb-table-toolbar">
           <div className="lb-table-toolbar__left">
             <Ic n="bar" s={16} c="rgba(255,255,255,0.4)" />
@@ -529,7 +880,9 @@ export default function ManageLeaderboardPage() {
             <span className="lb-table-toolbar__count">{eventSubs.length}</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span className="lb-table-toolbar__hint">Edit scores inline, then press</span>
+            <span className="lb-table-toolbar__hint">
+              Edit scores inline, then press
+            </span>
             <button
               className={`lb-recalc-btn${recalcFlash ? " lb-recalc-btn--flash" : ""}`}
               onClick={handleRecalculate}
@@ -539,30 +892,47 @@ export default function ManageLeaderboardPage() {
           </div>
         </div>
 
-        <SubmissionsTable
-          submissions={eventSubs}
-          onScoreChange={handleScoreChange}
-          onView={s => setViewTarget(s)}
-          onMarkWinner={s => setWinnerTarget(s)}
-        />
+        {loading ? (
+          <div className="lb-empty">Loading leaderboard data…</div>
+        ) : (
+          <SubmissionsTable
+            submissions={eventSubs}
+            onScoreChange={handleScoreChange}
+            onView={(s) => setViewTarget(s)}
+            onMarkWinner={(s) => setWinnerTarget(s)}
+          />
+        )}
 
         <div className="lb-hint-row">
           <span className="lb-hint-row__text">
             Rankings are auto-sorted by score. Click{" "}
-            <strong style={{ color: "rgba(255,255,255,0.5)" }}>Update Rankings</strong> to commit changes.
+            <strong style={{ color: "rgba(255,255,255,0.5)" }}>
+              Update Rankings
+            </strong>{" "}
+            to commit changes.
           </span>
           {scoredSubs.length > 0 && (
-            <span className="lb-hint-row__scored">{scoredSubs.length} of {eventSubs.length} scored</span>
+            <span className="lb-hint-row__scored">
+              {scoredSubs.length} of {eventSubs.length} scored
+            </span>
           )}
         </div>
       </div>
 
       {/* ── Modals */}
       {winnerTarget && (
-        <WinnerModal submission={winnerTarget} onConfirm={confirmWinner} onCancel={() => setWinnerTarget(null)} />
+        <WinnerModal
+          submission={winnerTarget}
+          onConfirm={confirmWinner}
+          onCancel={() => setWinnerTarget(null)}
+        />
       )}
       {viewTarget && (
-        <ViewModal submission={viewTarget} rank={rankMap.get(viewTarget.id) ?? null} onClose={() => setViewTarget(null)} />
+        <ViewModal
+          submission={viewTarget}
+          rank={rankMap.get(viewTarget.id) ?? null}
+          onClose={() => setViewTarget(null)}
+        />
       )}
 
       {/* ── Toast */}

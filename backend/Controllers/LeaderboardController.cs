@@ -36,16 +36,18 @@ namespace backend.Controllers
             // 2. Map to DTO and calculate Rank
             var leaderboard = results.Select((s, index) => new LeaderboardTotalReadDTO
             {
+                Id = s.Id,
+                EventId = s.eventId,
                 // Student Info (Accessing through navigation property)
                 Student_name = s.Student?.fullname ?? "Unknown",
                 Student_email = s.Student?.User?.Email,
-                
+
                 // Ranking (index starts at 0, so we add 1)
                 Rank = index + 1,
-                
+
                 // Submission Info
                 Score = s.points,
-                Submission_title = s.title, 
+                Submission_title = s.title,
                 Review_status = s.status
             }).ToList();
 

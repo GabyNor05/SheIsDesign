@@ -1,5 +1,69 @@
 const API_BASE = "http://localhost:5160/api";
 
+const STATUS_COLORS = {
+  approved: "#22C55E",
+  pending: "#FBBF24",
+  rejected: "#F87171",
+};
+
+function getInitials(name = "", email = "") {
+  const source = (name || email || "").trim();
+  if (!source) return "?";
+
+  const parts = source.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+function mapParticipant(item) {
+  const status = (item.status || "pending").toLowerCase();
+  const type = (item.type || "student").toLowerCase();
+
+  return {
+    id: item.id,
+    type,
+    initials: item.initials || getInitials(item.name, item.email),
+    name: item.name || item.fullName || "Unknown participant",
+    email: item.email || "",
+    institution: item.institution || "",
+    field: item.field || item.jobTitle || "",
+    status,
+    joined: item.joined || item.dateCreated || "",
+    submissions: Number(item.submissions || 0),
+    points: Number(item.points || 0),
+    color: item.color || STATUS_COLORS[status] || "#a78bfa",
+  };
+}
+
+export async function fetchParticipantsForAdmin() {
+  const response = await fetch(`${API_BASE}/Participant`);
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || "Failed to fetch participants");
+  }
+
+  const data = await response.json();
+  return data.map(mapParticipant);
+}
+
+export async function updateParticipantStatus(userId, status) {
+  const response = await fetch(`${API_BASE}/Participant/${userId}/status`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || "Failed to update participant status");
+  }
+
+  return response.json();
+}
+
 // Fetches the full participant profile for a given userId.
 // Returns: { name, email, university, totalEventsJoined, totalScore, mostRecentEventTitle, mostRecentEventDate }
 export async function fetchParticipantProfile(userId) {
@@ -14,7 +78,9 @@ export async function fetchParticipantProfile(userId) {
 // Fetches the participant's status within a specific event.
 // Returns: { status, eventTitle }
 async function fetchParticipantEventStatus(userId, eventId) {
-  const response = await fetch(`${API_BASE}/Participant/${userId}/event/${eventId}`);
+  const response = await fetch(
+    `${API_BASE}/Participant/${userId}/event/${eventId}`,
+  );
   if (!response.ok) {
     const text = await response.text();
     throw new Error(text || "Failed to fetch participant event status");

@@ -8,7 +8,7 @@ namespace SheDesign.Data
     {
         public SheDesignContext(DbContextOptions<SheDesignContext> options) : base(options)
         {
-            
+
         }
 
         public DbSet<User> Users { get; set; }
@@ -113,7 +113,8 @@ namespace SheDesign.Data
             modelBuilder.Entity<Submission>()
                 .HasOne(s => s.Student)
                 .WithMany(m => m.Submissions)
-                .HasForeignKey(s => s.studentId);
+                .HasForeignKey(s => s.studentId)
+                .IsRequired(false);
 
             // IndustryProfessional relationship
             modelBuilder.Entity<IndustryProfessional>()

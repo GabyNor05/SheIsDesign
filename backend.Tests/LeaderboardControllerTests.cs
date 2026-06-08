@@ -62,33 +62,33 @@ namespace SheDesign.Tests
             var student1 = new Student { Id = 1, fullname = "Alice Johnson" };
             var student2 = new Student { Id = 2, fullname = "Bob Smith" };
 
-            var sub1 = new Submission 
-            { 
-                Id = 10, 
-                eventId = targetEventId, 
-                title = "Alice Entry", 
-                points = 85, 
+            var sub1 = new Submission
+            {
+                Id = 10,
+                eventId = targetEventId,
+                title = "Alice Entry",
+                points = 85,
                 rank = 2, // Current database rank value
-                Student = student1 
-            };
-            
-            var sub2 = new Submission 
-            { 
-                Id = 11, 
-                eventId = targetEventId, 
-                title = "Bob Entry", 
-                points = 98, 
-                rank = 5, // Higher database rank value, should come first based on your OrderByDescending
-                Student = student2 
+                Student = student1
             };
 
-            var subOtherEvent = new Submission 
-            { 
-                Id = 12, 
+            var sub2 = new Submission
+            {
+                Id = 11,
+                eventId = targetEventId,
+                title = "Bob Entry",
+                points = 98,
+                rank = 5, // Higher database rank value, should come first based on your OrderByDescending
+                Student = student2
+            };
+
+            var subOtherEvent = new Submission
+            {
+                Id = 12,
                 eventId = 999, // Different event entirely
-                title = "Charlie Entry", 
-                points = 100, 
-                rank = 10 
+                title = "Charlie Entry",
+                points = 100,
+                rank = 10
             };
 
             _context.Submission.AddRange(sub1, sub2, subOtherEvent);
@@ -109,6 +109,8 @@ namespace SheDesign.Tests
             var firstPlace = leaderboard[0];
             var secondPlace = leaderboard[1];
 
+            Assert.Equal(11, firstPlace.Id);
+            Assert.Equal(targetEventId, firstPlace.EventId);
             Assert.Equal("Bob Smith", firstPlace.Student_name);
             Assert.Equal(98, firstPlace.Score);
             Assert.Equal(1, firstPlace.Rank); // Procedural index math (0 + 1)
@@ -123,12 +125,12 @@ namespace SheDesign.Tests
         {
             // Arrange
             int targetEventId = 1;
-            var subWithoutStudent = new Submission 
-            { 
-                Id = 20, 
-                eventId = targetEventId, 
-                title = "Orphaned Submission", 
-                points = 70, 
+            var subWithoutStudent = new Submission
+            {
+                Id = 20,
+                eventId = targetEventId,
+                title = "Orphaned Submission",
+                points = 70,
                 rank = 1,
                 Student = null // Simulating missing relational data
             };
@@ -145,7 +147,7 @@ namespace SheDesign.Tests
 
             Assert.Single(leaderboard);
             // Confirms your null-coalescing operator logic (?? "Unknown") works smoothly
-            Assert.Equal("Unknown", leaderboard[0].Student_name); 
+            Assert.Equal("Unknown", leaderboard[0].Student_name);
             Assert.Null(leaderboard[0].Student_email);
         }
     }
