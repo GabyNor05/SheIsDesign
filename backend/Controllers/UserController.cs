@@ -92,7 +92,7 @@ namespace backend.Controllers
                 Email = dto.Email,
                 PasswordHash = hash,
                 DateCreated = DateTime.UtcNow,
-                Role = Role.User
+                Role = "User"
             };
 
             _context.Users.Add(user);
@@ -160,10 +160,10 @@ namespace backend.Controllers
                 isNewUser = true;
                 user = new User
                 {
-                    Email = email,
+                    Email        = email,
                     PasswordHash = string.Empty,
-                    DateCreated = DateTime.UtcNow,
-                    Role = Role.User
+                    DateCreated  = DateTime.UtcNow,
+                    Role         = "User"
                 };
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
