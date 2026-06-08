@@ -265,8 +265,20 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("category")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("eventId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("image_file_link")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("points")
                         .HasColumnType("integer");
