@@ -333,7 +333,7 @@ body {
     transition: all 0.18s;
     border: 1px solid var(--border);
     background: var(--surface);
-    color: var(--text-second);
+    color: #fff;
 }
 
 .quick-actions__btn:hover {

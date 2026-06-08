@@ -2,7 +2,7 @@ const API_BASE = "http://localhost:5160/api";
 
 // Fetches the full participant profile for a given userId.
 // Returns: { name, email, university, totalEventsJoined, totalScore, mostRecentEventTitle, mostRecentEventDate }
-async function fetchParticipantProfile(userId) {
+export async function fetchParticipantProfile(userId) {
   const response = await fetch(`${API_BASE}/Participant/${userId}`);
   if (!response.ok) {
     const text = await response.text();

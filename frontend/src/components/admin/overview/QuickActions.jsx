@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 // import emailjs from '@emailjs/browser';
 import { Plus, Handshake } from "@phosphor-icons/react";
 import { FiBarChart2 } from "react-icons/fi";
@@ -7,6 +8,8 @@ import EventForm from "../event/EventForm";
 import InviteJudgeForm from "../event/InviteJudgeForm";
 import Modal from "../Modal";
 import { T } from "../theme";
+import { Icon } from "./Icon";
+import "../../../pages/admin/template/AdminDashboardV2.css";
 
 
 const QUICK_ACTIONS = [
@@ -15,8 +18,9 @@ const QUICK_ACTIONS = [
   { id: 3, icon: <FiBarChart2 size={16} />, label: "View Leaderboard" },
 ];
 
-function QuickActions({ setActiveTab }) {
+function QuickActions() {
   const [modal, setModal] = useState(null);
+  const navigate = useNavigate();
 
   const handleCreate = (eventData) => {
     console.log("Creating event:", eventData);
@@ -39,38 +43,26 @@ function QuickActions({ setActiveTab }) {
         setModal("invite");
         break;
       case 3:
-        setActiveTab("Leaderboard");
+        navigate("/admin/leaderboard");
         break;
       default:
         break;
     }
   };
   return (
-    <div style={{ display: "flex", gap: 10, flexWrap: "wrap",  }}>
+    
+    <div className="quick-actions">
       {QUICK_ACTIONS.map((action, i) => (
-        <button key={action.id} style={{
-          display: "flex", alignItems: "center", gap: 6,
-          background: i === 0 ? T.pink : T.surface,
-          border: `1px solid ${i === 0 ? T.pink : T.border}`,
-          borderRadius: "16777200px", padding: "8px 16px", cursor: "pointer",
-          color: i === 0 ? "#fff" : T.textSecond,
-          fontFamily: "Poppins", fontSize: 13.5, fontWeight: 500,
-          transition: "all 0.18s",
-        }}
-          onMouseEnter={e => {
-            if (i !== 0) { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.borderColor = T.borderHi; e.currentTarget.style.color = T.textPrimary; }
-            else { e.currentTarget.style.opacity = "0.85"; }
-          }}
-          onMouseLeave={e => {
-            if (i !== 0) { e.currentTarget.style.background = T.surface; e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textSecond; }
-            else { e.currentTarget.style.opacity = "1"; }
-          }}
+        <button 
+          key={action.id}
+          className={`quick-actions__btn${i === 0 ? " quick-actions__btn--primary" : ""}`}
           onClick={() => buttonAction(action.id)}
         >
-          <div>{action.icon}</div>
+          <Icon name={action.icon} size={15} color={i === 0 ? "#fff" : "var(--text-second)"} />
           {action.label}
         </button>
       ))}
+
 
       {modal === "create" && (
         <Modal onClose={() => setModal(null)} title="Create New Event" wide>
@@ -82,8 +74,9 @@ function QuickActions({ setActiveTab }) {
           <InviteJudgeForm onSave={handleInvite} onClose={() => setModal(null)} />
         </Modal>
       )}
+      </div>
 
-    </div>
+   
 
   );
 

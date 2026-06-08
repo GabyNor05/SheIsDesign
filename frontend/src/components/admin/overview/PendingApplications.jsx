@@ -1,9 +1,10 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {
   Check, X
 } from "@phosphor-icons/react";
 import { RxPeople } from "react-icons/rx";
 import { T } from "../theme";
+import {fetchParticipantProfile} from "../../../services/participantService";
 import SectionHeader from "../SectionHeader";
 import Card from "./Card";
 
@@ -107,50 +108,104 @@ function PendingApplications() {
   const [tab, setTab] = useState("students");
   const total = PENDING_STUDENTS.length + PENDING_PROFESSIONALS.length;
   const list  = tab === "students" ? PENDING_STUDENTS : PENDING_PROFESSIONALS;
+  const [participants, setParticipants] = useState([]);
+   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  return (
-    <Card style={{width: "100%"}}>
-      <SectionHeader
-        icon= {<RxPeople size = {16} />}
-        title="Pending Applications"
-        badge={total}
-        action="View all"
-      />
+  const loadParticipants = async () => {
+    try{
+      setLoading(true);
+      const participants = await fetchParticipantProfile();
+      console.log("Fetched participants:", participants);
+      setParticipants(participants);
+      setError(null);
 
-      {/* Tabs */}
-      <div style={{ width: "422.39px", display: "flex", gap: 0, marginBottom: 16, borderBottom: `1px solid ${T.border}` }}>
-        {[
-          { key: "students",      label: "Students",             count: PENDING_STUDENTS.length },
-          { key: "professionals", label: "Industry Professionals",count: PENDING_PROFESSIONALS.length },
-        ].map(t => (
-          <button key={t.key} onClick={() => setTab(t.key)} style={{
-            background: "none", border: "none", cursor: "pointer",
-            padding: "10px 16px 10px 0", marginRight: 20,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: tab === t.key ? 600 : 400,
-            color: tab === t.key ? T.textPrimary : T.textSecond,
-            borderBottom: `2px solid ${tab === t.key ? T.pink : "transparent"}`,
-            transition: "all 0.15s", display: "flex", alignItems: "center", gap: 7,
-          }}>
-            {t.label}
-            <span style={{
-              fontSize: 11, fontWeight: 700,
-              background: tab === t.key ? T.pink : T.surfaceHi,
-              color: tab === t.key ? "#fff" : T.textMuted,
-              borderRadius: 20, padding: "1px 7px",
-              transition: "all 0.15s",
+    } catch (err){
+      console.error("Error fetching participants:", err);
+      setError(err.message);
+      setParticipants([]);
+    } finally {
+      setLoading(false);
+    }
+    }
+
+    useEffect(() => {
+      loadParticipants();
+    }, []);
+  if (loading) {
+    return (
+      <Card style={{width: "100%"}}>
+        <SectionHeader
+          icon={<RxPeople size={16} />}
+          title="Pending Applications"
+          badge="Loading..."
+        />
+        <div style={{ padding: "20px", textAlign: "center", color: T.textMuted }}>
+          Loading applications...
+        </div>
+      </Card>
+    );
+  }
+  if (error) {
+    return (
+      <Card className="w-full">
+        <SectionHeader
+          icon={<RxPeople size={16} />}
+          title="Pending Applications"
+          badge="Loading..."
+        />
+        <div style={{ padding: "20px", textAlign: "center", color: T.closedRed }}>
+          Failed to load applications: {error}
+        </div>
+      </Card>
+    );
+  }
+
+
+    return (
+      <Card style={{width: "100%"}}>
+        <SectionHeader
+          icon= {<RxPeople size = {16} />}
+          title="Pending Applications"
+          badge={total}
+          action="View all"
+        />
+  
+        {/* Tabs */}
+        <div style={{ width: "422.39px", display: "flex", gap: 0, marginBottom: 16, borderBottom: `1px solid ${T.border}` }}>
+          {[
+            { key: "students",      label: "Students",             count: PENDING_STUDENTS.length },
+            { key: "professionals", label: "Industry Professionals",count: PENDING_PROFESSIONALS.length },
+          ].map(t => (
+            <button key={t.key} onClick={() => setTab(t.key)} style={{
+              background: "none", border: "none", cursor: "pointer",
+              padding: "10px 16px 10px 0", marginRight: 20,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, fontWeight: tab === t.key ? 600 : 400,
+              color: tab === t.key ? T.textPrimary : T.textSecond,
+              borderBottom: `2px solid ${tab === t.key ? T.pink : "transparent"}`,
+              transition: "all 0.15s", display: "flex", alignItems: "center", gap: 7,
             }}>
-              {t.count}
-            </span>
-          </button>
+              {t.label}
+              <span style={{
+                fontSize: 11, fontWeight: 700,
+                background: tab === t.key ? T.pink : T.surfaceHi,
+                color: tab === t.key ? "#fff" : T.textMuted,
+                borderRadius: 20, padding: "1px 7px",
+                transition: "all 0.15s",
+              }}>
+                {t.count}
+              </span>
+            </button>
+          ))}
+        </div>
+  
+        {/* List */}
+        {list.map((person, i) => (
+          <ApplicantRow key={person.id} person={person} isLast={i === list.length - 1} />
         ))}
-      </div>
+      </Card>
+    );
+  }
 
-      {/* List */}
-      {list.map((person, i) => (
-        <ApplicantRow key={person.id} person={person} isLast={i === list.length - 1} />
-      ))}
-    </Card>
-  );
-}
 
 export default PendingApplications;

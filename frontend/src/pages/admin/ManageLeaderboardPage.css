@@ -268,17 +268,15 @@
     background: #1A1A1A;
     border: 1px solid #2E2E2E;
     border-radius: 14px;
-    padding: 24px 18px;
+
     display: flex;
-    flex-direction: column;
-    /* ✅ stack vertically */
-    align-items: center;
-    /* ✅ centre horizontally */
-    justify-content: center;
-    /* ✅ centre vertically */
-    gap: 12px;
+    flex-direction: row;
+    padding: 18px 20px;
+    align-items: flex-start;
+    gap: 14px;
     transition: border-color 0.2s, transform 0.2s;
-    text-align: center;
+    cursor: default;
+    text-align: left;
     /* ✅ centre text */
 }
 

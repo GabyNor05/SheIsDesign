@@ -5,7 +5,7 @@ import {
 } from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
 import { eventService } from "../../../services/eventService";
-
+import {Icon} from "./Icon";
 import { T } from "../theme";
 
 const STATUS_MAP = {
@@ -50,148 +50,29 @@ function StatusBadge({ status }) {
 }
 
 function EventCard({ event }) {
-  const pct = Math.min(
-    100,
-    Math.round((event.entries / event.maxEntries) * 100),
-  );
+  const pct = Math.min(100, Math.round((event.entries / event.maxEntries) * 100));
   return (
-    <div
-      style={{
-        background: T.surface,
-        border: `1px solid ${T.border}`,
-        borderRadius: 14,
-        padding: "18px 20px",
-        maxHeight: "170px",
-        minWidth: 230,
-        maxWidth: 260,
-        flex: "0 0 240px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 12,
-        transition: "border-color 0.2s, transform 0.2s",
-        cursor: "pointer",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = T.pink + "66";
-        e.currentTarget.style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = T.border;
-        e.currentTarget.style.transform = "translateY(0)";
-      }}
-    >
+    <div className="event-card">
+      <div className="event-card__top">
         <div>
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: 8,
-        }}
-      >
-        <div className="">
-
-          <div
-            style={{
-              display:"flex",
-              fontFamily: "Syne, sans-serif",
-              flexWrap: "wrap",
-              fontWeight: 700,
-              fontSize: 14.5,
-              color: T.textPrimary,
-              marginBottom: 4,
-              lineHeight: 1.3,
-            }}
-          >
-            {event.title}
-          </div>
+          <div className="event-card__title">{event.title}</div>
+          <div className="event-card__category">{event.category}</div>
         </div>
-        
         <StatusBadge status={event.status} />
       </div>
-          <div
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              width: "100%",
-              fontSize: 10.5,
-              color: T.textMuted,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
-          >
-            {event.category}
-          </div>
-        </div>
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 6,
-          color: T.textMuted,
-        }}
-      >
-        <CalendarBlank size={14} color={T.textSecond} />
-
-        <span
-          style={{
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 12,
-            color: T.textSecond,
-          }}
-        >
-          {event.dateRange}
-        </span>
+      <div className="event-card__date">
+        <Icon name="calendar" size={12} color="var(--text-muted)" />
+        <span>{event.dateRange}</span>
       </div>
-
       <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: 6,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 11.5,
-              color: T.textMuted,
-            }}
-          >
-            Entries
-          </span>
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12,
-              fontWeight: 600,
-              color: T.textSecond,
-            }}
-          >
-            {event.entries} / {event.maxEntries}
-          </span>
+        <div className="event-card__entries-label">
+          <span className="event-card__entries-text">Entries</span>
+          <span className="event-card__entries-count">{event.entries} / {event.maxEntries}</span>
         </div>
-        <div
-          style={{
-            height: 5,
-            background: T.surfaceBord,
-            borderRadius: 3,
-            overflow: "hidden",
-          }}
-        >
+        <div className="event-card__bar-track">
           <div
-            style={{
-              width: `${pct}%`,
-              height: "100%",
-              background:
-                pct > 80
-                  ? T.pink
-                  : `linear-gradient(90deg, ${T.pink}88, ${T.pink})`,
-              borderRadius: 3,
-              transition: "width 0.5s ease",
-            }}
+            className={`event-card__bar-fill${pct > 80 ? " event-card__bar-fill--full" : ""}`}
+            style={{ width: `${pct}%` }}
           />
         </div>
       </div>

@@ -3,7 +3,7 @@ import { T } from "../theme";
 function Card({ children, style = {}, glow = false }) {
   return (
     <div style={{
-      background: T.pinkDim,
+      background: T.surface,
       border: `1px solid ${T.border}`,
       borderRadius: 14,
       padding: "20px 22px",

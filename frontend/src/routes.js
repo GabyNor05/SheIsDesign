@@ -17,7 +17,7 @@ import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage"
 import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
 
 // Admin pages
-// import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDashboardV2 from "./pages/admin/template/AdminDashboardV2";
 import ManageEvents from "./pages/admin/template/Events";
 import ManageParticipantsPage from "./pages/admin/ManageParticipantsPage";
@@ -60,6 +60,7 @@ const Routes = createBrowserRouter([
         element: <AdminLayout />,
         children: [
           { index: true, element: <AdminDashboardV2 /> },
+          {path: "dashboard", element: <AdminDashboard /> },
           { path: "events", element: <ManageEvents /> },
           { path: "participants", element: <ManageParticipantsPage /> },
           { path: "leaderboard", element: <ManageLeaderboardPage /> },

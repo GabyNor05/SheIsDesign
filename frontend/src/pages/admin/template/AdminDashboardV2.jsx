@@ -1,27 +1,21 @@
 import { useState } from "react";
+import QuickActions from "../../../components/admin/overview/QuickActions";
+import PendingApplications from "../../../components/admin/overview/PendingApplications";
+import UpcomingEvents from "../../../components/admin/overview/UpcomingEvents";
 import "./AdminDashboardV2.css";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-const TODAY       = "Monday, 4 May 2025";
+const TODAY = new Date().toLocaleDateString("en-ZA", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 const PAGE_TITLE  = "Overview";
 const PAGE_SUB    = "Manage events, participants, and competitions.";
 
-const QUICK_ACTIONS = [
-  { id: 1, icon: "plus",  label: "Create Event"        },
-  { id: 2, icon: "file",  label: "Review Applications" },
-  { id: 3, icon: "award", label: "Invite Judge"        },
-  { id: 4, icon: "chart", label: "View Leaderboard"    },
-];
-
-const UPCOMING_EVENTS = [
-  { id: "evt-001", title: "Brand Identity Challenge", category: "BRAND IDENTITY", status: "OPEN",     dateRange: "1–12 Mar 2026",  entries: 84,  maxEntries: 100 },
-  { id: "evt-002", title: "Motion Design Bootcamp",   category: "MOTION DESIGN",  status: "OPEN",     dateRange: "10–20 Mar 2026", entries: 41,  maxEntries: 60  },
-  { id: "evt-003", title: "UI/UX Hackathon 2026",     category: "UX DESIGN",      status: "OPEN",     dateRange: "1–5 Apr 2026",   entries: 112, maxEntries: 150 },
-  { id: "evt-004", title: "Typography Sprint",        category: "GRAPHIC DESIGN", status: "UPCOMING", dateRange: "12–18 Apr 2026", entries: 29,  maxEntries: 60  },
-];
 
 const PENDING_STUDENTS = [
   { id: 1, initials: "AD", name: "Amara Diailo",   uni: "Wits University",         field: "Graphic Design",       date: "2 May 2026",  color: "#C41262" },
@@ -45,12 +39,6 @@ const RECENT_ACTIVITY = [
   { id: 6, type: "event",      icon: "edit",     title: "Event updated",            detail: "Motion Design Bootcamp — date moved", time: "3h ago"     },
 ];
 
-const PLATFORM_SUMMARY = [
-  { icon: "graduation", label: "Total Students",      value: "1,024" },
-  { icon: "briefcase",  label: "Total Professionals", value: "223"   },
-  { icon: "calendar",   label: "Active Events",       value: "5"     },
-  { icon: "file",       label: "Total Submissions",   value: "3,840" },
-];
 
 const STATUS_STYLE = {
   OPEN:     { bg: "var(--green-bg)", color: "var(--green)", dot: "var(--green)" },
@@ -140,38 +128,6 @@ function Card({ children, style = {}, glow = false }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// TOPBAR
-// ─────────────────────────────────────────────────────────────────────────────
-// function Topbar() {
-//   return (
-//     <header className="topbar">
-//       <span className="topbar__logo">
-//         Shels<span>Design</span>
-//       </span>
-//       <div className="topbar__right">
-//         <button className="topbar__notif-btn" aria-label="Notifications">
-//           <Icon name="bell" size={18} color="var(--text-second)" />
-//           <span className="topbar__notif-dot" />
-//         </button>
-//         <div className="topbar__user">
-//           <div className="topbar__avatar">
-//             <span>A</span>
-//           </div>
-//           <div>
-//             <div className="topbar__user-name">{ADMIN_NAME}</div>
-//             <div className="topbar__user-email">{ADMIN_EMAIL}</div>
-//           </div>
-//         </div>
-//         <button className="topbar__logout-btn">
-//           <Icon name="logout" size={13} color="currentColor" /> Logout
-//         </button>
-//       </div>
-//     </header>
-//   );
-// }
-
-// ─────────────────────────────────────────────────────────────────────────────
 // PAGE HEADER
 // ─────────────────────────────────────────────────────────────────────────────
 function PageHeader() {
@@ -196,73 +152,7 @@ function PageHeader() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// QUICK ACTIONS
-// ─────────────────────────────────────────────────────────────────────────────
-function QuickActions() {
-  return (
-    <div className="quick-actions">
-      {QUICK_ACTIONS.map((action, i) => (
-        <button
-          key={action.id}
-          className={`quick-actions__btn${i === 0 ? " quick-actions__btn--primary" : ""}`}
-        >
-          <Icon name={action.icon} size={15} color={i === 0 ? "#fff" : "var(--text-second)"} />
-          {action.label}
-        </button>
-      ))}
-    </div>
-  );
-}
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EVENT CARD
-// ─────────────────────────────────────────────────────────────────────────────
-function EventCard({ event }) {
-  const pct = Math.min(100, Math.round((event.entries / event.maxEntries) * 100));
-  return (
-    <div className="event-card">
-      <div className="event-card__top">
-        <div>
-          <div className="event-card__title">{event.title}</div>
-          <div className="event-card__category">{event.category}</div>
-        </div>
-        <StatusBadge status={event.status} />
-      </div>
-      <div className="event-card__date">
-        <Icon name="calendar" size={12} color="var(--text-muted)" />
-        <span>{event.dateRange}</span>
-      </div>
-      <div>
-        <div className="event-card__entries-label">
-          <span className="event-card__entries-text">Entries</span>
-          <span className="event-card__entries-count">{event.entries} / {event.maxEntries}</span>
-        </div>
-        <div className="event-card__bar-track">
-          <div
-            className={`event-card__bar-fill${pct > 80 ? " event-card__bar-fill--full" : ""}`}
-            style={{ width: `${pct}%` }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// UPCOMING EVENTS SECTION
-// ─────────────────────────────────────────────────────────────────────────────
-function UpcomingEventsSection() {
-  const openCount = UPCOMING_EVENTS.filter(e => e.status === "OPEN").length;
-  return (
-    <Card style={{ marginBottom: 20 }}>
-      <SectionHeader icon="calendar" title="Upcoming Events" badge={`${openCount} open`} action="View all" />
-      <div className="upcoming-events__scroll">
-        {UPCOMING_EVENTS.map(ev => <EventCard key={ev.id} event={ev} />)}
-      </div>
-    </Card>
-  );
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // APPLICANT ROW
@@ -308,7 +198,7 @@ function ApplicantRow({ person, isLast }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // PENDING APPLICATIONS
 // ─────────────────────────────────────────────────────────────────────────────
-function PendingApplications() {
+/* function PendingApplications() {
   const [tab, setTab] = useState("students");
   const total = PENDING_STUDENTS.length + PENDING_PROFESSIONALS.length;
   const list  = tab === "students" ? PENDING_STUDENTS : PENDING_PROFESSIONALS;
@@ -339,7 +229,7 @@ function PendingApplications() {
     </Card>
   );
 }
-
+ */
 // ─────────────────────────────────────────────────────────────────────────────
 // ACTIVITY ITEM
 // ─────────────────────────────────────────────────────────────────────────────
@@ -376,29 +266,7 @@ function RecentActivity() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PLATFORM SUMMARY
-// ─────────────────────────────────────────────────────────────────────────────
-function PlatformSummary() {
-  return (
-    <div>
-      <p className="platform-summary__label">Platform Summary</p>
-      <div className="platform-summary__grid">
-        {PLATFORM_SUMMARY.map(stat => (
-          <div key={stat.label} className="stat-card">
-            <div className="stat-card__icon">
-              <Icon name={stat.icon} size={17} color="var(--pink)" />
-            </div>
-            <div>
-              <div className="stat-card__value">{stat.value}</div>
-              <div className="stat-card__name">{stat.label}</div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // APP ROOT
@@ -406,23 +274,19 @@ function PlatformSummary() {
 export default function AdminDashboardV2() {
   return (
     <div className="dash-root">
-      {/* <Topbar /> */}
       <main className="dash-main">
         <div className="dash-section" style={{ animationDelay: "0ms" }}>
           <PageHeader />
         </div>
-        <div className="dash-section" style={{ animationDelay: "60ms" }}>
+        <div className="" style={{ animationDelay: "60ms" }}>
           <QuickActions />
         </div>
         <div className="dash-section" style={{ animationDelay: "120ms" }}>
-          <UpcomingEventsSection />
+          <UpcomingEvents />
         </div>
         <div className="dash-two-col dash-section" style={{ animationDelay: "180ms" }}>
           <PendingApplications />
           <RecentActivity />
-        </div>
-        <div className="dash-section" style={{ animationDelay: "240ms" }}>
-          <PlatformSummary />
         </div>
       </main>
     </div>
