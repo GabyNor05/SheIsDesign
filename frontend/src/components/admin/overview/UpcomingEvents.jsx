@@ -85,23 +85,23 @@ function UpcomingEvents() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const loadEvents = async () => {
-    try {
-      setLoading(true);
-      const upcoming = await eventService.getUpcomingEvents();
-      console.log("Next events:", upcoming);
-      setEvents(upcoming);
-      setError(null);
-    } catch (err) {
-      console.error("Failed to load events", err);
-      setError(err.message);
-      setEvents([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  
   useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setLoading(true);
+        const upcoming = await eventService.getUpcomingEvents();
+        console.log("Next events:", upcoming);
+        setEvents(upcoming);
+        setError(null);
+      } catch (err) {
+        console.error("Failed to load events", err);
+        setError(err.message);
+        setEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    };
     loadEvents();
   }, []);
 

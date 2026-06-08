@@ -3,6 +3,7 @@ import { T } from "../theme";
 import { eventService } from "../../../services/eventService";
 import EventForm from "./EventForm";
 import FeaturedCard from "./FeaturedCard";
+import EventCard from "./EventCard";
 import Modal from "../Modal";
 
 const STORAGE_KEY = "sheisdesign_events";
@@ -110,7 +111,7 @@ export default function LiveEvents() {
     );
     setEvents(updated);
     saveEvents(updated);
-    setModal(null);
+    setModal(true);
     setActive(null);
   };
 

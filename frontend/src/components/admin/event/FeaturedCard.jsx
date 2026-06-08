@@ -106,7 +106,7 @@ function FeaturedCard({ event, onManage, onView }) {
               gap: 6,
             }}
           >
-            <Icon name="eye" size={14} color={T.textSecond} /> View
+            <Icon name="eye" size={14}  /> View
           </button>
         </div>
       </div>

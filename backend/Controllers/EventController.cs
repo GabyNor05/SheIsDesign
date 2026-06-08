@@ -93,7 +93,7 @@ namespace backend.Controllers
             var today = DateTime.UtcNow;
 
             var upcomingEvents = await _context.Event
-                .Where(e => e.Start_date > today)
+                .Where(e => e.Start_date > today && e.Status.ToLower() == "open")
                 .OrderBy(e => e.Start_date)
                 .Select(e => new EventReadDTO
                 {

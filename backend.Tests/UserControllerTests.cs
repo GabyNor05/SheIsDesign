@@ -41,8 +41,8 @@ namespace SheDesign.Tests
             // Arrange
             _context.Users.AddRange(new List<User>
             {
-                new User { Id = 1, Email = "one@test.com", Role = Role.User, PasswordHash = "abc" },
-                new User { Id = 2, Email = "two@test.com", Role = Role.Admin, PasswordHash = "xyz" }
+                new User { Id = 1, Email = "one@test.com", Role = "User", PasswordHash = "abc" },
+                new User { Id = 2, Email = "two@test.com", Role = "Admin", PasswordHash = "xyz" }
             });
             await _context.SaveChangesAsync();
 
@@ -74,7 +74,7 @@ namespace SheDesign.Tests
             var returnedDto = Assert.IsType<UserReadDTO>(createdAtActionResult.Value);
             
             Assert.Equal("secure@test.com", returnedDto.Email);
-            Assert.Equal(Role.User, returnedDto.Role);
+            Assert.Equal("User", returnedDto.Role);
 
             // Verify entry in the DB has a valid BCrypt hashed signature
             var dbUser = await _context.Users.FindAsync(returnedDto.Id);
@@ -95,7 +95,7 @@ namespace SheDesign.Tests
                 Id = 5, 
                 Email = "auth@test.com", 
                 PasswordHash = clearTextHash, 
-                Role = Role.User
+                Role = "User" 
             };
             _context.Users.Add(testUser);
             await _context.SaveChangesAsync();

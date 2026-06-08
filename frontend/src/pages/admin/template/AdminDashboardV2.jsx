@@ -266,11 +266,6 @@ function RecentActivity() {
   );
 }
 
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-// APP ROOT
-// ─────────────────────────────────────────────────────────────────────────────
 export default function AdminDashboardV2() {
   return (
     <div className="dash-root">

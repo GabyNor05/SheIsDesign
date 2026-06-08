@@ -1,6 +1,6 @@
 /* The purpose of the Sidebar has changed instead of navigating to a different page it just storing what the active tab is so that the AdminDashboard knows what to render. The Sidebar will now act as a control panel for the AdminDashboard, managing the state of the active tab and providing a way for the user to switch between different sections of the dashboard. */
 import { Link, useNavigate } from "react-router-dom";
-import { SquaresFour, CalendarDots, UsersThree, Trophy, Images, HandHeart, Question, SignOut } from "@phosphor-icons/react";
+import { SquaresFour, CalendarDots, UsersThree, Trophy, Images, HandHeart, Question, SignOut, ArrowsOutSimple } from "@phosphor-icons/react";
 import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
 import "./Sidebar.css";
@@ -52,7 +52,9 @@ const navTabs = [
 function Sidebar({ activeTab, setActiveTab }) {
     const navigate = useNavigate();
     const { logout } = useAuth();
-
+ function handleReturnToSite(){
+        navigate("/");
+ }
     function handleLogout() {
         logout();
         navigate("/");
@@ -89,9 +91,9 @@ function Sidebar({ activeTab, setActiveTab }) {
             <div className="sidebar-footer w-[187px]">
                 <div className="w-[180px] h-[1px] bg-[#E2E2E2]/40 my-4 mx-1"></div>
                 <div className="sidebar-footer-nav flex flex-col mt-6">
-                    <button className="w-full flex items-center gap-2  py-[10px] px-3 text-[#888] text-sm font-medium mb-3 rounded-[10px] border-none hover:bg-gray-100/20 hover:text-gray-200 transition-colors duration-200 font-[DM Sans]">
-                        <Question size={24} />
-                        Help & Docs
+                    <button  /* onclick={handleReturnToSite()} */ className="w-full flex items-center gap-2  py-[10px] px-3 text-[#888] text-sm font-medium mb-3 rounded-[10px] hover:bg-gray-100/20 hover:text-gray-200 transition-colors duration-200 font-[DM Sans]">
+                        <ArrowsOutSimple size={24} />
+                        View Main Site
                     </button>
                     <button
                         className="sidebar-logout-btn w-full flex items-center gap-2 py-[10px] px-3 mb-[2px] text-sm text-red-600 font-medium hover:bg-gray-100/20 rounded-lg transition-colors duration-200 font-[DM Sans]"
