@@ -12,8 +12,8 @@ using SheDesign.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(SheDesignContext))]
-    [Migration("20260601163423_newMigrations")]
-    partial class newMigrations
+    [Migration("20260608195831_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
