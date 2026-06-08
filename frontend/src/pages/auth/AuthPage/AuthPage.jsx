@@ -234,7 +234,6 @@ function AuthCard() {
   const [modalStep, setModalStep]         = useState(null);
   const [loginEmail, setLoginEmail]       = useState("");
   const [isAdmin, setIsAdmin]             = useState(false);
-  const [isJudge]                         = useState(false);
   const [loginError, setLoginError]       = useState("");
   const [signupError, setSignupError]     = useState("");
   const [apiUser, setApiUser]             = useState(null);
@@ -258,11 +257,11 @@ function AuthCard() {
           });
         } else {
           login(res);
-          navigate(
-            res.role === "admin" ? "/admin/dashboard"
-            : res.role === "judge" ? "/judge/dashboard"
-            : "/"
-          );
+          if (res.status === "Pending") { navigate("/application-status"); return; }
+          let dest = "/";
+          if (res.role === "Admin") dest = "/admin/dashboard";
+          else if (res.role === "Judge") dest = "/judge/dashboard";
+          navigate(dest);
         }
       } catch (err) {
         setGoogleError(sanitiseError(err));
@@ -279,7 +278,7 @@ function AuthCard() {
       const res = await loginUser(email, password);
       setApiUser(res);
       setLoginEmail(email);
-      const adminCheck = res.role === "admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
+      const adminCheck = res.role === "Admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
       setIsAdmin(adminCheck);
       setModalStep(adminCheck ? "token" : "otp");
     } catch (err) {
@@ -305,7 +304,11 @@ function AuthCard() {
   function handleOtpVerified() {
     setModalStep(null);
     login(apiUser);
-    navigate(isAdmin ? "/admin/dashboard" : isJudge ? "/judge/dashboard" : "/");
+    if (apiUser?.status === "Pending") { navigate("/application-status"); return; }
+    let dest = "/";
+    if (isAdmin) dest = "/admin/dashboard";
+    else if (apiUser?.role === "Judge") dest = "/judge/dashboard";
+    navigate(dest);
   }
 
   return (

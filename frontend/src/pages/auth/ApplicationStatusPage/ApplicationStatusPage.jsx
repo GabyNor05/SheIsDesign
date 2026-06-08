@@ -1,99 +1,151 @@
+import { Link, useLocation } from "react-router-dom";
+import { MdPending, MdCheckCircle, MdCancel, MdArrowForward, MdExplore } from "react-icons/md";
+import { useAuth } from "../../../context/AuthContext";
+import "../SignupSuccessPage/SignupSuccessPage.css";
 
-// import "./AuthPage.css";
-// import { FiCheckCircle, FiClock, FiArrowLeftCircle } from "react-icons/fi";
-// import { useNavigate } from "react-router-dom";
+const STATUS_CONFIG = {
+  Pending: {
+    icon:    <MdPending size={52} style={{ color: "#FE7FAB", filter: "drop-shadow(0 0 16px rgba(196,18,98,0.5))", animation: "check-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.35s both" }} />,
+    eyebrow: "Under review",
+    heading: "Your application is pending.",
+    subtext: "We're reviewing your profile. You'll receive an email once your account is approved.",
+    notice: {
+      icon:  "pending",
+      title: "Profile under review",
+      body:  "We'll look over your details and get back to you within 1–2 business days.",
+    },
+    extra: {
+      icon:  "explore",
+      title: "Limited access available",
+      body:  "While we review your profile, you can browse events, explore the gallery, and check out the leaderboard — you just won't be able to submit work or compete yet.",
+    },
+    cta: { to: "/", label: "Browse SheIsDesign", secondary: true },
+  },
 
+  Approved: {
+    icon:    <MdCheckCircle size={52} className="ssp-check-icon" />,
+    eyebrow: "Account approved",
+    heading: "You're approved!",
+    subtext: "Your profile has been verified. You can now submit work and participate in competitions.",
+    notice: {
+      icon:  "check_circle",
+      title: "Account active",
+      body:  "Explore events, submit your work, and connect with the SheIsDesign community.",
+    },
+    extra:   null,
+    cta: { to: "/", label: "Start exploring", secondary: false },
+  },
 
-// function ApplicationStatusPage() {
-//   // TODO: Replace with real status from API
-//   const status = "pending"; // or "approved"
-//   const navigate = useNavigate();
+  Rejected: {
+    icon:    <MdCancel size={52} style={{ color: "rgba(248,235,237,0.3)", filter: "drop-shadow(0 0 8px rgba(0,0,0,0.3))", animation: "check-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.35s both" }} />,
+    eyebrow: "Application not approved",
+    heading: "We're sorry.",
+    subtext: "Your application wasn't approved at this time. Please reach out if you think this is a mistake.",
+    notice: {
+      icon:  "mail",
+      title: "Need help?",
+      body:  "Contact us at info@sheisdesign.org and we'll be happy to assist you.",
+    },
+    extra:   null,
+    cta: { to: "mailto:info@sheisdesign.org", label: "Contact us", secondary: false, external: true },
+  },
+};
 
-//   // Stepper logic (Figma: Application Submitted > Under Review > Approved)
-//   const steps = [
-//     { label: "Application Submitted", complete: true },
-//     { label: "Under Review", complete: status !== "pending" },
-//     { label: "Approved", complete: status === "approved" },
-//   ];
+function renderHeading(heading, firstName) {
+  if (!firstName) return heading;
+  return (
+    <>
+      {heading.replace(".", "")} <span className="ssp-heading__name">{firstName}.</span>
+    </>
+  );
+}
 
-//   // Status rows (Figma: 3 rows with icon and text)
-//   const statusRows = [
-//     {
-//       icon: <FiCheckCircle size={24} className="text-primary" />, text: "Application submitted successfully.", complete: true,
-//     },
-//     {
-//       icon: <FiClock size={24} className={status !== "pending" ? "text-primary" : "text-accent"} />, text: "Your university status is being verified.", complete: status !== "pending",
-//     },
-//     {
-//       icon: <FiCheckCircle size={24} className={status === "approved" ? "text-primary" : "text-white/30"} />, text: "Account approved.", complete: status === "approved",
-//     },
-//   ];
+export default function ApplicationStatusPage() {
+  const location  = useLocation();
+  const { user }  = useAuth();
 
-//   return (
-//     <section className="hero-section min-h-screen flex items-center justify-center relative overflow-hidden px-4">
-//       <div className="hero-glow-1" />
-//       <div className="hero-glow-2" />
-//       <div className="hero-glow-3" />
-//       <div className="form-card relative rounded-[32px] p-8 sm:p-12 w-full max-w-lg shadow-xl border border-white/10 bg-gradient-to-br from-[#201A1B] to-[#0D0608] z-10 flex flex-col items-center">
-//         <div className="form-card-glow-line" />
-//         {/* Top status icon in circle */}
-//         <div className="flex items-center justify-center w-24 h-24 rounded-full bg-white/5 border-2 border-primary mb-6 mt-2">
-//           {status === "pending" ? (
-//             <FiClock size={48} className="text-accent" />
-//           ) : (
-//             <FiCheckCircle size={48} className="text-primary" />
-//           )}
-//         </div>
-//         {/* Stepper */}
-//         <div className="w-full flex flex-col items-center mb-8">
-//           <div className="flex items-center gap-0 w-full max-w-xs">
-//             {steps.map((step, idx) => (
-//               <div key={step.label} className="flex items-center w-full">
-//                 <div className={`rounded-full border-2 ${step.complete ? "border-primary bg-primary" : "border-white/30 bg-white/10"} w-6 h-6 flex items-center justify-center text-xs font-bold text-white`}>
-//                   {step.complete ? <FiCheckCircle size={16} className="text-white" /> : idx + 1}
-//                 </div>
-//                 {idx < steps.length - 1 && (
-//                   <div className={`h-1 flex-1 ${steps[idx + 1].complete ? "bg-primary" : "bg-white/20"}`}></div>
-//                 )}
-//               </div>
-//             ))}
-//           </div>
-//           {/* Stepper status text */}
-//           <div className="w-full flex justify-center mt-2">
-//             <span className="text-white/80 text-xs font-medium">
-//               {steps.findLast((s) => s.complete).label}
-//             </span>
-//           </div>
-//         </div>
-//         {/* Main heading and subtext */}
-//         <h2 className="hero-heading text-2xl md:text-3xl font-extrabold leading-tight text-white mb-2 text-center">
-//           {status === "pending" ? "Application Pending" : "Application Approved"}
-//         </h2>
-//         <p className="text-base text-white/70 text-center mb-4">
-//           {status === "pending"
-//             ? "Your university status is being verified. You will receive an email once your account is activated."
-//             : "Congratulations! Your account is now active."}
-//         </p>
-//         {/* Status rows */}
-//         <div className="w-full mt-2 mb-6">
-//           {statusRows.map((row, idx) => (
-//             <div key={idx} className="flex items-center gap-4 py-3 px-2 rounded-lg mb-2 bg-white/5">
-//               <span>{row.icon}</span>
-//               <span className={`text-base ${row.complete ? "text-white" : "text-white/40"}`}>{row.text}</span>
-//             </div>
-//           ))}
-//         </div>
-//         {/* Return button */}
-//         <button
-//           className="btn hero-btn-primary w-full max-w-xs flex items-center justify-center gap-2 px-8 py-4 text-base font-bold mt-2"
-//           onClick={() => navigate("/")}
-//         >
-//           <FiArrowLeftCircle size={24} />
-//           Return to Home
-//         </button>
-//       </div>
-//     </section>
-//   );
-// }
+  const status    = location.state?.status    || user?.status    || "Pending";
+  const firstName = location.state?.firstName || user?.givenName || "";
+  const email     = location.state?.email     || user?.email     || "";
 
-// export default ApplicationStatusPage;
+  const cfg = STATUS_CONFIG[status] || STATUS_CONFIG.Pending;
+
+  return (
+    <div className="ssp-root">
+      <div className="ssp-glow ssp-glow--1" />
+      <div className="ssp-glow ssp-glow--2" />
+      <div className="ssp-dots" />
+
+      <nav className="ssp-nav">
+        <Link to="/" className="ssp-nav__logo">
+          <div className="ssp-nav__logo-mark">
+            <span className="material-icons" style={{ fontSize: "18px", color: "white" }}>brush</span>
+          </div>
+          <span className="ssp-nav__logo-text">SheisDesign</span>
+        </Link>
+      </nav>
+
+      <main className="ssp-main">
+        <div className="ssp-card">
+          <div className="ssp-card__glow-line" />
+
+          <div className="ssp-icon-wrap">
+            {cfg.icon}
+            <div className="ssp-icon-ring" />
+          </div>
+
+          <div className="ssp-card__header">
+            <span className="ssp-eyebrow">
+              <span className="ssp-eyebrow__dot" />
+              {cfg.eyebrow}
+            </span>
+            <h1 className="ssp-heading">
+              {renderHeading(cfg.heading, firstName)}
+            </h1>
+            <p className="ssp-subtext">{cfg.subtext}</p>
+            {email && <p className="ssp-subtext" style={{ fontSize: "12px" }}>{email}</p>}
+          </div>
+
+          <div className="ssp-notice">
+            <div className="ssp-notice__row">
+              <span className="material-icons ssp-notice__icon">{cfg.notice.icon}</span>
+              <div>
+                <p className="ssp-notice__title">{cfg.notice.title}</p>
+                <p className="ssp-notice__body">{cfg.notice.body}</p>
+              </div>
+            </div>
+          </div>
+
+          {cfg.extra && (
+            <div className="ssp-access">
+              <div className="ssp-access__row">
+                <span className="material-icons ssp-access__icon">{cfg.extra.icon}</span>
+                <div>
+                  <p className="ssp-access__title">{cfg.extra.title}</p>
+                  <p className="ssp-access__body">{cfg.extra.body}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {cfg.cta.secondary ? (
+            <Link to={cfg.cta.to} className="ssp-cta" style={{ background: "rgba(248,235,237,0.04)", border: "1px solid rgba(248,235,237,0.08)", boxShadow: "none" }}>
+              <MdExplore size={18} />
+              {cfg.cta.label}
+              <MdArrowForward size={16} className="ssp-cta__arrow" />
+            </Link>
+          ) : (
+            <Link
+              to={cfg.cta.to}
+              className="ssp-cta"
+              {...(cfg.cta.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            >
+              {cfg.cta.label}
+              <MdArrowForward size={16} className="ssp-cta__arrow" />
+            </Link>
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}

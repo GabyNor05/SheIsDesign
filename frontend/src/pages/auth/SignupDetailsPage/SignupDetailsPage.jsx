@@ -259,18 +259,16 @@ async function handleSubmit(e) {
       });
     }
 
-    navigate("/signup/success", {
-      state: { firstName, lastName, email }
+    navigate("/application-status", {
+      state: { firstName, lastName, email, status: "Pending" }
     });
 
   } catch (err) {
     console.error("Signup details error:", err);
 
-    // If the API fails but userId exists, still let them through
-    // This prevents users being permanently stuck on this screen
     if (userId) {
-      navigate("/signup/success", {
-        state: { firstName, lastName, email }
+      navigate("/application-status", {
+        state: { firstName, lastName, email, status: "Pending" }
       });
     } else {
       setSubmitError(
