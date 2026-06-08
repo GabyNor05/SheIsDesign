@@ -12,8 +12,8 @@ using SheDesign.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(SheDesignContext))]
-    [Migration("20260601163423_newMigrations")]
-    partial class newMigrations
+    [Migration("20260608211652_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -322,10 +322,12 @@ namespace backend.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("Role")
+                        .HasColumnType("integer")
                         .HasColumnName("roles");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
