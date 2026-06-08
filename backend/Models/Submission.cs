@@ -16,3 +16,6 @@ namespace SheDesign.Models
         public Event? Event { get; set; }
     }
 }
+
+//add description, add image url, add catergory
+
