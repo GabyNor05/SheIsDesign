@@ -38,6 +38,193 @@
     color: var(--sid-text-pink);
 }
 
+/* Background glows */
+.otp-page__glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.otp-page__glow--1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.18) 0%, transparent 70%);
+    top: -80px;
+    right: -80px;
+}
+
+.otp-page__glow--2 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(100, 20, 60, 0.14) 0%, transparent 70%);
+    bottom: -60px;
+    left: -60px;
+}
+
+/* Nav */
+.otp-page__nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 50;
+    background: rgba(15, 8, 11, 0.7);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.otp-page__nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.otp-page__nav-logo-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #c41262, #8a0d44);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.otp-page__nav-logo-text {
+    font-family: var(--sid-font);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--sid-text-primary);
+    letter-spacing: -0.3px;
+}
+
+.otp-page__nav-back {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--sid-font);
+    font-size: 13px;
+    color: var(--sid-text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.otp-page__nav-back:hover {
+    color: var(--sid-text-primary);
+}
+
+/* Card */
+.otp-page__card {
+    position: relative;
+    z-index: 10;
+    background: var(--sid-surface);
+    border: 1px solid var(--sid-border);
+    border-radius: var(--sid-radius-xl, 20px);
+    padding: 40px 36px 36px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+}
+
+.otp-page__card-glow-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, #c41262 40%, #e8186e 60%, transparent 100%);
+    border-radius: 20px 20px 0 0;
+}
+
+/* Lock icon */
+.otp-page__lock-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(196, 18, 98, 0.12);
+    border: 2px solid rgba(196, 18, 98, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sid-text-pink);
+    margin: 0 auto;
+}
+
+/* Secure badge */
+.otp-page__secure-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin: 12px auto 0;
+    width: fit-content;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(196, 18, 98, 0.10);
+    border: 1px solid rgba(196, 18, 98, 0.25);
+    font-family: var(--sid-font);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--sid-text-pink);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+/* Timer row */
+.otp-page__timer-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.otp-page__timer-icon {
+    color: var(--sid-text-faint);
+}
+
+.otp-page__timer-sep {
+    font-family: var(--sid-font);
+    font-size: 13px;
+    color: var(--sid-text-faint);
+}
+
+/* Submit button */
+.otp-page__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px;
+    border-radius: var(--sid-radius-lg);
+    background: linear-gradient(135deg, #c41262, #e8186e);
+    border: none;
+    cursor: pointer;
+    font-family: var(--sid-font);
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.2px;
+    transition: opacity 0.2s, transform 0.15s;
+}
+
+.otp-page__submit:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+}
+
+.otp-page__submit:active {
+    transform: translateY(0);
+}
+
 .otp-page__heading {
     text-align: center;
     margin-bottom: 28px;
@@ -157,8 +344,14 @@
     transition: color 0.2s ease;
 }
 
-.otp-page__resend-btn:hover {
+.otp-page__resend-btn:hover:not(:disabled) {
     color: var(--sid-primary);
+}
+
+.otp-page__resend-btn:disabled {
+    color: var(--sid-text-faint);
+    cursor: default;
+    text-decoration: none;
 }
 
 .otp-page__spam-note {

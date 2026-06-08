@@ -7,6 +7,7 @@
 import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createMentee, createIndustryProfessional } from "../../../services/authService";
+import { generateOtp, getExpiryTimestamp, sendVerificationEmail } from "../../../services/emailService";
 import {
   FiMail, FiBriefcase, FiUpload, FiFile,
 } from "react-icons/fi";
@@ -259,16 +260,22 @@ async function handleSubmit(e) {
       });
     }
 
-    navigate("/application-status", {
-      state: { firstName, lastName, email, status: "Pending" }
+    const code   = generateOtp();
+    const expiry = getExpiryTimestamp();
+    await sendVerificationEmail(email, firstName, code, expiry);
+    navigate("/signup/verify", {
+      state: { firstName, lastName, email, userId, code, expiry },
     });
 
   } catch (err) {
     console.error("Signup details error:", err);
 
     if (userId) {
-      navigate("/application-status", {
-        state: { firstName, lastName, email, status: "Pending" }
+      const code   = generateOtp();
+      const expiry = getExpiryTimestamp();
+      await sendVerificationEmail(email, firstName, code, expiry);
+      navigate("/signup/verify", {
+        state: { firstName, lastName, email, userId, code, expiry },
       });
     } else {
       setSubmitError(

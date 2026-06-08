@@ -1,11 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FiMail } from "react-icons/fi";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { FiLock, FiClock, FiCheckCircle } from "react-icons/fi";
 import { generateOtp, getExpiryTimestamp, sendVerificationEmail } from "../../../services/emailService";
-import GlowBackground from "../../../components/auth/GlowBackground/GlowBackground";
-import AuthNav from "../../../components/auth/AuthNav/AuthNav";
-import AuthCard from "../../../components/auth/AuthCard/AuthCard";
-import PrimaryButton from "../../../components/ui/Buttons/PrimaryButton/PrimaryButton";
 import "./OtpPage.css";
 
 function useCountdown(initial) {
@@ -20,7 +16,11 @@ function useCountdown(initial) {
 
   const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
   const ss = String(seconds % 60).padStart(2, "0");
-  return { display: `${mm}:${ss}`, expired: !active || seconds <= 0, reset: () => { setSeconds(initial); setActive(true); } };
+  return {
+    display: `${mm}:${ss}`,
+    expired: !active || seconds <= 0,
+    reset: () => { setSeconds(initial); setActive(true); },
+  };
 }
 
 const OTP_KEYS = ["d1", "d2", "d3", "d4", "d5", "d6"];
@@ -70,8 +70,13 @@ function OtpPage() {
     e.preventDefault();
     if (otp.join("").length < 6) { setError("Please enter the full 6-digit code."); return; }
     if (Date.now() > expiryRef.current) { setError("Code has expired. Please request a new one."); return; }
-    if (otp.join("") !== codeRef.current) { setError("Incorrect code. Please try again."); setOtp(new Array(6).fill("")); return; }
-    navigate("/signup/details", { state: { firstName, lastName, email, userId } });
+    if (otp.join("") !== codeRef.current) {
+      setError("Incorrect code. Please try again.");
+      setOtp(new Array(6).fill(""));
+      refs.current[0]?.focus();
+      return;
+    }
+    navigate("/application-status", { state: { firstName, lastName, email, status: "Pending" } });
   }
 
   async function handleResend() {
@@ -81,28 +86,57 @@ function OtpPage() {
     expiryRef.current = newExpiry;
     await sendVerificationEmail(email, firstName, newCode, newExpiry);
     reset();
+    setOtp(new Array(6).fill(""));
+    setError("");
   }
 
   return (
     <div className="otp-page">
-      <GlowBackground />
-      <AuthNav backTo="/signup" backLabel="Back" />
+      {/* Background glows */}
+      <div className="otp-page__glow otp-page__glow--1" />
+      <div className="otp-page__glow otp-page__glow--2" />
+
+      {/* Nav */}
+      <nav className="otp-page__nav">
+        <Link to="/" className="otp-page__nav-logo">
+          <div className="otp-page__nav-logo-mark">
+            <span className="material-icons" style={{ fontSize: "18px", color: "white" }}>brush</span>
+          </div>
+          <span className="otp-page__nav-logo-text">SheisDesign</span>
+        </Link>
+        <Link to="/signup/details" className="otp-page__nav-back">
+          <span className="material-icons" style={{ fontSize: "15px" }}>arrow_back</span>
+          Back
+        </Link>
+      </nav>
 
       <div className="otp-page__content">
-        <AuthCard>
+        <div className="otp-page__card">
+          <div className="otp-page__card-glow-line" />
+
+          {/* Lock icon */}
           <div className="otp-page__icon">
-            <FiMail size={28} className="otp-page__mail-icon" />
+            <div className="otp-page__lock-icon">
+              <FiLock size={26} />
+            </div>
           </div>
 
+          {/* Secure badge */}
+          <div className="otp-page__secure-badge">
+            <FiCheckCircle size={12} />
+            Secure Verification
+          </div>
+
+          {/* Heading */}
           <div className="otp-page__heading">
-            <h1 className="otp-page__title">Check your email</h1>
+            <h1 className="otp-page__title">Enter OTP</h1>
             <p className="otp-page__subtitle">
-              We sent a 6-digit code to{" "}
-              <span className="otp-page__email">{email}</span>.
-              Enter it below to verify your account.
+              Enter the 6-digit code sent to{" "}
+              <span className="otp-page__email">{email}</span>
             </p>
           </div>
 
+          {/* Form */}
           <form onSubmit={handleSubmit} className="otp-page__form">
             <div className="otp-page__inputs">
               {otp.map((v, i) => (
@@ -131,27 +165,27 @@ function OtpPage() {
               </div>
             )}
 
-            <div className="otp-page__resend">
-              <span className="otp-page__resend-label">Resend code</span>
-              {expired ? (
-                <button type="button" onClick={handleResend} className="otp-page__resend-btn">
-                  Resend now
-                </button>
-              ) : (
-                <span className="otp-page__countdown">{display}</span>
-              )}
+            {/* Timer + resend inline */}
+            <div className="otp-page__timer-row">
+              <FiClock size={13} className="otp-page__timer-icon" />
+              <span className="otp-page__countdown">{display}</span>
+              <span className="otp-page__timer-sep">·</span>
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={!expired}
+                className="otp-page__resend-btn"
+              >
+                Resend Code
+              </button>
             </div>
 
-            <PrimaryButton type="submit">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Verify &amp; Continue
-            </PrimaryButton>
+            <button type="submit" className="otp-page__submit">
+              <FiCheckCircle size={16} />
+              Verify
+            </button>
           </form>
-
-          <p className="otp-page__spam-note">Didn't receive it? Check your spam folder.</p>
-        </AuthCard>
+        </div>
       </div>
     </div>
   );
