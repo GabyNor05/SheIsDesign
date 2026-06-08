@@ -120,7 +120,7 @@ namespace backend.Controllers
                 description = postCreateDto.Description,
                 status = postCreateDto.Status,
                 comment_count = 0,
-                post_date = DateTime.Now
+                post_date = DateTime.UtcNow
             };
 
             _context.Post.Add(postEntity);
