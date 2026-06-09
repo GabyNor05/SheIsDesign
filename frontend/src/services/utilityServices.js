@@ -57,5 +57,5 @@ export const UpdateProfilePicture = {
 
     */
 
-    ChangeUserProfilePicture: (id, data) => apiClient.put(`/${id}/UpdateProfilePicture}`, {...data}),
+    ChangeUserProfilePicture: (id, data) => apiClient.put(`/${id}/UpdateProfilePicture`, {...data}),
 };
