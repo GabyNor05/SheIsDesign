@@ -35,19 +35,34 @@ namespace backend.Controllers
 
         // POST: api/IndustryProfessional
         [HttpPost]
-        public async Task<ActionResult<IndustryProfessional>> Post(IndustryProfessionalCreateDTO dto)
+        public async Task<ActionResult<IndustryProfessionalCreateDTO>> Post(IndustryProfessionalCreateDTO dto)
         {
             var ip = new IndustryProfessional
             {
+                fullname    = dto.fullname,
                 institution = dto.institution,
-                job_title = dto.job_title,
-                userId = dto.userId,
+                job_title   = dto.job_title,
+                userId      = dto.userId,
             };
 
             _context.IndustryProfessional.Add(ip);
+
+            var userToUpdate = await _context.Users.FindAsync(dto.userId);
+            if (userToUpdate != null)
+            {
+                userToUpdate.Role = Role.IndustryProfessional;
+                _context.Entry(userToUpdate).Property(u => u.Role).IsModified = true;
+            }
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = ip.Id }, ip);
+            return CreatedAtAction(nameof(GetById), new { id = ip.Id }, new IndustryProfessionalCreateDTO
+            {
+                fullname    = ip.fullname,
+                institution = ip.institution,
+                job_title   = ip.job_title,
+                userId      = ip.userId,
+            });
         }
 
         // DELETE: api/IndustryProfessional/5

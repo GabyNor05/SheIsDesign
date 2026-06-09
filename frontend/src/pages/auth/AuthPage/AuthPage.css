@@ -408,6 +408,13 @@
     opacity: 1;
 }
 
+.auth-card__submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
 /* Extra breathing room between submit btn and Google btn */
 .auth-card__google-group {
     display: flex;

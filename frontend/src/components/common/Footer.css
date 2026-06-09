@@ -1,0 +1,214 @@
+/* ── Footer.css ────────────────────────────────────────────────────────────────
+   SheIsDesign site footer — matches dark pink design system
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.site-footer {
+    position: relative;
+    background: #0D0608;
+    border-top: 1px solid rgba(196, 18, 98, 0.15);
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+/* Pink glow line at very top */
+.site-footer__glow-line {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.5), transparent);
+}
+
+/* ── Inner ─────────────────────────────────────────────────────────────────── */
+.site-footer__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 48px 40px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+}
+
+/* ── Brand ─────────────────────────────────────────────────────────────────── */
+.site-footer__logo {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.3px;
+    color: #F8EBED;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 12px;
+    transition: opacity 0.2s;
+}
+
+.site-footer__logo:hover {
+    opacity: 0.8;
+}
+
+.site-footer__logo-accent {
+    color: #FE4081;
+}
+
+.site-footer__tagline {
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.4);
+    line-height: 1.7;
+    max-width: 240px;
+    margin: 0;
+}
+
+/* ── Links ─────────────────────────────────────────────────────────────────── */
+.site-footer__links {
+    display: flex;
+    gap: 40px;
+}
+
+.site-footer__links-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.site-footer__links-heading {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(248, 235, 237, 0.3);
+    margin-bottom: 4px;
+}
+
+.site-footer__link {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(248, 235, 237, 0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+    width: fit-content;
+    position: relative;
+}
+
+.site-footer__link::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #FE4081;
+    transition: width 0.22s ease;
+}
+
+.site-footer__link:hover {
+    color: #F8EBED;
+}
+
+.site-footer__link:hover::after {
+    width: 100%;
+}
+
+/* ── CTA ───────────────────────────────────────────────────────────────────── */
+.site-footer__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.site-footer__cta-text {
+    font-size: 13px;
+    color: rgba(248, 235, 237, 0.5);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.site-footer__cta-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 11px 22px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 18px rgba(196, 18, 98, 0.28);
+    white-space: nowrap;
+}
+
+.site-footer__cta-btn:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 26px rgba(196, 18, 98, 0.4);
+}
+
+/* ── Bottom bar ────────────────────────────────────────────────────────────── */
+.site-footer__bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 48px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.site-footer__copy {
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.25);
+    margin: 0;
+}
+
+.site-footer__bottom-links {
+    display: flex;
+    gap: 20px;
+}
+
+.site-footer__bottom-link {
+    font-size: 12px;
+    color: rgba(248, 235, 237, 0.25);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.site-footer__bottom-link:hover {
+    color: rgba(248, 235, 237, 0.6);
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .site-footer__inner {
+        grid-template-columns: 1fr 1fr;
+        padding: 40px 24px 32px;
+        gap: 36px;
+    }
+
+    .site-footer__brand {
+        grid-column: 1 / -1;
+    }
+
+    .site-footer__bottom {
+        padding: 16px 24px 24px;
+    }
+}
+
+@media (max-width: 580px) {
+    .site-footer__inner {
+        grid-template-columns: 1fr;
+    }
+
+    .site-footer__links {
+        gap: 28px;
+    }
+
+    .site-footer__bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}

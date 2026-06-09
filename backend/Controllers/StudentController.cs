@@ -73,7 +73,7 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<StudentCreateDTO>> PostStudent(StudentCreateDTO dto)
         {
-            var existingUser = _context.Users.Find(dto.userID);
+            var existingUser = await _context.Users.FindAsync(dto.userID);
 
             var student = new Student
             {
@@ -86,6 +86,14 @@ namespace backend.Controllers
             };
 
             _context.Student.Add(student);
+
+            var userToUpdate = await _context.Users.FindAsync(dto.userID);
+            if (userToUpdate != null)
+            {
+                userToUpdate.Role = Role.Student;
+                _context.Entry(userToUpdate).Property(u => u.Role).IsModified = true;
+            }
+
             await _context.SaveChangesAsync();
 
             // Mapping to ReadDTO
