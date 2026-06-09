@@ -617,10 +617,12 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* FAB */}
-      <button className="gallery-fab" onClick={() => setShowPostModal(true)} title="Post to Library">
-        <Plus size={24} weight="bold" />
-      </button>
+      {/* FAB — hidden for pending users */}
+      {!(user?.status === "Pending" && user?.role?.toLowerCase() !== "admin") && (
+        <button className="gallery-fab" onClick={() => setShowPostModal(true)} title="Post to Library">
+          <Plus size={24} weight="bold" />
+        </button>
+      )}
 
       {selectedPost && (
         <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} user={user} />
