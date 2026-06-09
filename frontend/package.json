@@ -48,7 +48,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "public/logo512.png",
+      "icon": "public/favicon-256x256.png",
       "forceCodeSigning": false
     },
     "mac": {

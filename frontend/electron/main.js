@@ -1,7 +1,9 @@
-const { app, BrowserWindow, shell } = require("electron");
+const { app, BrowserWindow, Menu, shell } = require("electron");
 const path = require("path");
 
 const isDev = !app.isPackaged;
+
+Menu.setApplicationMenu(null);
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -9,6 +11,9 @@ function createWindow() {
     height: 800,
     minWidth: 800,
     minHeight: 600,
+    icon: isDev
+      ? path.join(__dirname, "../public/favicon-256x256.png")
+      : path.join(__dirname, "../build/favicon-256x256.png"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
