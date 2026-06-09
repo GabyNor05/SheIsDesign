@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { FiLock, FiClock, FiCheckCircle } from "react-icons/fi";
 import { generateOtp, getExpiryTimestamp, sendVerificationEmail } from "../../../services/emailService";
+import { registerUser, createMentee, createIndustryProfessional } from "../../../services/authService";
 import "./OtpPage.css";
 
 function useCountdown(initial) {
@@ -29,13 +30,20 @@ function OtpPage() {
   const navigate  = useNavigate();
   const location  = useLocation();
 
-  const email     = location.state?.email     || "your email";
-  const firstName = location.state?.firstName || "";
-  const lastName  = location.state?.lastName  || "";
-  const userId    = location.state?.userId;
+  const email          = location.state?.email          || "your email";
+  const firstName      = location.state?.firstName      || "";
+  const lastName       = location.state?.lastName       || "";
+  const password       = location.state?.password       || "";
+  const tab            = location.state?.tab            || "student";
+  const studentFields  = location.state?.studentFields  || {};
+  const wantsVolunteer = location.state?.wantsVolunteer || false;
+  const industryFields = location.state?.industryFields || {};
 
   const codeRef   = useRef(location.state?.code   || "");
   const expiryRef = useRef(location.state?.expiry || 0);
+
+  const [submitError, setSubmitError] = useState("");
+  const [submitting, setSubmitting]   = useState(false);
 
   const [otp, setOtp]     = useState(new Array(6).fill(""));
   const [error, setError] = useState("");
@@ -66,7 +74,7 @@ function OtpPage() {
     refs.current[Math.min(digits.length, 5)]?.focus();
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (otp.join("").length < 6) { setError("Please enter the full 6-digit code."); return; }
     if (Date.now() > expiryRef.current) { setError("Code has expired. Please request a new one."); return; }
@@ -76,7 +84,37 @@ function OtpPage() {
       refs.current[0]?.focus();
       return;
     }
-    navigate("/application-status", { state: { firstName, lastName, email, status: "Pending" } });
+
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const res = await registerUser(email, password);
+      const userId = res.id;
+
+      if (tab === "student") {
+        await createMentee({
+          fullname:        `${firstName} ${lastName}`.trim(),
+          university:      studentFields.university      || "",
+          year_of_study:   studentFields.year_of_study  ?? 1,
+          field_of_study:  studentFields.fieldOfStudy   || "",
+          student_number:  studentFields.studentNumber  || "",
+          wants_volunteer: wantsVolunteer,
+          userId,
+        });
+      } else {
+        await createIndustryProfessional({
+          fullname:    `${firstName} ${lastName}`.trim(),
+          institution: industryFields.institution || "",
+          job_title:   industryFields.jobTitle    || "",
+          userId,
+        });
+      }
+
+      navigate("/application-status", { state: { firstName, lastName, email, status: "Pending" } });
+    } catch (err) {
+      setSubmitError(err.message || "Something went wrong. Please try again.");
+      setSubmitting(false);
+    }
   }
 
   async function handleResend() {
@@ -156,12 +194,12 @@ function OtpPage() {
               ))}
             </div>
 
-            {error && (
+            {(error || submitError) && (
               <div className="otp-page__error">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
                 </svg>
-                {error}
+                {error || submitError}
               </div>
             )}
 
@@ -180,9 +218,9 @@ function OtpPage() {
               </button>
             </div>
 
-            <button type="submit" className="otp-page__submit">
+            <button type="submit" className="otp-page__submit" disabled={submitting}>
               <FiCheckCircle size={16} />
-              Verify
+              {submitting ? "Creating account…" : "Verify"}
             </button>
           </form>
         </div>

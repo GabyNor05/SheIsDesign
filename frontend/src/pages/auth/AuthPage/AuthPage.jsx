@@ -9,7 +9,7 @@ import TokenModal from "../../../components/auth/TokenModal/TokenModal";
 import OtpModal from "../../../components/auth/OtpModal/OtpModal";
 import { useAuth } from "../../../context/AuthContext";
 import { useGoogleLogin } from "@react-oauth/google";
-import { loginUser, registerUser, googleLoginUser } from "../../../services/authService";
+import { loginUser, googleLoginUser } from "../../../services/authService";
 import "./AuthPage.css";
 
 const ADMIN_EMAILS = ["admin@sheisdesign.co.za", "superadmin@example.com"];
@@ -285,16 +285,10 @@ function AuthCard() {
     }
   }
 
-  async function handleSignupSubmit({ firstName, lastName, email, password }) {
-    setSignupError("");
-    try {
-      const res = await registerUser(email, password);
-      navigate("/signup/details", {
-        state: { firstName, lastName, email, userId: res.id },
-      });
-    } catch (err) {
-      setSignupError(sanitiseError(err));
-    }
+  function handleSignupSubmit({ firstName, lastName, email, password }) {
+    navigate("/signup/details", {
+      state: { firstName, lastName, email, password },
+    });
   }
 
   function handleOtpVerified() {

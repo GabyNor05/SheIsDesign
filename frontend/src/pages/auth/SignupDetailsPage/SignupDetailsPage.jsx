@@ -6,7 +6,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { createMentee, createIndustryProfessional } from "../../../services/authService";
 import { generateOtp, getExpiryTimestamp, sendVerificationEmail } from "../../../services/emailService";
 import {
   FiMail, FiBriefcase, FiUpload, FiFile,
@@ -210,7 +209,7 @@ export default function SignupDetailsPage() {
   const firstName = location.state?.firstName || "there";
   const lastName  = location.state?.lastName  || "";
   const email     = location.state?.email     || "";
-  const userId    = location.state?.userId;
+  const password  = location.state?.password  || "";
 
   const [tab, setTab] = useState("student");
   const [submitError, setSubmitError] = useState("");
@@ -237,52 +236,40 @@ export default function SignupDetailsPage() {
     setIndustryFields((p) => ({ ...p, [key]: val }));
   }
 
+const YEAR_MAP = {
+  "1st Year": 1, "2nd Year": 2, "3rd Year": 3,
+  "4th Year": 4, "Postgraduate": 5,
+};
+
 async function handleSubmit(e) {
   e.preventDefault();
   setSubmitError("");
 
+  const code   = generateOtp();
+  const expiry = getExpiryTimestamp();
   try {
-    if (tab === "student") {
-      await createMentee({
-        fullname:        `${firstName} ${lastName}`.trim(),
-        university:      studentFields.university,
-        year_of_study:   studentFields.yearOfStudy,
-        field_of_study:  studentFields.fieldOfStudy,
-        student_number:  studentFields.studentNumber,
-        wants_volunteer: wantsVolunteer,
-        userId,
-      });
-    } else {
-      await createIndustryProfessional({
-        institution: industryFields.institution,
-        job_title:   industryFields.jobTitle,
-        userId,
-      });
-    }
-
-    const code   = generateOtp();
-    const expiry = getExpiryTimestamp();
     await sendVerificationEmail(email, firstName, code, expiry);
-    navigate("/signup/verify", {
-      state: { firstName, lastName, email, userId, code, expiry },
-    });
-
-  } catch (err) {
-    console.error("Signup details error:", err);
-
-    if (userId) {
-      const code   = generateOtp();
-      const expiry = getExpiryTimestamp();
-      await sendVerificationEmail(email, firstName, code, expiry);
-      navigate("/signup/verify", {
-        state: { firstName, lastName, email, userId, code, expiry },
-      });
-    } else {
-      setSubmitError(
-        err.message || "Something went wrong. Please try again."
-      );
-    }
+  } catch {
+    // email failed — continue, user can resend on the OTP page
   }
+
+  navigate("/signup/verify", {
+    state: {
+      firstName,
+      lastName,
+      email,
+      password,
+      code,
+      expiry,
+      tab,
+      studentFields: {
+        ...studentFields,
+        year_of_study: YEAR_MAP[studentFields.yearOfStudy] ?? 1,
+      },
+      wantsVolunteer,
+      industryFields,
+    },
+  });
 }
 
   return (

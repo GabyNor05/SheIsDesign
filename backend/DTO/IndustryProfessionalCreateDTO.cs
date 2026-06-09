@@ -3,8 +3,9 @@ namespace SheDesign.DTO
 {
     public class IndustryProfessionalCreateDTO
     {
+        public string fullname    { get; set; } = String.Empty;
         public string institution { get; set; } = String.Empty;
-        public string job_title { get; set; } = String.Empty;
-        public int userId { get; set; }
+        public string job_title   { get; set; } = String.Empty;
+        public int    userId      { get; set; }
     }
 }
