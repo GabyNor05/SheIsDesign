@@ -27,8 +27,9 @@ namespace backend.Controllers
         public async Task<ActionResult<IEnumerable<JudgeMarkSchemeReadDTO>>> GetJudgeMarkScheme()
         {
             return await _context.JudgeMarkScheme
-                .Include(scheme => scheme.Judge)
                 .Include(scheme => scheme.Post)
+                .Include(scheme => scheme.Judge)
+                    .ThenInclude(j => j.IndustryProfessional) // Dig deeper to get the IP details
                 .Select(scheme => new JudgeMarkSchemeReadDTO
                 {
                     Id = scheme.Id,
@@ -37,8 +38,12 @@ namespace backend.Controllers
                     Score = scheme.Score,
                     Comment = scheme.Comment,
                     TimeStamp = scheme.TimeStamp,
-                    // Pulling flattened properties safely via null-conditional operators
-                    JudgeName = scheme.Judge != null ? scheme.Judge.IndustryProfessional.fullname : "Unknown Judge",
+                    
+                    // Step through the relationship chain with null safety checks
+                    JudgeName = scheme.Judge != null && scheme.Judge.IndustryProfessional != null 
+                        ? scheme.Judge.IndustryProfessional.fullname 
+                        : "Unknown Judge",
+                        
                     PostTitle = scheme.Post != null ? scheme.Post.title : "Untitled Post"
                 })
                 .ToListAsync();
@@ -49,8 +54,9 @@ namespace backend.Controllers
         public async Task<ActionResult<JudgeMarkSchemeReadDTO>> GetJudgeMarkScheme(int id)
         {
             var judgeMarkScheme = await _context.JudgeMarkScheme
-                .Include(scheme => scheme.Judge)
                 .Include(scheme => scheme.Post)
+                .Include(scheme => scheme.Judge)
+                    .ThenInclude(j => j.IndustryProfessional)
                 .Where(scheme => scheme.Id == id)
                 .Select(scheme => new JudgeMarkSchemeReadDTO
                 {
@@ -60,15 +66,14 @@ namespace backend.Controllers
                     Score = scheme.Score,
                     Comment = scheme.Comment,
                     TimeStamp = scheme.TimeStamp,
-                    JudgeName = scheme.Judge != null ? scheme.Judge.IndustryProfessional.fullname : "Unknown Judge",
+                    JudgeName = scheme.Judge != null && scheme.Judge.IndustryProfessional != null 
+                        ? scheme.Judge.IndustryProfessional.fullname 
+                        : "Unknown Judge",
                     PostTitle = scheme.Post != null ? scheme.Post.title : "Untitled Post"
                 })
                 .FirstOrDefaultAsync();
 
-            if (judgeMarkScheme == null)
-            {
-                return NotFound();
-            }
+            if (judgeMarkScheme == null) return NotFound();
 
             return judgeMarkScheme;
         }
@@ -107,7 +112,6 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<JudgeMarkSchemeReadDTO>> PostJudgeMarkScheme(JudgeMarkSchemeCreateDTO dto)
         {
-            // 1. Map incoming DTO to your core Entity Model
             var judgeMarkScheme = new JudgeMarkScheme
             {
                 PostId = dto.PostId,
@@ -120,13 +124,13 @@ namespace backend.Controllers
             _context.JudgeMarkScheme.Add(judgeMarkScheme);
             await _context.SaveChangesAsync();
 
-            // 2. Fetch the newly saved record with its navigation properties loaded
+            // Re-fetch with the full relationship graph loaded
             var savedScheme = await _context.JudgeMarkScheme
-                .Include(s => s.Judge)
                 .Include(s => s.Post)
+                .Include(s => s.Judge)
+                    .ThenInclude(j => j.IndustryProfessional)
                 .FirstOrDefaultAsync(s => s.Id == judgeMarkScheme.Id);
 
-            // 3. Map it back to a clear, descriptive Read DTO to return to the frontend
             var readDto = new JudgeMarkSchemeReadDTO
             {
                 Id = judgeMarkScheme.Id,
@@ -135,7 +139,9 @@ namespace backend.Controllers
                 Score = judgeMarkScheme.Score,
                 Comment = judgeMarkScheme.Comment,
                 TimeStamp = judgeMarkScheme.TimeStamp,
-                JudgeName = savedScheme?.Judge != null ? savedScheme.Judge.IndustryProfessional.fullname : "Unknown Judge",
+                JudgeName = savedScheme?.Judge?.IndustryProfessional != null 
+                    ? savedScheme.Judge.IndustryProfessional.fullname 
+                    : "Unknown Judge",
                 PostTitle = savedScheme?.Post != null ? savedScheme.Post.title : "Untitled Post"
             };
 
