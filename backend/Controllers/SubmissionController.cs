@@ -63,31 +63,6 @@ namespace backend.Controllers
             return submission;
         }
 
-        // GET: api/Submission/details/5
-        [HttpGet("details/{id}")]
-        public async Task<ActionResult<LeaderboardTotalReadDTO>> GetSubmissionDetails(int id)
-        {
-            // Using Eager Loading to get Student and User in one go
-            var submission = await _context.Submission
-                .Include(s => s.Student)
-                    .ThenInclude(st => st.User)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (submission == null) return NotFound();
-
-            var dto = new LeaderboardTotalReadDTO
-            {
-                Student_name = submission.Student?.fullname ?? "Unknown",
-                Student_email = submission.Student?.User?.Email,
-                Score = submission.points,
-                Submission_title = submission.title,
-                Review_status = submission.status,
-                Rank = submission.rank 
-            };
-
-            return Ok(dto);
-        }
-
         // PUT: api/Submission/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubmission(int id, SubmissionUpdateDTO updateDto)
