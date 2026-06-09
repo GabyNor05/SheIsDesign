@@ -39,12 +39,21 @@ namespace backend.Controllers
         {
             var ip = new IndustryProfessional
             {
+                fullname    = dto.fullname,
                 institution = dto.institution,
-                job_title = dto.job_title,
-                userId = dto.userId,
+                job_title   = dto.job_title,
+                userId      = dto.userId,
             };
 
             _context.IndustryProfessional.Add(ip);
+
+            var userToUpdate = await _context.Users.FindAsync(dto.userId);
+            if (userToUpdate != null)
+            {
+                userToUpdate.Role = Role.IndustryProfessional;
+                _context.Entry(userToUpdate).Property(u => u.Role).IsModified = true;
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetById), new { id = ip.Id }, ip);

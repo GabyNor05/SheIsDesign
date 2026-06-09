@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.VisualBasic;
 
 namespace SheDesign.Models
@@ -12,6 +13,7 @@ namespace SheDesign.Models
         public string PasswordHash { get; set; } = String.Empty;
         public DateTime DateCreated {get; set; } = DateTime.UtcNow;
         public Role Role { get; set; } = Role.User;
+        [Column("status")]
         public Status Status { get; set; } = Status.Pending;
 
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();

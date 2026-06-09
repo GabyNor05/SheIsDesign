@@ -254,6 +254,7 @@ async function handleSubmit(e) {
       });
     } else {
       await createIndustryProfessional({
+        fullname:    `${firstName} ${lastName}`.trim(),
         institution: industryFields.institution,
         job_title:   industryFields.jobTitle,
         userId,
