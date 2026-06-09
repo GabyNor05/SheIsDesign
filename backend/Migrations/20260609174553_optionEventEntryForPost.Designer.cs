@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SheDesign.Data;
@@ -11,9 +12,11 @@ using SheDesign.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(SheDesignContext))]
-    partial class SheDesignContextModelSnapshot : ModelSnapshot
+    [Migration("20260609174553_optionEventEntryForPost")]
+    partial class optionEventEntryForPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,7 +77,7 @@ namespace backend.Migrations
                         .HasColumnType("text")
                         .HasColumnName("donor_name");
 
-                    b.Property<int?>("eventId")
+                    b.Property<int>("eventId")
                         .HasColumnType("integer")
                         .HasColumnName("eventId");
 
@@ -185,35 +188,6 @@ namespace backend.Migrations
                     b.HasIndex("IndustryProfessionalID");
 
                     b.ToTable("Judge");
-                });
-
-            modelBuilder.Entity("SheDesign.Models.JudgeMarkScheme", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("text");
-
-                    b.Property<int>("JudgeId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JudgeId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("JudgeMarkScheme");
                 });
 
             modelBuilder.Entity("SheDesign.Models.Post", b =>
@@ -412,7 +386,9 @@ namespace backend.Migrations
                 {
                     b.HasOne("SheDesign.Models.Event", "Event")
                         .WithMany("Donations")
-                        .HasForeignKey("eventId");
+                        .HasForeignKey("eventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Event");
                 });
@@ -437,25 +413,6 @@ namespace backend.Migrations
                         .IsRequired();
 
                     b.Navigation("IndustryProfessional");
-                });
-
-            modelBuilder.Entity("SheDesign.Models.JudgeMarkScheme", b =>
-                {
-                    b.HasOne("SheDesign.Models.Judge", "Judge")
-                        .WithMany()
-                        .HasForeignKey("JudgeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SheDesign.Models.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Judge");
-
-                    b.Navigation("Post");
                 });
 
             modelBuilder.Entity("SheDesign.Models.Post", b =>

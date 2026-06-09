@@ -20,7 +20,30 @@ apiClient.interceptors.response.use(
     }
 );
 
-export const approveUserService = {
-    //needs the userID
-    ApproveUser: (id) => apiClient.put(`/${id}/ApproveUser`)
+export const Status = {
+    Pending: 0,
+    Approved: 1,
+    Rejected: 2
+};
+
+export const Role = {
+    User: 0,
+    Judge: 1,
+    IndustryProfessional: 2,
+    Student: 3,
+    Admin: 4,
+};
+
+export const ChangeUserStatusService = {
+    SetApproved: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Status.Approved}`),
+    SetPending: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Status.Pending}`),
+    SetRejected: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Status.Rejected}`),
+};
+
+export const ChangeUserRole = {
+    SetUser: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Role.User}`),
+    SetJudge: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Role.Judge}`),
+    SetIndustryProfessional: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Role.IndustryProfessional}`),
+    SetStudent: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Role.Student}`),
+    SetAdmin: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Role.Admin}`),
 };

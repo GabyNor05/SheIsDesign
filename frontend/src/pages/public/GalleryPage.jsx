@@ -63,7 +63,7 @@ function PostCard({ post, onClick, index }) {
   }, [index]);
 
   const gradient = CATEGORY_GRADIENTS[post.category] || ["#1a0510", "#2d0a1e", "#C41262"];
-  const hasImage = !!post.imageUrl;
+  const hasImage = !!post.imageFileLink;
   const initials = (post.studentName || "D").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
 
   return (
@@ -81,7 +81,7 @@ function PostCard({ post, onClick, index }) {
         }}
       >
         {hasImage
-          ? <img src={post.imageUrl} alt={post.title} className="bcard__img" />
+          ? <img src={post.imageFileLink} alt={post.title} className="bcard__img" />
           : (
             <div className="bcard__placeholder">
               <svg width="28" height="28" viewBox="0 0 24 24" fill={gradient[2] + "55"}>
@@ -296,7 +296,7 @@ export default function GalleryPage() {
         const data = await postService.getAllPosts();
         const all = Array.isArray(data) ? data : [];
         const approved = all.map(normalisePost).filter((p) => p.status === "Approved");
-        setPosts(approved);
+        setPosts(all);
       } catch (err) {
         setFetchError(err?.message || "Failed to load gallery.");
       } finally {

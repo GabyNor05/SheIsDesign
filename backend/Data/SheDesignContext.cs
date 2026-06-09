@@ -125,5 +125,6 @@ namespace SheDesign.Data
                 .WithMany(u => u.IndustryProfessionals)
                 .HasForeignKey(ip => ip.userId);
         }
+        public DbSet<SheDesign.Models.JudgeMarkScheme> JudgeMarkScheme { get; set; } = default!;
     }
 }

@@ -54,14 +54,38 @@ namespace backend.Controllers
             };
         }
 
-        [HttpPut("{id}/ApproveUser")]
-        public async Task<IActionResult> ApproveUser(int id)
+        [HttpPut("{id}/ChangeUserStatus")]
+        public async Task<IActionResult> ChangeUserStatus(int id, Status userStatus)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound();
 
-            user.Status = Status.Approved;
+            user.Status = userStatus;
             _context.Entry(user).Property(u => u.Status).IsModified = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}/ChangeUserRole")]
+        public async Task<IActionResult> ChangeUserRole(int id, Role userRole)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            user.Role = userRole;
+            _context.Entry(user).Property(u => u.Role).IsModified = true;
 
             try
             {

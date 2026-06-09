@@ -121,7 +121,6 @@ export default function PostToLibraryModal({ onClose, onSuccess, studentId }) {
         Description:   fullDescription,
         Category:      category,
         StudentId:     studentId,
-        EventId:       0,
         ImageFileLink: imageUrl,
         Status:        "Pending",
       };
