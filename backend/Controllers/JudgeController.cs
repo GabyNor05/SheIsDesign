@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SheDesign.Data;
 using SheDesign.Models;
+using SheDesign.DTO;
 
 namespace backend.Controllers
 {
@@ -23,9 +24,20 @@ namespace backend.Controllers
 
         // GET: api/Judge
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Judge>>> GetJudge()
+        public async Task<ActionResult<IEnumerable<JudgeReadDTO>>> GetJudge()
         {
-            return await _context.Judge.ToListAsync();
+            return await _context.Judge
+                .Include(j => j.IndustryProfessional)
+                .Select(j => new JudgeReadDTO
+                {
+                    Id = j.Id,
+                    IndustryProfessionalID = j.IndustryProfessionalID,
+                    Fullname = j.IndustryProfessional!.fullname,
+                    Institution = j.IndustryProfessional.institution,
+                    JobTitle = j.IndustryProfessional.job_title,
+                    UserId = j.IndustryProfessional.userId
+                })
+                .ToListAsync();
         }
 
         // GET: api/Judge/5
