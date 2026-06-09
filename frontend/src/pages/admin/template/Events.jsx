@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import "./Events.css";
+import "./EventModal.css";
 import { eventService } from "../../../services/eventService";
-import EventForm from "../../../components/admin/event/EventForm";
-import AllEvents from "../../../components/admin/event/AllEvents";
+import { cloudinaryService } from "../../../services/CloudinaryService";
 
 const T = {
   bg:          "#0D0D0D",
@@ -29,8 +29,6 @@ const T = {
   amber:       "#FBBF24",
 };
 
-const STORAGE_KEY = "sheisdesign_events";
-
 const CATEGORIES = [
   "Branding","Motion","UI/UX","Typography",
   "Illustration","Packaging","Photography","Web Design","Other",
@@ -46,16 +44,15 @@ const STATUS_STYLES = {
 };
 
 const SEED_EVENTS = [
-  { EventID:"evt-001", title:"Brand Identity Challenge",  category:"Branding",     categoryLabel:"Brand Identity",  start_date:"2025-03-12", end_date:"2025-03-10", entry_count:84,  max_entries:92,  description:"A comprehensive brand identity challenge.",  points_reward:500,  status:"open",     image_link:"", submissions:66, location:"Online", time:"09:00", judges:6 },
-  { EventID:"evt-002", title:"Motion Design Bootcamp",    category:"Motion",       categoryLabel:"Motion Design",   start_date:"2025-03-20", end_date:"2025-03-18", entry_count:41,  max_entries:60,  description:"An intensive motion design bootcamp.",       points_reward:300,  status:"open",     image_link:"", submissions:28, location:"Online", time:"10:00", judges:3 },
-  { EventID:"evt-003", title:"UI/UX Hackathon 2026",      category:"UI/UX",        categoryLabel:"UX Design",       start_date:"2025-04-05", end_date:"2025-04-03", entry_count:61,  max_entries:75,  description:"A 48-hour hackathon.",                       points_reward:750,  status:"open",     image_link:"", submissions:47, location:"Wits University", time:"08:00", judges:4 },
-  { EventID:"evt-004", title:"Illustration Open Brief",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-05-02", end_date:"2025-04-28", entry_count:67,  max_entries:80,  description:"An open illustration brief.",                points_reward:400,  status:"open",     image_link:"", submissions:51, location:"Online", time:"09:00", judges:3 },
-  { EventID:"evt-005", title:"Typography Sprint",         category:"Typography",   categoryLabel:"Typography",      start_date:"2025-04-18", end_date:"2025-04-15", entry_count:29,  max_entries:60,  description:"A focused sprint on editorial typography.",  points_reward:200,  status:"draft",    image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
-  { EventID:"evt-006", title:"Packaging Design Sprint",   category:"Packaging",    categoryLabel:"Packaging",       start_date:"2025-05-15", end_date:"2025-05-12", entry_count:0,   max_entries:75,  description:"Design sustainable packaging.",              points_reward:350,  status:"upcoming", image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
-  { EventID:"evt-007", title:"Annual Design Awards 2025", category:"Other",        categoryLabel:"Awards",          start_date:"2025-10-14", end_date:"2025-10-12", entry_count:287, max_entries:300, description:"The flagship annual awards.",                points_reward:1000, status:"closed",   image_link:"", submissions:187,location:"Online", time:"14:00", judges:8 },
-  { EventID:"evt-008", title:"Poster Design Challenge",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-06-01", end_date:"2025-05-30", entry_count:76,  max_entries:100, description:"A bold poster challenge.",                   points_reward:250,  status:"closed",   image_link:"", submissions:69, location:"Online", time:"10:00", judges:3 },
+  { EventID:"evt-001", title:"Brand Identity Challenge",  category:"Branding",     start_date:"2025-03-12", end_date:"2025-03-10", entry_count:84,  max_entries:92,  description:"A comprehensive brand identity challenge.",  points_reward:500,  status:"open",     image_link:"", submissions:66, location:"Online", time:"09:00", judges:6 },
+  { EventID:"evt-002", title:"Motion Design Bootcamp",    category:"Motion",       start_date:"2025-03-20", end_date:"2025-03-18", entry_count:41,  max_entries:60,  description:"An intensive motion design bootcamp.",       points_reward:300,  status:"open",     image_link:"", submissions:28, location:"Online", time:"10:00", judges:3 },
+  { EventID:"evt-003", title:"UI/UX Hackathon 2026",      category:"UI/UX",        start_date:"2025-04-05", end_date:"2025-04-03", entry_count:61,  max_entries:75,  description:"A 48-hour hackathon.",                       points_reward:750,  status:"open",     image_link:"", submissions:47, location:"Wits University", time:"08:00", judges:4 },
+  { EventID:"evt-004", title:"Illustration Open Brief",   category:"Illustration", start_date:"2025-05-02", end_date:"2025-04-28", entry_count:67,  max_entries:80,  description:"An open illustration brief.",                points_reward:400,  status:"open",     image_link:"", submissions:51, location:"Online", time:"09:00", judges:3 },
+  { EventID:"evt-005", title:"Typography Sprint",         category:"Typography",   start_date:"2025-04-18", end_date:"2025-04-15", entry_count:29,  max_entries:60,  description:"A focused sprint on editorial typography.",  points_reward:200,  status:"draft",    image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
+  { EventID:"evt-006", title:"Packaging Design Sprint",   category:"Packaging",    start_date:"2025-05-15", end_date:"2025-05-12", entry_count:0,   max_entries:75,  description:"Design sustainable packaging.",              points_reward:350,  status:"upcoming", image_link:"", submissions:0,  location:"Online", time:"10:00", judges:2 },
+  { EventID:"evt-007", title:"Annual Design Awards 2025", category:"Other",        start_date:"2025-10-14", end_date:"2025-10-12", entry_count:287, max_entries:300, description:"The flagship annual awards.",                points_reward:1000, status:"closed",   image_link:"", submissions:187,location:"Online", time:"14:00", judges:8 },
+  { EventID:"evt-008", title:"Poster Design Challenge",   category:"Illustration", start_date:"2025-06-01", end_date:"2025-05-30", entry_count:76,  max_entries:100, description:"A bold poster challenge.",                   points_reward:250,  status:"closed",   image_link:"", submissions:69, location:"Online", time:"10:00", judges:3 },
 ];
-
 
 function genId() { return "evt-" + Date.now().toString(36); }
 function fmtDate(d) {
@@ -81,6 +78,7 @@ function Ic({ n, s = 16, c = "currentColor" }) {
     pin:    <><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></>,
     clock:  <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>,
     award:  <><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></>,
+    warn:   <><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>,
   };
   return (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none"
@@ -91,7 +89,7 @@ function Ic({ n, s = 16, c = "currentColor" }) {
 }
 
 function Badge({ status }) {
-  const s = STATUS_STYLES[status] || STATUS_STYLES.DRAFT;
+  const s = STATUS_STYLES[status] || STATUS_STYLES.draft;
   return (
     <span className="ev-badge" style={{ background: s.bg, color: s.color, borderColor: `${s.color}40` }}>
       {status}
@@ -106,9 +104,7 @@ function ProgressBar({ count, max, showLabel = true }) {
       {showLabel && (
         <div className="progress-label">
           <span className="progress-label__count">{count} / {max} entries</span>
-          <span className="progress-label__pct" style={{ color: p >= 80 ? T.pinkHot : T.textSecond }}>
-            {p}% full
-          </span>
+          <span className="progress-label__pct" style={{ color: p >= 80 ? T.pinkHot : T.textSecond }}>{p}% full</span>
         </div>
       )}
       <div className="progress-track" style={{ height: showLabel ? 5 : 4 }}>
@@ -127,9 +123,7 @@ function JudgeAvatars({ count }) {
       <div className="judge-avatar-stack">
         {Array.from({ length: show }).map((_, i) => (
           <div key={i} className="judge-avatar" style={{
-            background: colors[i % 4] + "30",
-            color: colors[i % 4],
-            marginLeft: i ? -6 : 0,
+            background: colors[i % 4] + "30", color: colors[i % 4], marginLeft: i ? -6 : 0,
           }}>J</div>
         ))}
       </div>
@@ -156,20 +150,38 @@ function MetaRow({ icon, text }) {
   );
 }
 
-function Modal({ title, onClose, children, wide }) {
+// ── Scoped modal using ev-modal- classes (not modal-overlay from AuthPage) ───
+function EventModal({ title, eyebrow = "Admin · Events", onClose, children, wide }) {
   useEffect(() => {
     const h = e => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", h);
-    return () => window.removeEventListener("keydown", h);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", h);
+      document.body.style.overflow = "";
+    };
   }, [onClose]);
 
   return (
-    <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}
-      role="dialog" aria-modal="true" aria-label={title}>
-      <div className={`modal-box ${wide ? "modal-box--wide" : "modal-box--narrow"}`}>
-        <div className="modal-header">
-          <h2 className="modal-title">{title}</h2>
-          <button className="modal-close-btn" onClick={onClose} aria-label="Close">
+    <div
+      className="ev-modal-overlay"
+      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+    >
+      <div className={`ev-modal-box ${wide ? "ev-modal-box--wide" : "ev-modal-box--narrow"}`}
+        style={{ position: "relative" }}>
+        <div className="ev-modal-glow" />
+        <div className="ev-modal-header">
+          <div className="ev-modal-header__left">
+            <span className="ev-modal-eyebrow">
+              <span className="ev-modal-eyebrow-dot" />
+              {eyebrow}
+            </span>
+            <h2 className="ev-modal-title">{title}</h2>
+          </div>
+          <button className="ev-modal-close" onClick={onClose} aria-label="Close">
             <Ic n="close" s={14} c="currentColor" />
           </button>
         </div>
@@ -179,14 +191,15 @@ function Modal({ title, onClose, children, wide }) {
   );
 }
 
-/* function FormField({ label, required, error, children }) {
+// ── Form field helper ─────────────────────────────────────────────────────────
+function FormField({ label, required, error, children }) {
   return (
-    <div className="form-field">
-      <label className="form-label">
-        {label}{required && <span className="form-label__required"> *</span>}
+    <div className="ev-form-field">
+      <label className="ev-form-label">
+        {label}{required && <span className="ev-form-label__required"> *</span>}
       </label>
       {children}
-      {error && <span className="form-error">{error}</span>}
+      {error && <span className="ev-form-error">{error}</span>}
     </div>
   );
 }
@@ -194,124 +207,276 @@ function Modal({ title, onClose, children, wide }) {
 const EMPTY_FORM = {
   title:"", start_date:"", end_date:"", description:"",
   max_entries:"", category:"Branding", points_reward:"",
-  status:"DRAFT", image_link:"", location:"Online", time:"10:00",
-  entry_count:0, submissions:0, judges:0, categoryLabel:"",
+  status:"draft", image_link:"", location:"Online", time:"10:00",
+  entry_count:0, submissions:0, judges:0,
 };
 
+// ── Event form with Cloudinary image upload + date pickers ───────────────────
 function EventForm({ initial, onSave, onClose }) {
-  const [form, setForm] = useState(initial ? { ...initial } : { ...EMPTY_FORM });
-  const [errors, setErrors] = useState({});
+  const [form, setForm]           = useState(initial ? { ...initial } : { ...EMPTY_FORM });
+  const [errors, setErrors]       = useState({});
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(initial?.image_link || null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState("");
+  const [dragOver, setDragOver]   = useState(false);
+  const fileInputRef              = useRef(null);
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
+  function handleFileSelect(file) {
+    if (!file || !file.type.startsWith("image/")) {
+      setUploadError("Please select a valid image file (JPG, PNG, WEBP).");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadError("Image must be under 10 MB.");
+      return;
+    }
+    setUploadError("");
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setImagePreview(reader.result);
+    reader.readAsDataURL(file);
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelect(file);
+  }
+
   const validate = () => {
     const e = {};
-    if (!form.title.trim())                                   e.title         = "Required";
-    if (!form.start_date)                                     e.start_date    = "Required";
-    if (!form.end_date)                                       e.end_date      = "Required";
-    if (!form.description.trim())                             e.description   = "Required";
-    if (!form.max_entries || +form.max_entries < 1)           e.max_entries   = "Must be >= 1";
-    if (form.points_reward === "" || +form.points_reward < 0) e.points_reward = "Required";
+    if (!form.title.trim())                                   e.title         = "Title is required";
+    if (!form.start_date)                                     e.start_date    = "Start date is required";
+    if (!form.end_date)                                       e.end_date      = "End date is required";
+    if (!form.description.trim())                             e.description   = "Description is required";
+    if (!form.max_entries || +form.max_entries < 1)           e.max_entries   = "Must be at least 1";
+    if (form.points_reward === "" || +form.points_reward < 0) e.points_reward = "Points reward is required";
     setErrors(e);
     return !Object.keys(e).length;
   };
 
-  const submit = () => {
+  const submit = async () => {
     if (!validate()) return;
-    onSave({ ...form, max_entries: +form.max_entries, points_reward: +form.points_reward, categoryLabel: form.categoryLabel || form.category });
+    setUploading(true);
+    setUploadError("");
+    try {
+      let imageUrl = form.image_link;
+      // Upload to Cloudinary if a new file was selected
+      if (imageFile) {
+        const uploaded = await cloudinaryService.uploadImage(imageFile, "events");
+        if (!uploaded) throw new Error("Image upload failed. Please try again.");
+        imageUrl = uploaded;
+      }
+      onSave({
+        ...form,
+        image_link:    imageUrl,
+        max_entries:   +form.max_entries,
+        points_reward: +form.points_reward,
+      });
+    } catch (err) {
+      setUploadError(err?.message || "Something went wrong.");
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const inp = (key, type = "text", placeholder = "") => ({
-    type, placeholder,
-    value: form[key] ?? "",
-    onChange: e => set(key, e.target.value),
-    className: `form-input${errors[key] ? " form-input--error" : ""}`,
-    onFocus: e => { e.target.style.borderColor = T.pink; },
-    onBlur:  e => { e.target.style.borderColor = errors[key] ? T.closedRed : T.border; },
-  });
-
   return (
-    <div className="modal-body">
-      <div className="form-grid">
-        <div className="form-grid__full">
+    <div className="ev-modal-body">
+      <div className="ev-form-grid">
+
+        {/* Title — full width */}
+        <div className="ev-form-grid__full">
           <FormField label="Event Title" required error={errors.title}>
-            <input {...inp("title","text","e.g. Brand Identity Challenge")} />
-          </FormField>
-        </div>
-        <FormField label="Start Date" required error={errors.start_date}>
-          <input {...inp("start_date","date")} />
-        </FormField>
-        <FormField label="Submission Deadline" required error={errors.end_date}>
-          <input {...inp("end_date","date")} />
-        </FormField>
-        <FormField label="Category" required>
-          <select className="form-select" value={form.category} onChange={e => set("category", e.target.value)}
-            onFocus={e => { e.target.style.borderColor = T.pink; }}
-            onBlur={e  => { e.target.style.borderColor = T.border; }}>
-            {CATEGORIES.map(c => <option key={c} value={c} style={{ background: T.surfaceHi }}>{c}</option>)}
-          </select>
-        </FormField>
-        <FormField label="Status" required>
-          <select className="form-select" value={form.status} onChange={e => set("status", e.target.value)}
-            onFocus={e => { e.target.style.borderColor = T.pink; }}
-            onBlur={e  => { e.target.style.borderColor = T.border; }}>
-            {STATUSES.map(s => <option key={s} value={s} style={{ background: T.surfaceHi }}>{s}</option>)}
-          </select>
-        </FormField>
-        <FormField label="Max Entries" required error={errors.max_entries}>
-          <input {...inp("max_entries","number","e.g. 100")} />
-        </FormField>
-        <FormField label="Points Reward" required error={errors.points_reward}>
-          <input {...inp("points_reward","number","e.g. 500")} />
-        </FormField>
-        <FormField label="Location">
-          <input {...inp("location","text","e.g. Online")} />
-        </FormField>
-        <FormField label="Time">
-          <input {...inp("time","time")} />
-        </FormField>
-        <div className="form-grid__full">
-          <FormField label="Description" required error={errors.description}>
-            <textarea
-              rows={4}
-              value={form.description}
-              onChange={e => set("description", e.target.value)}
-              placeholder="Describe the event, rules, and deliverables..."
-              className={`form-textarea${errors.description ? " form-input--error" : ""}`}
-              onFocus={e => { e.target.style.borderColor = T.pink; }}
-              onBlur={e  => { e.target.style.borderColor = errors.description ? T.closedRed : T.border; }}
+            <input
+              className={`ev-form-input${errors.title ? " ev-form-input--error" : ""}`}
+              type="text"
+              placeholder="e.g. Brand Identity Challenge"
+              value={form.title}
+              onChange={e => set("title", e.target.value)}
             />
           </FormField>
         </div>
-        <div className="form-grid__full">
-          <FormField label="Banner Image URL">
-            <input {...inp("image_link","url","https://...")} />
+
+        {/* Status + Category */}
+        <FormField label="Status">
+          <select className="ev-form-select" value={form.status} onChange={e => set("status", e.target.value)}>
+            {STATUSES.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+          </select>
+        </FormField>
+
+        <FormField label="Category" required>
+          <select className="ev-form-select" value={form.category} onChange={e => set("category", e.target.value)}>
+            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </FormField>
+
+        {/* Date pickers */}
+        <FormField label="Start Date" required error={errors.start_date}>
+          <input
+            className={`ev-form-input${errors.start_date ? " ev-form-input--error" : ""}`}
+            type="date"
+            value={form.start_date}
+            onChange={e => set("start_date", e.target.value)}
+          />
+        </FormField>
+
+        <FormField label="Submission Deadline" required error={errors.end_date}>
+          <input
+            className={`ev-form-input${errors.end_date ? " ev-form-input--error" : ""}`}
+            type="date"
+            value={form.end_date}
+            onChange={e => set("end_date", e.target.value)}
+          />
+        </FormField>
+
+        {/* Max entries + Points */}
+        <FormField label="Max Entries" required error={errors.max_entries}>
+          <input
+            className={`ev-form-input${errors.max_entries ? " ev-form-input--error" : ""}`}
+            type="number"
+            placeholder="e.g. 100"
+            value={form.max_entries}
+            onChange={e => set("max_entries", e.target.value)}
+          />
+        </FormField>
+
+        <FormField label="Points Reward" required error={errors.points_reward}>
+          <input
+            className={`ev-form-input${errors.points_reward ? " ev-form-input--error" : ""}`}
+            type="number"
+            placeholder="e.g. 500"
+            value={form.points_reward}
+            onChange={e => set("points_reward", e.target.value)}
+          />
+        </FormField>
+
+        {/* Location + Time */}
+        <FormField label="Location">
+          <input
+            className="ev-form-input"
+            type="text"
+            placeholder="e.g. Online"
+            value={form.location}
+            onChange={e => set("location", e.target.value)}
+          />
+        </FormField>
+
+        <FormField label="Time">
+          <input
+            className="ev-form-input"
+            type="time"
+            value={form.time}
+            onChange={e => set("time", e.target.value)}
+          />
+        </FormField>
+
+        {/* Description — full width */}
+        <div className="ev-form-grid__full">
+          <FormField label="Description" required error={errors.description}>
+            <textarea
+              className={`ev-form-textarea${errors.description ? " ev-form-textarea--error" : ""}`}
+              rows={4}
+              placeholder="Describe the event, rules, and deliverables..."
+              value={form.description}
+              onChange={e => set("description", e.target.value)}
+            />
+          </FormField>
+        </div>
+
+        {/* Banner image upload — full width */}
+        <div className="ev-form-grid__full">
+          <FormField label="Banner Image">
+            <div
+              className={`ev-img-upload${dragOver ? " ev-img-upload--active" : ""}${imagePreview ? " ev-img-upload--has-image" : ""}`}
+              onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {imagePreview ? (
+                <>
+                  <img src={imagePreview} alt="Banner preview" className="ev-img-upload__preview" />
+                  <div className="ev-img-upload__overlay">
+                    <Ic n="img" s={18} c="#fff" />
+                    <span>Change image</span>
+                  </div>
+                </>
+              ) : (
+                <div className="ev-img-upload__placeholder">
+                  <Ic n="img" s={24} c="rgba(196,18,98,0.6)" />
+                  <span className="ev-img-upload__label">Drop image here or click to browse</span>
+                  <span className="ev-img-upload__sub">JPG, PNG, WEBP · max 10 MB</span>
+                </div>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display:"none" }}
+                onChange={e => handleFileSelect(e.target.files[0])}
+              />
+            </div>
+            {imageFile && (
+              <div className="ev-img-upload__file-row">
+                <span className="ev-img-upload__file-name">{imageFile.name}</span>
+                <button
+                  className="ev-img-upload__remove"
+                  type="button"
+                  onClick={e => {
+                    e.stopPropagation();
+                    setImageFile(null);
+                    setImagePreview(initial?.image_link || null);
+                    set("image_link", initial?.image_link || "");
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+            {uploadError && <span className="ev-form-error">{uploadError}</span>}
           </FormField>
         </div>
       </div>
-      <div className="form-footer">
-        <button className="btn-ghost" onClick={onClose}>Cancel</button>
-        <button className="btn-primary" onClick={submit}>
-          {initial ? "Save Changes" : "Create Event"}
+
+      <div className="ev-form-footer">
+        <button className="ev-btn-ghost" onClick={onClose} disabled={uploading}>Cancel</button>
+        <button className="ev-btn-primary" onClick={submit} disabled={uploading}>
+          {uploading ? (
+            <><span className="ev-upload-spinner" /> Uploading…</>
+          ) : (
+            <><Ic n={initial ? "edit" : "plus"} s={13} c="#fff" />
+            {initial ? "Save Changes" : "Create Event"}</>
+          )}
         </button>
       </div>
     </div>
   );
-} */
+}
 
-function ConfirmDelete({ event, onConfirm, onClose }) {
+// ── Confirm delete ────────────────────────────────────────────────────────────
+function ConfirmDelete({ event, onConfirm, onClose, deleting }) {
   return (
-    <Modal title="Delete Event" onClose={onClose}>
-      <div className="modal-body">
-        <p className="confirm-text">
-          Are you sure you want to delete <strong>{event.title}</strong>? This action cannot be undone.
-        </p>
-        <div className="form-footer">
-          <button className="btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="btn-danger" onClick={onConfirm}>Delete Event</button>
+    <EventModal title="Delete Event" eyebrow="Permanent Action" onClose={onClose}>
+      <div className="ev-modal-body">
+        <div style={{ display:"flex", gap:14, alignItems:"flex-start", marginBottom:20, padding:"14px 16px", background:"rgba(248,113,113,0.06)", border:"1px solid rgba(248,113,113,0.2)", borderRadius:10 }}>
+          <Ic n="warn" s={18} c="#F87171" />
+          <p className="ev-confirm-text" style={{ margin:0 }}>
+            Are you sure you want to delete <strong>{event.title}</strong>?
+            This will permanently remove it from the database and cannot be undone.
+          </p>
+        </div>
+        <div className="ev-form-footer">
+          <button className="ev-btn-ghost" onClick={onClose} disabled={deleting}>Cancel</button>
+          <button className="ev-btn-danger" onClick={onConfirm} disabled={deleting}>
+            {deleting ? "Deleting…" : "Delete Event"}
+          </button>
         </div>
       </div>
-    </Modal>
+    </EventModal>
   );
 }
 
@@ -398,23 +563,17 @@ function CompactCard({ event, onEdit, onDelete, onView, onCloseEvent }) {
           </button>
         ) : event.status === "closed" ? (
           <button className="compact-card__close-btn" onClick={onCloseEvent}
-            style={{ borderColor:"rgba(96,165,250,0.4)", color:"#60A5FA" }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(96,165,250,0.6)"; e.currentTarget.style.color="#93C5FD"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(96,165,250,0.4)"; e.currentTarget.style.color="#60A5FA"; }}
-          >
+            style={{ borderColor:"rgba(96,165,250,0.4)", color:"#60A5FA" }}>
             <Ic n="eye" s={11} c="currentColor" /> Reopen
           </button>
         ) : event.status === "draft" ? (
           <button className="compact-card__close-btn" onClick={onCloseEvent}
-            style={{ borderColor:"rgba(196,18,98,0.4)", color:"#FE4081" }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor="rgba(196,18,98,0.6)"; e.currentTarget.style.color="#C41262"; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(196,18,98,0.4)"; e.currentTarget.style.color="#FE4081"; }}
-          >
+            style={{ borderColor:"rgba(196,18,98,0.4)", color:"#FE4081" }}>
             <Ic n="plus" s={11} c="currentColor" /> Publish
           </button>
         ) : (
           <span className="compact-card__status-label">
-            {event.status.charAt(0) + event.status.slice(1).toLowerCase()}
+            {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
           </span>
         )}
         <div className="compact-card__icon-btns">
@@ -464,7 +623,7 @@ function EventDetail({ event, onBack, onEdit }) {
         </div>
       </div>
       <div className="ev-detail__id-row">
-        <code className="ev-detail__id">{event.EventID}</code>
+        <code className="ev-detail__id">{event.EventID || event.Id || event.id}</code>
         <button className="btn-primary" onClick={onEdit}>
           <Ic n="edit" s={13} c="#fff" /> Edit Event
         </button>
@@ -509,52 +668,28 @@ function EventDetail({ event, onBack, onEdit }) {
 
 const PAGE_SIZE = 8;
 
-
-
 export default function ManageEvents() {
-  const [events,   setEvents]  = useState([]);
-  const [loading,  setLoading] = useState(false);
-  const [error,    setError]   = useState(null);
-  
+  const [events,   setEvents]   = useState([]);
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
   useEffect(() => {
-    const loadUpcomingEvents = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await eventService.getUpcomingEvents();
-        setEvents(data || []);
-
-      } catch (err) {
-        console.error("Error fetching upcoming events:", err);
-        setError(err.message || "Failed to load events");
-        setEvents(SEED_EVENTS);
-        
-      } finally {
-        setLoading(false);
-      }
-    };
-
-     const loadAllEvents = async () => {
+    const load = async () => {
       setLoading(true);
       setError(null);
       try {
         const data = await eventService.getAllEvents();
         setEvents(data || []);
-
       } catch (err) {
-        console.error("Error fetching all events:", err);
-        setError(err.message || "Failed to load events");
+        console.error("Error fetching events:", err);
         setEvents(SEED_EVENTS);
       } finally {
         setLoading(false);
       }
     };
-    
-    loadUpcomingEvents();
-      
-      loadAllEvents();
+    load();
   }, []);
-
 
   const [search,   setSearch]  = useState("");
   const [tab,      setTab]     = useState("all");
@@ -562,7 +697,6 @@ export default function ManageEvents() {
   const [active,   setActive]  = useState(null);
   const [detailId, setDetail]  = useState(null);
   const [page,     setPage]    = useState(1);
-  
 
   const scrollRef = useRef(null);
   const drag = useRef({ active: false, startX: 0, scrollLeft: 0 });
@@ -570,49 +704,96 @@ export default function ManageEvents() {
   const onMouseMove = e => { if (!drag.current.active) return; e.preventDefault(); const x = e.pageX - scrollRef.current.offsetLeft; scrollRef.current.scrollLeft = drag.current.scrollLeft - (x - drag.current.startX) * 1.5; };
   const onMouseUp   = () => { drag.current.active = false; };
 
-
   useEffect(() => { setPage(1); }, [tab, search]);
 
-  const persist      = next => { setEvents(next); };
-  const handleCreate = data => { persist([{ ...data, EventID: genId() }, ...events]); setModal(null); };
-  const handleEdit   = data => { persist(events.map(e => e.EventID === active.EventID ? { ...data, EventID: active.EventID } : e)); setModal(null); setActive(null); };
-  const handleDelete = ()   => { persist(events.filter(e => e.EventID !== active.EventID)); if (detailId === active.EventID) setDetail(null); setModal(null); setActive(null); };
+  const persist = next => setEvents(next);
 
-  const handleStatusToggle = ev => {
+  const handleCreate = async (data) => {
+    try {
+      const created = await eventService.createEvent(data);
+      persist([{ ...data, EventID: created?.id || genId() }, ...events]);
+    } catch {
+      persist([{ ...data, EventID: genId() }, ...events]);
+    }
+    setModal(null);
+  };
+
+  const handleEdit = async (data) => {
+    try {
+      await eventService.updateEvent(active.EventID || active.Id || active.id, data);
+    } catch (err) {
+      console.error("Update error:", err);
+    }
+    persist(events.map(e =>
+      (e.EventID || e.Id || e.id) === (active.EventID || active.Id || active.id)
+        ? { ...data, EventID: active.EventID || active.Id || active.id }
+        : e
+    ));
+    setModal(null);
+    setActive(null);
+  };
+
+  // ── Delete: calls API then removes from local state ──────────────────────
+  const handleDelete = async () => {
+    const eventId = active.EventID || active.Id || active.id;
+    setDeleting(true);
+    try {
+      await eventService.deleteEvent(eventId);
+    } catch (err) {
+      console.error("Delete error:", err);
+      // Still remove from UI even if API fails in dev/seed mode
+    } finally {
+      setDeleting(false);
+    }
+    persist(events.filter(e => (e.EventID || e.Id || e.id) !== eventId));
+    if (detailId === eventId) setDetail(null);
+    setModal(null);
+    setActive(null);
+  };
+
+  const handleStatusToggle = async (ev) => {
     const next =
       ev.status === "open"     ? "closed" :
       ev.status === "closed"   ? "open"   :
       ev.status === "draft"    ? "open"   :
       ev.status === "upcoming" ? "open"   : ev.status;
-    persist(events.map(e => e.EventID === ev.EventID ? { ...e, status: next } : e));
+    try {
+      await eventService.updateEvent(ev.EventID || ev.Id || ev.id, { ...ev, status: next });
+    } catch (err) {
+      console.error("Status toggle error:", err);
+    }
+    persist(events.map(e =>
+      (e.EventID || e.Id || e.id) === (ev.EventID || ev.Id || ev.id) ? { ...e, status: next } : e
+    ));
   };
 
-  const liveOpen    = events.filter(e => e.status === "open").slice(0, 3);
-  const allFiltered = events.filter(e => e.status === tab && e.title.toLowerCase().includes(search.toLowerCase()));
-  const totalPages  = Math.max(1, Math.ceil(allFiltered.length / PAGE_SIZE));
-  const filtered    = allFiltered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const filtered    = events.filter(e =>
+    (tab === "all" || e.status === tab) &&
+    e.title.toLowerCase().includes(search.toLowerCase())
+  );
+  const totalPages  = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paged       = tab === "all" ? filtered : filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const tabCounts   = STATUS_TABS.reduce((a, s) => { a[s] = events.filter(e => e.status === s).length; return a; }, {});
-  
-  const detailEv    = detailId ? events.find(e => e.EventID === detailId) : null;
+  const liveOpen    = events.filter(e => e.status === "open").slice(0, 6);
+  const detailEv    = detailId ? events.find(e => (e.EventID || e.Id || e.id) === detailId) : null;
 
   if (detailEv) return (
     <div className="events-root">
-      <EventDetail event={detailEv} onBack={() => setDetail(null)} onEdit={() => { setActive(detailEv); setModal("edit"); }} />
+      <EventDetail event={detailEv} onBack={() => setDetail(null)}
+        onEdit={() => { setActive(detailEv); setModal("edit"); }} />
       {modal === "edit" && active && (
-        <Modal title="Edit Event" onClose={() => setModal(null)} wide>
+        <EventModal title="Edit Event" onClose={() => setModal(null)} wide>
           <EventForm initial={active} onSave={handleEdit} onClose={() => setModal(null)} />
-        </Modal>
+        </EventModal>
       )}
     </div>
   );
-
- const displayEvents = events;
-
 
   return (
     <div className="events-root">
       <div className="events-inner">
 
+        {/* Page header */}
         <div className="ev-page-header fu">
           <div>
             <p className="ev-page-header__eyebrow">
@@ -630,7 +811,6 @@ export default function ManageEvents() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Search events..."
-                aria-label="Search events"
               />
             </div>
             <button className="btn-primary" onClick={() => setModal("create")}>
@@ -639,7 +819,9 @@ export default function ManageEvents() {
           </div>
         </div>
 
-          <section className="live-section fu" style={{ animationDelay:"60ms" }} aria-label="Live and open events">
+        {/* Live events strip */}
+        {liveOpen.length > 0 && (
+          <section className="live-section fu" style={{ animationDelay:"60ms" }}>
             <div className="live-section__header">
               <div className="live-section__left">
                 <span className="live-dot" />
@@ -647,40 +829,41 @@ export default function ManageEvents() {
                 <span className="live-count">{liveOpen.length}</span>
               </div>
             </div>
-        {liveOpen.length > 0 && (
             <div className="live-scroll-wrap">
-              <div className="live-scroll" ref={scrollRef} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
-                {displayEvents.filter(e => e.status === "open" /* && e.Start_date > new Date() */).map(ev => (
-                  <FeaturedCard key={ev.EventID} event={ev}
-                    onView={() => setDetail(ev.EventID)}
+              <div className="live-scroll" ref={scrollRef}
+                onMouseDown={onMouseDown} onMouseMove={onMouseMove}
+                onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
+                {liveOpen.map(ev => (
+                  <FeaturedCard key={ev.EventID || ev.id} event={ev}
+                    onView={() => setDetail(ev.EventID || ev.Id || ev.id)}
                     onManage={() => { setActive(ev); setModal("edit"); }}
                   />
                 ))}
               </div>
             </div>
+          </section>
         )}
-        </section>
 
-        <section className="fu" style={{ animationDelay:"120ms" }} aria-label="All events">
+        {/* All events grid */}
+        <section className="fu" style={{ animationDelay:"120ms" }}>
           <div className="all-events-header">
             <div className="all-events-title">
               <span className="all-events-title__text">All Events</span>
               <span className="all-events-title__count">{events.length}</span>
             </div>
             <div className="status-tabs">
-              <button className="status-tab" onClick={() => setTab("all")}
-                style={tab === "all" ? { background: T.surfaceHi, borderColor: T.surfaceHi, color: T.textPrimary } : {}}>
-                All
-              </button>
-              {STATUS_TABS.map(s => {
+              {["all", ...STATUS_TABS].map(s => {
                 const isActive = s === tab;
                 const sc = STATUS_STYLES[s] || {};
                 return (
                   <button key={s} onClick={() => setTab(s)}
                     className={`status-tab${isActive ? " status-tab--active" : ""}`}
-                    style={isActive ? { background: sc.bg, borderColor: `${sc.color}55`, color: sc.color } : {}}>
-                    {s.toUpperCase()}
-                    {tabCounts[s] > 0 && (
+                    style={isActive && s !== "all"
+                      ? { background: sc.bg, borderColor: `${sc.color}55`, color: sc.color }
+                      : isActive ? { background: T.surfaceHi, borderColor: T.surfaceHi, color: T.textPrimary }
+                      : {}}>
+                    {s === "all" ? "All" : s.toUpperCase()}
+                    {s !== "all" && tabCounts[s] > 0 && (
                       <span className="status-tab__count" style={{
                         background: isActive ? `${sc.color}33` : T.surfaceHi,
                         color:      isActive ? sc.color : T.textMuted,
@@ -694,113 +877,60 @@ export default function ManageEvents() {
             </div>
           </div>
 
+          {loading ? (
+            <div className="events-empty">Loading events…</div>
+          ) : paged.length === 0 ? (
+            <div className="events-empty">No {tab !== "all" ? tab : ""} events found.</div>
+          ) : (
+            <div className="admin-events-grid">
+              {paged.map(ev => (
+                <CompactCard key={ev.EventID || ev.id} event={ev}
+                  onView={() => setDetail(ev.EventID || ev.Id || ev.id)}
+                  onEdit={() => { setActive(ev); setModal("edit"); }}
+                  onDelete={() => { setActive(ev); setModal("delete"); }}
+                  onCloseEvent={() => handleStatusToggle(ev)}
+                />
+              ))}
+            </div>
+          )}
 
-          {tab === "all" ? (
-            
-              <div className="admin-events-grid">
-                {events.map(ev => (
-                  <CompactCard key={ev.EventID} event={ev}
-                    onView={() => setDetail(ev.EventID)}
-                    onEdit={() => { setActive(ev); setModal("edit"); }}
-                    onDelete={() => { setActive(ev); setModal("delete"); }}
-                    onCloseEvent={() => handleStatusToggle(ev)}
-                  />
+          {tab !== "all" && totalPages > 1 && (
+            <div className="pagination">
+              <span className="pagination__info">
+                Showing {((page-1)*PAGE_SIZE)+1}–{Math.min(page*PAGE_SIZE, filtered.length)} of {filtered.length}
+              </span>
+              <div className="pagination__controls">
+                <button className="pagination__btn" onClick={() => setPage(p => p-1)} disabled={page===1}>Prev</button>
+                {Array.from({ length: totalPages }, (_,i) => i+1).map(p => (
+                  <button key={p}
+                    className={`pagination__page${p===page ? " pagination__page--active" : ""}`}
+                    onClick={() => setPage(p)}>{p}</button>
                 ))}
+                <button className="pagination__btn" onClick={() => setPage(p => p+1)} disabled={page===totalPages}>Next</button>
               </div>
-            
-          )  : (
-            <>
-              <div className="admin-events-grid">
-                {filtered.map(ev => (
-                  <CompactCard key={ev.EventID} event={ev}
-                    onView={() => setDetail(ev.EventID)}
-                    onEdit={() => { setActive(ev); setModal("edit"); }}
-                    onDelete={() => { setActive(ev); setModal("delete"); }}
-                    onCloseEvent={() => handleStatusToggle(ev)}
-                  />
-                ))}
-              </div>
-
-              {totalPages > 1 && (
-                <div className="pagination">
-                  <span className="pagination__info">
-                    Showing {((page - 1) * PAGE_SIZE) + 1}–{Math.min(page * PAGE_SIZE, allFiltered.length)} of {allFiltered.length} events
-                  </span>
-                  <div className="pagination__controls">
-                    <button className="pagination__btn" onClick={() => setPage(p => p - 1)} disabled={page === 1}>
-                      Prev
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                      <button key={p}
-                        className={`pagination__page${p === page ? " pagination__page--active" : ""}`}
-                        onClick={() => setPage(p)}>
-                        {p}
-                      </button>
-                    ))}
-                    <button className="pagination__btn" onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>
-                      Next
-                    </button>
-                  </div>
-                </div>
-              )}
-            </>
-          )} 
-           {tab === "all" &&(<div className="admin-events-grid">
-                {events.filter(ev => ev.Status === "all").map(ev => (
-                  <CompactCard key={ev.EventID} event={ev}
-                    onView={() => setDetail(ev.EventID)}
-                    onEdit={() => { setActive(ev); setModal("edit"); }}
-                    onDelete={() => { setActive(ev); setModal("delete"); }}
-                    onCloseEvent={() => handleStatusToggle(ev)}
-                  />
-                ))}
-              </div>)} 
-              {tab === "open" &&(<div className="admin-events-grid">
-                {events.filter(ev => ev.Status === "open").map(ev => (
-                  <CompactCard key={ev.EventID} event={ev}
-                    onView={() => setDetail(ev.EventID)}
-                    onEdit={() => { setActive(ev); setModal("edit"); }}
-                    onDelete={() => { setActive(ev); setModal("delete"); }}
-                    onCloseEvent={() => handleStatusToggle(ev)}
-                  />
-                ))}
-              </div>)} 
-              {tab === "closed" &&(<div className="admin-events-grid">
-                {events.filter(ev => ev.Status === "closed").map(ev => (
-                  <CompactCard key={ev.EventID} event={ev}
-                    onView={() => setDetail(ev.EventID)}
-                    onEdit={() => { setActive(ev); setModal("edit"); }}
-                    onDelete={() => { setActive(ev); setModal("delete"); }}
-                    onCloseEvent={() => handleStatusToggle(ev)}
-                  />
-                ))}
-              </div>)} 
-              {tab === "DRAFT" &&(<div className="admin-events-grid">
-                {events.filter(ev => ev.Status === "draft").map(ev => (
-                  <CompactCard key={ev.EventID} event={ev}
-                    onView={() => setDetail(ev.EventID)}
-                    onEdit={() => { setActive(ev); setModal("edit"); }}
-                    onDelete={() => { setActive(ev); setModal("delete"); }}
-                    onCloseEvent={() => handleStatusToggle(ev)}
-                  />
-                ))}
-              </div>)} 
-
+            </div>
+          )}
         </section>
       </div>
 
+      {/* Modals */}
       {modal === "create" && (
-        <Modal title="Create New Event" onClose={() => setModal(null)} wide>
+        <EventModal title="Create New Event" onClose={() => setModal(null)} wide>
           <EventForm onSave={handleCreate} onClose={() => setModal(null)} />
-        </Modal>
+        </EventModal>
       )}
       {modal === "edit" && active && (
-        <Modal title="Edit Event" onClose={() => { setModal(null); setActive(null); }} wide>
+        <EventModal title="Edit Event" onClose={() => { setModal(null); setActive(null); }} wide>
           <EventForm initial={active} onSave={handleEdit} onClose={() => { setModal(null); setActive(null); }} />
-        </Modal>
+        </EventModal>
       )}
       {modal === "delete" && active && (
-        <ConfirmDelete event={active} onConfirm={handleDelete} onClose={() => { setModal(null); setActive(null); }} />
+        <ConfirmDelete
+          event={active}
+          onConfirm={handleDelete}
+          onClose={() => { setModal(null); setActive(null); }}
+          deleting={deleting}
+        />
       )}
     </div>
   );

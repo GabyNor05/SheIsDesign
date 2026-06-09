@@ -381,7 +381,7 @@ function PendingApplications() {
     );
   }
 
-  if (error) {
+if (error) {
     return (
       <Card className="w-full">
         <SectionHeader
@@ -389,10 +389,29 @@ function PendingApplications() {
           title="Pending Applications"
           badge={participants.length}
         />
-        <div
-          style={{ padding: "20px", textAlign: "center", color: T.closedRed }}
-        >
-          Failed to load applications: {error}
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <span style={{ color: T.closedRed, fontSize: 13, fontFamily: "'Poppins', sans-serif" }}>
+            ⚠ Unable to load applications
+          </span>
+          <p style={{ color: T.textMuted, fontSize: 12, marginTop: 6, fontFamily: "'Poppins', sans-serif" }}>
+            Check your backend connection and try again.
+          </p>
+          <button
+            onClick={loadParticipants}
+            style={{
+              marginTop: 12,
+              background: "none",
+              border: `1px solid ${T.border}`,
+              borderRadius: 8,
+              padding: "6px 16px",
+              color: T.textSecond,
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            Retry
+          </button>
         </div>
       </Card>
     );
