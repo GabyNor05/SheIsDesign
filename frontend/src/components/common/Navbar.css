@@ -153,6 +153,13 @@
     }
 }
 
+/* Right-side wrapper — dashboard button + auth control */
+.navbar-custom__right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
 /* User Avatar and dropdown */
 .nav-avatar {
     position: relative;

@@ -99,6 +99,12 @@ export default function Navbar({ solid = false }) {
   const isPending = user?.status === "Pending" && user?.role?.toLowerCase() !== "admin";
   const isActive = (path) => location.pathname === path;
 
+  const role = user?.role?.toLowerCase();
+  const isApproved = user?.status === "Approved";
+  let dashboardTo = null;
+  if (isApproved && role === "admin") dashboardTo = "/admin";
+  else if (isApproved && role === "judge") dashboardTo = "/judge";
+
   const navClass = ["navbar-custom", solid ? "navbar-custom--solid" : ""]
     .filter(Boolean)
     .join(" ");
@@ -143,8 +149,15 @@ export default function Navbar({ solid = false }) {
         ))}
       </div>
 
-      {/* Right side — Avatar, Log In, or Join */}
-      {renderAuthControl()}
+      {/* Right side — dashboard shortcut + Avatar / Log In / Join */}
+      <div className="navbar-custom__right">
+        {dashboardTo && (
+          <Link to={dashboardTo} className="navbar-custom__cta">
+            Dashboard
+          </Link>
+        )}
+        {renderAuthControl()}
+      </div>
     </nav>
   );
 }
