@@ -95,14 +95,6 @@ export default function EventDetailModal({ event, onClose, onApply, applied = fa
             </div>
           </div>
 
-          {/* Applied banner */}
-          {applied && (
-            <div className="edm__applied-banner">
-              <CheckCircle size={15} weight="fill" color="#10e266" />
-              <span>You have applied for this event</span>
-            </div>
-          )}
-
           <div className="edm__cta">
             <button
               className={`edm__apply-btn ${applied ? "edm__apply-btn--applied" : !isOpen ? "edm__apply-btn--disabled" : ""}`}
