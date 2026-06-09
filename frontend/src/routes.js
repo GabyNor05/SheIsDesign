@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "./components/common/RootLayout";
 import AdminLayout from "./pages/admin/template/AdminLayout";
+import PendingBlockedRoute from "./components/common/PendingBlockedRoute";
 
 // Public pages
 import HomePage from "./pages/public/HomePage";
@@ -38,11 +39,11 @@ const Routes = createBrowserRouter([
     children: [
       // ── Public ────────────────────────────────────────────────────────────
       { index: true, element: <HomePage /> },
-      { path: "events", element: <EventsPage /> },
-      { path: "gallery", element: <GalleryPage /> },
-      { path: "leaderboard", element: <LeaderboardPage /> },
-      { path: "donate", element: <DonatePage /> },
-      { path: "profile", element: <ProfilePage /> },
+      { path: "events",      element: <PendingBlockedRoute><EventsPage /></PendingBlockedRoute> },
+      { path: "gallery",     element: <GalleryPage /> },
+      { path: "leaderboard", element: <PendingBlockedRoute><LeaderboardPage /></PendingBlockedRoute> },
+      { path: "donate",      element: <DonatePage /> },
+      { path: "profile",     element: <PendingBlockedRoute><ProfilePage /></PendingBlockedRoute> },
 
       // ── Auth ──────────────────────────────────────────────────────────────
       { path: "auth", element: <AuthPage /> },

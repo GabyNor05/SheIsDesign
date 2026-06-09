@@ -11,7 +11,7 @@ import { useAuth } from "../../context/AuthContext";
 import "./Navbar.css";
 
 // ── Avatar with dropdown ──────────────────────────────────────────────────────
-function UserAvatar({ user, onLogout }) {
+function UserAvatar({ user, onLogout, isPending }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -63,16 +63,19 @@ function UserAvatar({ user, onLogout }) {
           <div className="nav-avatar__dropdown-divider" />
 
           {/* Links */}
-          <Link
-            to="/profile"
-            className="nav-avatar__dropdown-item"
-            onClick={() => setOpen(false)}
-          >
-            <MdAccountCircle size={15} />
-            My Profile
-          </Link>
-
-          <div className="nav-avatar__dropdown-divider" />
+          {!isPending && (
+            <>
+              <Link
+                to="/profile"
+                className="nav-avatar__dropdown-item"
+                onClick={() => setOpen(false)}
+              >
+                <MdAccountCircle size={15} />
+                My Profile
+              </Link>
+              <div className="nav-avatar__dropdown-divider" />
+            </>
+          )}
 
           <button
             className="nav-avatar__dropdown-item nav-avatar__dropdown-item--danger"
@@ -93,6 +96,7 @@ export default function Navbar({ solid = false }) {
   const navigate   = useNavigate();
   const { user, logout, hasLoggedInBefore } = useAuth();
 
+  const isPending = user?.status === "Pending" && user?.role?.toLowerCase() !== "admin";
   const isActive = (path) => location.pathname === path;
 
   const navClass = ["navbar-custom", solid ? "navbar-custom--solid" : ""]
@@ -106,7 +110,7 @@ export default function Navbar({ solid = false }) {
 
   function renderAuthControl() {
     if (user) {
-      return <UserAvatar user={user} onLogout={handleLogout} />;
+      return <UserAvatar user={user} onLogout={handleLogout} isPending={isPending} />;
     }
     if (hasLoggedInBefore) {
       return <Link to="/login" className="navbar-custom__cta">Log In</Link>;
@@ -124,11 +128,11 @@ export default function Navbar({ solid = false }) {
       {/* Nav links */}
       <div className="navbar-custom__links">
         {[
-          { to: "/events",      label: "Events"      },
-          { to: "/gallery",     label: "Gallery"     },
-          { to: "/leaderboard", label: "Leaderboard" },
-          { to: "/donate",      label: "Donate"      },
-        ].map(({ to, label }) => (
+          { to: "/events",      label: "Events",       pendingAllowed: false },
+          { to: "/gallery",     label: "Gallery",      pendingAllowed: true  },
+          { to: "/leaderboard", label: "Leaderboard",  pendingAllowed: false },
+          { to: "/donate",      label: "Donate",       pendingAllowed: true  },
+        ].filter(link => !isPending || link.pendingAllowed).map(({ to, label }) => (
           <Link
             key={to}
             to={to}
