@@ -1,4 +1,4 @@
-import { CalendarDots, X, Users, Trophy } from "@phosphor-icons/react";
+import { CalendarDots, X, Users, Trophy, CheckCircle } from "@phosphor-icons/react";
 import "./EventDetailModal.css";
 
 function fmtDate(d) {
@@ -16,25 +16,29 @@ function daysLeft(dateStr) {
   return `${diff} days left`;
 }
 
-export default function EventDetailModal({ event, onClose, onApply }) {
+export default function EventDetailModal({ event, onClose, onApply, applied = false }) {
   if (!event) return null;
 
-  const status = event.status?.toUpperCase() || "DRAFT";
-  const max = event.max_entry ?? event.max_entries ?? 0;
-  const count = event.entry_count ?? 0;
-  const pct = max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0;
-  const isFull = count >= max && max > 0;
-  const isOpen = status === "OPEN" && !isFull;
+  const status   = event.status?.toUpperCase() || "DRAFT";
+  const max      = event.max_entry ?? event.max_entries ?? 0;
+  const count    = event.entry_count ?? 0;
+  const pct      = max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0;
+  const isFull   = count >= max && max > 0;
+  const isOpen   = status === "OPEN" && !isFull;
   const timeLeft = daysLeft(event.end_date);
+
+  function applyLabel() {
+    if (applied)  return "✓ Applied";
+    if (isFull)   return "Event Full";
+    if (!isOpen)  return "Closed";
+    return "Apply for this event";
+  }
 
   return (
     <div className="edm__overlay" onClick={onClose}>
       <div className="edm__box" onClick={e => e.stopPropagation()}>
 
-        {/* Close button */}
-        <button className="edm__close" onClick={onClose}>
-          <X size={18} />
-        </button>
+        <button className="edm__close" onClick={onClose}><X size={18} /></button>
 
         {/* Image */}
         <div className="edm__image">
@@ -53,7 +57,6 @@ export default function EventDetailModal({ event, onClose, onApply }) {
           <p className="edm__category">{event.category || "Event"}</p>
           <h2 className="edm__title">{event.title}</h2>
 
-          {/* Date row */}
           <div className="edm__date-row">
             <CalendarDots size={14} color="rgba(255,255,255,0.4)" />
             <span className="edm__date-text">
@@ -61,12 +64,10 @@ export default function EventDetailModal({ event, onClose, onApply }) {
             </span>
           </div>
 
-          {/* Description */}
           {event.description && (
             <p className="edm__description">{event.description}</p>
           )}
 
-          {/* Stats row */}
           <div className="edm__stats">
             <div className="edm__stat">
               <Users size={16} color="#FE4081" />
@@ -84,7 +85,6 @@ export default function EventDetailModal({ event, onClose, onApply }) {
             </div>
           </div>
 
-          {/* Progress bar */}
           <div className="edm__progress-wrap">
             <div className="edm__progress-row">
               <span className="edm__progress-label">{pct}% full</span>
@@ -95,18 +95,23 @@ export default function EventDetailModal({ event, onClose, onApply }) {
             </div>
           </div>
 
-          {/* CTA */}
+          {/* Applied banner */}
+          {applied && (
+            <div className="edm__applied-banner">
+              <CheckCircle size={15} weight="fill" color="#10e266" />
+              <span>You have applied for this event</span>
+            </div>
+          )}
+
           <div className="edm__cta">
             <button
-              className={`edm__apply-btn ${!isOpen ? "edm__apply-btn--disabled" : ""}`}
-              onClick={() => isOpen && onApply(event)}
-              disabled={!isOpen}
+              className={`edm__apply-btn ${applied ? "edm__apply-btn--applied" : !isOpen ? "edm__apply-btn--disabled" : ""}`}
+              onClick={() => !applied && isOpen && onApply(event)}
+              disabled={applied || !isOpen}
             >
-              {isFull ? "Event Full" : !isOpen ? "Closed" : "Apply for this event"}
+              {applyLabel()}
             </button>
-            <button className="edm__close-btn" onClick={onClose}>
-              Close
-            </button>
+            <button className="edm__close-btn" onClick={onClose}>Close</button>
           </div>
         </div>
       </div>

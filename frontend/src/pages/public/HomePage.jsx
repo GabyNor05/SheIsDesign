@@ -48,11 +48,8 @@ const y = -10 + progress * 1;
       <HeroSection />
       <WhatWeDoSection />
       <EventsSection />
-      <LeaderboardSection />
-      <FeaturedWorkSection />
       <ImpactSection />
       <SupportSection />
-      <CTASection />
     </div>
   );
 }

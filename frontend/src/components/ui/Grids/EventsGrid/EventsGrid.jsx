@@ -1,7 +1,7 @@
-import StudentEventCard from '../../Cards/EventCard/StudentEventCard'
+import StudentEventCard from '../../Cards/EventCard/StudentEventCard';
 import "./EventsGrid.css";
 
-export default function EventsGrid({ events, activeFilter, onApply, onViewDetails }) {
+export default function EventsGrid({ events, activeFilter, onApply, onViewDetails, appliedIds = new Set() }) {
   const filtered = events.filter((e) => {
     if (activeFilter === "all") return true;
     if (activeFilter === "open") return e.status?.toLowerCase() === "open" && (e.entry_count ?? 0) < e.max_entry;
@@ -30,6 +30,7 @@ export default function EventsGrid({ events, activeFilter, onApply, onViewDetail
                 event={event}
                 onApply={onApply}
                 onViewDetails={onViewDetails}
+                applied={appliedIds.has(event.id)}
               />
             ))}
           </div>
