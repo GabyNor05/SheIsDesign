@@ -165,6 +165,7 @@ export default function SignupDetailsPage() {
   const lastName  = location.state?.lastName  || "";
   const email     = location.state?.email     || "";
   const password  = location.state?.password  || "";
+  const userId    = location.state?.userId    || null;
 
   const [tab, setTab] = useState("student");
   const [submitError, setSubmitError] = useState("");
@@ -213,6 +214,7 @@ async function handleSubmit(e) {
       lastName,
       email,
       password,
+      userId,
       code,
       expiry,
       tab,
