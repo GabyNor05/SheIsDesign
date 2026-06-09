@@ -11,7 +11,7 @@ using SheDesign.DTO;
 
 namespace backend.Controllers
 {
-    [Route("api/[controller]s")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -61,6 +61,7 @@ namespace backend.Controllers
             if (user == null) return NotFound();
 
             user.Status = Status.Approved;
+            _context.Entry(user).Property(u => u.Status).IsModified = true;
 
             try
             {
@@ -78,7 +79,6 @@ namespace backend.Controllers
         }
 
         // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, UserUpdateDTO dto)
         {
@@ -88,7 +88,6 @@ namespace backend.Controllers
             user.Email = dto.email;
             user.Role = dto.role;
             user.Status = dto.status;
-            // add whichever fields your UserUpdateDTO has
 
             try
             {
@@ -106,12 +105,12 @@ namespace backend.Controllers
         }
 
         // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(UserCreateDTO dto)
         {
             var hash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
             Console.WriteLine($"DEBUG: The generated hash is: {hash}");
+
             var user = new User
             {
                 Email = dto.Email,
@@ -134,7 +133,6 @@ namespace backend.Controllers
             return CreatedAtAction("GetUser", new { id = user.Id }, result);
         }
 
-        
         [HttpPost("Login")]
         public async Task<ActionResult> Login([FromBody] LoginDTO dto)
         {
@@ -143,16 +141,19 @@ namespace backend.Controllers
             if (user == null) return Unauthorized("User Not Found");
 
             bool validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
+            if (!validPassword) return Unauthorized("Incorrect Password");
 
-            if (!validPassword)
-                return Unauthorized("Incorrect Password");
+            // Look up student record after confirming user exists
+            var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == user.Id);
 
             return Ok(new UserReadDTO
             {
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                Status = user.Status,
+                StudentId = student?.Id
             });
         }
 
@@ -180,6 +181,7 @@ namespace backend.Controllers
 
             bool isNewUser = false;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
             if (user == null)
             {
                 isNewUser = true;
@@ -194,15 +196,20 @@ namespace backend.Controllers
                 await _context.SaveChangesAsync();
             }
 
+            // Look up student record after confirming/creating user
+            var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == user.Id);
+
             return Ok(new UserReadDTO
             {
-                Id          = user.Id,
-                Email       = user.Email,
-                Role        = user.Role,
+                Id         = user.Id,
+                Email      = user.Email,
+                Role       = user.Role,
                 DateCreated = user.DateCreated,
-                IsNewUser   = isNewUser,
-                GivenName   = givenName,
-                FamilyName  = familyName,
+                Status     = user.Status,
+                IsNewUser  = isNewUser,
+                GivenName  = givenName,
+                FamilyName = familyName,
+                StudentId  = student?.Id
             });
         }
 

@@ -11,5 +11,7 @@ namespace SheDesign.DTO
         public bool IsNewUser { get; set; } = false;
         public string GivenName { get; set; } = string.Empty;
         public string FamilyName { get; set; } = string.Empty;
+
+        public int? StudentId { get; set; } 
     }
 }

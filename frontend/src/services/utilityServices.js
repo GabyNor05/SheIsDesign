@@ -21,5 +21,6 @@ apiClient.interceptors.response.use(
 );
 
 export const approveUserService = {
+    //needs the userID
     ApproveUser: (id) => apiClient.put(`/${id}/ApproveUser`)
 };

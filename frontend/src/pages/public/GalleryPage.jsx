@@ -271,6 +271,8 @@ function PostModal({ post, onClose }) {
 export default function GalleryPage() {
   const { user } = useAuth();
 
+  const studentId = sessionStorage.getItem("StudentID");
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
@@ -468,7 +470,7 @@ export default function GalleryPage() {
         <PostToLibraryModal
           onClose={() => setShowPostModal(false)}
           onSuccess={handleNewPost}
-          studentId={user?.id}
+          studentId={studentId}
         />
       )}
     </div>

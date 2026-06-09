@@ -27,7 +27,14 @@ export async function loginUser(email, password) {
     throw new Error(text || "Login failed");
   }
 
-  return response.json();
+  const data = await response.json();
+
+  // Store student ID on login if the user is a student
+  if (data.studentId) {
+    sessionStorage.setItem("StudentID", data.studentId);
+  }
+
+  return data;
 }
 
 export async function googleLoginUser(accessToken) {
@@ -36,11 +43,20 @@ export async function googleLoginUser(accessToken) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ accessToken }),
   });
+
   if (!response.ok) {
     const text = await response.text();
     throw new Error(text || "Google sign-in failed");
   }
-  return response.json();
+
+  const data = await response.json();
+
+  // Store student ID on Google login if the user is a student
+  if (data.studentId) {
+    sessionStorage.setItem("StudentID", data.studentId);
+  }
+
+  return data;
 }
 
 export async function createMentee({ fullname, university, year_of_study, field_of_study, student_number, wants_volunteer, userId }) {
@@ -55,7 +71,13 @@ export async function createMentee({ fullname, university, year_of_study, field_
     throw new Error(text || "Failed to save student details");
   }
 
-  return response.json();
+  // Parse JSON first, then read the id from the parsed data
+  const data = await response.json();
+  if (data.id) {
+    sessionStorage.setItem("StudentID", data.id);
+  }
+
+  return data;
 }
 
 export async function createIndustryProfessional({ fullname, institution, job_title, userId }) {
