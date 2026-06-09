@@ -34,6 +34,7 @@ function OtpPage() {
   const firstName      = location.state?.firstName      || "";
   const lastName       = location.state?.lastName       || "";
   const password       = location.state?.password       || "";
+  const existingUserId = location.state?.userId         || null;
   const tab            = location.state?.tab            || "student";
   const studentFields  = location.state?.studentFields  || {};
   const wantsVolunteer = location.state?.wantsVolunteer || false;
@@ -88,8 +89,7 @@ function OtpPage() {
     setSubmitting(true);
     setSubmitError("");
     try {
-      const res = await registerUser(email, password);
-      const userId = res.id;
+      const userId = existingUserId ?? (await registerUser(email, password)).id;
 
       if (tab === "student") {
         await createMentee({
