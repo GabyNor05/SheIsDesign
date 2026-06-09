@@ -3,6 +3,7 @@ import RootLayout from "./components/common/RootLayout";
 import AdminLayout from "./pages/admin/template/AdminLayout";
 import PendingBlockedRoute from "./components/common/PendingBlockedRoute";
 import AuthRequiredRoute from "./components/common/AuthRequiredRoute";
+import RoleProtectedRoute from "./components/common/RoleProtectedRoute";
 
 // Public pages
 import HomePage from "./pages/public/HomePage";
@@ -61,10 +62,10 @@ const Routes = createBrowserRouter([
       // ── New admin — all share the sidebar via AdminLayout ──────────────────
       {
         path: "admin",
-        element: <AdminLayout />,
+        element: <RoleProtectedRoute role="admin"><AdminLayout /></RoleProtectedRoute>,
         children: [
           { index: true, element: <AdminDashboardV2 /> },
-          {path: "dashboard", element: <AdminDashboard /> },
+          { path: "dashboard", element: <AdminDashboard /> },
           { path: "events", element: <ManageEvents /> },
           { path: "participants", element: <ManageParticipantsPage /> },
           { path: "leaderboard", element: <ManageLeaderboardPage /> },
@@ -74,9 +75,9 @@ const Routes = createBrowserRouter([
       },
 
       // ── Judge ─────────────────────────────────────────────────────────────
-      { path: "judge", element: <JudgeDashboard /> },
-      { path: "judge/events", element: <JudgeEventsPage /> },
-      { path: "judge/score/:eventId", element: <JudgeScoringPage /> },
+      { path: "judge", element: <RoleProtectedRoute role="judge"><JudgeDashboard /></RoleProtectedRoute> },
+      { path: "judge/events", element: <RoleProtectedRoute role="judge"><JudgeEventsPage /></RoleProtectedRoute> },
+      { path: "judge/score/:eventId", element: <RoleProtectedRoute role="judge"><JudgeScoringPage /></RoleProtectedRoute> },
     ],
   },
 ]);
