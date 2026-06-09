@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5160/api";
+import API_BASE from '../config';
 
 const STATUS_COLORS = {
   approved: "#22C55E",

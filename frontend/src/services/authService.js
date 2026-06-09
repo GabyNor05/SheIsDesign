@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5160/api";
+import API_BASE from '../config';
 
 export async function registerUser(email, password) {
   const response = await fetch(`${API_BASE}/User`, {

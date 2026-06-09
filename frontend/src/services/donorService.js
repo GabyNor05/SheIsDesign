@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5160/api";
+import API_BASE from '../config';
 
 function formatDate(value) {
   if (!value) return "—";

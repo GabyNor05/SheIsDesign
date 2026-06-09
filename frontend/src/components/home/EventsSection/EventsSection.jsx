@@ -6,7 +6,7 @@ import "./EventsSection.css";
 //  API 
 // ERD Table: Event
 // GET /api/Event — returns all events
-const API_BASE = "http://localhost:5160/api";
+import API_BASE from '../../../config';
 
 async function fetchEvents() {
   const res = await fetch(`${API_BASE}/Event`);
