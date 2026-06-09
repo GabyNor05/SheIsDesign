@@ -110,7 +110,8 @@ namespace SheDesign.Data
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.Event)
                 .WithMany(e => e.Posts)
-                .HasForeignKey(p => p.eventId);
+                .HasForeignKey(p => p.eventId)
+                .IsRequired(false);
 
             // Submission relationship
             modelBuilder.Entity<Submission>()

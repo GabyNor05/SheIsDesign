@@ -271,7 +271,7 @@ function PostModal({ post, onClose }) {
 export default function GalleryPage() {
   const { user } = useAuth();
 
-  const studentId = sessionStorage.getItem("StudentID");
+  const studentId = user?.studentId ?? (Number(sessionStorage.getItem("StudentID")) || null);
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
