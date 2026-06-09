@@ -32,6 +32,8 @@ namespace SheDesign.Data
                 entity.Property(u => u.Email).HasColumnName("email");
                 entity.Property(u => u.PasswordHash).HasColumnName("password");
                 entity.Property(u => u.Role).HasColumnName("roles");
+                entity.HasIndex(u => u.Email).IsUnique();
+                entity.Property(u => u.Status).HasConversion<string>();
             });
 
             // Comment table naming & mapping

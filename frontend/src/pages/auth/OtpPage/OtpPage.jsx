@@ -92,7 +92,7 @@ function OtpPage() {
       const userId = res.id;
 
       if (tab === "student") {
-        await createMentee({
+        const student_res = await createMentee({
           fullname:        `${firstName} ${lastName}`.trim(),
           university:      studentFields.university      || "",
           year_of_study:   studentFields.year_of_study  ?? 1,
@@ -101,6 +101,9 @@ function OtpPage() {
           wants_volunteer: wantsVolunteer,
           userId,
         });
+
+        const studentId = student_res.id;
+        sessionStorage.setItem("StudentID", studentId);
       } else {
         await createIndustryProfessional({
           fullname:    `${firstName} ${lastName}`.trim(),
