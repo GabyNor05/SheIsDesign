@@ -9,7 +9,7 @@ namespace SheDesign.DTO
         public int StudentId { get; set; }
         public string ImageFileLink { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
-        public int EventId { get; set; }
+        public int? EventId { get; set; }
         public int LinkCount { get; set; }
         public int CommentCount { get; set; }
         public DateTime PostDate { get; set; }
