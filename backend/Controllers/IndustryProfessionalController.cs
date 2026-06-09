@@ -35,7 +35,7 @@ namespace backend.Controllers
 
         // POST: api/IndustryProfessional
         [HttpPost]
-        public async Task<ActionResult<IndustryProfessionalCreateDTO>> Post(IndustryProfessionalCreateDTO dto)
+        public async Task<ActionResult<IndustryProfessional>> Post(IndustryProfessionalCreateDTO dto)
         {
             var ip = new IndustryProfessional
             {
@@ -56,13 +56,7 @@ namespace backend.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetById), new { id = ip.Id }, new IndustryProfessionalCreateDTO
-            {
-                fullname    = ip.fullname,
-                institution = ip.institution,
-                job_title   = ip.job_title,
-                userId      = ip.userId,
-            });
+            return CreatedAtAction(nameof(GetById), new { id = ip.Id }, ip);
         }
 
         // DELETE: api/IndustryProfessional/5
