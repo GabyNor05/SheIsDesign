@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "./components/common/RootLayout";
 import AdminLayout from "./pages/admin/template/AdminLayout";
 import PendingBlockedRoute from "./components/common/PendingBlockedRoute";
+import AuthRequiredRoute from "./components/common/AuthRequiredRoute";
 
 // Public pages
 import HomePage from "./pages/public/HomePage";
@@ -40,7 +41,7 @@ const Routes = createBrowserRouter([
       // ── Public ────────────────────────────────────────────────────────────
       { index: true, element: <HomePage /> },
       { path: "events",      element: <PendingBlockedRoute><EventsPage /></PendingBlockedRoute> },
-      { path: "gallery",     element: <GalleryPage /> },
+      { path: "gallery",     element: <AuthRequiredRoute><GalleryPage /></AuthRequiredRoute> },
       { path: "leaderboard", element: <PendingBlockedRoute><LeaderboardPage /></PendingBlockedRoute> },
       { path: "donate",      element: <DonatePage /> },
       { path: "profile",     element: <PendingBlockedRoute><ProfilePage /></PendingBlockedRoute> },

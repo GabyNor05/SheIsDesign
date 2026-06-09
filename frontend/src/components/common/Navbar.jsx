@@ -134,11 +134,11 @@ export default function Navbar({ solid = false }) {
       {/* Nav links */}
       <div className="navbar-custom__links">
         {[
-          { to: "/events",      label: "Events",       pendingAllowed: false },
-          { to: "/gallery",     label: "Gallery",      pendingAllowed: true  },
-          { to: "/leaderboard", label: "Leaderboard",  pendingAllowed: false },
-          { to: "/donate",      label: "Donate",       pendingAllowed: true  },
-        ].filter(link => !isPending || link.pendingAllowed).map(({ to, label }) => (
+          { to: "/events",      label: "Events",       requiresAuth: true,  pendingAllowed: false },
+          { to: "/gallery",     label: "Gallery",      requiresAuth: true,  pendingAllowed: true  },
+          { to: "/leaderboard", label: "Leaderboard",  requiresAuth: true,  pendingAllowed: false },
+          { to: "/donate",      label: "Donate",       requiresAuth: false, pendingAllowed: true  },
+        ].filter(link => (!link.requiresAuth || user) && (!isPending || link.pendingAllowed)).map(({ to, label }) => (
           <Link
             key={to}
             to={to}
