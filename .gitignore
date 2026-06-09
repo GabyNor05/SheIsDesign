@@ -8,7 +8,6 @@ backend/obj/
 .vs/
 *.cache
 backend/appsettings.Development.json
-backend/appsettings.json
 backend/.env
 .env
 

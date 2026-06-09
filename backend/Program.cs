@@ -3,13 +3,19 @@ using SheDesign.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Render injects PORT at runtime; fall back to 5160 for local dev
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5160";
+builder.WebHost.UseUrls($"http://+:{port}");
+
+// CORS origins are comma-separated via env var so no rebuild is needed per environment
+var rawOrigins = builder.Configuration["CORS_ALLOWED_ORIGINS"] ?? "http://localhost:3000";
+var allowedOrigins = rawOrigins.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -36,8 +42,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
 
