@@ -4,10 +4,13 @@ import WhatWeDoSection from "../../components/home/WhatWeDoSection/WhatWeDoSecti
 import EventsSection from "../../components/home/EventsSection/EventsSection";
 import ImpactSection from "../../components/home/ImpactSection/ImpactSection";
 import SupportSection from "../../components/home/SupportSection/SupportSection";
+import { useAuth } from "../../context/AuthContext";
 import "./HomePage.css";
 
 function HomePage() {
   const orbRef = useRef(null);
+  const { user } = useAuth();
+  const isPending = user?.status === "Pending" && user?.role?.toLowerCase() !== "admin";
 
   useEffect(() => {
     let ticking = false;
@@ -44,7 +47,7 @@ const y = -10 + progress * 1;
 
       <HeroSection />
       <WhatWeDoSection />
-      <EventsSection />
+      {!isPending && <EventsSection />}
       <ImpactSection />
       <SupportSection />
     </div>
