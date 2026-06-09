@@ -562,21 +562,7 @@ function SubmissionsTable({
                     >
                       <Ic n="eye" s={13} c="currentColor" /> View
                     </button>
-                    {!sub.isWinner ? (
-                      <button
-                        className="lb-action-btn lb-action-btn--winner"
-                        onClick={() => onMarkWinner(sub)}
-                      >
-                        <Ic n="trophy" s={13} c="currentColor" /> Set Winner
-                      </button>
-                    ) : (
-                      <button
-                        className="lb-action-btn lb-action-btn--confirmed"
-                        disabled
-                      >
-                        <Ic n="check" s={13} c="currentColor" /> Winner
-                      </button>
-                    )}
+                    
                   </div>
                 </td>
               </tr>
@@ -927,10 +913,10 @@ export default function ManageLeaderboardPage() {
 
       {/* ── Table section */}
       <div
-        className="lb-table-section lb-anim"
+        className=" lb-anim w-full"
         style={{ animationDelay: "120ms" }}
       >
-        <div className="lb-table-toolbar">
+        <div className="lb-table-toolbar mt-12 mb-5">
           <div className="lb-table-toolbar__left">
             <Ic n="bar" s={16} c="rgba(255,255,255,0.4)" />
             <span className="lb-table-toolbar__title">Submissions</span>
@@ -944,7 +930,7 @@ export default function ManageLeaderboardPage() {
               className={`lb-recalc-btn${recalcFlash ? " lb-recalc-btn--flash" : ""}`}
               onClick={handleRecalculate}
             >
-              <Ic n="refresh" s={14} c="currentColor" /> Update Rankings
+              <Ic n="refresh" s={14} c="currentColor" /> Recalculate Rankings
             </button>
           </div>
         </div>
