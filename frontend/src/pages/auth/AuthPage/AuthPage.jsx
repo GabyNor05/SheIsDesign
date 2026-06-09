@@ -6,7 +6,6 @@ import { FiMail } from "react-icons/fi";
 import { Field, PasswordField, OrDivider, GoogleButton } from "../../../components/ui/Fields/Field/Field";
 import FloatingCards from "../../../components/auth/FloatingCards/FloatingCards";
 import TokenModal from "../../../components/auth/TokenModal/TokenModal";
-import OtpModal from "../../../components/auth/OtpModal/OtpModal";
 import { useAuth } from "../../../context/AuthContext";
 import { useGoogleLogin } from "@react-oauth/google";
 import { loginUser, googleLoginUser } from "../../../services/authService";
@@ -279,11 +278,17 @@ function AuthCard() {
     setLoginError("");
     try {
       const res = await loginUser(email, password);
-      setApiUser(res);
-      setLoginEmail(email);
       const adminCheck = res.role === "Admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
-      setIsAdmin(adminCheck);
-      setModalStep(adminCheck ? "token" : "otp");
+      if (adminCheck) {
+        setApiUser(res);
+        setLoginEmail(email);
+        setIsAdmin(true);
+        setModalStep("token");
+      } else {
+        login(res);
+        if (res.status === "Pending") { navigate("/application-status"); return; }
+        navigate("/");
+      }
     } catch (err) {
       setLoginError(sanitiseError(err));
     }
@@ -346,14 +351,6 @@ function AuthCard() {
       {modalStep === "token" && (
         <TokenModal
           email={loginEmail}
-          onClose={() => setModalStep(null)}
-          onVerified={() => setModalStep("otp")}
-        />
-      )}
-      {modalStep === "otp" && (
-        <OtpModal
-          email={loginEmail}
-          isAdmin={isAdmin}
           onClose={() => setModalStep(null)}
           onVerified={handleOtpVerified}
         />
