@@ -58,11 +58,11 @@ export async function createMentee({ fullname, university, year_of_study, field_
   return response.json();
 }
 
-export async function createIndustryProfessional({ institution, job_title, userId }) {
+export async function createIndustryProfessional({ fullname, institution, job_title, userId }) {
   const response = await fetch(`${API_BASE}/IndustryProfessional`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ institution, job_title, userId }),
+    body: JSON.stringify({ fullname, institution, job_title, userId }),
   });
 
   if (!response.ok) {
