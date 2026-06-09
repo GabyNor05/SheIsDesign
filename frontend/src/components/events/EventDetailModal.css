@@ -293,3 +293,26 @@
     border-color: rgba(196, 18, 98, 0.6);
     background: rgba(196, 18, 98, 0.05);
 }
+
+/* Applied state additions */
+.edm__applied-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(16, 226, 102, 0.07);
+    border: 1px solid rgba(16, 226, 102, 0.2);
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #10e266;
+}
+
+.edm__apply-btn--applied {
+    background: rgba(16, 226, 102, 0.1) !important;
+    border: 1px solid rgba(16, 226, 102, 0.3) !important;
+    color: #10e266 !important;
+    cursor: default !important;
+    opacity: 1 !important;
+}
