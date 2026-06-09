@@ -194,7 +194,11 @@ function SignupFields({ onSubmit, error, onGoogleClick, googleLoading, googleErr
 
         {error && <p className="auth-card__error">{error}</p>}
 
-        <button type="submit" className="auth-card__submit">
+        <button
+          type="submit"
+          className="auth-card__submit"
+          disabled={!firstName.trim() || !lastName.trim() || !email.trim() || !password}
+        >
           <MdPersonAdd size={18} />
           Sign up
         </button>
