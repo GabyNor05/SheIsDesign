@@ -1,12 +1,34 @@
+/* ── OtpPage.css ───────────────────────────────────────────────────────────────
+   Matches SheIsDesign design system:
+   bg #0D0608 · brand #C41262 → #FE4081 · font Poppins
+   ──────────────────────────────────────────────────────────────────────────── */
+
+
+.otp-page__nav-logo {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.3px;
+    color: #F8EBED;
+    text-decoration: none;
+}
+
+.otp-page__nav-logo-accent {
+    color: #FE4081;
+}
+
+
+/* ── Page root ─────────────────────────────────────────────────────────────── */
 .otp-page {
     position: relative;
     min-height: 100vh;
-    background: var(--sid-bg);
+    background: #0D0608;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 80px 24px 48px;
     overflow: hidden;
+    font-family: 'Poppins', sans-serif;
 }
 
 .otp-page__content {
@@ -17,28 +39,7 @@
     justify-content: center;
 }
 
-.otp-page__icon {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 24px;
-}
-
-.otp-page__icon>div {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: rgba(196, 18, 98, 0.12);
-    border: 2px solid rgba(196, 18, 98, 0.35);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.otp-page__mail-icon {
-    color: var(--sid-text-pink);
-}
-
-/* Background glows */
+/* ── Background glows ──────────────────────────────────────────────────────── */
 .otp-page__glow {
     position: absolute;
     border-radius: 50%;
@@ -48,22 +49,48 @@
 }
 
 .otp-page__glow--1 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(196, 18, 98, 0.18) 0%, transparent 70%);
-    top: -80px;
-    right: -80px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.22) 0%, transparent 70%);
+    top: -120px;
+    right: -100px;
+    animation: otp-orb-a 8s ease-in-out infinite;
 }
 
 .otp-page__glow--2 {
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(100, 20, 60, 0.14) 0%, transparent 70%);
-    bottom: -60px;
-    left: -60px;
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.14) 0%, transparent 70%);
+    bottom: -80px;
+    left: -80px;
+    animation: otp-orb-b 10s ease-in-out infinite;
 }
 
-/* Nav */
+@keyframes otp-orb-a {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-20px, 16px) scale(1.06);
+    }
+}
+
+@keyframes otp-orb-b {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(16px, -12px) scale(1.08);
+    }
+}
+
+/* ── Nav ───────────────────────────────────────────────────────────────────── */
 .otp-page__nav {
     position: fixed;
     top: 0;
@@ -75,9 +102,9 @@
     justify-content: space-between;
     padding: 0 28px;
     z-index: 50;
-    background: rgba(15, 8, 11, 0.7);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: rgba(13, 6, 8, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .otp-page__nav-logo {
@@ -90,18 +117,18 @@
 .otp-page__nav-logo-mark {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #c41262, #8a0d44);
+    border-radius: 10px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .otp-page__nav-logo-text {
-    font-family: var(--sid-font);
+    font-family: 'Poppins', sans-serif;
     font-size: 15px;
     font-weight: 700;
-    color: var(--sid-text-primary);
+    color: #F8EBED;
     letter-spacing: -0.3px;
 }
 
@@ -109,56 +136,67 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    font-family: var(--sid-font);
+    font-family: 'Poppins', sans-serif;
     font-size: 13px;
-    color: var(--sid-text-muted);
+    color: rgba(248, 235, 237, 0.45);
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .otp-page__nav-back:hover {
-    color: var(--sid-text-primary);
+    color: #F8EBED;
 }
 
-/* Card */
+/* ── Card ──────────────────────────────────────────────────────────────────── */
 .otp-page__card {
     position: relative;
     z-index: 10;
-    background: var(--sid-surface);
-    border: 1px solid var(--sid-border);
-    border-radius: var(--sid-radius-xl, 20px);
-    padding: 40px 36px 36px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(196, 18, 98, 0.18);
+    border-radius: 28px;
+    padding: 44px 40px 40px;
     width: 100%;
-    max-width: 440px;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+    max-width: 460px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 32px 80px rgba(13, 6, 8, 0.5),
+        0 0 60px rgba(196, 18, 98, 0.07);
     overflow: hidden;
 }
 
+/* Top glow line */
 .otp-page__card-glow-line {
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent 0%, #c41262 40%, #e8186e 60%, transparent 100%);
-    border-radius: 20px 20px 0 0;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.7), transparent);
+    border-radius: 1px;
 }
 
-/* Lock icon */
+/* ── Lock icon ─────────────────────────────────────────────────────────────── */
+.otp-page__icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
 .otp-page__lock-icon {
     width: 64px;
     height: 64px;
     border-radius: 50%;
     background: rgba(196, 18, 98, 0.12);
-    border: 2px solid rgba(196, 18, 98, 0.35);
+    border: 1px solid rgba(196, 18, 98, 0.35);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--sid-text-pink);
-    margin: 0 auto;
+    color: #FE7FAB;
+    box-shadow: 0 0 24px rgba(196, 18, 98, 0.15);
 }
 
-/* Secure badge */
+/* ── Secure badge ──────────────────────────────────────────────────────────── */
 .otp-page__secure-badge {
     display: flex;
     align-items: center;
@@ -166,100 +204,55 @@
     gap: 5px;
     margin: 12px auto 0;
     width: fit-content;
-    padding: 4px 12px;
-    border-radius: 20px;
-    background: rgba(196, 18, 98, 0.10);
+    padding: 4px 14px;
+    border-radius: 999px;
+    background: rgba(196, 18, 98, 0.1);
     border: 1px solid rgba(196, 18, 98, 0.25);
-    font-family: var(--sid-font);
-    font-size: 11px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
     font-weight: 600;
-    color: var(--sid-text-pink);
-    letter-spacing: 0.4px;
+    color: #FE7FAB;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
 }
 
-/* Timer row */
-.otp-page__timer-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.otp-page__timer-icon {
-    color: var(--sid-text-faint);
-}
-
-.otp-page__timer-sep {
-    font-family: var(--sid-font);
-    font-size: 13px;
-    color: var(--sid-text-faint);
-}
-
-/* Submit button */
-.otp-page__submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 13px;
-    border-radius: var(--sid-radius-lg);
-    background: linear-gradient(135deg, #c41262, #e8186e);
-    border: none;
-    cursor: pointer;
-    font-family: var(--sid-font);
-    font-size: 15px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 0.2px;
-    transition: opacity 0.2s, transform 0.15s;
-}
-
-.otp-page__submit:hover {
-    opacity: 0.92;
-    transform: translateY(-1px);
-}
-
-.otp-page__submit:active {
-    transform: translateY(0);
-}
-
+/* ── Heading ───────────────────────────────────────────────────────────────── */
 .otp-page__heading {
     text-align: center;
-    margin-bottom: 28px;
+    margin: 24px 0 28px;
 }
 
 .otp-page__title {
-    font-family: var(--sid-font);
-    font-size: 26px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
     font-weight: 800;
-    color: var(--sid-text-primary);
-    letter-spacing: -0.4px;
-    line-height: 1.2;
+    color: #F8EBED;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
     margin: 0 0 10px;
 }
 
 .otp-page__subtitle {
-    font-family: var(--sid-font);
+    font-family: 'Poppins', sans-serif;
     font-size: 14px;
-    color: var(--sid-text-muted);
+    color: rgba(248, 235, 237, 0.5);
     line-height: 1.65;
     margin: 0;
 }
 
 .otp-page__email {
     font-weight: 600;
-    color: var(--sid-text-secondary);
+    color: #FE7FAB;
 }
 
+/* ── Form ──────────────────────────────────────────────────────────────────── */
 .otp-page__form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* OTP boxes */
+/* ── OTP boxes ─────────────────────────────────────────────────────────────── */
 .otp-page__inputs {
     display: flex;
     justify-content: center;
@@ -269,95 +262,163 @@
 .otp-page__box {
     width: 52px;
     height: 60px;
-    border-radius: var(--sid-radius-lg);
-    border: 2px solid var(--sid-border);
-    background: var(--sid-surface);
-    font-family: var(--sid-font);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    font-family: 'Poppins', sans-serif;
     font-size: 22px;
     font-weight: 700;
-    color: var(--sid-text-primary);
+    color: #F8EBED;
     text-align: center;
     outline: none;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    caret-color: #C41262;
 }
 
 .otp-page__box:focus {
-    border-color: var(--sid-border-focus);
-    background: var(--sid-surface-hover);
+    border-color: rgba(196, 18, 98, 0.6);
+    box-shadow: 0 0 0 3px rgba(196, 18, 98, 0.12);
+    background: rgba(196, 18, 98, 0.05);
 }
 
 .otp-page__box--filled {
-    border-color: var(--sid-primary);
+    border-color: rgba(196, 18, 98, 0.5);
+    background: rgba(196, 18, 98, 0.08);
 }
 
 .otp-page__box--error {
-    border-color: var(--sid-border-error);
+    border-color: rgba(254, 64, 129, 0.55);
+    box-shadow: 0 0 0 3px rgba(254, 64, 129, 0.08);
 }
 
-/* Error */
+/* ── Error ─────────────────────────────────────────────────────────────────── */
 .otp-page__error {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 16px;
-    border-radius: var(--sid-radius-lg);
-    background: rgba(254, 64, 129, 0.08);
-    border: 1px solid rgba(254, 64, 129, 0.20);
-    font-family: var(--sid-font);
+    padding: 11px 16px;
+    border-radius: 12px;
+    background: rgba(254, 64, 129, 0.07);
+    border: 1px solid rgba(254, 64, 129, 0.2);
+    font-family: 'Poppins', sans-serif;
     font-size: 13px;
-    color: var(--sid-text-pink);
+    color: #FE7FAB;
+    line-height: 1.5;
 }
 
-/* Resend */
-.otp-page__resend {
+/* ── Timer row ─────────────────────────────────────────────────────────────── */
+.otp-page__timer-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 7px;
 }
 
-.otp-page__resend-label {
-    font-family: var(--sid-font);
+.otp-page__timer-icon {
+    color: rgba(248, 235, 237, 0.3);
+}
+
+.otp-page__timer-sep {
+    font-family: 'Poppins', sans-serif;
     font-size: 13px;
-    color: var(--sid-text-faint);
+    color: rgba(248, 235, 237, 0.25);
 }
 
 .otp-page__countdown {
-    font-family: var(--sid-font);
+    font-family: 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: var(--sid-text-muted);
+    color: rgba(248, 235, 237, 0.55);
 }
 
+/* ── Resend button ─────────────────────────────────────────────────────────── */
 .otp-page__resend-btn {
-    font-family: var(--sid-font);
+    font-family: 'Poppins', sans-serif;
     font-size: 13px;
     font-weight: 600;
-    color: var(--sid-text-pink);
+    color: #FE7FAB;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
     text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: color 0.2s ease;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
 }
 
 .otp-page__resend-btn:hover:not(:disabled) {
-    color: var(--sid-primary);
+    color: #FE4081;
 }
 
 .otp-page__resend-btn:disabled {
-    color: var(--sid-text-faint);
+    color: rgba(248, 235, 237, 0.2);
     cursor: default;
     text-decoration: none;
 }
 
+/* ── Submit button ─────────────────────────────────────────────────────────── */
+.otp-page__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    padding: 15px 24px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.01em;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 6px 24px rgba(196, 18, 98, 0.32);
+}
+
+.otp-page__submit:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(196, 18, 98, 0.44);
+}
+
+.otp-page__submit:active {
+    transform: translateY(0);
+}
+
+.otp-page__submit:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* ── Spam note ─────────────────────────────────────────────────────────────── */
 .otp-page__spam-note {
-    font-family: var(--sid-font);
-    font-size: 12px;
-    color: var(--sid-text-faint);
+    font-family: 'Poppins', sans-serif;
+    font-size: 11.5px;
+    color: rgba(248, 235, 237, 0.2);
     text-align: center;
     margin: 4px 0 0;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .otp-page__card {
+        padding: 36px 24px 32px;
+    }
+
+    .otp-page__box {
+        width: 44px;
+        height: 52px;
+        font-size: 18px;
+    }
+
+    .otp-page__title {
+        font-size: 24px;
+    }
+}
+
+.otp-page__nav-logo-accent {
+    color: #FE4081;
 }
