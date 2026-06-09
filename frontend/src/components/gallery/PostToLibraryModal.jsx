@@ -8,12 +8,17 @@ import { postService } from "../../services/postManagementService";
 import "./PostToLibraryModal.css";
 
 const CATEGORIES = [
-  "Brand Identity",
   "Graphic Design",
-  "UX Design",
+  "Illustration",
+  "Brand Identity",
+  "UI/UX",
   "Motion Design",
-  "UI Design",
-  "Print & Packaging",
+  "Photography",
+  "Typography",
+  "3D Art",
+  "Product Design",
+  "Packaging",
+  "Editorial",
 ];
 
 // Suggested tags students can pick from — they can also type their own
@@ -99,6 +104,11 @@ export default function PostToLibraryModal({ onClose, onSuccess, studentId }) {
 
   // ── Submit ────────────────────────────────────────────────────────────────────
   async function handleSubmit() {
+    const parsedStudentId = Number(studentId);
+    if (!parsedStudentId || !Number.isInteger(parsedStudentId)) {
+      setError("Your student session is missing. Please log out and log back in.");
+      return;
+    }
     if (!title.trim()) { setError("Please add a title for your work."); return; }
     if (!category)     { setError("Please select a category."); return; }
     if (!imageFile)    { setError("Please upload an image of your work."); return; }
@@ -120,7 +130,8 @@ export default function PostToLibraryModal({ onClose, onSuccess, studentId }) {
         Title:         title.trim(),
         Description:   fullDescription,
         Category:      category,
-        StudentId:     studentId,
+        StudentId:     parsedStudentId,
+        EventId:       null,
         ImageFileLink: imageUrl,
         Status:        "Pending",
       };

@@ -47,3 +47,15 @@ export const ChangeUserRole = {
     SetStudent: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Role.Student}`),
     SetAdmin: (id, status) => apiClient.put(`/${id}/ChangeUserStatus?userStatus=${Role.Admin}`),
 };
+
+export const UpdateProfilePicture = {
+    /*needs this data structure
+
+    {
+        "profilePictureLink": "string"
+    }
+
+    */
+
+    ChangeUserProfilePicture: (id, data) => apiClient.put(`/${id}/UpdateProfilePicture`, {...data}),
+};
