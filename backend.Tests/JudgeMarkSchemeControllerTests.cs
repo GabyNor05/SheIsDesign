@@ -39,14 +39,25 @@ namespace SheDesign.Tests
         public async Task GetJudgeMarkScheme_ReturnsAllRecordsMappedToReadDTO()
         {
             // Arrange
-            var mockIp = new IndustryProfessional { Id = 1, fullname = "Professor McGonagall" };
-            var mockJudge = new Judge { Id = 2, IndustryProfessionalID = 1, IndustryProfessional = mockIp };
-            var mockPost = new Post { Id = 10, title = "Transfiguration Portfolio" };
+            var mockIp1 = new IndustryProfessional { Id = 1, fullname = "Professor McGonagall" };
+            var mockJudge1 = new Judge { Id = 2, IndustryProfessionalID = 1, IndustryProfessional = mockIp1 };
+            var mockPost1 = new Post { Id = 10, title = "Transfiguration Portfolio" };
+            
+            var mockIp2 = new IndustryProfessional { Id = 3, fullname = "Minerva" };
+            var mockJudge2 = new Judge { Id = 4, IndustryProfessionalID = 3, IndustryProfessional = mockIp2 };
+            var mockPost2 = new Post { Id = 11, title = "Defense Against Dark Arts" };
 
+            // Add all related entities first to satisfy FK constraints
+            _context.IndustryProfessional.AddRange(new[] { mockIp1, mockIp2 });
+            _context.Judge.AddRange(new[] { mockJudge1, mockJudge2 });
+            _context.Post.AddRange(new[] { mockPost1, mockPost2 });
+            await _context.SaveChangesAsync();
+
+            // Add JudgeMarkScheme records
             _context.JudgeMarkScheme.AddRange(new List<JudgeMarkScheme>
             {
-                new JudgeMarkScheme { Id = 1, PostId = 10, JudgeId = 2, Score = 85, Comment = "Good work", Judge = mockJudge, Post = mockPost },
-                new JudgeMarkScheme { Id = 2, PostId = 11, JudgeId = 3, Score = 92, Comment = "Exceptional UI" } // Left orphan intentionally to test fallback logic
+                new JudgeMarkScheme { Id = 1, PostId = 10, JudgeId = 2, Score = 85, Comment = "Good work" },
+                new JudgeMarkScheme { Id = 2, PostId = 11, JudgeId = 4, Score = 92, Comment = "Exceptional UI" }
             });
             await _context.SaveChangesAsync();
 
@@ -60,14 +71,13 @@ namespace SheDesign.Tests
             Assert.Equal(2, schemes.Count);
             
             // Validate that multi-hop flattening projection mapped nested entities correctly
-            var populatedDto = schemes.First(s => s.Id == 1);
-            Assert.Equal("Professor McGonagall", populatedDto.JudgeName);
-            Assert.Equal("Transfiguration Portfolio", populatedDto.PostTitle);
+            var firstDto = schemes.First(s => s.Id == 1);
+            Assert.Equal("Professor McGonagall", firstDto.JudgeName);
+            Assert.Equal("Transfiguration Portfolio", firstDto.PostTitle);
 
-            // Validate that the orphan entry safely defaults to standard text boundaries
-            var fallbackDto = schemes.First(s => s.Id == 2);
-            Assert.Equal("Unknown Judge", fallbackDto.JudgeName);
-            Assert.Equal("Untitled Post", fallbackDto.PostTitle);
+            var secondDto = schemes.First(s => s.Id == 2);
+            Assert.Equal("Minerva", secondDto.JudgeName);
+            Assert.Equal("Defense Against Dark Arts", secondDto.PostTitle);
         }
 
         [Fact]

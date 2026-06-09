@@ -36,117 +36,152 @@ namespace SheDesign.Tests
         }
 
         [Fact]
-        public async Task GetTotalLeaderboardDetails_ReturnsEmptyList_WhenNoSubmissionsExistForEvent()
+        public async Task GetLeaderboard_ReturnsNotFound_WhenNoPostsExistForEvent()
         {
             // Arrange
             int targetEventId = 99;
-            // Seed a submission for a completely different event
-            _context.Submission.Add(new Submission { Id = 1, eventId = 100, title = "Other Event Sub" });
+
+            // Seed a post for a completely different event
+            _context.Post.Add(new Post { Id = 1, eventId = 100, title = "Other Event Post" });
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _controller.GetTotalLeaderboardDetails(targetEventId);
+            var result = await _controller.GetLeaderboard(targetEventId);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var leaderboard = Assert.IsAssignableFrom<IEnumerable<LeaderboardTotalReadDTO>>(okResult.Value);
-            Assert.Empty(leaderboard);
+            Assert.IsType<NotFoundObjectResult>(result.Result);
         }
 
         [Fact]
-        public async Task GetTotalLeaderboardDetails_FiltersCorrectEvent_AndCalculatesSequentialRanks()
+        public async Task GetLeaderboard_FiltersCorrectEvent_AndSortsByTotalScoreDescending()
         {
             // Arrange
             int targetEventId = 5;
 
-            var student1 = new Student { Id = 1, fullname = "Alice Johnson" };
-            var student2 = new Student { Id = 2, fullname = "Bob Smith" };
+            var user1 = new User { Id = 1, Email = "alice@test.com" };
+            var user2 = new User { Id = 2, Email = "bob@test.com" };
 
-            var sub1 = new Submission
-            {
-                Id = 10,
-                eventId = targetEventId,
-                title = "Alice Entry",
-                points = 85,
-                rank = 2, // Current database rank value
-                Student = student1
-            };
+            var student1 = new Student { Id = 1, fullname = "Alice Johnson", university = "UCT", userId = 1, User = user1 };
+            var student2 = new Student { Id = 2, fullname = "Bob Smith", university = "Wits", userId = 2, User = user2 };
 
-            var sub2 = new Submission
-            {
-                Id = 11,
-                eventId = targetEventId,
-                title = "Bob Entry",
-                points = 98,
-                rank = 5, // Higher database rank value, should come first based on your OrderByDescending
-                Student = student2
-            };
+            var post1 = new Post { Id = 10, eventId = targetEventId, title = "Alice Entry", studentId = 1, Student = student1 };
+            var post2 = new Post { Id = 11, eventId = targetEventId, title = "Bob Entry", studentId = 2, Student = student2 };
+            var postOtherEvent = new Post { Id = 12, eventId = 999, title = "Other Event Post" };
 
-            var subOtherEvent = new Submission
-            {
-                Id = 12,
-                eventId = 999, // Different event entirely
-                title = "Charlie Entry",
-                points = 100,
-                rank = 10
-            };
+            // Alice gets score 85, Bob gets score 98 — Bob should rank first
+            var mark1 = new JudgeMarkScheme { Id = 1, PostId = 10, JudgeId = 1, Score = 85 };
+            var mark2 = new JudgeMarkScheme { Id = 2, PostId = 11, JudgeId = 1, Score = 98 };
 
-            _context.Submission.AddRange(sub1, sub2, subOtherEvent);
+            _context.Post.AddRange(post1, post2, postOtherEvent);
+            _context.JudgeMarkScheme.AddRange(mark1, mark2);
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _controller.GetTotalLeaderboardDetails(targetEventId);
+            var result = await _controller.GetLeaderboard(targetEventId);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var leaderboard = Assert.IsAssignableFrom<IEnumerable<LeaderboardTotalReadDTO>>(okResult.Value).ToList();
+            var leaderboard = Assert.IsAssignableFrom<IEnumerable<LeaderboardEntryReadDTO>>(okResult.Value).ToList();
 
-            // 1. Check filtering: Only the 2 items matching targetEventId should return
+            // Only the 2 posts matching targetEventId should return
             Assert.Equal(2, leaderboard.Count);
 
-            // 2. Check sorting ordering: sub2 has rank 5, sub1 has rank 2. 
-            // OrderByDescending(s => s.rank) means sub2 must appear first (Index 0).
+            // Bob has higher score so should be first
             var firstPlace = leaderboard[0];
             var secondPlace = leaderboard[1];
 
             Assert.Equal(11, firstPlace.Id);
             Assert.Equal(targetEventId, firstPlace.EventId);
             Assert.Equal("Bob Smith", firstPlace.Student_name);
+            Assert.Equal("bob@test.com", firstPlace.Student_email);
             Assert.Equal(98, firstPlace.Score);
-            Assert.Equal(1, firstPlace.Rank); // Procedural index math (0 + 1)
+            Assert.Equal(ReviewStatus.Reviewed, firstPlace.Review_status);
 
             Assert.Equal("Alice Johnson", secondPlace.Student_name);
             Assert.Equal(85, secondPlace.Score);
-            Assert.Equal(2, secondPlace.Rank); // Procedural index math (1 + 1)
+            Assert.Equal(ReviewStatus.Reviewed, secondPlace.Review_status);
         }
 
         [Fact]
-        public async Task GetTotalLeaderboardDetails_HandlesMissingStudentGracefully()
+        public async Task GetLeaderboard_SumsMultipleJudgeScores_PerPost()
         {
             // Arrange
-            int targetEventId = 1;
-            var subWithoutStudent = new Submission
-            {
-                Id = 20,
-                eventId = targetEventId,
-                title = "Orphaned Submission",
-                points = 70,
-                rank = 1,
-                Student = null // Simulating missing relational data
-            };
+            int targetEventId = 3;
 
-            _context.Submission.Add(subWithoutStudent);
+            var student = new Student { Id = 1, fullname = "Carol White", university = "UCT", userId = 1 };
+            var post = new Post { Id = 20, eventId = targetEventId, title = "Carol Entry", studentId = 1, Student = student };
+
+            // Two judges score the same post — scores should be summed
+            var mark1 = new JudgeMarkScheme { Id = 1, PostId = 20, JudgeId = 1, Score = 40 };
+            var mark2 = new JudgeMarkScheme { Id = 2, PostId = 20, JudgeId = 2, Score = 55 };
+
+            _context.Post.Add(post);
+            _context.JudgeMarkScheme.AddRange(mark1, mark2);
             await _context.SaveChangesAsync();
 
             // Act
-            var result = await _controller.GetTotalLeaderboardDetails(targetEventId);
+            var result = await _controller.GetLeaderboard(targetEventId);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var leaderboard = Assert.IsAssignableFrom<IEnumerable<LeaderboardTotalReadDTO>>(okResult.Value).ToList();
+            var leaderboard = Assert.IsAssignableFrom<IEnumerable<LeaderboardEntryReadDTO>>(okResult.Value).ToList();
 
             Assert.Single(leaderboard);
-            // Confirms your null-coalescing operator logic (?? "Unknown") works smoothly
+            Assert.Equal(95, leaderboard[0].Score); // 40 + 55
+        }
+
+        [Fact]
+        public async Task GetLeaderboard_SetsUnreviewed_WhenNoMarkSchemeExists()
+        {
+            // Arrange
+            int targetEventId = 1;
+
+            var student = new Student { Id = 1, fullname = "Dave Brown", university = "UJ", userId = 1 };
+            var post = new Post { Id = 30, eventId = targetEventId, title = "Unscored Post", studentId = 1, Student = student };
+
+            // No JudgeMarkScheme entries for this post
+            _context.Post.Add(post);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _controller.GetLeaderboard(targetEventId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var leaderboard = Assert.IsAssignableFrom<IEnumerable<LeaderboardEntryReadDTO>>(okResult.Value).ToList();
+
+            Assert.Single(leaderboard);
+            Assert.Equal(0, leaderboard[0].Score);
+            Assert.Equal(ReviewStatus.Unreviewed, leaderboard[0].Review_status);
+            Assert.Equal("Dave Brown", leaderboard[0].Student_name);
+        }
+
+        [Fact]
+        public async Task GetLeaderboard_HandlesMissingStudentGracefully()
+        {
+            // Arrange
+            int targetEventId = 1;
+
+            var post = new Post
+            {
+                Id = 40,
+                eventId = targetEventId,
+                title = "Orphaned Post",
+                studentId = 99, // No matching student
+                Student = null
+            };
+
+            _context.Post.Add(post);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _controller.GetLeaderboard(targetEventId);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result.Result);
+            var leaderboard = Assert.IsAssignableFrom<IEnumerable<LeaderboardEntryReadDTO>>(okResult.Value).ToList();
+
+            Assert.Single(leaderboard);
             Assert.Equal("Unknown", leaderboard[0].Student_name);
             Assert.Null(leaderboard[0].Student_email);
         }
