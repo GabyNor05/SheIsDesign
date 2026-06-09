@@ -4,62 +4,18 @@
 // First name passed via location.state from SignupBasicPage
 // API-ready: all handlers stubbed with TODO comments
 // ─────────────────────────────────────────────────────────────────────────────
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { generateOtp, getExpiryTimestamp, sendVerificationEmail } from "../../../services/emailService";
 import {
-  FiMail, FiBriefcase, FiUpload, FiFile,
+  FiMail, FiBriefcase, // FiUpload, FiFile, — CV upload not yet implemented
 } from "react-icons/fi";
 import { MdBusiness, MdBadge, MdPalette, MdCheckCircle } from "react-icons/md";
 import { Field, SelectField, TagInput } from "../../../components/ui/Fields/Field/Field";
 import "./SignupDetailsPage.css";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CV Upload zone
-// ─────────────────────────────────────────────────────────────────────────────
-function CVUploadZone({ file, onFile }) {
-  const [dragging, setDragging] = useState(false);
-  const inputRef = useRef(null);
-
-  function handleDrop(e) {
-    e.preventDefault();
-    setDragging(false);
-    const f = e.dataTransfer.files[0];
-    if (f) onFile(f);
-  }
-
-  return (
-    <div className="sdp-field">
-      <label className="sdp-field-label">CV / Career Summary</label>
-      <div
-        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={handleDrop}
-        onClick={() => inputRef.current?.click()}
-        className={`sdp-upload ${dragging ? "sdp-upload--dragging" : ""} ${file ? "sdp-upload--filled" : ""}`}
-      >
-        <div className="sdp-upload__icon">
-          {file ? <FiFile size={22} /> : <FiUpload size={22} />}
-        </div>
-        {file ? (
-          <span className="sdp-upload__filename">{file.name}</span>
-        ) : (
-          <>
-            <span className="sdp-upload__primary">Upload your CV or career summary</span>
-            <span className="sdp-upload__secondary">PDF or Word, max 5MB — drag &amp; drop or click to browse</span>
-          </>
-        )}
-        <input
-          ref={inputRef}
-          type="file"
-          accept=".pdf,.doc,.docx"
-          className="sdp-upload__input"
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); }}
-        />
-      </div>
-    </div>
-  );
-}
+// CV upload — not yet implemented
+// function CVUploadZone({ file, onFile }) { ... }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Volunteer checkbox
@@ -155,7 +111,7 @@ function StudentForm({ email, fields, onChange }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Industry Professional form fields
 // ─────────────────────────────────────────────────────────────────────────────
-function IndustryForm({ email, fields, onChange, cvFile, onCvFile }) {
+function IndustryForm({ email, fields, onChange }) {
   return (
     <div className="sdp-fields">
       {/* ERD: User.email — disabled */}
@@ -193,8 +149,7 @@ function IndustryForm({ email, fields, onChange, cvFile, onCvFile }) {
         initialTags={["UX Design", "Service Design", "JavaScript"]}
       />
 
-      {/* ERD: IndustryProfessional.cv_file_link */}
-      <CVUploadZone file={cvFile} onFile={onCvFile} />
+      {/* CV upload — not yet implemented */}
     </div>
   );
 }
@@ -226,7 +181,6 @@ export default function SignupDetailsPage() {
     institution: "",
     jobTitle:    "",
   });
-  const [cvFile, setCvFile] = useState(null);
 
   function handleStudentChange(key, val) {
     setStudentFields((p) => ({ ...p, [key]: val }));
@@ -368,8 +322,6 @@ async function handleSubmit(e) {
                 email={email}
                 fields={industryFields}
                 onChange={handleIndustryChange}
-                cvFile={cvFile}
-                onCvFile={setCvFile}
               />
             )}
 
