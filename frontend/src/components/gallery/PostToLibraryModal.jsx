@@ -99,6 +99,11 @@ export default function PostToLibraryModal({ onClose, onSuccess, studentId }) {
 
   // ── Submit ────────────────────────────────────────────────────────────────────
   async function handleSubmit() {
+    const parsedStudentId = Number(studentId);
+    if (!parsedStudentId || !Number.isInteger(parsedStudentId)) {
+      setError("Your student session is missing. Please log out and log back in.");
+      return;
+    }
     if (!title.trim()) { setError("Please add a title for your work."); return; }
     if (!category)     { setError("Please select a category."); return; }
     if (!imageFile)    { setError("Please upload an image of your work."); return; }
@@ -120,8 +125,8 @@ export default function PostToLibraryModal({ onClose, onSuccess, studentId }) {
         Title:         title.trim(),
         Description:   fullDescription,
         Category:      category,
-        StudentId:     studentId,
-        EventId:       0,
+        StudentId:     parsedStudentId,
+        EventId:       null,
         ImageFileLink: imageUrl,
         Status:        "Pending",
       };
