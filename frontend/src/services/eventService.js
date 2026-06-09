@@ -49,9 +49,14 @@ export const eventService = {
     -----
 
     */
+   
     createEvent: (eventData) => apiClient.post('/', eventData),
 
     updateEvent: (id, eventData) => apiClient.put(`/${id}`, { ...eventData, id }),
 
-    deleteEvent: (id) => apiClient.delete(`/${id}`)
+    deleteEvent: (id) => apiClient.delete(`/${id}`),
+
+    assignJudge: (id, judgeId) => apiClient.put(`/${id}/AssignJudge`, judgeId),
+ 
+    unassignJudge: (id) => apiClient.put(`/${id}/UnassignJudge`),
 };

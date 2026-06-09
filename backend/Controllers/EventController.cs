@@ -142,6 +142,65 @@ namespace backend.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}/AssignJudge")]
+        public async Task<IActionResult> AssignJudge(int id, int judgeId)
+        {
+            var _event = await _context.Event.FindAsync(id);
+            if (_event == null) return NotFound($"Event with ID {id} not found.");
+
+            // Verify the judge exists
+            var judge = await _context.Judge.FindAsync(judgeId);
+            if (judge == null) return NotFound($"Judge with ID {judgeId} not found.");
+
+            // Prevent duplicate assignment
+            if (_event.JudgeId == judgeId)
+                return Conflict($"Judge {judgeId} is already assigned to this event.");
+
+            _event.JudgeId = judgeId;
+            _context.Entry(_event).Property(e => e.JudgeId).IsModified = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EventExists(id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return Ok(_event);
+        }
+
+        [HttpPut("{id}/UnassignJudge")]
+        public async Task<IActionResult> UnassignJudge(int id)
+        {
+            var _event = await _context.Event.FindAsync(id);
+            if (_event == null) return NotFound($"Event with ID {id} not found.");
+
+            if (_event.JudgeId == null)
+                return NotFound($"No judge is currently assigned to this event.");
+
+            _event.JudgeId = null;
+            _context.Entry(_event).Property(e => e.JudgeId).IsModified = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EventExists(id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return Ok(_event);
+        }
+
         // POST: api/Event
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
