@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SheDesign.Data;
@@ -11,9 +12,11 @@ using SheDesign.Data;
 namespace backend.Migrations
 {
     [DbContext(typeof(SheDesignContext))]
-    partial class SheDesignContextModelSnapshot : ModelSnapshot
+    [Migration("20260609151654_UniqueUserEmail")]
+    partial class UniqueUserEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -348,9 +351,8 @@ namespace backend.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("roles");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

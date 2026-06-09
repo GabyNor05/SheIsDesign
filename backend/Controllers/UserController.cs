@@ -11,7 +11,7 @@ using SheDesign.DTO;
 
 namespace backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]s")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -31,7 +31,8 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                Status = user.Status
             }).ToListAsync();
         }
 
@@ -48,18 +49,18 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                Status = user.Status
             };
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        [HttpPut("{id}/ApproveUser")]
+        public async Task<IActionResult> ApproveUser(int id)
         {
-            if (id != user.Id) return BadRequest();
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
 
-            _context.Entry(user).State = EntityState.Modified;
+            user.Status = Status.Approved;
 
             try
             {
@@ -68,13 +69,37 @@ namespace backend.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!UserExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
+            }
+
+            return NoContent();
+        }
+
+        // PUT: api/Users/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id, UserUpdateDTO dto)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            user.Email = dto.email;
+            user.Role = dto.role;
+            user.Status = dto.status;
+            // add whichever fields your UserUpdateDTO has
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                    return NotFound();
+                else
+                    throw;
             }
 
             return NoContent();
