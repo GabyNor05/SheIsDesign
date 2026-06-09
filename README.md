@@ -118,7 +118,7 @@ The database schema, as illustrated in the ERD below, is engineered to support a
 - **Post & Comment**: Drives community interaction. Post entities tie back to specific events, while the Comment table acts as a relational bridge connecting comments directly to the User who authored them.
 - **Submission**: Manages competition entries, work status, points, and leaderboard ranks linked directly to an individual StudentID.
 
-![Banner](./documentation/erd.jpeg
+![Banner](./documentation/erd.jpeg)
 
 ---
 
