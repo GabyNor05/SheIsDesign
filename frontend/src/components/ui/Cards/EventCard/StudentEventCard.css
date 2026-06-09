@@ -209,3 +209,17 @@
     cursor: pointer;
     transition: opacity 0.15s;
 }
+
+.sec__apply-btn--applied {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.35);
+    box-shadow: none;
+    cursor: default;
+    font-weight: 500;
+}
+
+.sec__apply-btn--applied:hover {
+    opacity: 1;
+    background: transparent;
+}
