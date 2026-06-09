@@ -32,6 +32,52 @@ const STATUS_CONFIG = {
   Winner: { bg: "rgba(196,18,98,0.12)", color: "#FE4081", dot: "#C41262" },
 };
 
+const MOCK_LEADERBOARD_SEEDS = [
+  {
+    studentName: "Amara Diailo",
+    studentEmail: "amara@wits.ac.za",
+    submissionTitle: "Creative Brief",
+    status: "Winner",
+    score: 95,
+    rank: 1,
+    isWinner: true,
+  },
+  {
+    studentName: "Siya Mokoena",
+    studentEmail: "siya@cput.ac.za",
+    submissionTitle: "UX Concept Deck",
+    status: "Reviewed",
+    score: 88,
+    rank: 2,
+    isWinner: false,
+  },
+  {
+    studentName: "Naledi Dlamini",
+    studentEmail: "naledi@up.ac.za",
+    submissionTitle: "Illustration Pitch",
+    status: "Pending",
+    score: 74,
+    rank: 3,
+    isWinner: false,
+  },
+];
+
+function getMockLeaderboardForEvent(eventId) {
+  return MOCK_LEADERBOARD_SEEDS.map((entry, index) => ({
+    id: 9000 + eventId * 10 + index,
+    eventId,
+    studentName: entry.studentName,
+    studentEmail: entry.studentEmail,
+    submissionTitle: entry.submissionTitle,
+    status: entry.status,
+    score: entry.score,
+    rank: entry.rank,
+    submittedAt: "—",
+    isWinner: entry.isWinner,
+    color: "#FE4081",
+  }));
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SVG ICON COMPONENT — no emojis, consistent with Events.jsx
 // ─────────────────────────────────────────────────────────────────────────────
@@ -567,8 +613,13 @@ export default function ManageLeaderboardPage() {
         const eventData = await fetchEvents();
         if (!isMounted) return;
 
-        setEvents(eventData);
-        setSelectedEventId(eventData[0]?.id ?? null);
+        const nextEvents =
+          Array.isArray(eventData) && eventData.length > 0
+            ? eventData
+            : [{ id: 1, title: "SheIsDesign Showcase", date: "Live demo" }];
+
+        setEvents(nextEvents);
+        setSelectedEventId(nextEvents[0]?.id ?? null);
       } catch (err) {
         if (!isMounted) return;
         console.error("Failed to load events:", err);
@@ -594,7 +645,13 @@ export default function ManageLeaderboardPage() {
         setLoading(true);
         const data = await fetchLeaderboardForEvent(selectedEventId);
         if (!isMounted) return;
-        setSubmissions(data);
+
+        const nextData =
+          Array.isArray(data) && data.length > 0
+            ? data
+            : getMockLeaderboardForEvent(selectedEventId);
+
+        setSubmissions(nextData);
         setError("");
       } catch (err) {
         if (!isMounted) return;

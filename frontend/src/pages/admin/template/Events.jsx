@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./Events.css";
 import { eventService } from "../../../services/eventService";
+import EventForm from "../../../components/admin/event/EventForm";
 import AllEvents from "../../../components/admin/event/AllEvents";
 
 const T = {
@@ -55,9 +56,7 @@ const SEED_EVENTS = [
   { EventID:"evt-008", title:"Poster Design Challenge",   category:"Illustration", categoryLabel:"Illustration",    start_date:"2025-06-01", end_date:"2025-05-30", entry_count:76,  max_entries:100, description:"A bold poster challenge.",                   points_reward:250,  status:"closed",   image_link:"", submissions:69, location:"Online", time:"10:00", judges:3 },
 ];
 
-function saveEvents(evs) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(evs)); } catch {}
-}
+
 function genId() { return "evt-" + Date.now().toString(36); }
 function fmtDate(d) {
   if (!d) return "—";
@@ -180,7 +179,7 @@ function Modal({ title, onClose, children, wide }) {
   );
 }
 
-function FormField({ label, required, error, children }) {
+/* function FormField({ label, required, error, children }) {
   return (
     <div className="form-field">
       <label className="form-label">
@@ -298,7 +297,7 @@ function EventForm({ initial, onSave, onClose }) {
       </div>
     </div>
   );
-}
+} */
 
 function ConfirmDelete({ event, onConfirm, onClose }) {
   return (
@@ -524,12 +523,12 @@ export default function ManageEvents() {
       try {
         const data = await eventService.getUpcomingEvents();
         setEvents(data || []);
-        saveEvents(data || []);
+
       } catch (err) {
         console.error("Error fetching upcoming events:", err);
         setError(err.message || "Failed to load events");
         setEvents(SEED_EVENTS);
-        saveEvents(SEED_EVENTS);
+        
       } finally {
         setLoading(false);
       }
@@ -541,12 +540,11 @@ export default function ManageEvents() {
       try {
         const data = await eventService.getAllEvents();
         setEvents(data || []);
-        saveEvents(data || []);
+
       } catch (err) {
         console.error("Error fetching all events:", err);
         setError(err.message || "Failed to load events");
         setEvents(SEED_EVENTS);
-        saveEvents(SEED_EVENTS);
       } finally {
         setLoading(false);
       }
@@ -572,10 +570,10 @@ export default function ManageEvents() {
   const onMouseMove = e => { if (!drag.current.active) return; e.preventDefault(); const x = e.pageX - scrollRef.current.offsetLeft; scrollRef.current.scrollLeft = drag.current.scrollLeft - (x - drag.current.startX) * 1.5; };
   const onMouseUp   = () => { drag.current.active = false; };
 
-  useEffect(() => { saveEvents(events); }, [events]);
+
   useEffect(() => { setPage(1); }, [tab, search]);
 
-  const persist      = next => { setEvents(next); saveEvents(next); };
+  const persist      = next => { setEvents(next); };
   const handleCreate = data => { persist([{ ...data, EventID: genId() }, ...events]); setModal(null); };
   const handleEdit   = data => { persist(events.map(e => e.EventID === active.EventID ? { ...data, EventID: active.EventID } : e)); setModal(null); setActive(null); };
   const handleDelete = ()   => { persist(events.filter(e => e.EventID !== active.EventID)); if (detailId === active.EventID) setDetail(null); setModal(null); setActive(null); };

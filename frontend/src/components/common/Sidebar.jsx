@@ -63,7 +63,7 @@ function Sidebar({ activeTab, setActiveTab }) {
     return (
         <aside className="sidebar-container flex flex-col justify-between w-56 h-screen px-[14px] py-6 bg-white ">
             <div className="flex flex-col ">
-                <Link to="/" className="sidebar-logo">
+                <Link to="/" className="sidebar-logo" alt="Navigate to Home">
                     SheIs<span className="sidebar-logo-accent">Design</span>
                 </Link>
                 <div className="w-[187px]">

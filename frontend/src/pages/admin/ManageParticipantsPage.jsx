@@ -6,7 +6,13 @@ import {
 } from "../../services/participantService";
 
 async function fetchParticipants() {
-  return fetchParticipantsForAdmin();
+  const data = await fetchParticipantsForAdmin();
+
+  if (Array.isArray(data) && data.length > 0) {
+    return data;
+  }
+
+  return MOCK_PARTICIPANTS;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

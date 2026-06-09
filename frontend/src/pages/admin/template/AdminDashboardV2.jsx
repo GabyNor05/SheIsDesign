@@ -87,15 +87,6 @@ function Icon({ name, size = 16, color = "currentColor" }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // SHARED PRIMITIVES
 // ─────────────────────────────────────────────────────────────────────────────
-function StatusBadge({ status }) {
-  const s = STATUS_STYLE[status] || STATUS_STYLE.DRAFT;
-  return (
-    <span className="status-badge" style={{ background: s.bg, color: s.color, borderColor: `${s.color}30` }}>
-      <span className="status-badge__dot" style={{ background: s.dot }} />
-      {status}
-    </span>
-  );
-}
 
 function SectionHeader({ icon, title, badge, action, onAction }) {
   return (
@@ -154,82 +145,7 @@ function PageHeader() {
 
 
 
-// ─────────────────────────────────────────────────────────────────────────────
-// APPLICANT ROW
-// ─────────────────────────────────────────────────────────────────────────────
-function ApplicantRow({ person, isLast }) {
-  const [status, setStatus] = useState(null);
 
-  return (
-    <div className={`applicant-row${isLast ? " applicant-row--last" : ""}${status ? " applicant-row--actioned" : ""}`}>
-      <div
-        className="applicant-row__avatar"
-        style={{
-          background: `${person.color}22`,
-          border: `1.5px solid ${person.color}55`,
-          color: person.color,
-        }}
-      >
-        {person.initials}
-      </div>
-      <div className="applicant-row__info">
-        <div className="applicant-row__name">{person.name}</div>
-        <div className="applicant-row__meta">{person.uni} · {person.field}</div>
-      </div>
-      <time className="applicant-row__date">{person.date}</time>
-      {status === null ? (
-        <div className="applicant-row__actions">
-          <button className="applicant-row__approve-btn" onClick={() => setStatus("approved")}>
-            <Icon name="check" size={12} color="var(--green)" /> Approve
-          </button>
-          <button className="applicant-row__deny-btn" onClick={() => setStatus("denied")}>
-            <Icon name="x" size={12} color="currentColor" /> Deny
-          </button>
-        </div>
-      ) : (
-        <span className={`applicant-row__result applicant-row__result--${status}`}>
-          {status === "approved" ? "✓ Approved" : "✗ Denied"}
-        </span>
-      )}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PENDING APPLICATIONS
-// ─────────────────────────────────────────────────────────────────────────────
-/* function PendingApplications() {
-  const [tab, setTab] = useState("students");
-  const total = PENDING_STUDENTS.length + PENDING_PROFESSIONALS.length;
-  const list  = tab === "students" ? PENDING_STUDENTS : PENDING_PROFESSIONALS;
-
-  return (
-    <Card>
-      <SectionHeader icon="users" title="Pending Applications" badge={total} action="View all" />
-      <div className="tabs">
-        {[
-          { key: "students",      label: "Students",              count: PENDING_STUDENTS.length },
-          { key: "professionals", label: "Industry Professionals", count: PENDING_PROFESSIONALS.length },
-        ].map(t => (
-          <button
-            key={t.key}
-            className={`tabs__btn${tab === t.key ? " tabs__btn--active" : ""}`}
-            onClick={() => setTab(t.key)}
-          >
-            {t.label}
-            <span className={`tabs__count${tab === t.key ? " tabs__count--active" : ""}`}>
-              {t.count}
-            </span>
-          </button>
-        ))}
-      </div>
-      {list.map((person, i) => (
-        <ApplicantRow key={person.id} person={person} isLast={i === list.length - 1} />
-      ))}
-    </Card>
-  );
-}
- */
 // ─────────────────────────────────────────────────────────────────────────────
 // ACTIVITY ITEM
 // ─────────────────────────────────────────────────────────────────────────────

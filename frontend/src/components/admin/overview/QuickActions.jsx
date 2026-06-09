@@ -1,21 +1,17 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import emailjs from '@emailjs/browser';
-import { Plus, Handshake } from "@phosphor-icons/react";
-import { FiBarChart2 } from "react-icons/fi";
 import EventForm from "../event/EventForm";
 import InviteJudgeForm from "../event/InviteJudgeForm";
 import Modal from "../Modal";
-import { T } from "../theme";
 import { Icon } from "./Icon";
 import "../../../pages/admin/template/AdminDashboardV2.css";
 
 
 const QUICK_ACTIONS = [
-  { id: 1, icon: <Plus size={16} />, label: "Create Event" },
-  { id: 2, icon: <Handshake size={16} />, label: "Invite Judge" },
-  { id: 3, icon: <FiBarChart2 size={16} />, label: "View Leaderboard" },
+  { id: 1, icon: "plus", label: "Create Event" },
+  { id: 2, icon: "award", label: "Invite Judge" },
+  { id: 3, icon: "chart", label: "View Leaderboard" },
 ];
 
 function QuickActions() {
