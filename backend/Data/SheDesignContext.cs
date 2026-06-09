@@ -19,6 +19,7 @@ namespace SheDesign.Data
         public DbSet<Post> Post { get; set; }
         public DbSet<Submission> Submission { get; set; }
         public DbSet<IndustryProfessional> IndustryProfessional { get; set; }
+        public DbSet<Judge> Judge { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

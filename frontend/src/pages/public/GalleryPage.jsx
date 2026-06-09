@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Lightning, Trophy, CheckCircle, Heart, BookmarkSimple, ArrowSquareOut, Plus, Eye } from "@phosphor-icons/react";
 import { postService } from "../../services/postManagementService";
 import { useAuth } from "../../context/AuthContext";
-import SubmitWorkModal from "../../components/gallery/SubmitWorkModal";
+import PostToLibraryModal from "../../components/gallery/PostToLibraryModal";
 import "./GalleryPage.css";
 
 const CATEGORIES = ["All", "Brand Identity", "Graphic Design", "UX Design", "Motion Design", "UI Design", "Print & Packaging"];
@@ -23,21 +23,21 @@ const CATEGORY_GRADIENTS = {
 
 function normalisePost(p) {
   return {
-    id:          p.Id          ?? p.id,
-    title:       p.Title       ?? p.title       ?? "",
-    description: p.Description ?? p.description ?? "",
-    imageUrl:    p.ImageFileLink ?? p.imageFileLink ?? p.image_file_link ?? null,
-    category:    p.Category    ?? p.category    ?? "Graphic Design",
-    studentId:   p.StudentId   ?? p.studentId   ?? null,
-    studentName: p.StudentName ?? p.studentName ?? "",
-    eventId:     p.EventId     ?? p.eventId     ?? null,
-    eventName:   p.EventName   ?? p.eventName   ?? "",
-    status:      p.Status      ?? p.status      ?? "",
-    points:      p.Points      ?? p.points      ?? null,
-    rank:        p.Rank        ?? p.rank        ?? null,
-    timeStamp:   p.PostDate    ?? p.postDate    ?? p.TimeStamp ?? p.timeStamp ?? null,
-    linkCount:   p.LinkCount   ?? p.linkCount   ?? 0,
-    commentCount:p.CommentCount?? p.commentCount?? 0,
+    id:           p.Id           ?? p.id,
+    title:        p.Title        ?? p.title        ?? "",
+    description:  p.Description  ?? p.description  ?? "",
+    imageUrl:     p.ImageFileLink ?? p.imageFileLink ?? p.image_file_link ?? null,
+    category:     p.Category     ?? p.category     ?? "Graphic Design",
+    studentId:    p.StudentId    ?? p.studentId    ?? null,
+    studentName:  p.StudentName  ?? p.studentName  ?? "",
+    eventId:      p.EventId      ?? p.eventId      ?? null,
+    eventName:    p.EventName    ?? p.eventName    ?? "",
+    status:       p.Status       ?? p.status       ?? "",
+    points:       p.Points       ?? p.points       ?? null,
+    rank:         p.Rank         ?? p.rank         ?? null,
+    timeStamp:    p.PostDate     ?? p.postDate     ?? p.TimeStamp ?? p.timeStamp ?? null,
+    linkCount:    p.LinkCount    ?? p.linkCount    ?? 0,
+    commentCount: p.CommentCount ?? p.commentCount ?? 0,
   };
 }
 
@@ -279,7 +279,7 @@ export default function GalleryPage() {
   const [search, setSearch] = useState("");
   const [selectedPost, setSelectedPost] = useState(null);
   const [heroVisible, setHeroVisible] = useState(false);
-  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [showPostModal, setShowPostModal] = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setHeroVisible(true), 100);
@@ -321,9 +321,6 @@ export default function GalleryPage() {
     if (sortBy === "az")     result.sort((a, b) => a.title.localeCompare(b.title));
     return result;
   }, [posts, activeCategory, sortBy, search]);
-
-  const columns = [[], [], []];
-  filtered.forEach((p, i) => columns[i % 3].push(p));
 
   function handleNewPost(newPost) {
     setPosts((prev) => [normalisePost(newPost), ...prev]);
@@ -455,17 +452,21 @@ export default function GalleryPage() {
       {/* ── Floating action button ── */}
       <button
         className="gallery-fab"
-        onClick={() => setShowSubmitModal(true)}
-        title="Post Your Work"
+        onClick={() => setShowPostModal(true)}
+        title="Post to Library"
       >
         <Plus size={24} weight="bold" />
       </button>
 
-      {selectedPost && <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />}
+      {/* ── Post detail modal ── */}
+      {selectedPost && (
+        <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />
+      )}
 
-      {showSubmitModal && (
-        <SubmitWorkModal
-          onClose={() => setShowSubmitModal(false)}
+      {/* ── Post to library modal ── */}
+      {showPostModal && (
+        <PostToLibraryModal
+          onClose={() => setShowPostModal(false)}
           onSuccess={handleNewPost}
           studentId={user?.id}
         />

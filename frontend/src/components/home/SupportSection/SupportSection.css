@@ -1,46 +1,48 @@
 /* =============================================
    SupportSection.css
-   Styles for src/components/home/SupportSection.jsx
    ============================================= */
 
-/* --- Section wrapper --- */
 .support-section {
     font-family: 'Poppins', sans-serif;
     background: rgba(13, 6, 8, 0.55);
     border-top: 1px solid rgba(248, 235, 237, 0.06);
     position: relative;
     overflow: hidden;
+    padding: 112px 48px;
 }
 
-/* --- Background glows --- */
 .support-glow-1 {
     position: absolute;
-    top: -100px;
-    left: -100px;
-    width: 400px;
-    height: 400px;
+    top: -120px;
+    left: -120px;
+    width: 480px;
+    height: 480px;
     background: radial-gradient(circle, rgba(196, 18, 98, 0.1) 0%, transparent 70%);
     pointer-events: none;
 }
 
 .support-glow-2 {
     position: absolute;
-    bottom: -100px;
-    right: -100px;
-    width: 400px;
-    height: 400px;
+    bottom: -120px;
+    right: -120px;
+    width: 480px;
+    height: 480px;
     background: radial-gradient(circle, rgba(254, 64, 129, 0.08) 0%, transparent 70%);
     pointer-events: none;
 }
 
-/* --- Inner container --- */
 .support-inner {
     position: relative;
     z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
 }
 
 /* =============================================
-   Section Header
+   Header
    ============================================= */
 
 .support-header {
@@ -64,18 +66,16 @@
 }
 
 .support-eyebrow {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
     font-size: 11px;
+    font-weight: 500;
     color: #FE7FAB;
     letter-spacing: 0.15em;
     text-transform: uppercase;
 }
 
 .support-heading {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 800;
     font-size: clamp(36px, 4vw, 52px);
+    font-weight: 800;
     color: #F8EBED;
     letter-spacing: -1px;
     line-height: 1.1;
@@ -83,37 +83,36 @@
 }
 
 .support-subtext {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
     font-size: 16px;
+    font-weight: 400;
     color: rgba(248, 235, 237, 0.5);
     line-height: 1.75;
-    max-width: 540px;
+    max-width: 520px;
     margin: 0;
 }
 
-/* --- Cards grid --- */
+/* =============================================
+   Cards grid
+   ============================================= */
+
 .support-cards-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: 28px;
 }
 
 /* =============================================
-   SupportCard
+   Card
    ============================================= */
 
 .support-card {
-    flex: 1;
-    background: linear-gradient(145deg, rgba(196, 18, 98, 0.07) 0%, rgba(13, 6, 8, 0.95) 100%);
-    border: 1px solid rgba(196, 18, 98, 0.15);
+    background: linear-gradient(160deg, rgba(196, 18, 98, 0.06) 0%, rgba(13, 6, 8, 0.96) 100%);
+    border: 1px solid rgba(196, 18, 98, 0.14);
     border-radius: 24px;
-    padding: 40px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 32px;
     position: relative;
-    overflow: hidden;
 }
 
 .support-card-glow-line {
@@ -122,111 +121,445 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.5), transparent);
+    z-index: 2;
 }
 
 /* =============================================
-   ImagePlaceholder
+   Visual strip
    ============================================= */
 
-.support-img-placeholder {
+.support-visual {
     width: 100%;
-    height: 148px;
-    border-radius: 16px;
-    background: rgba(196, 18, 98, 0.06);
-    border: 1px solid rgba(196, 18, 98, 0.12);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    flex-shrink: 0;
+    height: 160px;
     position: relative;
     overflow: hidden;
+    background: rgba(196, 18, 98, 0.03);
+    border-bottom: 1px solid rgba(196, 18, 98, 0.08);
+    flex-shrink: 0;
 }
 
-.support-img-glow-line {
+/* Center icon badge */
+.sv-center-icon {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(196, 18, 98, 0.3), transparent);
-}
-
-.support-img-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
     background: rgba(196, 18, 98, 0.12);
-    border: 1px solid rgba(196, 18, 98, 0.2);
+    border: 1px solid rgba(196, 18, 98, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #C41262;
+    z-index: 2;
+    backdrop-filter: blur(4px);
 }
 
-.support-img-label {
-    font-family: 'Poppins', sans-serif;
-    font-size: 11px;
-    color: rgba(248, 235, 237, 0.2);
+.sv-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
 }
 
-/* --- Card body (icon + title + description) --- */
+/* ── Orbs ─────────────────────────────── */
+
+.sv-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(30px);
+    pointer-events: none;
+}
+
+.sv-orb--1 {
+    width: 110px;
+    height: 110px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.32) 0%, transparent 70%);
+    top: -30px;
+    left: 18%;
+    animation: sv-orb-a 7s ease-in-out infinite;
+}
+
+.sv-orb--2 {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.22) 0%, transparent 70%);
+    bottom: -15px;
+    right: 22%;
+    animation: sv-orb-b 9s ease-in-out infinite;
+}
+
+.sv-orb--3 {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.18) 0%, transparent 70%);
+    top: 25%;
+    right: 8%;
+    animation: sv-orb-c 6s ease-in-out infinite;
+}
+
+.sv-orb--4 {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.28) 0%, transparent 70%);
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: sv-orb-b 8s ease-in-out infinite;
+}
+
+.sv-orb--5 {
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.18) 0%, transparent 70%);
+    bottom: -10px;
+    left: 12%;
+    animation: sv-orb-a 10s ease-in-out infinite;
+}
+
+.sv-orb--6 {
+    width: 55px;
+    height: 55px;
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.2) 0%, transparent 70%);
+    top: 18%;
+    right: 10%;
+    animation: sv-orb-c 7.5s ease-in-out infinite;
+}
+
+@keyframes sv-orb-a {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(16px, 10px) scale(1.07);
+    }
+
+    66% {
+        transform: translate(-8px, 18px) scale(0.94);
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+}
+
+@keyframes sv-orb-b {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(-18px, -8px) scale(1.1);
+    }
+
+    66% {
+        transform: translate(10px, -16px) scale(0.92);
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+}
+
+@keyframes sv-orb-c {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(-12px, 14px) scale(1.06);
+    }
+}
+
+/* ── Diamonds ─────────────────────────── */
+
+.sv-diamond {
+    position: absolute;
+    border: 1px solid rgba(196, 18, 98, 0.18);
+    transform: rotate(45deg);
+    animation: sv-spin-slow linear infinite;
+}
+
+.sv-diamond--1 {
+    width: 38px;
+    height: 38px;
+    top: 50%;
+    left: 10%;
+    margin-top: -19px;
+    animation-duration: 18s;
+}
+
+.sv-diamond--2 {
+    width: 22px;
+    height: 22px;
+    top: 18%;
+    right: 16%;
+    border-color: rgba(196, 18, 98, 0.12);
+    animation-duration: 14s;
+    animation-direction: reverse;
+}
+
+.sv-diamond--3 {
+    width: 13px;
+    height: 13px;
+    bottom: 20%;
+    left: 42%;
+    border-color: rgba(254, 64, 129, 0.22);
+    animation-duration: 10s;
+}
+
+@keyframes sv-spin-slow {
+    from {
+        transform: rotate(45deg);
+    }
+
+    to {
+        transform: rotate(405deg);
+    }
+}
+
+/* ── Concentric circles ───────────────── */
+
+.sv-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(196, 18, 98, 0.14);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: sv-pulse ease-in-out infinite;
+}
+
+.sv-circle--1 {
+    width: 64px;
+    height: 64px;
+    animation-duration: 4s;
+}
+
+.sv-circle--2 {
+    width: 108px;
+    height: 108px;
+    border-color: rgba(196, 18, 98, 0.09);
+    animation-duration: 4s;
+    animation-delay: 0.5s;
+}
+
+.sv-circle--3 {
+    width: 152px;
+    height: 152px;
+    border-color: rgba(196, 18, 98, 0.06);
+    animation-duration: 4s;
+    animation-delay: 1s;
+}
+
+@keyframes sv-pulse {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.04);
+        opacity: 0.65;
+    }
+}
+
+/* ── Orbiting dots ────────────────────── */
+
+.sv-orbit {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(196, 18, 98, 0.55);
+    top: 50%;
+    left: 50%;
+    margin: -2.5px 0 0 -2.5px;
+}
+
+.sv-orbit--1 {
+    animation: sv-orbit-r 6s linear infinite;
+}
+
+.sv-orbit--2 {
+    animation: sv-orbit-r 6s linear infinite;
+    animation-delay: -1.5s;
+}
+
+.sv-orbit--3 {
+    animation: sv-orbit-r2 8s linear infinite;
+}
+
+.sv-orbit--4 {
+    animation: sv-orbit-r2 8s linear infinite;
+    animation-delay: -4s;
+}
+
+@keyframes sv-orbit-r {
+    from {
+        transform: rotate(0deg) translateX(48px) rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg) translateX(48px) rotate(-360deg);
+    }
+}
+
+@keyframes sv-orbit-r2 {
+    from {
+        transform: rotate(90deg) translateX(68px) rotate(-90deg);
+    }
+
+    to {
+        transform: rotate(450deg) translateX(68px) rotate(-450deg);
+    }
+}
+
+/* ── Floating dots ────────────────────── */
+
+.sv-dot {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(196, 18, 98, 0.38);
+    animation: sv-float ease-in-out infinite;
+}
+
+.sv-dot--1 {
+    width: 4px;
+    height: 4px;
+    top: 20%;
+    left: 30%;
+    animation-duration: 5s;
+}
+
+.sv-dot--2 {
+    width: 3px;
+    height: 3px;
+    top: 62%;
+    right: 28%;
+    animation-duration: 7s;
+    animation-delay: -2s;
+}
+
+.sv-dot--3 {
+    width: 5px;
+    height: 5px;
+    bottom: 18%;
+    left: 54%;
+    animation-duration: 6s;
+    animation-delay: -1s;
+}
+
+.sv-dot--4 {
+    width: 3px;
+    height: 3px;
+    top: 34%;
+    right: 38%;
+    animation-duration: 8s;
+    animation-delay: -3s;
+}
+
+.sv-dot--5 {
+    width: 4px;
+    height: 4px;
+    top: 24%;
+    left: 22%;
+    animation-duration: 6s;
+}
+
+.sv-dot--6 {
+    width: 3px;
+    height: 3px;
+    bottom: 24%;
+    right: 18%;
+    animation-duration: 5s;
+    animation-delay: -1.5s;
+}
+
+.sv-dot--7 {
+    width: 5px;
+    height: 5px;
+    top: 54%;
+    left: 68%;
+    animation-duration: 7s;
+    animation-delay: -2.5s;
+}
+
+.sv-dot--8 {
+    width: 3px;
+    height: 3px;
+    bottom: 34%;
+    left: 38%;
+    animation-duration: 9s;
+    animation-delay: -4s;
+}
+
+@keyframes sv-float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.55;
+    }
+
+    50% {
+        transform: translateY(-7px);
+        opacity: 1;
+    }
+}
+
+/* =============================================
+   Card body
+   ============================================= */
+
 .support-card-body {
+    padding: 32px 36px 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-}
-
-.support-card-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
-    background: rgba(196, 18, 98, 0.12);
-    border: 1px solid rgba(196, 18, 98, 0.25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #C41262;
+    gap: 12px;
 }
 
 .support-card-title {
-    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
     font-weight: 800;
-    font-size: 26px;
     color: #F8EBED;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.4px;
     line-height: 1.2;
     margin: 0;
 }
 
 .support-card-description {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
     font-size: 14px;
+    font-weight: 400;
     color: rgba(248, 235, 237, 0.5);
     line-height: 1.75;
     margin: 0;
 }
 
-/* --- Divider --- */
 .support-card-divider {
     height: 1px;
     background: rgba(248, 235, 237, 0.06);
+    margin: 28px 36px;
 }
 
 /* =============================================
-   BulletItem
+   Benefits list
    ============================================= */
 
 .support-benefits-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 0;
+    padding: 0 36px;
     margin: 0;
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
 .support-bullet {
@@ -236,10 +569,10 @@
 }
 
 .support-bullet-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: rgba(196, 18, 98, 0.12);
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: rgba(196, 18, 98, 0.1);
     border: 1px solid rgba(196, 18, 98, 0.2);
     display: flex;
     align-items: center;
@@ -249,46 +582,57 @@
 }
 
 .support-bullet-text {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 400;
     font-size: 14px;
+    font-weight: 400;
     color: rgba(248, 235, 237, 0.6);
     line-height: 1.5;
 }
 
-/* --- CTA Button wrapper --- */
+/* =============================================
+   CTA button
+   ============================================= */
+
 .support-card-cta {
+    padding: 28px 36px 36px;
     margin-top: auto;
-    padding-top: 8px;
 }
 
-/* --- Support card CTA button --- */
 .support-card-btn {
     width: 100%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 16px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #C41262, #FE4081) !important;
-    color: white !important;
+    padding: 15px 24px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    color: #fff;
     text-decoration: none;
     font-family: 'Poppins', sans-serif;
-    font-weight: 700;
     font-size: 14px;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 6px 24px rgba(196, 18, 98, 0.28);
 }
 
-.support-card-btn:hover,
-.support-card-btn:focus,
-.support-card-btn:active,
-.support-card-btn:focus-visible {
-    background: linear-gradient(135deg, #C41262, #FE4081) !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
+.support-card-btn:hover {
     opacity: 0.88;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 32px rgba(196, 18, 98, 0.38);
+}
+
+/* =============================================
+   Responsive
+   ============================================= */
+
+@media (max-width: 900px) {
+    .support-section {
+        padding: 72px 24px;
+    }
+
+    .support-cards-grid {
+        grid-template-columns: 1fr;
+    }
 }
