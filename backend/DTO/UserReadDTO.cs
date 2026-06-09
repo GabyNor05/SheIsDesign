@@ -5,6 +5,7 @@ namespace SheDesign.DTO
         public int Id { get; set; }
         public string Email { get; set; } = String.Empty;
         public string Password { get; set; } = String.Empty;
+        public string ProfilePictureLink { get; set; } = String.Empty;
         public Role Role { get; set; }
         public Status Status { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;

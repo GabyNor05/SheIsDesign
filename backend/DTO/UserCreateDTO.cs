@@ -4,5 +4,6 @@ namespace SheDesign.DTO
     {
         public string Email { get; set; } = String.Empty;
         public string Password { get; set; } = String.Empty;
+        public string? ProfilePictureLink { get; set; } = String.Empty;
     }
 }

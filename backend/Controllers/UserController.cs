@@ -32,7 +32,8 @@ namespace backend.Controllers
                 Email = user.Email,
                 DateCreated = user.DateCreated,
                 Role = user.Role,
-                Status = user.Status
+                Status = user.Status,
+                ProfilePictureLink = user.ProfilePictureLink
             }).ToListAsync();
         }
 
@@ -50,7 +51,8 @@ namespace backend.Controllers
                 Email = user.Email,
                 DateCreated = user.DateCreated,
                 Role = user.Role,
-                Status = user.Status
+                Status = user.Status,
+                ProfilePictureLink = user.ProfilePictureLink
             };
         }
 
@@ -86,6 +88,30 @@ namespace backend.Controllers
 
             user.Role = userRole;
             _context.Entry(user).Property(u => u.Role).IsModified = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}/UpdateProfilePicture")]
+        public async Task<IActionResult> UpdateProfilePicture(int id, UserProfilePictureDTO profilePictureDTO)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            user.ProfilePictureLink = profilePictureDTO.ProfilePictureLink;
+            _context.Entry(user).Property(u => u.ProfilePictureLink).IsModified = true; // fixed
 
             try
             {
@@ -140,7 +166,8 @@ namespace backend.Controllers
                 Email = dto.Email,
                 PasswordHash = hash,
                 DateCreated = DateTime.UtcNow,
-                Role = Role.User
+                Role = Role.User,
+                ProfilePictureLink = dto.ProfilePictureLink
             };
 
             _context.Users.Add(user);
@@ -151,7 +178,8 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                ProfilePictureLink = user.ProfilePictureLink
             };
 
             return CreatedAtAction("GetUser", new { id = user.Id }, result);
@@ -177,7 +205,7 @@ namespace backend.Controllers
                 DateCreated = user.DateCreated,
                 Role = user.Role,
                 Status = user.Status,
-                StudentId = student?.Id
+                StudentId = student?.Id,
             });
         }
 
@@ -214,7 +242,7 @@ namespace backend.Controllers
                     Email = email,
                     PasswordHash = string.Empty,
                     DateCreated = DateTime.UtcNow,
-                    Role = Role.User
+                    Role = Role.User,
                 };
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
