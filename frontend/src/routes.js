@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import RootLayout from "./components/common/RootLayout";
 import AdminLayout from "./pages/admin/template/AdminLayout";
 
@@ -31,7 +31,7 @@ import JudgeDashboard from "./pages/judge/JudgeDashboard";
 import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
 import JudgeScoringPage from "./pages/judge/JudgeScoringPage";
 
-const Routes = createBrowserRouter([
+const Routes = createHashRouter([
   {
     path: "/",
     element: <RootLayout />,

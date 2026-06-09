@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "sheisdesign",
   "version": "0.1.0",
   "private": true,
   "main": "electron/main.js",
@@ -28,12 +28,15 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron:dev": "concurrently \"react-scripts start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron:build": "react-scripts build && electron-builder",
+    "electron:build": "react-scripts build && electron-builder --win",
     "electron:preview": "react-scripts build && electron ."
   },
   "build": {
     "appId": "com.sheisdesign.app",
     "productName": "SheIsDesign",
+    "extraMetadata": {
+      "main": "electron/main.js"
+    },
     "files": [
       "build/**/*",
       "electron/**/*"
@@ -43,7 +46,8 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "public/logo512.png"
+      "icon": "public/logo512.png",
+      "forceCodeSigning": false
     },
     "mac": {
       "target": "dmg",
