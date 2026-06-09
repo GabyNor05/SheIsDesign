@@ -224,6 +224,40 @@ function CommentSection({ postId, user }) {
     setText("");
   }
 
+  const isPending = user?.status === "Pending" && user?.role?.toLowerCase() !== "admin";
+
+  function renderCommentFooter() {
+    if (!user) {
+      return (
+        <p className="gallery-comments__login-prompt">
+          <a href="/login" className="gallery-comments__login-link">Log in</a> to leave a comment.
+        </p>
+      );
+    }
+    if (isPending) {
+      return (
+        <p className="gallery-comments__login-prompt">
+          Once an admin verifies your account you can comment.
+        </p>
+      );
+    }
+    return (
+      <form className="gallery-comments__form" onSubmit={handleSubmit}>
+        <input
+          ref={inputRef}
+          className="gallery-comments__input"
+          placeholder="Add a comment…"
+          value={text}
+          onChange={e => setText(e.target.value)}
+          maxLength={300}
+        />
+        <button type="submit" className="gallery-comments__submit" disabled={!text.trim()}>
+          <PaperPlaneTilt size={14} weight="fill" />
+        </button>
+      </form>
+    );
+  }
+
   return (
     <div className="gallery-comments">
       <div className="gallery-comments__header">
@@ -250,25 +284,7 @@ function CommentSection({ postId, user }) {
         ))}
       </div>
 
-      {user ? (
-        <form className="gallery-comments__form" onSubmit={handleSubmit}>
-          <input
-            ref={inputRef}
-            className="gallery-comments__input"
-            placeholder="Add a comment…"
-            value={text}
-            onChange={e => setText(e.target.value)}
-            maxLength={300}
-          />
-          <button type="submit" className="gallery-comments__submit" disabled={!text.trim()}>
-            <PaperPlaneTilt size={14} weight="fill" />
-          </button>
-        </form>
-      ) : (
-        <p className="gallery-comments__login-prompt">
-          <a href="/login" className="gallery-comments__login-link">Log in</a> to leave a comment.
-        </p>
-      )}
+      {renderCommentFooter()}
     </div>
   );
 }
