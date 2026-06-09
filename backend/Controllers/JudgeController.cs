@@ -88,12 +88,17 @@ namespace backend.Controllers
         // POST: api/Judge
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Judge>> PostJudge(Judge judge)
+        public async Task<ActionResult<JudgeCreateDTO>> PostJudge(JudgeCreateDTO dto)
         {
+            var judge = new Judge
+            {
+                IndustryProfessionalID = dto.IndustryProfessionalId
+            };
+
             _context.Judge.Add(judge);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetJudge", new { id = judge.Id }, judge);
+            return CreatedAtAction("GetJudge", new { id = judge.Id }, dto);
         }
 
         // DELETE: api/Judge/5
