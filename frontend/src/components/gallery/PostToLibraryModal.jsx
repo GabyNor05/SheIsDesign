@@ -8,12 +8,17 @@ import { postService } from "../../services/postManagementService";
 import "./PostToLibraryModal.css";
 
 const CATEGORIES = [
-  "Brand Identity",
   "Graphic Design",
-  "UX Design",
+  "Illustration",
+  "Brand Identity",
+  "UI/UX",
   "Motion Design",
-  "UI Design",
-  "Print & Packaging",
+  "Photography",
+  "Typography",
+  "3D Art",
+  "Product Design",
+  "Packaging",
+  "Editorial",
 ];
 
 // Suggested tags students can pick from — they can also type their own
