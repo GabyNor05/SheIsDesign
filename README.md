@@ -45,7 +45,7 @@ The public-facing side allows students and industry professionals to register, e
 | **Testing**         | Jest + xUnit +         | TDD - Unit, Integration and Component       |
 | **Database**        | PostgreSQL (Aiven)     | Relational data for ERD Schemas             |
 | **HTTP Client**     | Axios                  | Frontend ↔ backend requests                 |
-| **Deployment**      | Github Pages (backend) | CI/CD and hosting                           |
+| **Deployment**      | Render (backend)       | CI/CD and hosting                           |
 | **Packaging**       | Electron               | For creating a desktop app                  |
 | **Version Control** | GitHub                 | ---                                         |
 
@@ -106,20 +106,31 @@ The app will open at [http://localhost:3000](http://localhost:3000).
 ---
 
 ## 🛢 Database Schema (ERD Summary)
+The database schema, as illustrated in the ERD below, is engineered to support a highly relational, scalable, and secure platform. The architecture centres around managing core entities such as Users, Students, Events, and community interactions (Posts, Comments, Submissions, and Donations).
 
-\*Insert ERD
+#### Key Architectural Standards
+- **3rd Normal Form (3NF) Compliance**: The database has been carefully normalized to the 3rd level of normalization (3NF). This eliminates data redundancy, prevents update anomalies, and ensures that all non-key attributes are fully dependent solely on the primary keys.
+- **No Many-to-Many Relationships**: To maximise data integrity and optimise query performance, direct many-to-many relationships were intentionally avoided. Any complex relationships are resolved cleanly via one-to-many logical constraints and specialised relational mapping (such as separating general User credentials from specific Student profiles or mapping Donation records directly to individual Event targets).
+
+#### Core Entities & Relationships
+- **User & Student**: Handles authentication and role-based access control. A base User record maps directly to a detailed Student profile containing university and academic tracking metrics.
+- **Event & Donation**: Tracks platform events alongside financial support. The Donation table links directly to a specific EventID, ensuring transparent financial allocation.
+- **Post & Comment**: Drives community interaction. Post entities tie back to specific events, while the Comment table acts as a relational bridge connecting comments directly to the User who authored them.
+- **Submission**: Manages competition entries, work status, points, and leaderboard ranks linked directly to an individual StudentID.
+
+![Banner](./documentation/erd.jpeg
 
 ---
 
 ## 🚀 Deployment Process
 
 #### Backend (.Net + C#):
-Deployed on **Github Pages**.  
+Deployed on **Render**.  
 Responsible for handling data requests, authentication, and database communication.
 
-#### Database (PosgreSQL):
+#### Database (PostgreSQL):
 Hosted on **Aiven**, allowing remote access through phpMyAdmin.  
-Credentials are stored as environment variables.
+Credentials are stored in appsettings.json in the backend and are git-ignored.
 
 ---
 
@@ -133,11 +144,11 @@ This project was a full journey for me, not just in building a product, but in l
 - Created a platform that reflects real tutor needs.
 
 ### 🧪 Challenges & Solutions
-One major challenge was deployment, managing the frontend, backend, and SQL database across different platforms. I solved this by hosting the backend on Render, the SQL database on AlwaysData, and using environment variables to securely connect everything. I also ran into CORS issues when the frontend tried to call the backend, I resolved those by configuring allowed origins and carefully using environment variables. Finally, I do not think I optimised performance by compressing images, using lazy loading for tutor images, and reducing unused CSS, like I should have.
+One major challenge was deployment, managing the frontend, backend, and SQL database across different platforms. I solved this by hosting the backend on Render, the SQL database on AlwaysData, and using environment variables to securely connect everything. I also ran into CORS issues when the frontend tried to call the backend. I resolved those by configuring allowed origins and carefully using environment variables. Finally, I do not think I optimised performance by compressing images, using lazy loading for tutor images, and reducing unused CSS, like I should have.
 
 **Keagan Boucher**
-- **Challenges**:
-- **Solutions**: 
+- **Challenges**: Struggled with negotiating Google Cloud services and navigating organisational permissions, which delayed implementing Google Login. Also faced difficulties setting up a frontend unit testing framework independent of backend availability.
+- **Solutions**: Utilised mock services to isolate and test frontend features individually without relying on live backend endpoints.
 
 **Anika de Beer**
 - **Challenges**:
@@ -148,9 +159,9 @@ One major challenge was deployment, managing the frontend, backend, and SQL data
 - **Solutions**: 
 
 **Keabetswe Olifant**
-- **Challenges**: The challenges that this project has produced, at least the ones discovered by me, were the database structure changes. Seen as the database structure is permanent, it is not easy to make changes to it. Unit Testing has also been a hard part of development due to the sheer amount of tests that need to be conducted because of a large code base, and many parts that need testing.
-- **Solutions**: 
-My Solutions to the database issue, was to attempt to manipulate the migrations feature to undo the structures and redo them with a few commands from the command line. This has been my method of improvisation. Furthermore, a library for unit testing was used to see just how much of the codebase has been unit tested in order to determine just how much more testing was needed, and also close communication with my teammates was crucial for this part to avoid conflicts and to work efficiently.
+- **Challenges**: The challenges that this project has produced, at least the ones discovered by me, were the database structure changes. Since the database structure is permanent, it is not easy to change. Unit Testing has also been a hard part of development due to the sheer number of tests required by a large code base and the many parts that need testing.
+- **Solutions**: My Solution to the database issue was to attempt to manipulate the migrations feature to undo the structures and redo them with a few commands from the command line. This has been my method of improvisation. Furthermore, a unit testing library was used to assess how much of the codebase had been unit tested, determine how much more testing was needed, and ensure that close communication with my teammates was crucial for this part to avoid conflicts and work efficiently.
+
 ---
 
 ## 📽️ Demo & Promo Videos
