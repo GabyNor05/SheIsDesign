@@ -64,3 +64,15 @@ export const INPUT_STYLES = {
   boxSizing: "border-box",
   transition: "border-color 0.15s",
 };
+
+export const inputStyle = {
+  fontFamily: "'Poppins', sans-serif",
+  fontSize: 13,
+  padding: "10px 12px",
+  background: T.surface,
+  border: `1px solid ${T.border}`,
+  borderRadius: 8,
+  color: T.textPrimary,
+  width: "100%",
+  boxSizing: "border-box",
+};
