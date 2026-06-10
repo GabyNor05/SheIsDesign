@@ -94,19 +94,19 @@ function InfoRow({ icon, label, value }) {
   );
 }
 
-function StatusPill({ status }) {
-  const s = (status || "pending").toLowerCase();
-  const style = STATUS_STYLES[s] || STATUS_STYLES.pending;
-  return (
-    <span className="profile-status-pill" style={{
-      color: style.color,
-      background: style.bg,
-      border: `1px solid ${style.border}`,
-    }}>
-      {s.charAt(0).toUpperCase() + s.slice(1)}
-    </span>
-  );
-}
+// function StatusPill({ status }) {
+//   const s = (status || "pending").toLowerCase();
+//   const style = STATUS_STYLES[s] || STATUS_STYLES.pending;
+//   return (
+//     <span className="profile-status-pill" style={{
+//       color: style.color,
+//       background: style.bg,
+//       border: `1px solid ${style.border}`,
+//     }}>
+//       {s.charAt(0).toUpperCase() + s.slice(1)}
+//     </span>
+//   );
+// }
 
 function SectionTab({ tabs, active, onChange }) {
   return (
@@ -376,7 +376,18 @@ export default function ProfilePage() {
                 <a href="/judge" className="profile-card__link" style={{ color: roleConfig.color }}>Go to Judge Dashboard &rarr;</a>
               </div>
             )}
-
+            {role === "student" && (
+              <div className="profile-card profile-card--role">
+                <h2 className="profile-card__title">Your Activity</h2>
+                <p className="profile-card__body">
+                  Browse upcoming events, submit your design work, and track your ranking on the leaderboard.
+                </p>
+                <div className="profile-card__links">
+                  <a href="/events"  className="profile-card__link" style={{ color: roleConfig.color }}>Browse Events &rarr;</a>
+                  <a href="/gallery" className="profile-card__link" style={{ color: roleConfig.color }}>View Gallery &rarr;</a>
+                </div>
+              </div>
+            )}
           </>
         )}
 
@@ -416,7 +427,7 @@ export default function ProfilePage() {
                     <div className="profile-event-row__body">
                       <div className="profile-event-row__top">
                         <span className="profile-event-row__category">{ev.category}</span>
-                        <StatusPill status={ev.status} />
+                        {/* <StatusPill status={ev.status} /> */}
                       </div>
                       <p className="profile-event-row__title">{ev.eventTitle}</p>
                       <p className="profile-event-row__subtitle">{ev.title}</p>
@@ -470,7 +481,6 @@ export default function ProfilePage() {
                             </svg>
                           </div>
                       }
-                      <StatusPill status={post.status || post.Status} />
                     </div>
                     <div className="profile-library-card__body">
                       <p className="profile-library-card__category">{post.category || post.Category || "Post"}</p>
