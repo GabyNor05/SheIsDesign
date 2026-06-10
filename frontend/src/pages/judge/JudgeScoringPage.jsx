@@ -155,7 +155,7 @@ export default function JudgeScoringPage() {
     <div className="j-root">
 
       {/* ── Back */}
-      <button className="j-back-btn j-anim" onClick={() => navigate("/judge/events")}>
+      <button className="j-back-btn j-anim" onClick={() => navigate("/judge")}>
         <Ic n="left" s={14} c="currentColor" /> Back to Events
       </button>
 

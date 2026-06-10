@@ -161,8 +161,11 @@ namespace backend.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(UserCreateDTO dto)
         {
+            var emailExists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
+            if (emailExists)
+                return Conflict("An account with this email address already exists.");
+
             var hash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            Console.WriteLine($"DEBUG: The generated hash is: {hash}");
 
             var user = new User
             {
