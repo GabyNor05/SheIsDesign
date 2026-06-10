@@ -111,7 +111,6 @@ namespace backend.Controllers
             var recentActivity = postActivities
                 .Concat(donationActivities)
                 .Concat(markSchemeActivities)
-                .Concat(eventActivities)
                 .Concat(userActivities)
                 .OrderByDescending(a => a.Timestamp)
                 .Take(limit)

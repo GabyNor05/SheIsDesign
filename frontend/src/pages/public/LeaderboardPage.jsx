@@ -48,7 +48,7 @@ function isCurrentUserEntry(entry, user) {
   return entryName.length > 0 && userName.length > 0 && entryName === userName;
 }
 
-function PodiumCard({ entry, position, isCurrentUser }) {
+function PodiumCard({ entry, position, isCurrentUser, index = 0 }) {
   const isCenter = position === "center";
   const hue = avatarHue(entry.fullname);
 
@@ -63,7 +63,7 @@ function PodiumCard({ entry, position, isCurrentUser }) {
 
       <div className="lb-podium-card__rank-badge">
         {rankIcon}
-        <span className="lb-podium-card__rank-num">{entry.rank}</span>
+        <span className="lb-podium-card__rank-num">{index + 1}</span>
       </div>
 
       <div
@@ -108,7 +108,7 @@ function TableRow({ entry, index, isCurrentUser }) {
       style={{ animationDelay: `${index * 40}ms` }}
     >
       <div className="lb-row__rank">
-        <span className="lb-row__rank-num">{entry.rank}</span>
+        <span className="lb-row__rank-num">{index + 1}</span>
       </div>
 
       <div className="lb-row__student">
@@ -219,10 +219,11 @@ export default function LeaderboardPage() {
             </div>
           ) : (
             <div className="lb-podium">
-              {podiumOrder.map(({ entry, pos }) => (
+              {podiumOrder.map(({ entry, pos }, index) => (
                 <PodiumCard
                   key={entry.rank}
                   entry={entry}
+                  index={index}
                   position={pos}
                   isCurrentUser={isCurrentUserEntry(entry, user)}
                 />

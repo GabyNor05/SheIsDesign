@@ -17,17 +17,17 @@ namespace SheDesign.Tests
         private readonly SheDesignContext _context;
         private readonly UserController _controller;
 
-        public UserControllerTests()
-        {
-            var options = new DbContextOptionsBuilder<SheDesignContext>()
-                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                .Options;
+        // public UserControllerTests()
+        // {
+        //     var options = new DbContextOptionsBuilder<SheDesignContext>()
+        //         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+        //         .Options;
 
-            _context = new SheDesignContext(options);
-            _context.Database.EnsureCreated();
+        //     _context = new SheDesignContext(options);
+        //     _context.Database.EnsureCreated();
 
-            _controller = new UserController(_context);
-        }
+        //     _controller = new UserController(_context);
+        // }
 
         public void Dispose()
         {

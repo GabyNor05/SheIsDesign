@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { eventService } from "../../services/eventService";
+import { judgeService } from "../../services/judgeService";
 import "./Judge.css";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -701,26 +702,58 @@ export default function JudgeDashboard() {
       color:    "#C41262",
     });
 
-    if (!user.judgeId) {
-      setLoading(false);
-      return;
+    const userId = user.id ?? user.Id;
+    let resolvedJudgeId = user.judgeId ?? user.JudgeId;
+
+    async function loadJudgeData() {
+      const judges = await judgeService.getAllJudges().catch(() => null);
+      let loadedJudge = null;
+      if (Array.isArray(judges)) {
+        loadedJudge = judges.find(
+          (j) =>
+            j.id === resolvedJudgeId || j.Id === resolvedJudgeId ||
+            j.userId === userId || j.UserId === userId,
+        );
+        if (!resolvedJudgeId) {
+          resolvedJudgeId = loadedJudge?.id ?? loadedJudge?.Id;
+        }
+      }
+
+      if (loadedJudge) {
+        const name = loadedJudge.fullname ?? loadedJudge.Fullname ?? fullName;
+        setJudge({
+          name,
+          email: user.email,
+          specialty:
+            loadedJudge.jobTitle || loadedJudge.JobTitle
+              ? `${loadedJudge.jobTitle ?? loadedJudge.JobTitle} — ${loadedJudge.institution ?? loadedJudge.Institution ?? "SheIsDesign"}`
+              : "Judge — SheIsDesign",
+          initials: initials(name),
+          color: "#C41262",
+        });
+      }
+
+      if (!resolvedJudgeId) {
+        throw new Error("Could not resolve judge identity.");
+      }
+
+      const data = await eventService.getEventsByJudge(resolvedJudgeId);
+      if (!isMounted) return;
+
+      setEvents((Array.isArray(data) ? data : []).map((e) => ({
+        id:          e.id,
+        title:       e.title,
+        category:    e.category,
+        startDate:   e.start_date?.split("T")[0] ?? "",
+        deadline:    e.end_date?.split("T")[0] ?? "",
+        submissions: e.submissionCount ?? 0,
+        scored:      e.scoredCount ?? 0,
+        color:       categoryColor(e.category),
+        description: e.description ?? "",
+      })));
     }
 
-    eventService.getEventsByJudge(user.judgeId)
-      .then(data => {
-        if (!isMounted) return;
-        setEvents((Array.isArray(data) ? data : []).map(e => ({
-          id:          e.id,
-          title:       e.title,
-          category:    e.category,
-          startDate:   e.start_date?.split("T")[0] ?? "",
-          deadline:    e.end_date?.split("T")[0] ?? "",
-          submissions: e.submissionCount ?? 0,
-          scored:      e.scoredCount ?? 0,
-          color:       categoryColor(e.category),
-          description: e.description ?? "",
-        })));
-      })
+    loadJudgeData()
       .catch(() => {
         if (isMounted) setError("Could not load your assigned events.");
       })

@@ -10,6 +10,7 @@ using SheDesign.Data;
 using System.Data.Common;
 using System.Text.Json;
 using SheDesign.DTO;
+using SheDesign.DTOs;
 
 namespace backend.Controllers
 {
@@ -166,11 +167,20 @@ namespace backend.Controllers
         // PUT: api/Event/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvent(int id, Event @event)
+        public async Task<IActionResult> PutEvent(int id, EventUpdateDTO dto)
         {
-            if (id != @event.Id) return BadRequest();
-
-            _context.Entry(@event).State = EntityState.Modified;
+            var @event = await _context.Event.FindAsync(id);
+            if (@event == null) return NotFound();
+            
+            @event.Title         = dto.Title;
+            @event.Start_date    = dto.Start_date;
+            @event.End_date      = dto.End_date;
+            @event.Description   = dto.Description;
+            @event.Max_entry     = dto.Max_entry;
+            @event.Category      = dto.Category;
+            @event.Points_reward = dto.Points_reward;
+            @event.Status        = dto.Status;
+            @event.Image_link    = dto.Image_link;
 
             try
             {
@@ -178,14 +188,8 @@ namespace backend.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EventExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!EventExists(id)) return NotFound();
+                throw;
             }
 
             return NoContent();
