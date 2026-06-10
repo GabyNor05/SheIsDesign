@@ -211,9 +211,24 @@ const EMPTY_FORM = {
   entry_count:0, submissions:0, judges:0,
 };
 
+function normalizeEventId(ev) {
+  return Number(ev?.EventID ?? ev?.Id ?? ev?.id);
+}
+
+function normalizeDateValue(value) {
+  if (!value) return "";
+  const s = value.toString();
+  if (s.includes("T")) return s.slice(0, 16);
+  return s;
+}
+
 // ── Event form with Cloudinary image upload + date pickers ───────────────────
 function EventForm({ initial, onSave, onClose }) {
-  const [form, setForm]           = useState(initial ? { ...initial } : { ...EMPTY_FORM });
+  const [form, setForm]           = useState(initial ? {
+    ...initial,
+    start_date: normalizeDateValue(initial.start_date),
+    end_date: normalizeDateValue(initial.end_date),
+  } : { ...EMPTY_FORM });
   const [errors, setErrors]       = useState({});
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(initial?.image_link || null);
@@ -265,18 +280,29 @@ function EventForm({ initial, onSave, onClose }) {
     setUploadError("");
     try {
       let imageUrl = form.image_link;
-      // Upload to Cloudinary if a new file was selected
       if (imageFile) {
         const uploaded = await cloudinaryService.uploadImage(imageFile, "events");
         if (!uploaded) throw new Error("Image upload failed. Please try again.");
         imageUrl = uploaded;
       }
-      onSave({
+
+      const payload = {
         ...form,
         image_link:    imageUrl,
-        max_entries:   +form.max_entries,
+        max_entry:     +form.max_entries,
         points_reward: +form.points_reward,
-      });
+      };
+
+      if (initial) {
+        const eventId = normalizeEventId(initial);
+        await eventService.updateEvent(eventId, payload);
+        onSave({ ...payload, EventID: eventId });
+      } else {
+        const created = await eventService.createEvent(payload);
+        onSave({ ...payload, EventID: normalizeEventId(created) || genId(), ...created });
+      }
+
+      onClose();
     } catch (err) {
       setUploadError(err?.message || "Something went wrong.");
     } finally {
@@ -314,22 +340,22 @@ function EventForm({ initial, onSave, onClose }) {
           </select>
         </FormField>
 
-        {/* Date pickers */}
-        <FormField label="Start Date" required error={errors.start_date}>
+        {/* Date + time pickers */}
+        <FormField label="Start Date & Time" required error={errors.start_date}>
           <input
             className={`ev-form-input${errors.start_date ? " ev-form-input--error" : ""}`}
-            type="date"
-            value={form.start_date}
-            onChange={e => set("start_date", e.target.value)}
+            type="datetime-local"
+            value={form.start_date ? form.start_date.slice(0, 16) : ""}
+            onChange={e => set("start_date", new Date(e.target.value).toISOString())}
           />
         </FormField>
 
-        <FormField label="Submission Deadline" required error={errors.end_date}>
+        <FormField label="Submission Deadline & Time" required error={errors.end_date}>
           <input
             className={`ev-form-input${errors.end_date ? " ev-form-input--error" : ""}`}
-            type="date"
-            value={form.end_date}
-            onChange={e => set("end_date", e.target.value)}
+            type="datetime-local"
+            value={form.end_date ? form.end_date.slice(0, 16) : ""}
+            onChange={e => set("end_date", new Date(e.target.value).toISOString())}
           />
         </FormField>
 
@@ -354,7 +380,7 @@ function EventForm({ initial, onSave, onClose }) {
           />
         </FormField>
 
-        {/* Location + Time */}
+        {/* Location + Time
         <FormField label="Location">
           <input
             className="ev-form-input"
@@ -363,16 +389,7 @@ function EventForm({ initial, onSave, onClose }) {
             value={form.location}
             onChange={e => set("location", e.target.value)}
           />
-        </FormField>
-
-        <FormField label="Time">
-          <input
-            className="ev-form-input"
-            type="time"
-            value={form.time}
-            onChange={e => set("time", e.target.value)}
-          />
-        </FormField>
+        </FormField> */}
 
         {/* Description — full width */}
         <div className="ev-form-grid__full">
@@ -682,12 +699,13 @@ export default function ManageEvents() {
         const raw = await eventService.getAllEvents();
         const data = (raw || []).map(e => ({
           ...e,
-          EventID: e.EventID || e.id,
+          EventID: normalizeEventId(e),
           max_entries: e.max_entries ?? e.max_entry ?? 0,
         }));
         setEvents(data);
       } catch (err) {
         console.error("Error fetching events:", err);
+        setError(err?.message || "Unable to load events from the API.");
         setEvents(SEED_EVENTS);
       } finally {
         setLoading(false);
@@ -724,26 +742,18 @@ export default function ManageEvents() {
   }, []);
 
   const persist = next => setEvents(next);
+  const getEventId = (ev) => normalizeEventId(ev);
 
   const handleCreate = async (data) => {
-    try {
-      const created = await eventService.createEvent(data);
-      persist([{ ...data, EventID: created?.id || genId() }, ...events]);
-    } catch {
-      persist([{ ...data, EventID: genId() }, ...events]);
-    }
+    persist([{ ...data, EventID: data.EventID || normalizeEventId(data) || genId() }, ...events]);
     setModal(null);
   };
 
   const handleEdit = async (data) => {
-    try {
-      await eventService.updateEvent(active.EventID || active.Id || active.id, data);
-    } catch (err) {
-      console.error("Update error:", err);
-    }
+    const eventId = getEventId(active);
     persist(events.map(e =>
-      (e.EventID || e.Id || e.id) === (active.EventID || active.Id || active.id)
-        ? { ...data, EventID: active.EventID || active.Id || active.id }
+      getEventId(e) === eventId
+        ? { ...data, EventID: eventId }
         : e
     ));
     setModal(null);
@@ -752,7 +762,7 @@ export default function ManageEvents() {
 
   // ── Delete: calls API then removes from local state ──────────────────────
   const handleDelete = async () => {
-    const eventId = active.EventID || active.Id || active.id;
+    const eventId = getEventId(active);
     setDeleting(true);
     try {
       await eventService.deleteEvent(eventId);
@@ -762,25 +772,26 @@ export default function ManageEvents() {
     } finally {
       setDeleting(false);
     }
-    persist(events.filter(e => (e.EventID || e.Id || e.id) !== eventId));
+    persist(events.filter(e => getEventId(e) !== eventId));
     if (detailId === eventId) setDetail(null);
     setModal(null);
     setActive(null);
   };
 
   const handleStatusToggle = async (ev) => {
+    const eventId = getEventId(ev);
     const next =
       ev.status === "open"     ? "closed" :
       ev.status === "closed"   ? "open"   :
       ev.status === "draft"    ? "open"   :
       ev.status === "upcoming" ? "open"   : ev.status;
     try {
-      await eventService.updateEvent(ev.EventID || ev.Id || ev.id, { ...ev, status: next });
+      await eventService.updateEvent(eventId, { ...ev, status: next });
     } catch (err) {
       console.error("Status toggle error:", err);
     }
     persist(events.map(e =>
-      (e.EventID || e.Id || e.id) === (ev.EventID || ev.Id || ev.id) ? { ...e, status: next } : e
+      getEventId(e) === eventId ? { ...e, status: next } : e
     ));
   };
 
@@ -835,6 +846,12 @@ export default function ManageEvents() {
             </button>
           </div>
         </div>
+
+        {error && (
+          <div style={{ marginBottom: 20, padding: "14px 18px", background: "#f8d7da", color: "#842029", borderRadius: 10, border: "1px solid #f5c2c7" }}>
+            {error}
+          </div>
+        )}
 
         {/* Live events strip */}
         {liveOpen.length > 0 && (

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { eventService } from "../../services/eventService";
 import { postService } from "../../services/postManagementService";
+import { judgeService } from "../../services/judgeService";
 import { judgeMarkSchemeService } from "../../services/judgeMarkService";
 import "./Judge.css";
 
@@ -59,6 +60,7 @@ export default function JudgeScoringPage() {
   const id                = Number(eventId);
 
   const [event,        setEvent]        = useState(null);
+  const [judge,        setJudge]        = useState(null);
   const [submissions,  setSubmissions]  = useState([]);
   const [scores,       setScores]       = useState({});
   const [submitting,   setSubmitting]   = useState(false);
@@ -105,6 +107,33 @@ export default function JudgeScoringPage() {
     }).catch(err => console.error("Failed to load scoring data:", err));
   }, [id]);
 
+  useEffect(() => {
+    const userId = user?.id ?? user?.Id;
+    const judgeId = user?.judgeId ?? user?.JudgeId;
+    if (!judgeId && !userId) return;
+
+    judgeService.getAllJudges()
+      .then((judges) => {
+        if (!Array.isArray(judges)) return;
+        const foundJudge = judges.find(
+          (j) =>
+            j.id === judgeId || j.Id === judgeId ||
+            j.userId === userId || j.UserId === userId,
+        );
+        if (!foundJudge) return;
+
+        setJudge({
+          id: foundJudge.id ?? foundJudge.Id,
+          name: foundJudge.fullname ?? foundJudge.Fullname ?? `${user?.givenName ?? ""} ${user?.familyName ?? ""}`.trim(),
+          institution: foundJudge.institution ?? foundJudge.Institution,
+          title: foundJudge.jobTitle ?? foundJudge.JobTitle,
+        });
+      })
+      .catch(() => {
+        // Non-blocking: judge profile is optional in scoring view.
+      });
+  }, [user]);
+
   function setScore(subId, value) {
     setScores(prev => ({ ...prev, [subId]: { ...prev[subId], score: value } }));
   }
@@ -124,7 +153,7 @@ export default function JudgeScoringPage() {
 
   async function handleSubmit() {
     if (!allScored) return;
-    const judgeId = user?.judgeId;
+    const judgeId = user?.judgeId ?? user?.JudgeId ?? judge?.id ?? judge?.Id;
     if (!judgeId) { setToast("Judge ID not found — please log in again."); return; }
 
     setSubmitting(true);
@@ -173,6 +202,11 @@ export default function JudgeScoringPage() {
             <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
               <Ic n="file" s={12} c="rgba(255,255,255,0.4)" /> {submissions.length} submissions
             </span>
+            {judge && (
+              <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <Ic n="trophy" s={12} c="rgba(255,255,255,0.4)" /> Judge: {judge.name}
+              </span>
+            )}
           </div>
         </div>
         {submitted && (

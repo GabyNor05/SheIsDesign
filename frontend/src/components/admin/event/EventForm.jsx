@@ -58,26 +58,30 @@ export default function EventForm({ initial = null, onSave, onClose }) {
         const eventDTO = {
           title: form.title,
           start_date: utcStartDate,
-          end_date: utcEndDate, 
+          end_date: utcEndDate,
           description: form.description,
-          max_entry: Number(form.max_entries), 
+          max_entry: Number(form.max_entries),
           category: form.category,
-          points_reward: Number(form.points_reward), 
-          status: form.status || "draft", 
-          image_link: uploadedImageUrl 
+          points_reward: Number(form.points_reward),
+          status: form.status || "draft",
+          image_link: uploadedImageUrl,
         };
 
         console.log("Submitting Event DTO:", eventDTO);
 
-        onSave(form);
+        const isEdit = Boolean(initial);
+        const eventId = initial?.EventID ?? initial?.Id ?? initial?.id;
+        const response = isEdit
+          ? await eventService.updateEvent(eventId, eventDTO)
+          : await eventService.createEvent(eventDTO);
 
-        const response = await eventService.createEvent(eventDTO);
-        console.log("Event created successfully:", response);
-
+        console.log("Event saved successfully:", response);
+        onSave(response ?? { ...eventDTO, id: eventId });
+        onClose?.();
       } catch (error) {
         console.error("Form submission failed:", error);
-        alert(error.message || "An error occurred while creating the event.");
-      } 
+        alert(error.message || "An error occurred while saving the event.");
+      }
     }
   };
 
