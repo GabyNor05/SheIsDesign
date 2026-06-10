@@ -8,27 +8,9 @@
 > **A community platform celebrating, challenging, and elevating female students in design.**  
 > Built with React · Powered by a dark, accessible design system · Crafted with intention.
 
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [UI & Brand Style](#ui-&-brand-style)
-- [Key Features](#key-features)
-- [Getting Started](#getting-started)
-- [Database Schema (ERD Summary)](#database-schema-erd-summary)
-- [Deployment Process](#deployement-process)
-- [Reflection](#reflection)
-- [Demo & Promo Videos](#demo-&-promo-videos)
-- [Mockups](#mockups)
-- [Final Presentation Slide Show](#final-presentation-slide-show)
-- [Contributing](#contributing)
-- [Authors](#authors)
-- [License](#license)
-
 ---
 
-## 🔎 Overview
+## Overview
 
 ShelsDesign is a full-stack web platform designed to support and celebrate female design students across South Africa. The platform enables administrators to manage events, participants, leaderboards, galleries, and donations — all through a cohesive, dark-mode admin interface built to WCAG AA accessibility standards.
 
@@ -36,22 +18,22 @@ The public-facing side allows students and industry professionals to register, e
 
 ---
 
-## 🏗️ Tech Stack 
+## Tech Stack 
 
 | Layer               | Technology             | Purpose                                     |
 | ------------------- | ---------------------- | ------------------------------------------- |
 | **Frontend**        | React (CRA) + DaisyUI  | SPA UI, responsive layout, components       |
-| **Backend**         | .Net                   | ---                                         |
+| **Backend**         | .Net                   | Contexts, Models, Controllers and DTOs      |
 | **Testing**         | Jest + xUnit +         | TDD - Unit, Integration and Component       |
 | **Database**        | PostgreSQL (Aiven)     | Relational data for ERD Schemas             |
 | **HTTP Client**     | Axios                  | Frontend ↔ backend requests                 |
 | **Deployment**      | Render (backend)       | CI/CD and hosting                           |
 | **Packaging**       | Electron               | For creating a desktop app                  |
-| **Version Control** | GitHub                 | ---                                         |
+| **Version Control** | GitHub                 | To manage developer commits and branches    |
 
 ---
 
-## 🎨 UI & Brand Style
+## UI & Brand Style
 
 **Style summary**
 
@@ -60,17 +42,29 @@ The public-facing side allows students and industry professionals to register, e
 - Components: rounded cards, soft shadows, clear CTAs.
 - Illustration: friendly tutoring scenes, subtle texture background.
 
-**Style Tile**
+**Design System**
 
 ![banner](./documentation/styleTile.png)
 
 ---
-## 💡 Key Features
-- 
+## Key Features
+### Role-based Dashboards
+- **Admin Interface**: A cohesive, control centre designed for platform administrators to seamlessly manage real-time events, participants, galleries, and the leaderboard.
+- **Judge Scoring System**: A dedicated portal featuring a custom, task-oriented user flow and backend scoring logic built specifically to allow judges to review and evaluate student work cleanly.
+
+### Gamification & Engangement
+- **Live Competition Leaderboard**: A gamified, real-time student tracking system that calculates competition points and renders live rankings based on system-validated judge scores.
+- **Serverless Transactional Messaging**: Integration of an asynchronous, frontend-driven email client via EmailJS, eliminating backend SMTP server configuration overhead while ensuring fast user messaging pipelines.
+
+### Donations System
+A smart donation feature that automatically distributes incoming financial support across three core platform pillars to guarantee maximum impact:
+- **Events & Competitions**: Funds the prize pools, logistics, and execution of active design challenges.
+- **Student Resources**: Supplies academic materials, software access, and learning tools for design students.
+- **Community Workshops**: Powers regional training sessions, guest lectures, and collaborative design masterclasses.
 
 ---
 
-## ⚙️ Getting started
+## Getting started
 
 ### Prerequisites
 
@@ -118,11 +112,12 @@ The database schema, as illustrated in the ERD below, is engineered to support a
 - **Post & Comment**: Drives community interaction. Post entities tie back to specific events, while the Comment table acts as a relational bridge connecting comments directly to the User who authored them.
 - **Submission**: Manages competition entries, work status, points, and leaderboard ranks linked directly to an individual StudentID.
 
+br 
 ![Banner](./documentation/erd.jpeg)
 
 ---
 
-## 🚀 Deployment Process
+## Deployment Process
 
 #### Backend (.Net + C#):
 Deployed on **Render**.  
@@ -134,53 +129,49 @@ Credentials are stored in appsettings.json in the backend and are git-ignored.
 
 ---
 
-## 🧭 Reflection
-This project was a full journey for me, not just in building a product, but in learning how to think like a full-stack developer. One of the biggest learning curves was setting up and maintaining the SQL database and ensuring secure communication between the frontend and backend. I also had to learn how to deploy both sides of the app separately, which required research, patience, and LOTS of trial-and-error. Through this, I really improved my debugging skills, my understanding of server-client communication, and how to optimise code for performance and loading speed.
+##  Reflection
+Building SheIsDesign was a transformative journey that pushed our team to evolve from individual developers into a cohesive, full-stack engineering team. Navigating the integration of a React frontend packaged with Electron, a .NET backend, and a 3NF-compliant PostgreSQL database required immense technical adaptability and precision. Overcoming critical roadblocks—such as configuring secure Google Cloud permissions, managing complex component-based states, establishing isolated unit-testing frameworks with mock services, and executing fluid database migrations—forced us to adopt rigorous debugging and optimisation standards. This process significantly sharpened our understanding of server-client architecture, serverless data pipelines, and strict data contracts, transforming major technical hurdles into deep learning experiences.
 
+Beyond the technical architecture, this project was a masterclass in cross-functional collaboration and user-centric design. We successfully balanced highly technical administrative requirements—like designing task-oriented workflows for Admin and Judge dashboards—with strict accessibility and visual identity goals, building lightweight, library-free CSS animations that perform beautifully. When individual bottlenecks arose in testing or UI modularity, we leveraged internal peer mentoring and agile prototyping to keep the team unblocked. Ultimately, SheIsDesign stands as a testament to our team's shared resilience, proving that intentional, high-fidelity community platforms are built at the intersection of clean engineering and collaborative problem-solving.
 
-### 👏 Proud Moments
-- Built a full-stack application independently.
-- Successfully integrated database + backend + frontend deployments.
-- Created a platform that reflects real tutor needs.
+###  Proud Moments
+- **Keagan**: Engineered a robust frontend functions library that abstracted complex API interactions into clean, reusable data-fetching pipelines, strictly maintaining a separation of concerns and alleviating backend workloads. Additionally, partnered closely with **Gaby** throughout the system development life cycle (SDLC) to bridge frontend requirements and backend logic, successfully implementing state management, business rules, and UI layouts for the intricate Judge scoring system and real-time event management features.
+- **Anika**: Brought the SheIsDesign visual brand to life by authoring custom, fluid, floating orb animations that run across key landing sections. By building these directly with vanilla CSS keyframes and JSX, a high-fidelity visual aesthetic was achieved with zero external library overhead, keeping the application bundle lightweight, performant, and optimised for load speed.
+- **Gaby**: Modernised the platform's communication flow by integrating EmailJS to handle automated user messaging directly from the frontend UI, eliminating the need to configure a traditional backend SMTP server while minimising infrastructure complexity. Furthermore, successfully designed and implemented the structural layouts for both the Admin and Judge dashboards, creating a highly logical, task-oriented user flow that aligned perfectly with the client’s administrative needs.
+- **Keabetswe (KB)**: Architected the entire database access layer from the ground up by building out all relational Models, API Controllers, Data Transfer Objects (DTOs), and DbContext handlers before successfully hosting the production PostgreSQL instance on Aiven. Additionally, co-authored and optimised critical backend utility methods within the common frontend functions library to establish clean, reliable data contracts across the stack.
 
-### 🧪 Challenges & Solutions
-One major challenge was deployment, managing the frontend, backend, and SQL database across different platforms. I solved this by hosting the backend on Render, the SQL database on AlwaysData, and using environment variables to securely connect everything. I also ran into CORS issues when the frontend tried to call the backend. I resolved those by configuring allowed origins and carefully using environment variables. Finally, I do not think I optimised performance by compressing images, using lazy loading for tutor images, and reducing unused CSS, like I should have.
+### Challenges & Solutions
 
-**Keagan Boucher**
+**Keagan**
 - **Challenges**: Struggled with negotiating Google Cloud services and navigating organisational permissions, which delayed implementing Google Login. Also faced difficulties setting up a frontend unit testing framework independent of backend availability.
 - **Solutions**: Utilised mock services to isolate and test frontend features individually without relying on live backend endpoints.
 
-**Anika de Beer**
-- **Challenges**:
-- **Solutions**: 
+**Anika**
+- **Challenges**: Diagnosing a post-submission error that required tracing the mismatch between frontend data and backend expectations. Managing CSS conflicts as the project grew, with modal styles bleeding into page-level stylesheets. Balancing the overall design and feel of the website, as the brief required a pink colour scheme, while still needing to attract a wide audience of young students.
+- **Solutions**: Fixed the submission error by correcting the data sent from the frontend form. Scoped modal CSS using a dedicated file and ptl- class prefix to prevent style conflicts. Built fully animated visuals, including floating orbs, rotating shapes and pulsing rings, directly in JSX with no external dependencies, replacing all image placeholders across the Support and CTA sections.
 
-**Gaby Norris**
-- **Challenges**:
-- **Solutions**: 
+**Gaby**
+- **Challenges**: Struggled with shifting from monolithic frontend structures to true component-based development, ensuring modularity and reusability across the application. Additionally, faced architectural roadblocks when deciding how to structure and separate the distinct user flows for the Admin and Judge dashboards/portals. Testing also proved to be a major hurdle due to the complexity of the integrated features.
+- **Solutions**: Actively collaborated with **Anika** to deepen my understanding of component-based development, successfully implementing a clean component architecture. To resolve the dashboard dilemma, I utilised an agile, iterative approach—diving into rapid prototyping to see what worked visually and functionally, while continuously consulting the team for design alignment. When testing stalled, I paired up with **Keabetswe** (KB) to troubleshoot and successfully implement the required test suites.
 
-**Keabetswe Olifant**
-- **Challenges**: The challenges that this project has produced, at least the ones discovered by me, were the database structure changes. Since the database structure is permanent, it is not easy to change. Unit Testing has also been a hard part of development due to the sheer number of tests required by a large code base and the many parts that need testing.
+**KB**
+- **Challenges**: The challenges that this project has produced, at least the ones discovered by me, were the database structure changes. Since the database structure is permanent, it is not easy to change. Unit Testing has also been a difficult part of development due to the sheer number of tests required in a large codebase and the many components that need to be tested.
 - **Solutions**: My Solution to the database issue was to attempt to manipulate the migrations feature to undo the structures and redo them with a few commands from the command line. This has been my method of improvisation. Furthermore, a unit testing library was used to assess how much of the codebase had been unit tested, determine how much more testing was needed, and ensure that close communication with my teammates was crucial for this part to avoid conflicts and work efficiently.
 
 ---
 
-## 📽️ Demo & Promo Videos
+## Demo Video
 
 [Watch Demo Video]()
-[Watch Demo Video]()
 
-## 🖼️ Mockups
 
-![Banner](./documentation/mockups/mockupthumbnail.png)
-![Banner](./documentation/mockups/mockupthumbnail.png)
+## Final Presentation Slide Show
 
-## 👩‍🏫 Final Presentation Slide Show
-
-[View Presentation]()
+[View Presentation](https://www.figma.com/slides/FDR25zYjXFTsmbLN681JkI)
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/your-feature-name`
@@ -203,7 +194,7 @@ chore:    Build, config, tooling
 
 ---
 
-## 👩‍💻 Authors
+## Authors
 
 <a href="https://github.com/GabyNor05/SheIsDesign/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=GabyNor05/SheIsDesign" />
@@ -216,7 +207,7 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 ---
 
-## ⚖️ License
+## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
@@ -224,6 +215,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <div align="center">
 
-**SheIs**Design &nbsp;·&nbsp; Built with 🤍 in South Africa &nbsp;·&nbsp; DV300 · 2025
+**SheIs**Design &nbsp;·&nbsp; Built with 🤍 in South Africa &nbsp;·&nbsp; DV300 · 2026
 
 </div>
