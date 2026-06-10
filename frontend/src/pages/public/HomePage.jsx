@@ -47,8 +47,8 @@ const y = -10 + progress * 1;
 
       <HeroSection />
       <WhatWeDoSection />
-      {!isPending && <EventsSection />}
-      <ImpactSection />
+      {/* {!isPending && <EventsSection />} */}
+      {/* <ImpactSection /> */}
       <SupportSection />
     </div>
   );

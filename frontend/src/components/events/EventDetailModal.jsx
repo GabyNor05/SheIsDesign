@@ -10,9 +10,14 @@ function fmtDate(d) {
 
 function daysLeft(dateStr) {
   if (!dateStr) return null;
-  const diff = Math.ceil((new Date(dateStr) - new Date()) / (1000 * 60 * 60 * 24));
+  const now = new Date();
+  const end = new Date(dateStr);
+  const nowDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+  const diff = Math.round((endDay - nowDay) / (1000 * 60 * 60 * 24));
   if (diff < 0) return "Ended";
   if (diff === 0) return "Ends today";
+  if (diff === 1) return "1 day left";
   return `${diff} days left`;
 }
 

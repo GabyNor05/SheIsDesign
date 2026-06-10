@@ -17,7 +17,7 @@ function daysUntil(dateStr) {
   return `${diff} days left`;
 }
 
-export default function FeaturedEvent({ event, onApply, applied = false, joining = false }) {
+export default function FeaturedEvent({ event, onApply, onViewDetails, applied = false, joining = false }) {
   if (!event) return null;
 
   const fillPct = event.max_entry > 0
@@ -124,7 +124,7 @@ export default function FeaturedEvent({ event, onApply, applied = false, joining
                   </button>
                 );
               })()}
-              <button className="featured-event__btn-secondary">
+              <button className="featured-event__btn-secondary" onClick={onViewDetails}>
                 View full brief
               </button>
             </div>
