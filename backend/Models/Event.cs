@@ -14,7 +14,7 @@ namespace SheDesign.Models
         public int Points_reward { get; set; }
         public string Status { get; set; } = String.Empty; 
         public string? Image_link { get; set; } = String.Empty;
-        public Judge? AssignedJudgeIDs { get; set; } = new Judge();
+        public Judge? AssignedJudgeId { get; set; }
         public ICollection<Donation>? Donations { get; set; } = new List<Donation>();
         public ICollection<Post>? Posts { get; set; } = new List<Post>();
     }

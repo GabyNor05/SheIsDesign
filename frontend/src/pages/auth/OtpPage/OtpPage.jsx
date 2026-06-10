@@ -103,7 +103,6 @@ function OtpPage() {
         });
 
         const studentId = student_res.id;
-        sessionStorage.setItem("StudentID", studentId);
       } else {
         await createIndustryProfessional({
           fullname:    `${firstName} ${lastName}`.trim(),
