@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Check, X } from "@phosphor-icons/react";
 import { RxPeople } from "react-icons/rx";
 import { T } from "../theme";
@@ -318,6 +319,7 @@ function PendingApplications() {
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const loadParticipants = async () => {
     try {
@@ -424,6 +426,7 @@ if (error) {
         title="Pending Applications"
         badge={participants.length}
         action="View all"
+        onAction={() => navigate("/admin/participants")}
       />
 
       <div

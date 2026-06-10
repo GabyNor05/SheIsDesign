@@ -57,7 +57,7 @@ const SEED_EVENTS = [
 function genId() { return "evt-" + Date.now().toString(36); }
 function fmtDate(d) {
   if (!d) return "—";
-  try { return new Date(d + "T00:00:00").toLocaleDateString("en-ZA", { day:"numeric", month:"short", year:"numeric" }); } catch { return d; }
+  try { return new Date(d).toLocaleDateString("en-ZA", { day:"numeric", month:"short", year:"numeric" }); } catch { return d; }
 }
 function calcPct(count, max) { return max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0; }
 
@@ -679,8 +679,13 @@ export default function ManageEvents() {
       setLoading(true);
       setError(null);
       try {
-        const data = await eventService.getAllEvents();
-        setEvents(data || []);
+        const raw = await eventService.getAllEvents();
+        const data = (raw || []).map(e => ({
+          ...e,
+          EventID: e.EventID || e.id,
+          max_entries: e.max_entries ?? e.max_entry ?? 0,
+        }));
+        setEvents(data);
       } catch (err) {
         console.error("Error fetching events:", err);
         setEvents(SEED_EVENTS);
@@ -705,6 +710,18 @@ export default function ManageEvents() {
   const onMouseUp   = () => { drag.current.active = false; };
 
   useEffect(() => { setPage(1); }, [tab, search]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onWheel = (e) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   const persist = next => setEvents(next);
 
