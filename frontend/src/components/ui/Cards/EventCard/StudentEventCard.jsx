@@ -67,7 +67,7 @@ export default function StudentEventCard({ event, onApply, onViewDetails, applie
   onClick={() => !applied && isOpen && onApply(event)}
   disabled={applied || !isOpen}
 >
-  {applied ? "✓ Applied" : isFull ? "Full" : !isOpen ? "Closed" : "Apply"}
+  {applied ? "✓ Joined" : isFull ? "Full" : !isOpen ? "Closed" : "Join"}
 </button>
       </div>
     </div>

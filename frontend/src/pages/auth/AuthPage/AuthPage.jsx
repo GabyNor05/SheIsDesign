@@ -262,7 +262,7 @@ function AuthCard() {
           if (res.status === "Pending") { navigate("/application-status"); return; }
           let dest = "/";
           if (res.role === "Admin") dest = "/admin/dashboard";
-          else if (res.role === "Judge") dest = "/judge/dashboard";
+          else if (res.role === "Judge") dest = "/judge";
           navigate(dest);
         }
       } catch (err) {
@@ -306,7 +306,7 @@ function AuthCard() {
     if (apiUser?.status === "Pending") { navigate("/application-status"); return; }
     let dest = "/";
     if (isAdmin) dest = "/admin/dashboard";
-    else if (apiUser?.role === "Judge") dest = "/judge/dashboard";
+    else if (apiUser?.role === "Judge") dest = "/judge";
     navigate(dest);
   }
 

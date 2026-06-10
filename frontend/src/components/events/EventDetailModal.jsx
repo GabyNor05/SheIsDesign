@@ -28,10 +28,10 @@ export default function EventDetailModal({ event, onClose, onApply, applied = fa
   const timeLeft = daysLeft(event.end_date);
 
   function applyLabel() {
-    if (applied)  return "✓ Applied";
+    if (applied)  return "✓ Joined";
     if (isFull)   return "Event Full";
     if (!isOpen)  return "Closed";
-    return "Apply for this event";
+    return "Join event";
   }
 
   return (

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { eventService } from "../../services/eventService";
+import { submissionService } from "../../services/submissionService";
 
 import EventsHeroNew from "../../components/events/EventsHeroNew";
 import FeaturedEvent from "../../components/events/FeaturedEvent";
@@ -8,7 +9,6 @@ import EventsGrid from "../../components/ui/Grids/EventsGrid/EventsGrid";
 import RecommendedEvents from "../../components/events/RecommendedEvents";
 import LoginPromptModal from "../../components/ui/Modals/LoginPromptModal/LoginPromptModal";
 import EventDetailModal from "../../components/events/EventDetailModal";
-import ApplyModal from "../../components/events/ApplyModal";
 import "./EventsPage.css";
 
 export default function EventsPage() {
@@ -22,13 +22,12 @@ export default function EventsPage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [selectedEvent,  setSelectedEvent]  = useState(null);
 
-  // ── Apply modal + applied tracking ─────────────────────────────────────────
-  const [applyEvent,   setApplyEvent]   = useState(null);  // event to confirm
-  // appliedIds: Set of event IDs the user has applied to this session
-  const [appliedIds,   setAppliedIds]   = useState(() => {
-    try { return new Set(JSON.parse(localStorage.getItem("appliedEvents") || "[]")); }
+  // ── Joined events tracking ────────────────────────────────────────────────
+  const [joinedIds,  setJoinedIds]  = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem("joinedEvents") || "[]")); }
     catch { return new Set(); }
   });
+  const [joiningId,  setJoiningId]  = useState(null); // event id currently being joined
 
   // ── Fetch all events on mount ──────────────────────────────────────────────
   useEffect(() => {
@@ -83,19 +82,22 @@ export default function EventsPage() {
   function handleViewDetails(event) { setSelectedEvent(event); }
   function handleCloseModal()       { setSelectedEvent(null); }
 
-  function handleApply(event) {
+  async function handleApply(event) {
     if (!user) { setShowLoginModal(true); return; }
-    if (appliedIds.has(event.id)) return; // already applied
-    setApplyEvent(event);
-  }
-
-  function handleConfirmApply(event) {
-    // TODO: call actual submission API endpoint here
-    // e.g. await submissionService.createSubmission({ eventId: event.id, studentId: user.studentId })
-    const next = new Set(appliedIds);
-    next.add(event.id);
-    setAppliedIds(next);
-    localStorage.setItem("appliedEvents", JSON.stringify([...next]));
+    if (joinedIds.has(event.id) || joiningId === event.id) return;
+    const studentId = user.studentId ?? Number(sessionStorage.getItem("StudentID"));
+    setJoiningId(event.id);
+    try {
+      await submissionService.createSubmission({ studentId, eventId: event.id, title: event.title });
+      const next = new Set(joinedIds);
+      next.add(event.id);
+      setJoinedIds(next);
+      localStorage.setItem("joinedEvents", JSON.stringify([...next]));
+    } catch (err) {
+      console.error("Failed to join event:", err);
+    } finally {
+      setJoiningId(null);
+    }
   }
 
   function handleFilterChange(filter) {
@@ -146,7 +148,8 @@ export default function EventsPage() {
           event={featuredEvent}
           onApply={() => handleApply(featuredEvent)}
           onViewDetails={() => handleViewDetails(featuredEvent)}
-          applied={featuredEvent ? appliedIds.has(featuredEvent.id) : false}
+          applied={featuredEvent ? joinedIds.has(featuredEvent.id) : false}
+          joining={joiningId === featuredEvent?.id}
         />
       </div>
 
@@ -157,7 +160,8 @@ export default function EventsPage() {
           activeFilter={activeFilter}
           onApply={handleApply}
           onViewDetails={handleViewDetails}
-          appliedIds={appliedIds}
+          appliedIds={joinedIds}
+          joiningId={joiningId}
         />
       </div>
 
@@ -167,17 +171,8 @@ export default function EventsPage() {
         user={user}
         onApply={handleApply}
         onViewDetails={handleViewDetails}
-        appliedIds={appliedIds}
+        appliedIds={joinedIds}
       />
-
-      {/* Apply confirmation modal */}
-      {applyEvent && (
-        <ApplyModal
-          event={applyEvent}
-          onClose={() => setApplyEvent(null)}
-          onConfirm={handleConfirmApply}
-        />
-      )}
 
       {/* Event detail modal */}
       {selectedEvent && (
@@ -185,7 +180,8 @@ export default function EventsPage() {
           event={selectedEvent}
           onClose={handleCloseModal}
           onApply={event => { handleCloseModal(); handleApply(event); }}
-          applied={appliedIds.has(selectedEvent.id)}
+          applied={joinedIds.has(selectedEvent.id)}
+          joining={joiningId === selectedEvent?.id}
         />
       )}
 
