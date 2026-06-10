@@ -192,27 +192,17 @@ export default function LeaderboardPage() {
     <div className="lb-page">
       <div className="lb-glow lb-glow--mid-right" />
 
-      {/* Header */}
-      <header className="lb-header">
-        <div className="lb-header__bg-gradient" />
-        <div className="lb-header__orb" />
-        <div className="lb-header__orb2" />
-        <div className="lb-header__inner">
-          <h1 className="lb-header__title">Leaderboard</h1>
-          <p className="lb-header__sub">
-            See who's rising to the top. Points update after every event — compete, place, and get noticed by industry.
-          </p>
-        </div>
-      </header>
+      {/* Hero + Podium merged — title floats behind cards */}
+      <section className="lb-hero-podium">
+        <div className="lb-hero-podium__bg-gradient" />
+        <div className="lb-hero-podium__orb" />
+        <div className="lb-hero-podium__orb2" />
 
-      {/* Podium */}
-      <section className="lb-podium-section">
-        <div className="lb-podium-section__inner">
-          <div className="lb-section-label">
-            <Crown size={13} weight="fill" color="#FE4081" />
-            <span>Top performers</span>
-          </div>
+        {/* Giant floating title — sits behind cards via z-index */}
+        <h1 className="lb-hero-title">Leaderboard</h1>
 
+        {/* Podium cards sit on top of the title */}
+        <div className="lb-podium-wrapper">
           {loading ? (
             <div className="lb-podium-skeleton">
               {[0, 1, 2].map((i) => <div key={i} className="lb-podium-sk" />)}
