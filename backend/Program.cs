@@ -15,8 +15,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        // "null" origin is sent by Electron packaged apps (file:// protocol)
-        policy.SetIsOriginAllowed(origin => allowedOrigins.Contains(origin) || origin == "null")
+        // "*" wildcard allows all origins; "null" covers Electron packaged apps (file:// protocol)
+        policy.SetIsOriginAllowed(origin => allowedOrigins.Contains("*") || allowedOrigins.Contains(origin) || origin == "null")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -59,4 +59,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
