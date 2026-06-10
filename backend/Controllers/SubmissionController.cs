@@ -63,6 +63,25 @@ namespace backend.Controllers
             return submission;
         }
 
+        // GET: api/Submission/student/{studentId}
+        [HttpGet("student/{studentId}")]
+        public async Task<ActionResult<IEnumerable<SubmissionReadDTO>>> GetSubmissionsByStudent(int studentId)
+        {
+            return await _context.Submission
+                .Where(s => s.studentId == studentId)
+                .Select(s => new SubmissionReadDTO
+                {
+                    Id = s.Id,
+                    StudentId = s.studentId,
+                    EventId = s.eventId,
+                    Title = s.title,
+                    Status = s.status,
+                    Points = s.points,
+                    Rank = s.rank,
+                    TimeStamp = s.timeStamp
+                }).ToListAsync();
+        }
+
         // PUT: api/Submission/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubmission(int id, SubmissionUpdateDTO updateDto)
@@ -104,6 +123,10 @@ namespace backend.Controllers
             };
 
             _context.Submission.Add(submission);
+
+            var evt = await _context.Event.FindAsync(createDto.EventId);
+            if (evt != null) evt.Entry_count = (evt.Entry_count ?? 0) + 1;
+
             await _context.SaveChangesAsync();
 
             var readDto = new SubmissionReadDTO

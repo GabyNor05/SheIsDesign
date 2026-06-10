@@ -27,6 +27,9 @@ export const submissionService = {
     // GET: api/Submission/5
     getSubmissionById: (id) => apiClient.get(`/${id}`),
 
+    // GET: api/Submission/student/{studentId}
+    getSubmissionsByStudent: (studentId) => apiClient.get(`/student/${studentId}`),
+
     // GET: api/Submission/details/5 (Returns LeaderboardTotalReadDTO)
     getSubmissionDetails: (id) => apiClient.get(`/details/${id}`),
 

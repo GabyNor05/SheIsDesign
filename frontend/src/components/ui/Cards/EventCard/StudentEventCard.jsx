@@ -38,7 +38,7 @@ export default function StudentEventCard({ event, onApply, onViewDetails, applie
       <div className="sec__body" onClick={() => onViewDetails(event)} style={{ cursor: "pointer" }}>
         <p className="sec__category">{event.category || "Event"}</p>
         <h3 className="sec__title">{event.title}</h3>
-        <p className="sec__dates">📅 {fmtDate(event.start_date)} — {fmtDate(event.end_date)}</p>
+        <p className="sec__dates">{fmtDate(event.start_date)} — {fmtDate(event.end_date)}</p>
 
         <div className="sec__progress-row">
           <span className="sec__progress-label">

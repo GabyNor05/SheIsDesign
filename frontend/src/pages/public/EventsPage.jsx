@@ -36,15 +36,28 @@ export default function EventsPage() {
   });
   const [joiningId,  setJoiningId]  = useState(null);
 
-  // Reset per-user state when the logged-in account changes
+  // Sync joined state from backend whenever the logged-in account changes
   useEffect(() => {
-    try {
-      const stored = new Set(JSON.parse(localStorage.getItem("joinedEvents") || "[]"));
-      setJoinedIds(stored);
-    } catch {
-      setJoinedIds(new Set());
-    }
     setSubmittedEventIds(new Set());
+    const studentId = (user?.studentId ?? Number(sessionStorage.getItem("StudentID"))) || null;
+    if (!studentId) {
+      setJoinedIds(new Set());
+      return;
+    }
+    submissionService.getSubmissionsByStudent(studentId)
+      .then(subs => {
+        const ids = new Set(subs.map(s => s.eventId));
+        setJoinedIds(ids);
+        localStorage.setItem("joinedEvents", JSON.stringify([...ids]));
+      })
+      .catch(() => {
+        try {
+          const stored = new Set(JSON.parse(localStorage.getItem("joinedEvents") || "[]"));
+          setJoinedIds(stored);
+        } catch {
+          setJoinedIds(new Set());
+        }
+      });
   }, [user?.id]);
 
   // ── Fetch all events on mount ──────────────────────────────────────────────
@@ -124,6 +137,9 @@ export default function EventsPage() {
       next.add(event.id);
       setJoinedIds(next);
       localStorage.setItem("joinedEvents", JSON.stringify([...next]));
+      setEvents(prev => prev.map(e =>
+        e.id === event.id ? { ...e, entry_count: (e.entry_count ?? 0) + 1 } : e
+      ));
     } catch (err) {
       console.error("Failed to join event:", err);
     } finally {
