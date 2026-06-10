@@ -1,72 +1,23 @@
-import { useState, useEffect, useAuth } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { eventService } from "../../services/eventService";
-import { judgeService } from "../../services/judgeService";
-import { submissionService } from "../../services/submissionService";
-import { judgeMarkSchemeService } from "../../services/judgeMarkService";
 import "./Judge.css";
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MOCK DATA — 🔌 replace with real API calls
-// GET /api/judge/me
-// GET /api/judge/events
-// ─────────────────────────────────────────────────────────────────────────────
-const MOCK_JUDGE = {
-  name: "Lerato Nkosi",
-  email: "lerato@ogilvy.co.za",
-  specialty: "Brand Identity & Visual Communication",
-  initials: "LN",
-  color: "#C41262",
+const CATEGORY_COLORS = {
+  "branding":       "#C41262",
+  "brand identity": "#C41262",
+  "ui/ux":          "#60A5FA",
+  "illustration":   "#a78bfa",
+  "awards":         "#22C55E",
+  "packaging":      "#f97316",
+  "typography":     "#FBBF24",
 };
 
-const MOCK_EVENTS = [
-  {
-    id: 1,
-    title: "Brand Identity Challenge",
-    category: "Branding",
-    startDate: "2026-03-12",
-    deadline: "2026-03-20",
-    submissions: 6,
-    scored: 4,
-    color: "#C41262",
-    description:
-      "Design a full visual identity for a fictional female-led startup.",
-  },
-  {
-    id: 2,
-    title: "UI/UX Hackathon 2026",
-    category: "UI/UX",
-    startDate: "2026-04-05",
-    deadline: "2026-04-12",
-    submissions: 5,
-    scored: 0,
-    color: "#60A5FA",
-    description: "48-hour hackathon redesigning a real app for accessibility.",
-  },
-  {
-    id: 3,
-    title: "Annual Design Awards 2025",
-    category: "Awards",
-    startDate: "2025-10-14",
-    deadline: "2025-10-21",
-    submissions: 7,
-    scored: 7,
-    color: "#22C55E",
-    description:
-      "Flagship annual awards celebrating the best SheIsDesign work.",
-  },
-  {
-    id: 4,
-    title: "Illustration Open Brief",
-    category: "Illustration",
-    startDate: "2026-05-02",
-    deadline: "2026-05-10",
-    submissions: 5,
-    scored: 0,
-    color: "#a78bfa",
-    description: "Open illustration brief celebrating African femininity.",
-  },
-];
+function categoryColor(cat) {
+  return CATEGORY_COLORS[cat?.toLowerCase()] ?? "#FE4081";
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
@@ -731,119 +682,54 @@ function EventCard({ event, onScore }) {
 // ─────────────────────────────────────────────────────────────────────────────
 export default function JudgeDashboard() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [judge, setJudge] = useState(null);
   const [events, setEvents] = useState([]);
-  const [assessmentCount, setAssessmentCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (!user) return;
     let isMounted = true;
 
-    async function loadDashboardData() {
-      try {
-        setLoading(true);
-        setError("");
+    const fullName = [user.givenName, user.familyName].filter(Boolean).join(" ") || user.email || "Judge";
+    setJudge({
+      name:     fullName,
+      email:    user.email,
+      specialty: "Judge — SheIsDesign",
+      initials:  initials(fullName),
+      color:    "#C41262",
+    });
 
-        const [
-          judgesResponse,
-          eventsResponse,
-          submissionsResponse,
-          markSchemesResponse,
-        ] = await Promise.all([
-          judgeService.getAllJudges(),
-          eventService.getAllEvents(),
-          submissionService.getAllSubmissions(),
-          judgeMarkSchemeService.getAllMarkSchemes(),
-        ]);
-
-        if (!isMounted) return;
-
-        const judges = Array.isArray(judgesResponse) ? judgesResponse : [];
-        const apiEvents = Array.isArray(eventsResponse) ? eventsResponse : [];
-        const submissions = Array.isArray(submissionsResponse)
-          ? submissionsResponse
-          : [];
-        const markSchemes = Array.isArray(markSchemesResponse)
-          ? markSchemesResponse
-          : [];
-
-        const selectedJudge = judges[0];
-        const liveJudge = selectedJudge
-          ? {
-              name: selectedJudge.Fullname || selectedJudge.fullname || "Judge",
-              email: selectedJudge.UserId
-                ? `judge-${selectedJudge.UserId}@sheisdesign.dev`
-                : "judge@sheisdesign.dev",
-              specialty:
-                selectedJudge.JobTitle ||
-                selectedJudge.Institution ||
-                "SheIsDesign Review Panel",
-              initials: (
-                selectedJudge.Fullname ||
-                selectedJudge.fullname ||
-                "Judge"
-              )
-                .split(" ")
-                .slice(0, 2)
-                .map((word) => word[0])
-                .join("")
-                .toUpperCase(),
-              color: "#C41262",
-            }
-          : MOCK_JUDGE;
-
-        const mappedEvents = apiEvents.length
-          ? apiEvents.map((event) => {
-              const eventSubmissions = submissions.filter(
-                (item) => item.eventId === event.Id,
-              );
-              const scored = eventSubmissions.filter(
-                (item) =>
-                  item.points > 0 ||
-                  /review|approved|accepted|scored/i.test(item.status || ""),
-              ).length;
-
-              return {
-                id: event.Id,
-                title: event.Title || event.title,
-                category: event.Category || event.category || "General",
-                startDate: event.Start_date || event.startDate || "",
-                deadline: event.End_date || event.deadline || "",
-                submissions: eventSubmissions.length,
-                scored,
-                color: ["#C41262", "#60A5FA", "#22C55E", "#a78bfa"][
-                  event.Id % 4
-                ],
-                description:
-                  event.Description ||
-                  event.description ||
-                  "Judging activity from the live backend.",
-              };
-            })
-          : MOCK_EVENTS;
-
-        setJudge(liveJudge);
-        setEvents(mappedEvents);
-        setAssessmentCount(markSchemes.length);
-      } catch (error) {
-        if (!isMounted) return;
-        setJudge(MOCK_JUDGE);
-        setEvents(MOCK_EVENTS);
-        setError(
-          "Live judge data is unavailable right now, so the dashboard is showing the fallback mock view.",
-        );
-      } finally {
-        if (isMounted) setLoading(false);
-      }
+    if (!user.judgeId) {
+      setLoading(false);
+      return;
     }
 
-    loadDashboardData();
+    eventService.getEventsByJudge(user.judgeId)
+      .then(data => {
+        if (!isMounted) return;
+        setEvents((Array.isArray(data) ? data : []).map(e => ({
+          id:          e.id,
+          title:       e.title,
+          category:    e.category,
+          startDate:   e.start_date?.split("T")[0] ?? "",
+          deadline:    e.end_date?.split("T")[0] ?? "",
+          submissions: e.submissionCount ?? 0,
+          scored:      e.scoredCount ?? 0,
+          color:       categoryColor(e.category),
+          description: e.description ?? "",
+        })));
+      })
+      .catch(() => {
+        if (isMounted) setError("Could not load your assigned events.");
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+    return () => { isMounted = false; };
+  }, [user]);
 
   const totalScored = events.reduce((s, e) => s + e.scored, 0);
   const totalPending = events.reduce(
@@ -1005,7 +891,7 @@ export default function JudgeDashboard() {
                 />
                 Active Judge — SheIsDesign
               </span>
-              {assessmentCount > 0 && (
+              {totalScored > 0 && (
                 <span
                   style={{
                     display: "inline-flex",
@@ -1021,8 +907,8 @@ export default function JudgeDashboard() {
                   }}
                 >
                   <Ic n="star" s={11} c="currentColor" />
-                  {assessmentCount} live assessment
-                  {assessmentCount !== 1 ? "s" : ""} recorded
+                  {totalScored} live assessment
+                  {totalScored === 1 ? "" : "s"} recorded
                 </span>
               )}
               {totalPending > 0 && (

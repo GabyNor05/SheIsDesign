@@ -25,6 +25,7 @@ function Ic({ n, s = 16, c = "currentColor" }) {
     send:   <><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></>,
     file:   <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></>,
     close:  <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>,
+    eye:    <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>,
   };
   return (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none"
@@ -57,12 +58,13 @@ export default function JudgeScoringPage() {
   const { eventId }       = useParams();
   const id                = Number(eventId);
 
-  const [event,       setEvent]       = useState(null);
-  const [submissions, setSubmissions] = useState([]);
-  const [scores,      setScores]      = useState({});   // { submissionId: { score, comment } }
-  const [submitting,  setSubmitting]  = useState(false);
-  const [submitted,   setSubmitted]   = useState(false);
-  const [toast,       setToast]       = useState(null);
+  const [event,        setEvent]        = useState(null);
+  const [submissions,  setSubmissions]  = useState([]);
+  const [scores,       setScores]       = useState({});
+  const [submitting,   setSubmitting]   = useState(false);
+  const [submitted,    setSubmitted]    = useState(false);
+  const [toast,        setToast]        = useState(null);
+  const [lightboxSrc,  setLightboxSrc]  = useState(null);
 
   const { user } = useAuth();
 
@@ -228,6 +230,18 @@ export default function JudgeScoringPage() {
                 {initials(sub.studentName)}
               </div>
 
+              {/* View image button */}
+              {sub.imageLink && (
+                <button
+                  className="js-view-img-btn"
+                  onClick={() => setLightboxSrc({ src: sub.imageLink, title: sub.submissionTitle, student: sub.studentName })}
+                  title="View submission image"
+                >
+                  <Ic n="eye" s={14} c="currentColor" />
+                  View
+                </button>
+              )}
+
               {/* Info */}
               <div className="js-sub-card__info">
                 <div className="js-sub-card__name">{sub.studentName}</div>
@@ -296,6 +310,32 @@ export default function JudgeScoringPage() {
             )}
           </button>
         </div>
+      )}
+
+      {/* ── Image lightbox */}
+      {lightboxSrc && (
+        <dialog
+          className="js-lightbox"
+          open
+          aria-label="Submission image"
+          onCancel={() => setLightboxSrc(null)}
+        >
+          <button className="js-lightbox__backdrop" onClick={() => setLightboxSrc(null)} tabIndex={-1} />
+          <div className="js-lightbox__panel">
+            <div className="js-lightbox__header">
+              <div>
+                <div className="js-lightbox__student">{lightboxSrc.student}</div>
+                <div className="js-lightbox__title">{lightboxSrc.title}</div>
+              </div>
+              <button className="js-lightbox__close" onClick={() => setLightboxSrc(null)}>
+                <Ic n="close" s={16} c="currentColor" />
+              </button>
+            </div>
+            <div className="js-lightbox__img-wrap">
+              <img src={lightboxSrc.src} alt={lightboxSrc.title} className="js-lightbox__img" />
+            </div>
+          </div>
+        </dialog>
       )}
 
       {/* ── Toast */}

@@ -9,7 +9,12 @@ function fmtDate(d) {
   return new Date(d).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" });
 }
 
-function StatusPill({ status }) {
+function StatusPill({ status, hasScore }) {
+  if (hasScore) return (
+    <span className="msm__pill msm__pill--scored">
+      <CheckCircle size={11} weight="fill" /> Scored
+    </span>
+  );
   const s = status?.toLowerCase();
   if (s === "approved") return (
     <span className="msm__pill msm__pill--approved">
@@ -105,7 +110,7 @@ export default function MySubmissionsModal({ event, studentId, onClose, onResubm
                     <div className="msm__card-info">
                       <div className="msm__card-title">{post.title}</div>
                       <div className="msm__card-meta">
-                        <StatusPill status={post.status} />
+                        <StatusPill status={post.status} hasScore={!!mark} />
                         {post.postDate && (
                           <span className="msm__card-date">Submitted {fmtDate(post.postDate)}</span>
                         )}

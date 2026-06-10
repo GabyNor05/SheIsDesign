@@ -261,6 +261,12 @@
     border: 1px solid rgba(251, 191, 36, 0.2);
 }
 
+.msm__pill--scored {
+    background: #08121f;
+    color: #60A5FA;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
 /* ── Judge score row ── */
 .msm__score-row {
     display: flex;
