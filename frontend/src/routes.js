@@ -33,10 +33,13 @@ import ManageActivityPage from "./pages/admin/ManageActivityPage";
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
 import JudgeScoringPage from "./pages/judge/JudgeScoringPage";
 
+import NotFoundPage from "./pages/public/NotFoundPage";
+
 const Routes = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       // ── Public ────────────────────────────────────────────────────────────
       { index: true, element: <HomePage /> },
@@ -73,6 +76,9 @@ const Routes = createBrowserRouter([
       // ── Judge ─────────────────────────────────────────────────────────────
       { path: "judge", element: <RoleProtectedRoute role="judge"><JudgeDashboard /></RoleProtectedRoute> },
       { path: "judge/score/:eventId", element: <RoleProtectedRoute role="judge"><JudgeScoringPage /></RoleProtectedRoute> },
+
+      // ── 404 catch-all ─────────────────────────────────────────────────────
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ]);
