@@ -31,7 +31,6 @@ import ManageGallery from "./pages/admin/ManageGalleryPage";
 
 // Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
-import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
 import JudgeScoringPage from "./pages/judge/JudgeScoringPage";
 
 const Routes = createBrowserRouter([
@@ -76,7 +75,6 @@ const Routes = createBrowserRouter([
 
       // ── Judge ─────────────────────────────────────────────────────────────
       { path: "judge", element: <RoleProtectedRoute role="judge"><JudgeDashboard /></RoleProtectedRoute> },
-      { path: "judge/events", element: <RoleProtectedRoute role="judge"><JudgeEventsPage /></RoleProtectedRoute> },
       { path: "judge/score/:eventId", element: <RoleProtectedRoute role="judge"><JudgeScoringPage /></RoleProtectedRoute> },
     ],
   },
