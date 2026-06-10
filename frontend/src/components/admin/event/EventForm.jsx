@@ -173,7 +173,7 @@ export default function EventForm({ initial = null, onSave, onClose }) {
           style={{
             ...inputStyle,
             minHeight: 100,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
             resize: "vertical",
           }}
           placeholder="Event description..."
@@ -187,7 +187,7 @@ export default function EventForm({ initial = null, onSave, onClose }) {
       </div>
 
       <div style={{ display: "flex", gap: 12, justifyContent: "flex-end", marginTop: 24 }}>
-        <button onClick={e => set("status", "draft")} style={{ background: T.surfaceBord, border: "none", borderRadius: 8, padding: "10px 20px", color: T.textSecond, cursor: "pointer", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>
+        <button onClick={e => set("status", "draft")} style={{ background: T.surfaceBord, border: "none", borderRadius: 8, padding: "10px 20px", color: T.textSecond, cursor: "pointer", fontWeight: 600, fontFamily: "'Poppins', sans-serif" }}>
           Save as Draft
         </button>
         <button
@@ -200,7 +200,7 @@ export default function EventForm({ initial = null, onSave, onClose }) {
             color: T.textSecond,
             cursor: "pointer",
             fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
           }}
         >
           Cancel
@@ -215,7 +215,7 @@ export default function EventForm({ initial = null, onSave, onClose }) {
             color: "#fff",
             cursor: "pointer",
             fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
           }}
         >
           {initial ? "Update" : "Create"} Event

@@ -21,13 +21,13 @@ function StatCard({ stat }) {
     onMouseLeave={e => e.currentTarget.style.borderColor = T.border}
     >
       <div className="text-2xl mb-2 bg-slate-400/20 border-slate-600 border  w-fit p-2 rounded" aria-hidden="true">{stat.icon}</div>
-      <div style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 30, color: T.textPrimary, marginBottom: 4 }}>
+      <div style={{ fontFamily: "Poppins, sans-serif", fontWeight: 800, fontSize: 30, color: T.textPrimary, marginBottom: 4 }}>
         {stat.value}
       </div>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13.5, color: T.textSecond, marginBottom: 6 }}>
+      <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: 13.5, color: T.textSecond, marginBottom: 6 }}>
         {stat.label}
       </div>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.pink, fontWeight: 500 }}>
+      <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: 12, color: T.pink, fontWeight: 500 }}>
         {stat.sub}
       </div>
     </article>

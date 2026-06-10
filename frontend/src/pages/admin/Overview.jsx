@@ -23,7 +23,7 @@ function Overview({ setActiveTab }) {
                     <span className="rounded-[20px] w-fit" style={{
                         background: T.activeBg, color: T.activeGreen, borderRadius: 20,
                         padding: "4px 12px", fontSize: 12, fontWeight: 600,
-                        fontFamily: "'DM Sans', sans-serif", display: "flex", alignItems: "center", gap: 6,
+                        fontFamily: "'Poppins', sans-serif", display: "flex", alignItems: "center", gap: 6,
                     }} role="status">
                         <span aria-hidden="true" className="rounded-full w-2 h-2" style={{ background: T.activeGreen, display: "inline-block" }} />
                         {STATUS_BADGE}

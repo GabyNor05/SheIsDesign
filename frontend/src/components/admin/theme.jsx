@@ -57,7 +57,7 @@ export const INPUT_STYLES = {
   borderRadius: 8,
   padding: "10px 14px",
   color: T.textPrimary,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Poppins', sans-serif",
   fontSize: 14,
   outline: "none",
   width: "100%",

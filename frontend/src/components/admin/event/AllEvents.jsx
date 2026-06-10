@@ -90,7 +90,7 @@ function AllEvents() {
     <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: 20, fontWeight: 700, color: T.textPrimary, margin: 0 }}>
+        <h2 style={{ fontFamily: "Poppins, sans-serif", fontSize: 20, fontWeight: 700, color: T.textPrimary, margin: 0 }}>
           All Events
         </h2>
         <button
@@ -99,7 +99,7 @@ function AllEvents() {
             display: "flex", alignItems: "center", gap: 8,
             background: T.pink, color: "#fff", border: "none",
             borderRadius: 8, padding: "10px 16px", cursor: "pointer",
-            fontFamily: "Syne, sans-serif", fontSize: 13, fontWeight: 700,
+            fontFamily: "Poppins, sans-serif", fontSize: 13, fontWeight: 700,
             transition: "opacity 0.15s",
           }}
           onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
@@ -121,7 +121,7 @@ function AllEvents() {
                 color: tab === t ? "#fff" : T.textSecond,
                 border: `1px solid ${tab === t ? T.pink : T.border}`,
                 borderRadius: 6, padding: "8px 12px",
-                fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                fontFamily: "'Poppins', sans-serif", fontSize: 12, fontWeight: 600,
                 cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap",
               }}
             >
@@ -136,7 +136,7 @@ function AllEvents() {
           style={{
             background: T.surface, border: `1px solid ${T.border}`,
             borderRadius: 8, padding: "8px 12px", color: T.textPrimary,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13, width: 200,
+            fontFamily: "'Poppins', sans-serif", fontSize: 13, width: 200,
           }}
         />
       </div>

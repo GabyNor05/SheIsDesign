@@ -33,7 +33,7 @@ function ManageEvents() {
               padding: "10px 20px",
               color: "#fff",
               cursor: "pointer",
-              fontFamily: "Syne, sans-serif",
+              fontFamily: "Poppins, sans-serif",
               fontWeight: 700,
               fontSize: 13.5,
               transition: "opacity .15s",

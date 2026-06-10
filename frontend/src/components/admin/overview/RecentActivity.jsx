@@ -35,14 +35,14 @@ function ActivityRow({ item, isLast }) {
         {ACTIVITY_ICONS[item.type]}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: T.textPrimary }}>
+        <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: 14, fontWeight: 500, color: T.textPrimary }}>
           {item.title}
         </div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, color: T.textSecond, marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: 12.5, color: T.textSecond, marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
           {item.detail}
         </div>
       </div>
-      <time style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.textMuted, flexShrink: 0 }}>
+      <time style={{ fontFamily: "'Poppins', sans-serif", fontSize: 12, color: T.textMuted, flexShrink: 0 }}>
         {item.time}
       </time>
     </div>

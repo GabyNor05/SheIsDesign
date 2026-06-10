@@ -100,7 +100,7 @@ function InviteJudgeForm({ onSave, onClose }) {
             padding: "10px 24px",
             color: "#fff",
             cursor: "pointer",
-            fontFamily: "'Poppins', sans-serif",  // ✅ was Syne
+            fontFamily: "'Poppins', sans-serif", 
             fontSize: 14,
             fontWeight: 700,
             transition: "opacity 0.15s",

@@ -17,7 +17,7 @@ function daysUntil(dateStr) {
   return `${diff} days left`;
 }
 
-export default function FeaturedEvent({ event, onApply }) {
+export default function FeaturedEvent({ event, onApply, onViewDetails }) {
   if (!event) return null;
 
   const fillPct = event.max_entry > 0
@@ -115,9 +115,9 @@ export default function FeaturedEvent({ event, onApply }) {
               >
                 {isFull ? "Event full" : "Apply for this event"}
               </button>
-              <button className="featured-event__btn-secondary">
-                View full brief
-              </button>
+              <button className="featured-event__btn-secondary" onClick={onViewDetails}>
+  View full brief
+</button>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { CalendarDots, X, Users, Trophy, CheckCircle } from "@phosphor-icons/react";
+import { CalendarDots, X, Users, Trophy } from "@phosphor-icons/react";
 import "./EventDetailModal.css";
 
 function fmtDate(d) {

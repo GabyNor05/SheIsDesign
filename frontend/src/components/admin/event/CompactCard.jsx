@@ -38,7 +38,7 @@ function ProgressBar({ count, max }) {
       </div>
       <span
         style={{
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "'Poppins', sans-serif",
           fontSize: 11,
           color: T.textMuted,
           minWidth: 45,
@@ -121,7 +121,7 @@ function CompactCard({ event, onView, onManage, onDelete, onClose }) {
           <h3
             style={{
               margin: 0,
-              fontFamily: "Syne, sans-serif",
+              fontFamily: "Poppins, sans-serif",
               fontSize: 16,
               fontWeight: 700,
               color: T.textPrimary,
@@ -132,7 +132,7 @@ function CompactCard({ event, onView, onManage, onDelete, onClose }) {
           </h3>
           <span
             style={{
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Poppins', sans-serif",
               fontSize: 11,
               color: T.textMuted,
               background: T.surfaceHi,
@@ -157,19 +157,19 @@ function CompactCard({ event, onView, onManage, onDelete, onClose }) {
         >
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <Calendar size={14} color={T.textMuted} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <span style={{ fontFamily: "'Poppins', sans-serif" }}>
               {event.start_date || "TBD"}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <Clock size={14} color={T.textMuted} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <span style={{ fontFamily: "'Poppins', sans-serif" }}>
               {event.time || "00:00"}
             </span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <MapPin size={14} color={T.textMuted} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <span style={{ fontFamily: "'Poppins', sans-serif" }}>
               {event.location || "123 Main Str"}
             </span>
           </div>
@@ -185,7 +185,7 @@ function CompactCard({ event, onView, onManage, onDelete, onClose }) {
               <span className="w-fit py-1 px-3 rounded-full"
                 style={{
                   background: T.textMuted ,
-                  fontFamily: "Syne, sans-serif",
+                  fontFamily: "Poppins, sans-serif",
                   color: T.textPrimary,
                   fontSize: 12,
                 }}
@@ -231,7 +231,7 @@ function CompactCard({ event, onView, onManage, onDelete, onClose }) {
               cursor: "pointer",
               color: T.textSecond,
               transition: "all 0.15s",
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Poppins', sans-serif",
               fontSize: 13,
             }}
             onMouseEnter={(e) => {

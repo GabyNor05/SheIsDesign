@@ -30,7 +30,7 @@ function StatusBadge({ status }) {
         padding: "4px 10px",
         fontSize: 11.5,
         fontWeight: 600,
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Poppins', sans-serif",
         letterSpacing: "0.06em",
       }}
     >
