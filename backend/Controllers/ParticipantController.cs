@@ -22,56 +22,44 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ParticipantListDTO>>> GetParticipants()
         {
-            var participants = await _context.Users
+            var rows = await _context.Users
                 .Where(u => u.Role == Role.Student || u.Role == Role.IndustryProfessional)
                 .OrderByDescending(u => u.DateCreated)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.Email,
+                    u.Status,
+                    u.DateCreated,
+                    Student = u.Students.FirstOrDefault(),
+                    Professional = u.IndustryProfessionals.FirstOrDefault(),
+                    SubmissionCount = u.Students.SelectMany(s => s.Submissions).Count(),
+                    TotalPoints = u.Students.SelectMany(s => s.Submissions).Sum(s => s.points),
+                })
                 .ToListAsync();
 
-            var results = new List<ParticipantListDTO>();
-
-            foreach (var user in participants)
+            var results = rows.Select(r =>
             {
-                var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == user.Id);
-                var professional = await _context.IndustryProfessional.FirstOrDefaultAsync(i => i.userId == user.Id);
-
-                var type = student != null ? "student" : professional != null ? "professional" : user.Role.ToString().ToLowerInvariant();
-
-                var name = student?.fullname
-                    ?? professional?.job_title
-                    ?? user.Email;
-
-                var institution = student?.university
-                    ?? professional?.institution
-                    ?? "";
-
-                var field = student?.field_of_study
-                    ?? professional?.job_title
-                    ?? "";
-
-                var submissions = 0;
-                var points = 0;
-
-                if (student != null)
+                var name = r.Student?.fullname ?? r.Professional?.job_title ?? r.Email;
+                string type;
+                if (r.Student != null) type = "student";
+                else if (r.Professional != null) type = "professional";
+                else type = r.Status.ToString().ToLowerInvariant();
+                return new ParticipantListDTO
                 {
-                    submissions = await _context.Submission.CountAsync(s => s.studentId == student.Id);
-                    points = await _context.Submission.Where(s => s.studentId == student.Id).SumAsync(s => (int?)s.points) ?? 0;
-                }
-
-                results.Add(new ParticipantListDTO
-                {
-                    Id = user.Id,
+                    Id = r.Id,
                     Type = type,
-                    Initials = GetInitials(name, user.Email),
+                    Initials = GetInitials(name, r.Email),
                     Name = name,
-                    Email = user.Email,
-                    Institution = institution,
-                    Field = field,
-                    Status = user.Status.ToString().ToLowerInvariant(),
-                    Joined = user.DateCreated.ToString("d MMM yyyy"),
-                    Submissions = submissions,
-                    Points = points,
-                });
-            }
+                    Email = r.Email,
+                    Institution = r.Student?.university ?? r.Professional?.institution ?? "",
+                    Field = r.Student?.field_of_study ?? r.Professional?.job_title ?? "",
+                    Status = r.Status.ToString().ToLowerInvariant(),
+                    Joined = r.DateCreated.ToString("d MMM yyyy"),
+                    Submissions = r.SubmissionCount,
+                    Points = r.TotalPoints,
+                };
+            }).ToList();
 
             return Ok(results);
         }
@@ -106,35 +94,32 @@ namespace backend.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<ParticipantProfileDTO>> GetParticipantProfile(int userId)
         {
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null) return NotFound("User not found");
+            var data = await _context.Student
+                .Where(s => s.userId == userId)
+                .Select(s => new
+                {
+                    s.fullname,
+                    Email = s.User.Email,
+                    s.university,
+                    TotalEventsJoined = s.Posts.Select(p => p.eventId).Distinct().Count(),
+                    TotalScore = s.Submissions.Sum(sub => sub.points),
+                    MostRecentEventTitle = s.Posts.OrderByDescending(p => p.post_date).Select(p => p.Event.Title).FirstOrDefault(),
+                    MostRecentEventStart = s.Posts.OrderByDescending(p => p.post_date).Select(p => (DateTime?)p.Event.Start_date).FirstOrDefault(),
+                })
+                .FirstOrDefaultAsync();
 
-            var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == userId);
-            if (student == null) return NotFound("Student profile not found for this user");
+            if (data == null) return NotFound("Student profile not found for this user");
 
-            var posts = await _context.Post
-                .Where(p => p.studentId == student.Id)
-                .Include(p => p.Event)
-                .ToListAsync();
-
-            var submissions = await _context.Submission
-                .Where(s => s.studentId == student.Id)
-                .ToListAsync();
-
-            var mostRecentPost = posts.OrderByDescending(p => p.post_date).FirstOrDefault();
-
-            var dto = new ParticipantProfileDTO
+            return Ok(new ParticipantProfileDTO
             {
-                Name = student.fullname,
-                Email = user.Email,
-                University = student.university,
-                TotalEventsJoined = posts.Select(p => p.eventId).Distinct().Count(),
-                TotalScore = submissions.Sum(s => s.points),
-                MostRecentEventTitle = mostRecentPost?.Event?.Title,
-                MostRecentEventDate = mostRecentPost?.Event?.Start_date != null ? DateOnly.FromDateTime(mostRecentPost.Event.Start_date) : null
-            };
-
-            return Ok(dto);
+                Name = data.fullname,
+                Email = data.Email,
+                University = data.university,
+                TotalEventsJoined = data.TotalEventsJoined,
+                TotalScore = data.TotalScore,
+                MostRecentEventTitle = data.MostRecentEventTitle,
+                MostRecentEventDate = data.MostRecentEventStart.HasValue ? DateOnly.FromDateTime(data.MostRecentEventStart.Value) : null,
+            });
         }
 
         // GET: api/Participant/{userId}/event/{eventId}
@@ -142,20 +127,16 @@ namespace backend.Controllers
         [HttpGet("{userId}/event/{eventId}")]
         public async Task<ActionResult<ParticipantEventStatusDTO>> GetParticipantEventStatus(int userId, int eventId)
         {
-            var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == userId);
-            if (student == null) return NotFound("Student profile not found for this user");
+            var dto = await _context.Post
+                .Where(p => p.Student.userId == userId && p.eventId == eventId)
+                .Select(p => new ParticipantEventStatusDTO
+                {
+                    Status = p.status,
+                    EventTitle = p.Event.Title,
+                })
+                .FirstOrDefaultAsync();
 
-            var post = await _context.Post
-                .Include(p => p.Event)
-                .FirstOrDefaultAsync(p => p.studentId == student.Id && p.eventId == eventId);
-
-            if (post == null) return NotFound("No participation found for this user in this event");
-
-            var dto = new ParticipantEventStatusDTO
-            {
-                Status = post.status,
-                EventTitle = post.Event?.Title
-            };
+            if (dto == null) return NotFound("No participation found for this user in this event");
 
             return Ok(dto);
         }
