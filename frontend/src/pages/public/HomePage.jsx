@@ -10,7 +10,7 @@ import "./HomePage.css";
 function HomePage() {
   const orbRef = useRef(null);
   const { user } = useAuth();
-  const isPending = user?.status === "Pending" && user?.role?.toLowerCase() !== "admin";
+  const isPending = !user || (user?.status === "Pending" && user?.role?.toLowerCase() !== "admin");
 
   useEffect(() => {
     let ticking = false;
