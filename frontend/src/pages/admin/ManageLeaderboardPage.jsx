@@ -384,11 +384,8 @@ function ViewModal({ submission, rank, onClose }) {
           <div className="lb-view-meta-grid">
             {[
               {
-                label: "Score",
-                value:
-                  submission.score !== null
-                    ? `${submission.score} / 100`
-                    : "Not scored",
+                label: "Points",
+                value: submission.score !== null ? `${submission.score} pts` : "Not scored",
               },
               {
                 label: "Current Rank",
@@ -406,19 +403,29 @@ function ViewModal({ submission, rank, onClose }) {
           <div>
             <div
               className="lb-view-card__label"
-              style={{
-                marginBottom: 8,
-                display: "flex",
-                alignItems: "center",
-                gap: 5,
-              }}
+              style={{ marginBottom: 8, display: "flex", alignItems: "center", gap: 5 }}
             >
               <Ic n="img" s={11} c="rgba(255,255,255,0.3)" /> Submission Preview
             </div>
-            <div className="lb-view-preview">
-              <Ic n="img" s={28} c="rgba(255,255,255,0.15)" />
-              <span>File preview not available yet</span>
-            </div>
+            {submission.fileLink ? (
+              <img
+                src={submission.fileLink}
+                alt={submission.submissionTitle}
+                style={{
+                  width: "100%",
+                  maxHeight: 340,
+                  objectFit: "contain",
+                  borderRadius: 8,
+                  border: "1px solid #2E2E2E",
+                  background: "#111",
+                }}
+              />
+            ) : (
+              <div className="lb-view-preview">
+                <Ic n="img" s={28} c="rgba(255,255,255,0.15)" />
+                <span>No file attached to this submission</span>
+              </div>
+            )}
           </div>
         </div>
 

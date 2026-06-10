@@ -11,6 +11,7 @@ namespace SheDesign.DTO
         public int Score { get; set; }
         public string Submission_title { get; set; } = string.Empty;
         public ReviewStatus Review_status { get; set; } = ReviewStatus.Reviewed;
+        public string? Image_file_link { get; set; }
     }
 }
 

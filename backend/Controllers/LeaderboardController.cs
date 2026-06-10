@@ -64,7 +64,8 @@ namespace backend.Controllers
                     Submission_title = x.Post.title,
                     Review_status = markSchemes.Any(j => j.PostId == x.Post.Id)
                         ? ReviewStatus.Reviewed
-                        : ReviewStatus.Unreviewed
+                        : ReviewStatus.Unreviewed,
+                    Image_file_link = x.Post.image_file_link
                 })
                 .ToList();
 
