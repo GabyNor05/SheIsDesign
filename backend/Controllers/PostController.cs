@@ -80,6 +80,63 @@ namespace backend.Controllers
             return Ok(postDto);
         }
 
+        // GET: api/Post/event/{eventId}
+        [HttpGet("event/{eventId}")]
+        public async Task<ActionResult<IEnumerable<PostReadDto>>> GetPostsByEvent(int eventId)
+        {
+            var posts = await _context.Post
+                .Where(p => p.eventId == eventId)
+                .Include(p => p.Student)
+                .ToListAsync();
+
+            var postDtos = posts.Select(post => new PostReadDto
+            {
+                Id = post.Id,
+                Title = post.title,
+                StudentId = post.studentId,
+                StudentName = post.Student?.fullname ?? "",
+                ImageFileLink = post.image_file_link,
+                Category = post.category,
+                EventId = post.eventId,
+                LinkCount = post.link_count,
+                CommentCount = post.comment_count,
+                PostDate = post.post_date,
+                Description = post.description,
+                Status = post.status
+            }).ToList();
+
+            return Ok(postDtos);
+        }
+
+        // GET: api/Post/student/{studentId}/event/{eventId}
+        [HttpGet("student/{studentId}/event/{eventId}")]
+        public async Task<ActionResult<IEnumerable<PostReadDto>>> GetPostsByStudentAndEvent(int studentId, int eventId)
+        {
+            var posts = await _context.Post
+                .Where(p => p.studentId == studentId && p.eventId == eventId)
+                .Include(p => p.Student)
+                .OrderByDescending(p => p.post_date)
+                .ToListAsync();
+
+            var postDtos = posts.Select(post => new PostReadDto
+            {
+                Id = post.Id,
+                Title = post.title,
+                StudentId = post.studentId,
+                StudentName = post.Student?.fullname ?? "",
+                ImageFileLink = post.image_file_link,
+                Category = post.category,
+                EventId = post.eventId,
+                LinkCount = post.link_count,
+                CommentCount = post.comment_count,
+                PostDate = post.post_date,
+                Description = post.description,
+                Status = post.status
+            }).ToList();
+
+            return Ok(postDtos);
+        }
+
         // PUT: api/Post/5 — unchanged
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, PostCreateDto postUpdateDto)

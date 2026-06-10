@@ -198,8 +198,9 @@ namespace backend.Controllers
             bool validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
             if (!validPassword) return Unauthorized("Incorrect Password");
 
-            // Look up student record after confirming user exists
             var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == user.Id);
+            var ip      = await _context.IndustryProfessional.FirstOrDefaultAsync(ip => ip.userId == user.Id);
+            var judge   = ip != null ? await _context.Judge.FirstOrDefaultAsync(j => j.IndustryProfessionalID == ip.Id) : null;
 
             return Ok(new UserReadDTO
             {
@@ -209,6 +210,7 @@ namespace backend.Controllers
                 Role = user.Role,
                 Status = user.Status,
                 StudentId = student?.Id,
+                JudgeId = judge?.Id,
             });
         }
 
@@ -260,8 +262,9 @@ namespace backend.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            // Look up student record after confirming/creating user
             var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == user.Id);
+            var ip      = await _context.IndustryProfessional.FirstOrDefaultAsync(ip => ip.userId == user.Id);
+            var judge   = ip != null ? await _context.Judge.FirstOrDefaultAsync(j => j.IndustryProfessionalID == ip.Id) : null;
 
             return Ok(new UserReadDTO
             {
@@ -273,7 +276,8 @@ namespace backend.Controllers
                 IsNewUser  = isNewUser,
                 GivenName  = givenName,
                 FamilyName = familyName,
-                StudentId  = student?.Id
+                StudentId  = student?.Id,
+                JudgeId    = judge?.Id,
             });
         }
 

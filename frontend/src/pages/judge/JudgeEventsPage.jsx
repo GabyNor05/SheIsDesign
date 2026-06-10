@@ -1,26 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { eventService } from "../../services/eventService";
 import "./Judge.css";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MOCK DATA — 🔌 replace with real API calls
-// GET /api/judge/me
-// GET /api/judge/events
-// ─────────────────────────────────────────────────────────────────────────────
-const MOCK_JUDGE = {
-  name:      "Lerato Nkosi",
-  email:     "lerato@ogilvy.co.za",
-  specialty: "Brand Identity & Visual Communication",
-  initials:  "LN",
-  color:     "#C41262",
+const CATEGORY_COLORS = {
+  "branding":      "#C41262",
+  "brand identity":"#C41262",
+  "ui/ux":         "#60A5FA",
+  "illustration":  "#a78bfa",
+  "awards":        "#22C55E",
+  "packaging":     "#f97316",
+  "typography":    "#FBBF24",
 };
 
-const MOCK_EVENTS = [
-  { id: 1, title: "Brand Identity Challenge",  category: "Branding",     startDate: "2026-03-12", deadline: "2026-03-20", submissions: 6, scored: 4, color: "#C41262", description: "Design a full visual identity for a fictional female-led startup." },
-  { id: 2, title: "UI/UX Hackathon 2026",      category: "UI/UX",        startDate: "2026-04-05", deadline: "2026-04-12", submissions: 5, scored: 0, color: "#60A5FA", description: "48-hour hackathon redesigning a real app for accessibility." },
-  { id: 3, title: "Annual Design Awards 2025", category: "Awards",       startDate: "2025-10-14", deadline: "2025-10-21", submissions: 7, scored: 7, color: "#22C55E", description: "Flagship annual awards celebrating the best SheIsDesign work." },
-  { id: 4, title: "Illustration Open Brief",   category: "Illustration", startDate: "2026-05-02", deadline: "2026-05-10", submissions: 5, scored: 0, color: "#a78bfa", description: "Open illustration brief celebrating African femininity." },
-];
+function categoryColor(cat) {
+  return CATEGORY_COLORS[cat?.toLowerCase()] ?? "#FE4081";
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
@@ -345,11 +341,37 @@ export default function JudgeDashboard() {
   const [judge,  setJudge]  = useState(null);
   const [events, setEvents] = useState([]);
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    // 🔌 API CONNECTION: replace with real fetch
-    setJudge(MOCK_JUDGE);
-    setEvents(MOCK_EVENTS);
-  }, []);
+    if (!user) return;
+
+    const fullName = [user.givenName, user.familyName].filter(Boolean).join(" ") || user.email;
+    setJudge({
+      name:      fullName,
+      email:     user.email,
+      specialty: "Judge — SheIsDesign",
+      initials:  initials(fullName),
+      color:     "#C41262",
+    });
+
+    if (!user.judgeId) return;
+    eventService.getEventsByJudge(user.judgeId)
+      .then(data => {
+        setEvents(data.map(e => ({
+          id:          e.id,
+          title:       e.title,
+          category:    e.category,
+          startDate:   e.start_date?.split("T")[0],
+          deadline:    e.end_date?.split("T")[0],
+          submissions: e.submissionCount,
+          scored:      e.scoredCount,
+          color:       categoryColor(e.category),
+          description: e.description,
+        })));
+      })
+      .catch(err => console.error("Failed to load judge events:", err));
+  }, [user]);
 
   const totalScored  = events.reduce((s, e) => s + e.scored, 0);
   const totalPending = events.reduce((s, e) => s + (e.submissions - e.scored), 0);

@@ -13,6 +13,7 @@ namespace SheDesign.DTO
         public string GivenName { get; set; } = string.Empty;
         public string FamilyName { get; set; } = string.Empty;
 
-        public int? StudentId { get; set; } 
+        public int? StudentId { get; set; }
+        public int? JudgeId { get; set; }
     }
 }

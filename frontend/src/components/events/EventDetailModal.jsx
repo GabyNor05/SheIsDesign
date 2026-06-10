@@ -1,4 +1,4 @@
-import { CalendarDots, X, Users, Trophy } from "@phosphor-icons/react";
+import { CalendarDots, X, Users, Trophy, UploadSimple } from "@phosphor-icons/react";
 import "./EventDetailModal.css";
 
 function fmtDate(d) {
@@ -16,7 +16,7 @@ function daysLeft(dateStr) {
   return `${diff} days left`;
 }
 
-export default function EventDetailModal({ event, onClose, onApply, applied = false }) {
+export default function EventDetailModal({ event, onClose, onApply, onSubmitWork, onViewSubmissions, applied = false, hasSubmitted = false }) {
   if (!event) return null;
 
   const status   = event.status?.toUpperCase() || "DRAFT";
@@ -95,14 +95,36 @@ export default function EventDetailModal({ event, onClose, onApply, applied = fa
             </div>
           </div>
 
-          <div className="edm__cta">
-            <button
-              className={`edm__apply-btn ${applied ? "edm__apply-btn--applied" : !isOpen ? "edm__apply-btn--disabled" : ""}`}
-              onClick={() => !applied && isOpen && onApply(event)}
-              disabled={applied || !isOpen}
-            >
-              {applyLabel()}
-            </button>
+          <div className="edm__cta" style={{ flexWrap: "wrap" }}>
+            {applied ? (
+              <>
+                {!hasSubmitted && (
+                  <button
+                    className="edm__apply-btn"
+                    style={{ background: "linear-gradient(135deg, #C41262, #FE4081)", cursor: "pointer", color: "#fff", boxShadow: "0 4px 20px rgba(196,18,98,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: "7px" }}
+                    onClick={() => onSubmitWork?.(event)}
+                  >
+                    <UploadSimple size={15} />
+                    Submit Work
+                  </button>
+                )}
+                <button
+                  className="edm__close-btn"
+                  style={{ borderColor: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.6)" }}
+                  onClick={() => onViewSubmissions?.(event)}
+                >
+                  My Submissions
+                </button>
+              </>
+            ) : (
+              <button
+                className={`edm__apply-btn ${!isOpen ? "edm__apply-btn--disabled" : ""}`}
+                onClick={() => isOpen && onApply(event)}
+                disabled={!isOpen}
+              >
+                {applyLabel()}
+              </button>
+            )}
             <button className="edm__close-btn" onClick={onClose}>Close</button>
           </div>
         </div>

@@ -9,6 +9,9 @@ import EventsGrid from "../../components/ui/Grids/EventsGrid/EventsGrid";
 import RecommendedEvents from "../../components/events/RecommendedEvents";
 import LoginPromptModal from "../../components/ui/Modals/LoginPromptModal/LoginPromptModal";
 import EventDetailModal from "../../components/events/EventDetailModal";
+import SubmitWorkModal from "../../components/events/SubmitWorkModal";
+import MySubmissionsModal from "../../components/events/MySubmissionsModal";
+import { postService } from "../../services/postManagementService";
 import "./EventsPage.css";
 
 export default function EventsPage() {
@@ -19,15 +22,30 @@ export default function EventsPage() {
   const [loading,        setLoading]        = useState(true);
   const [error,          setError]          = useState(null);
   const [activeFilter,   setActiveFilter]   = useState("all");
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [selectedEvent,  setSelectedEvent]  = useState(null);
+  const [showLoginModal,      setShowLoginModal]      = useState(false);
+  const [selectedEvent,       setSelectedEvent]       = useState(null);
+  const [submitWorkEvent,      setSubmitWorkEvent]      = useState(null);
+  const [resubmitPost,         setResubmitPost]         = useState(null);
+  const [viewSubmissionsEvent, setViewSubmissionsEvent] = useState(null);
+  const [submittedEventIds,    setSubmittedEventIds]    = useState(new Set());
 
   // ── Joined events tracking ────────────────────────────────────────────────
   const [joinedIds,  setJoinedIds]  = useState(() => {
     try { return new Set(JSON.parse(localStorage.getItem("joinedEvents") || "[]")); }
     catch { return new Set(); }
   });
-  const [joiningId,  setJoiningId]  = useState(null); // event id currently being joined
+  const [joiningId,  setJoiningId]  = useState(null);
+
+  // Reset per-user state when the logged-in account changes
+  useEffect(() => {
+    try {
+      const stored = new Set(JSON.parse(localStorage.getItem("joinedEvents") || "[]"));
+      setJoinedIds(stored);
+    } catch {
+      setJoinedIds(new Set());
+    }
+    setSubmittedEventIds(new Set());
+  }, [user?.id]);
 
   // ── Fetch all events on mount ──────────────────────────────────────────────
   useEffect(() => {
@@ -79,6 +97,19 @@ export default function EventsPage() {
   }), [events]);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
+  // ── Check if student already submitted work for the selected event ───────
+  useEffect(() => {
+    const studentId = user?.studentId ?? Number(sessionStorage.getItem("StudentID"));
+    if (!selectedEvent || !studentId || !joinedIds.has(selectedEvent.id)) return;
+    postService.getPostsByStudentAndEvent(studentId, selectedEvent.id)
+      .then(posts => {
+        if (posts.length > 0) {
+          setSubmittedEventIds(prev => new Set([...prev, selectedEvent.id]));
+        }
+      })
+      .catch(() => {});
+  }, [selectedEvent?.id]);
+
   function handleViewDetails(event) { setSelectedEvent(event); }
   function handleCloseModal()       { setSelectedEvent(null); }
 
@@ -180,8 +211,32 @@ export default function EventsPage() {
           event={selectedEvent}
           onClose={handleCloseModal}
           onApply={event => { handleCloseModal(); handleApply(event); }}
+          onSubmitWork={event => { handleCloseModal(); setSubmitWorkEvent(event); }}
+          onViewSubmissions={event => { handleCloseModal(); setViewSubmissionsEvent(event); }}
           applied={joinedIds.has(selectedEvent.id)}
+          hasSubmitted={submittedEventIds.has(selectedEvent.id)}
           joining={joiningId === selectedEvent?.id}
+        />
+      )}
+
+      {/* Submit / resubmit work modal */}
+      {submitWorkEvent && (
+        <SubmitWorkModal
+          event={submitWorkEvent}
+          studentId={user?.studentId ?? Number(sessionStorage.getItem("StudentID"))}
+          existingPost={resubmitPost}
+          onClose={() => { setSubmitWorkEvent(null); setResubmitPost(null); }}
+          onSuccess={() => { setSubmitWorkEvent(null); setResubmitPost(null); }}
+        />
+      )}
+
+      {/* My submissions modal */}
+      {viewSubmissionsEvent && (
+        <MySubmissionsModal
+          event={viewSubmissionsEvent}
+          studentId={user?.studentId ?? Number(sessionStorage.getItem("StudentID"))}
+          onClose={() => setViewSubmissionsEvent(null)}
+          onResubmit={(event, post) => { setViewSubmissionsEvent(null); setResubmitPost(post); setSubmitWorkEvent(event); }}
         />
       )}
 

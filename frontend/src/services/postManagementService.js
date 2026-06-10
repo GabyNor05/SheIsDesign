@@ -31,6 +31,12 @@ export const postService = {
 
     updatePost: (id, postData) => apiClient.put(`/${id}`, { ...postData, id: Number(id) }),
 
+    // GET: api/Post/event/{eventId}
+    getPostsByEvent: (eventId) => apiClient.get(`/event/${eventId}`),
+
+    // GET: api/Post/student/{studentId}/event/{eventId}
+    getPostsByStudentAndEvent: (studentId, eventId) => apiClient.get(`/student/${studentId}/event/${eventId}`),
+
     // DELETE: api/Post/{id}
     deletePost: (id) => apiClient.delete(`/${id}`)
 };

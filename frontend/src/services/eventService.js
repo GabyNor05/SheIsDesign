@@ -55,7 +55,10 @@ export const eventService = {
 
     deleteEvent: (id) => apiClient.delete(`/${id}`),
 
-     // Assigns a judge to an event. judgeId is sent as a JSON body integer.
+     // GET: api/Event/judge/{judgeId} — events assigned to a judge with submission/score counts
+    getEventsByJudge: (judgeId) => apiClient.get(`/judge/${judgeId}`),
+
+    // Assigns a judge to an event. judgeId is sent as a JSON body integer.
     // Returns the assigned judgeId on success, 409 if already assigned.
     assignJudge: (id, judgeId) => apiClient.put(`/${id}/AssignJudge`, judgeId),
  

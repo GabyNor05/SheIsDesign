@@ -114,6 +114,55 @@ namespace backend.Controllers
             return Ok(upcomingEvents);
         }
 
+        // GET: api/Event/judge/{judgeId}
+        [HttpGet("judge/{judgeId}")]
+        public async Task<ActionResult<IEnumerable<JudgeEventDTO>>> GetEventsByJudge(int judgeId)
+        {
+            var events = await _context.Event
+                .Where(e => e.JudgeId == judgeId)
+                .ToListAsync();
+
+            if (!events.Any())
+                return Ok(new List<JudgeEventDTO>());
+
+            var eventIds = events.Select(e => e.Id).ToList();
+
+            // Count posts (submissions) per event
+            var postCounts = await _context.Post
+                .Where(p => p.eventId.HasValue && eventIds.Contains(p.eventId.Value))
+                .GroupBy(p => p.eventId!.Value)
+                .Select(g => new { EventId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.EventId, x => x.Count);
+
+            // Count scored posts per event (posts that have at least one JudgeMarkScheme entry)
+            var scoredPostIds = await _context.JudgeMarkScheme
+                .Select(j => j.PostId)
+                .Distinct()
+                .ToListAsync();
+
+            var scoredCounts = await _context.Post
+                .Where(p => p.eventId.HasValue && eventIds.Contains(p.eventId.Value) && scoredPostIds.Contains(p.Id))
+                .GroupBy(p => p.eventId!.Value)
+                .Select(g => new { EventId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.EventId, x => x.Count);
+
+            var result = events.Select(e => new JudgeEventDTO
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Category = e.Category,
+                Start_date = e.Start_date,
+                End_date = e.End_date,
+                Description = e.Description,
+                Status = e.Status,
+                Image_link = e.Image_link,
+                SubmissionCount = postCounts.TryGetValue(e.Id, out var sc) ? sc : 0,
+                ScoredCount = scoredCounts.TryGetValue(e.Id, out var scored) ? scored : 0,
+            }).ToList();
+
+            return Ok(result);
+        }
+
         // PUT: api/Event/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

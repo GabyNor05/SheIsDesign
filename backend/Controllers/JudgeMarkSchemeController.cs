@@ -49,6 +49,36 @@ namespace backend.Controllers
                 .ToListAsync();
         }
 
+        // GET: api/JudgeMarkScheme/event/{eventId}
+        [HttpGet("event/{eventId}")]
+        public async Task<ActionResult<IEnumerable<JudgeMarkSchemeReadDTO>>> GetMarkSchemesByEvent(int eventId)
+        {
+            var postIds = await _context.Post
+                .Where(p => p.eventId == eventId)
+                .Select(p => p.Id)
+                .ToListAsync();
+
+            return await _context.JudgeMarkScheme
+                .Where(j => postIds.Contains(j.PostId))
+                .Include(j => j.Post)
+                .Include(j => j.Judge)
+                    .ThenInclude(judge => judge.IndustryProfessional)
+                .Select(j => new JudgeMarkSchemeReadDTO
+                {
+                    Id = j.Id,
+                    PostId = j.PostId,
+                    JudgeId = j.JudgeId,
+                    Score = j.Score,
+                    Comment = j.Comment,
+                    TimeStamp = j.TimeStamp,
+                    JudgeName = j.Judge != null && j.Judge.IndustryProfessional != null
+                        ? j.Judge.IndustryProfessional.fullname
+                        : "Unknown Judge",
+                    PostTitle = j.Post != null ? j.Post.title : "Untitled Post"
+                })
+                .ToListAsync();
+        }
+
         // GET: api/JudgeMarkScheme/5
         [HttpGet("{id}")]
         public async Task<ActionResult<JudgeMarkSchemeReadDTO>> GetJudgeMarkScheme(int id)

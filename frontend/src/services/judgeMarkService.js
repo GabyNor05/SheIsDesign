@@ -44,4 +44,7 @@ export const judgeMarkSchemeService = {
     updateMarkScheme: (id, markSchemeData) => apiClient.put(`/${id}`, { ...markSchemeData, id }),
 
     deleteMarkScheme: (id) => apiClient.delete(`/${id}`),
+
+    // GET: api/JudgeMarkScheme/event/{eventId} — all scores for posts in an event
+    getMarkSchemesByEvent: (eventId) => apiClient.get(`/event/${eventId}`),
 };
