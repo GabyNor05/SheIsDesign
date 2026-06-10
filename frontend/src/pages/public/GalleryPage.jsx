@@ -5,6 +5,8 @@ import {
   CaretLeft, CaretRight, X
 } from "@phosphor-icons/react";
 import { postService } from "../../services/postManagementService";
+import { eventService } from "../../services/eventService";
+import { fetchParticipantsForAdmin } from "../../services/participantService";
 import { useAuth } from "../../context/AuthContext";
 import PostToLibraryModal from "../../components/gallery/PostToLibraryModal";
 import "./GalleryPage.css";
@@ -432,6 +434,8 @@ export default function GalleryPage() {
   const [posts,          setPosts]          = useState([]);
   const [loading,        setLoading]        = useState(true);
   const [fetchError,     setFetchError]     = useState(null);
+  const [userCount,      setUserCount]      = useState(null);
+  const [eventCount,     setEventCount]     = useState(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy,         setSortBy]         = useState("newest");
   const [search,         setSearch]         = useState("");
@@ -446,20 +450,26 @@ export default function GalleryPage() {
   }, []);
 
   useEffect(() => {
-    async function fetchPosts() {
+    async function fetchAll() {
       setLoading(true);
       setFetchError(null);
       try {
-        const data = await postService.getAllPosts();
-        const all  = Array.isArray(data) ? data : [];
+        const [data, events, participants] = await Promise.allSettled([
+          postService.getAllPosts(),
+          eventService.getAllEvents(),
+          fetchParticipantsForAdmin(),
+        ]);
+        const all = Array.isArray(data.value) ? data.value : [];
         setPosts(all.map(normalisePost));
+        if (events.status === "fulfilled") setEventCount(events.value.length);
+        if (participants.status === "fulfilled") setUserCount(participants.value.length);
       } catch (err) {
         setFetchError(err?.message || "Failed to load gallery.");
       } finally {
         setLoading(false);
       }
     }
-    fetchPosts();
+    fetchAll();
   }, []);
 
   // Reset page when filters change
@@ -512,9 +522,9 @@ export default function GalleryPage() {
           </p>
           <div className="gallery-hero__stats">
             {[
-              { value: loading ? "…" : `${posts.length}+`, label: "Posts" },
-              { value: "320+", label: "Designers" },
-              { value: "48",   label: "Events" },
+              { value: loading ? "…" : `${posts.length}+`,                    label: "Posts" },
+              { value: userCount  == null ? "…" : `${userCount}+`,  label: "Designers" },
+              { value: eventCount == null ? "…" : `${eventCount}`,  label: "Events" },
             ].map(s => (
               <div key={s.label} className="gallery-hero__stat">
                 <span className="gallery-hero__stat-value">{s.value}</span>
