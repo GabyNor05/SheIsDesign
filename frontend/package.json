@@ -29,7 +29,8 @@
     "eject": "react-scripts eject",
     "electron:dev": "concurrently \"react-scripts start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron:build": "react-scripts build && electron-builder --win",
-    "electron:preview": "react-scripts build && electron ."
+    "electron:preview": "react-scripts build && electron .",
+    "electron:release": "react-scripts build && electron-builder --win --publish always"
   },
   "build": {
     "appId": "com.sheisdesign.app",
@@ -58,6 +59,11 @@
     "linux": {
       "target": "AppImage",
       "icon": "public/logo512.png"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "KeaganCB-OW",
+      "repo": "SheIsDesign"
     }
   },
   "eslintConfig": {
