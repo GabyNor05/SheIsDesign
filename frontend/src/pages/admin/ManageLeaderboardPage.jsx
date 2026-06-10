@@ -606,11 +606,7 @@ export default function ManageLeaderboardPage() {
         const eventData = await fetchEvents();
         if (!isMounted) return;
 
-        const nextEvents =
-          Array.isArray(eventData) && eventData.length > 0
-            ? eventData
-            : [{ id: 1, title: "SheIsDesign Showcase", date: "Live demo" }];
-
+        const nextEvents = Array.isArray(eventData) ? eventData : [];
         setEvents(nextEvents);
         setSelectedEventId(nextEvents[0]?.id ?? null);
       } catch (err) {
@@ -639,12 +635,7 @@ export default function ManageLeaderboardPage() {
         const data = await fetchLeaderboardForEvent(selectedEventId);
         if (!isMounted) return;
 
-        const nextData =
-          Array.isArray(data) && data.length > 0
-            ? data
-            : getMockLeaderboardForEvent(selectedEventId);
-
-        setSubmissions(nextData);
+        setSubmissions(Array.isArray(data) ? data : []);
         setError("");
       } catch (err) {
         if (!isMounted) return;
