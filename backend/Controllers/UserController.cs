@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SheDesign.Data;
 using SheDesign.Models;
 using SheDesign.DTO;
@@ -16,10 +17,12 @@ namespace backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly SheDesignContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserController(SheDesignContext context)
+        public UserController(SheDesignContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: api/Users
@@ -207,6 +210,15 @@ namespace backend.Controllers
                 Status = user.Status,
                 StudentId = student?.Id,
             });
+        }
+
+        [HttpPost("VerifyAdminCode")]
+        public ActionResult VerifyAdminCode([FromBody] AdminCodeDTO dto)
+        {
+            var expected = _configuration["AdminAccessCode"];
+            if (string.IsNullOrEmpty(expected) || dto.Code?.Trim() != expected)
+                return Unauthorized("Invalid admin access code.");
+            return Ok();
         }
 
         [HttpPost("GoogleLogin")]

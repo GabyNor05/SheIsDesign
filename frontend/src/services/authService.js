@@ -59,6 +59,18 @@ export async function googleLoginUser(accessToken) {
   return data;
 }
 
+export async function verifyAdminCode(code) {
+  const response = await fetch(`${API_BASE}/User/VerifyAdminCode`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Invalid admin access code.");
+  }
+}
+
 export async function createMentee({ fullname, university, year_of_study, field_of_study, student_number, wants_volunteer, userId }) {
   const response = await fetch(`${API_BASE}/Student`, {
     method: "POST",
