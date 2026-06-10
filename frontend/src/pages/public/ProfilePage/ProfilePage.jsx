@@ -8,6 +8,7 @@ import "./ProfilePage.css";
 
 const API_BASE = "http://localhost:5160/api";
 
+// ── Bug 2 fix: added "industry professional" and all known role variants ──
 const ROLE_CONFIG = {
   student: {
     label: "Student",
@@ -29,6 +30,35 @@ const ROLE_CONFIG = {
     bg: "rgba(16,226,102,0.1)",
     border: "rgba(16,226,102,0.3)",
     description: "Platform administrator",
+  },
+  // all the variants your backend might send for "industry professional"
+  "industry professional": {
+    label: "Industry Professional",
+    color: "#818CF8",
+    bg: "rgba(129,140,248,0.1)",
+    border: "rgba(129,140,248,0.3)",
+    description: "Industry partner",
+  },
+  industry: {
+    label: "Industry Professional",
+    color: "#818CF8",
+    bg: "rgba(129,140,248,0.1)",
+    border: "rgba(129,140,248,0.3)",
+    description: "Industry partner",
+  },
+  professional: {
+    label: "Industry Professional",
+    color: "#818CF8",
+    bg: "rgba(129,140,248,0.1)",
+    border: "rgba(129,140,248,0.3)",
+    description: "Industry partner",
+  },
+  sponsor: {
+    label: "Sponsor",
+    color: "#818CF8",
+    bg: "rgba(129,140,248,0.1)",
+    border: "rgba(129,140,248,0.3)",
+    description: "Industry partner",
   },
 };
 
@@ -94,20 +124,6 @@ function InfoRow({ icon, label, value }) {
   );
 }
 
-// function StatusPill({ status }) {
-//   const s = (status || "pending").toLowerCase();
-//   const style = STATUS_STYLES[s] || STATUS_STYLES.pending;
-//   return (
-//     <span className="profile-status-pill" style={{
-//       color: style.color,
-//       background: style.bg,
-//       border: `1px solid ${style.border}`,
-//     }}>
-//       {s.charAt(0).toUpperCase() + s.slice(1)}
-//     </span>
-//   );
-// }
-
 function SectionTab({ tabs, active, onChange }) {
   return (
     <div className="profile-tabs">
@@ -127,6 +143,41 @@ function SectionTab({ tabs, active, onChange }) {
   );
 }
 
+// ── Bug 1 fix: robust ID extraction that handles all casing variants ──
+function extractUserId(user) {
+  if (!user) return null;
+  return (
+    user.id       ?? user.Id       ??
+    user.userId   ?? user.UserId   ??
+    user.user_id  ?? user.User_id  ??
+    null
+  );
+}
+
+function extractStudentId(user) {
+  if (!user) return null;
+  return (
+    user.studentId  ?? user.StudentId  ??
+    user.student_id ?? user.Student_id ??
+    null
+  );
+}
+
+// ── Bug 2 fix: normalise whatever role string comes from the backend ──
+function normaliseRole(user) {
+  const raw = (
+    user?.role ?? user?.Role ??
+    user?.userRole ?? user?.UserRole ??
+    "student"
+  ).toLowerCase().trim();
+
+  // collapse multi-word variants to the key in ROLE_CONFIG
+  if (raw.includes("industry") || raw.includes("professional") || raw.includes("sponsor")) {
+    return "industry professional";
+  }
+  return raw; // "student" | "judge" | "admin"
+}
+
 export default function ProfilePage() {
   const { user, login } = useAuth();
 
@@ -137,51 +188,65 @@ export default function ProfilePage() {
   const [photoLoading, setPhotoLoading] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Applied events (submissions cross-referenced with events)
   const [submissions,  setSubmissions]  = useState([]);
   const [events,       setEvents]       = useState([]);
   const [subLoading,   setSubLoading]   = useState(true);
 
-  // Library posts
   const [posts,        setPosts]        = useState([]);
   const [postsLoading, setPostsLoading] = useState(true);
 
-  // Active section tab
   const [activeTab, setActiveTab] = useState("details");
 
-  const role       = user?.role?.toLowerCase() || "student";
-  const roleConfig = ROLE_CONFIG[role] || ROLE_CONFIG.student;
-  const userId     = user?.id ?? user?.userId ?? user?.user_id ?? null;
-  const studentId  = user?.studentId ?? user?.student_id ?? null;
+  // ── Use the robust helpers ──
+  const role       = normaliseRole(user);
+  const roleConfig = ROLE_CONFIG[role] ?? ROLE_CONFIG.student;
+  const userId     = extractUserId(user);
+  const studentId  = extractStudentId(user);
+
+  // Debug: log what we resolved so you can verify in the console
+  useEffect(() => {
+    console.debug("[ProfilePage] resolved →", { role, userId, studentId, rawUser: user });
+  }, [user]);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100);
     return () => clearTimeout(t);
   }, []);
 
-  // Fetch base profile
+  // ── Bug 1 fix: fetch profile for any role that has a userId, not just students ──
   useEffect(() => {
     if (!userId) { setLoading(false); return; }
+
     if (role === "student") {
       getParticipantProfile(userId)
         .then(setProfile)
-        .catch(err => console.warn("Profile fetch failed:", err.message))
+        .catch(err => console.warn("Participant profile fetch failed:", err.message))
         .finally(() => setLoading(false));
     } else {
-      setLoading(false);
+      // For admin / judge / industry professional: fetch from the generic user endpoint
+      fetch(`${API_BASE}/User/${userId}`)
+        .then(res => res.ok ? res.json() : null)
+        .then(data => setProfile(data))
+        .catch(err => console.warn("User profile fetch failed:", err.message))
+        .finally(() => setLoading(false));
     }
   }, [userId, role]);
 
-  // Fetch submissions + events for applied events section
+  // ── Bug 3 fix: only fetch submissions/events when role is student AND studentId is available ──
   useEffect(() => {
-    if (!studentId || role !== "student") { setSubLoading(false); return; }
+    if (role !== "student" || !studentId) {
+      setSubLoading(false);
+      return;
+    }
 
     Promise.all([
       submissionService.getAllSubmissions(),
       eventService.getAllEvents(),
     ])
       .then(([allSubs, allEvents]) => {
-        const mine = (allSubs || []).filter(s => s.studentId === studentId || s.StudentId === studentId);
+        const mine = (allSubs || []).filter(
+          s => String(s.studentId ?? s.StudentId) === String(studentId)
+        );
         setSubmissions(mine);
         setEvents(allEvents || []);
       })
@@ -189,20 +254,24 @@ export default function ProfilePage() {
       .finally(() => setSubLoading(false));
   }, [studentId, role]);
 
-  // Fetch library posts
+  // ── Bug 3 fix: same guard for library posts ──
   useEffect(() => {
-    if (!studentId || role !== "student") { setPostsLoading(false); return; }
+    if (role !== "student" || !studentId) {
+      setPostsLoading(false);
+      return;
+    }
 
     postService.getAllPosts()
       .then(allPosts => {
-        const mine = (allPosts || []).filter(p => p.studentId === studentId || p.StudentId === studentId);
+        const mine = (allPosts || []).filter(
+          p => String(p.studentId ?? p.StudentId) === String(studentId)
+        );
         setPosts(mine);
       })
       .catch(err => console.warn("Posts fetch failed:", err.message))
       .finally(() => setPostsLoading(false));
   }, [studentId, role]);
 
-  // Profile photo upload — Cloudinary then persist to backend
   async function handlePhotoChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -212,7 +281,6 @@ export default function ProfilePage() {
       const { CloudinaryService } = await import("../../../services/CloudinaryService");
       const url = await CloudinaryService.uploadImage(file, "profile_photos");
       if (url && userId) {
-        // Persist to backend
         await fetch(`${API_BASE}/User/${userId}/UpdateProfilePicture`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -228,42 +296,43 @@ export default function ProfilePage() {
     }
   }
 
-  // Derived display values
-  const displayName  = profile?.name || user?.fullname || user?.name || user?.email?.split("@")[0] || "User";
-  const displayEmail = profile?.email || user?.email || "—";
-  const university   = profile?.university || user?.university || null;
-  const totalEvents  = profile?.totalEventsJoined ?? null;
-  const totalScore   = profile?.totalScore ?? null;
-  const recentEvent  = profile?.mostRecentEventTitle || null;
-  const recentDate   = profile?.mostRecentEventDate
-    ? new Date(profile.mostRecentEventDate).toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" })
+  // ── Derive display values — handle both camelCase and PascalCase from API ──
+  const displayName  = profile?.name       ?? profile?.Name       ?? user?.fullname ?? user?.name ?? user?.email?.split("@")[0] ?? "User";
+  const displayEmail = profile?.email      ?? profile?.Email      ?? user?.email ?? "—";
+  const university   = profile?.university ?? profile?.University ?? user?.university ?? null;
+  const totalEvents  = profile?.totalEventsJoined ?? profile?.TotalEventsJoined ?? null;
+  const totalScore   = profile?.totalScore        ?? profile?.TotalScore        ?? null;
+  const recentEvent  = profile?.mostRecentEventTitle ?? profile?.MostRecentEventTitle ?? null;
+  const recentDate   = (profile?.mostRecentEventDate ?? profile?.MostRecentEventDate)
+    ? new Date(profile.mostRecentEventDate ?? profile.MostRecentEventDate)
+        .toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" })
     : null;
 
   const initials = displayName
     .split(" ").map(w => w[0]).filter(Boolean).join("").slice(0, 2).toUpperCase();
 
-  // Build applied events list by joining submissions → events
   const appliedEvents = submissions.map(sub => {
-    const ev = events.find(e => e.id === sub.eventId || e.id === sub.EventId);
+    const ev = events.find(e => e.id === (sub.eventId ?? sub.EventId));
     return {
-      id:        sub.id || sub.Id,
-      title:     sub.title || sub.Title || ev?.title || "Untitled submission",
-      eventTitle: ev?.title || "—",
-      category:  ev?.category || "—",
-      status:    sub.status || sub.Status || "pending",
-      points:    sub.points ?? sub.Points ?? 0,
-      rank:      sub.rank ?? sub.Rank ?? null,
-      timestamp: sub.timeStamp || sub.TimeStamp,
-      imageLink: ev?.image_link || ev?.imageLink || null,
+      id:         sub.id         ?? sub.Id,
+      title:      sub.title      ?? sub.Title      ?? ev?.title ?? "Untitled submission",
+      eventTitle: ev?.title      ?? "—",
+      category:   ev?.category   ?? "—",
+      status:     sub.status     ?? sub.Status     ?? "pending",
+      points:     sub.points     ?? sub.Points     ?? 0,
+      rank:       sub.rank       ?? sub.Rank       ?? null,
+      timestamp:  sub.timeStamp  ?? sub.TimeStamp,
+      imageLink:  ev?.image_link ?? ev?.imageLink  ?? null,
     };
   });
 
+  // Tabs: students get 3, all other roles get just "Details"
   const tabs = role === "student" ? [
-    { id: "details",  label: "Details"         },
-    { id: "events",   label: "Applied Events",  count: appliedEvents.length  },
-    { id: "library",  label: "My Library",      count: posts.length          },
+    { id: "details", label: "Details"         },
+    { id: "events",  label: "Applied Events",  count: appliedEvents.length },
+    { id: "library", label: "My Library",      count: posts.length         },
   ] : [
-    { id: "details",  label: "Details" },
+    { id: "details", label: "Details" },
   ];
 
   return (
@@ -278,7 +347,6 @@ export default function ProfilePage() {
           <div className="profile-card__accent-line" style={{ background: roleConfig.color }} />
 
           <div className="profile-header">
-            {/* Avatar */}
             <div className="profile-avatar">
               {photo ? (
                 <img src={photo} alt={displayName} className="profile-avatar__photo" />
@@ -305,7 +373,6 @@ export default function ProfilePage() {
               <input ref={fileInputRef} type="file" accept="image/*" style={{ display: "none" }} onChange={handlePhotoChange} />
             </div>
 
-            {/* Name + role */}
             <div className="profile-header__info">
               <h1 className="profile-header__name">{displayName}</h1>
               <p className="profile-header__email">{displayEmail}</p>
@@ -320,8 +387,8 @@ export default function ProfilePage() {
           {/* Stats — students only */}
           {role === "student" && (
             <div className="profile-stats">
-              <StatCard value={totalEvents}  label="Events Joined"     accent="#C41262" />
-              <StatCard value={totalScore}   label="Total Score"       accent="#FE4081" />
+              <StatCard value={totalEvents} label="Events Joined"     accent="#C41262" />
+              <StatCard value={totalScore}  label="Total Score"       accent="#FE4081" />
               <StatCard
                 value={recentEvent ? recentEvent.split(" ").slice(0, 3).join(" ") + "…" : null}
                 label="Most Recent Event"
@@ -332,9 +399,7 @@ export default function ProfilePage() {
         </div>
 
         {/* ── Tab navigation ── */}
-        {role === "student" && (
-          <SectionTab tabs={tabs} active={activeTab} onChange={setActiveTab} />
-        )}
+        <SectionTab tabs={tabs} active={activeTab} onChange={setActiveTab} />
 
         {/* ── Details tab ── */}
         {activeTab === "details" && (
@@ -376,6 +441,15 @@ export default function ProfilePage() {
                 <a href="/judge" className="profile-card__link" style={{ color: roleConfig.color }}>Go to Judge Dashboard &rarr;</a>
               </div>
             )}
+            {role === "industry professional" && (
+              <div className="profile-card profile-card--role">
+                <h2 className="profile-card__title">Industry Professional Access</h2>
+                <p className="profile-card__body">
+                  You can view student work, browse the gallery, and engage with event submissions as an industry partner.
+                </p>
+                <a href="/gallery" className="profile-card__link" style={{ color: roleConfig.color }}>Browse Gallery &rarr;</a>
+              </div>
+            )}
             {role === "student" && (
               <div className="profile-card profile-card--role">
                 <h2 className="profile-card__title">Your Activity</h2>
@@ -391,8 +465,8 @@ export default function ProfilePage() {
           </>
         )}
 
-        {/* ── Applied Events tab ── */}
-        {activeTab === "events" && (
+        {/* ── Applied Events tab (students only) ── */}
+        {activeTab === "events" && role === "student" && (
           <div className="profile-card">
             <h2 className="profile-card__title">Applied Events</h2>
             {subLoading ? (
@@ -412,7 +486,6 @@ export default function ProfilePage() {
               <div className="profile-event-list">
                 {appliedEvents.map(ev => (
                   <div key={ev.id} className="profile-event-row">
-                    {/* Image or placeholder */}
                     <div className="profile-event-row__img">
                       {ev.imageLink
                         ? <img src={ev.imageLink} alt={ev.eventTitle} />
@@ -423,16 +496,13 @@ export default function ProfilePage() {
                           </div>
                       }
                     </div>
-
                     <div className="profile-event-row__body">
                       <div className="profile-event-row__top">
                         <span className="profile-event-row__category">{ev.category}</span>
-                        {/* <StatusPill status={ev.status} /> */}
                       </div>
                       <p className="profile-event-row__title">{ev.eventTitle}</p>
                       <p className="profile-event-row__subtitle">{ev.title}</p>
                     </div>
-
                     <div className="profile-event-row__meta">
                       {ev.points > 0 && (
                         <div className="profile-event-row__pts">
@@ -451,8 +521,8 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {/* ── Library tab ── */}
-        {activeTab === "library" && (
+        {/* ── Library tab (students only) ── */}
+        {activeTab === "library" && role === "student" && (
           <div className="profile-card">
             <h2 className="profile-card__title">My Library</h2>
             {postsLoading ? (
@@ -471,10 +541,10 @@ export default function ProfilePage() {
             ) : (
               <div className="profile-library-grid">
                 {posts.map(post => (
-                  <div key={post.id || post.Id} className="profile-library-card">
+                  <div key={post.id ?? post.Id} className="profile-library-card">
                     <div className="profile-library-card__image">
-                      {post.imageFileLink || post.ImageFileLink
-                        ? <img src={post.imageFileLink || post.ImageFileLink} alt={post.title || post.Title} />
+                      {(post.imageFileLink ?? post.ImageFileLink)
+                        ? <img src={post.imageFileLink ?? post.ImageFileLink} alt={post.title ?? post.Title} />
                         : <div className="profile-library-card__img-placeholder">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="#FE4081">
                               <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
@@ -483,10 +553,10 @@ export default function ProfilePage() {
                       }
                     </div>
                     <div className="profile-library-card__body">
-                      <p className="profile-library-card__category">{post.category || post.Category || "Post"}</p>
-                      <p className="profile-library-card__title">{post.title || post.Title}</p>
-                      {(post.description || post.Description) && (
-                        <p className="profile-library-card__desc">{post.description || post.Description}</p>
+                      <p className="profile-library-card__category">{post.category ?? post.Category ?? "Post"}</p>
+                      <p className="profile-library-card__title">{post.title ?? post.Title}</p>
+                      {(post.description ?? post.Description) && (
+                        <p className="profile-library-card__desc">{post.description ?? post.Description}</p>
                       )}
                       <div className="profile-library-card__footer">
                         <span className="profile-library-card__stat">
@@ -497,9 +567,9 @@ export default function ProfilePage() {
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                           {post.linkCount ?? post.LinkCount ?? 0}
                         </span>
-                        {(post.postDate || post.PostDate) && (
+                        {(post.postDate ?? post.PostDate) && (
                           <span className="profile-library-card__date">
-                            {new Date(post.postDate || post.PostDate).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" })}
+                            {new Date(post.postDate ?? post.PostDate).toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" })}
                           </span>
                         )}
                       </div>
