@@ -1,6 +1,7 @@
 import axios from 'axios';
+import API_BASE from '../config';
 
-const API_BASE_URL = 'http://localhost:5160/api/User'; 
+const API_BASE_URL = `${API_BASE}/User`;
 
 const apiClient = axios.create({
     baseURL: API_BASE_URL,

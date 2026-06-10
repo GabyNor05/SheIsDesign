@@ -34,7 +34,7 @@ namespace backend.Controllers
                 .ToListAsync();
 
             if (!posts.Any())
-                return NotFound($"No posts found for event ID {eventId}.");
+                return Ok(new List<LeaderboardEntryReadDTO>());
 
             // Get all JudgeMarkScheme scores for posts in this event
             var postIds = posts.Select(p => p.Id).ToList();

@@ -35,7 +35,7 @@ import JudgeScoringPage from "./pages/judge/JudgeScoringPage";
 
 import NotFoundPage from "./pages/public/NotFoundPage";
 
-const Routes = createBrowserRouter([
+const Routes = createHashRouter([
   {
     path: "/",
     element: <RootLayout />,

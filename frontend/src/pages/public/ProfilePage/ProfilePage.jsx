@@ -6,7 +6,7 @@ import { postService } from "../../../services/postManagementService";
 import { eventService } from "../../../services/eventService";
 import "./ProfilePage.css";
 
-const API_BASE = "http://localhost:5160/api";
+import API_BASE from '../../../config';
 
 const ROLE_CONFIG = {
   student: {

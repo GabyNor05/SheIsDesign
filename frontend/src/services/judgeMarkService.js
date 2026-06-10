@@ -1,6 +1,7 @@
 import axios from 'axios';
+import API_BASE from '../config';
 
-const API_BASE_URL = 'http://localhost:5160/api/JudgeMarkScheme';
+const API_BASE_URL = `${API_BASE}/JudgeMarkScheme`;
 
 const apiClient = axios.create({
     baseURL: API_BASE_URL,

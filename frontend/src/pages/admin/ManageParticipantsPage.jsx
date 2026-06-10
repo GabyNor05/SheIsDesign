@@ -5,7 +5,7 @@ import {
   updateParticipantStatus,
 } from "../../services/participantService";
 
-const API_BASE = "http://localhost:5160/api";
+import API_BASE from '../../config';
 
 // Role enum values matching your C# backend
 // Role.User = 0, Role.Admin = 1, Role.IndustryProfessional = 2, Role.Student = 3

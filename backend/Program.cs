@@ -15,7 +15,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(allowedOrigins)
+        // "null" origin is sent by Electron packaged apps (file:// protocol)
+        policy.SetIsOriginAllowed(origin => allowedOrigins.Contains(origin) || origin == "null")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
