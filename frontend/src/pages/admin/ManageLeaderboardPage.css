@@ -648,16 +648,19 @@
 /* ── Empty state ───────────────────────────────────────────────────────────── */
 .lb-empty {
     padding: 60px 0;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
     color: rgba(255, 255, 255, 0.3);
     font-size: 14px;
     font-family: 'Poppins', sans-serif;
 }
 
 .lb-empty__icon {
-    font-size: 36px;
-    margin-bottom: 12px;
-    opacity: 0.3;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 /* ── Hint row ──────────────────────────────────────────────────────────────── */

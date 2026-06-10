@@ -33,6 +33,7 @@ export async function fetchEvents() {
 
 export async function fetchLeaderboardForEvent(eventId) {
   const res = await fetch(`${API_BASE}/Leaderboard?eventId=${eventId}`);
+  if (res.status === 404) return [];
   if (!res.ok) throw new Error(`Leaderboard fetch failed: ${res.status}`);
 
   const data = await res.json();

@@ -636,7 +636,11 @@ export default function ManageLeaderboardPage() {
         if (!isMounted) return;
 
         setSubmissions(Array.isArray(data) ? data : []);
-        setError("");
+        if (Array.isArray(data) && data.length === 0) {
+          setError("No submissions yet.");
+        } else {
+          setError("");
+        }
       } catch (err) {
         if (!isMounted) return;
         console.error("Failed to load leaderboard:", err);
@@ -833,22 +837,14 @@ export default function ManageLeaderboardPage() {
           className="lb-winner-banner lb-anim"
           style={{
             animationDelay: "40ms",
-            background: "rgba(248,113,113,0.08)",
-            border: "1px solid rgba(248,113,113,0.2)",
+            background: "rgba(96,165,250,0.08)",
+            border: "1px solid rgba(96,165,250,0.2)",
           }}
         >
           <div className="lb-winner-banner__icon">
-            <Ic n="clock" s={18} c="#F87171" />
+            <Ic n="inbox" s={18} c="#60A5FA" />
           </div>
-          <div>
-            <div
-              className="lb-winner-banner__label"
-              style={{ color: "#FCA5A5" }}
-            >
-              Live data notice
-            </div>
-            <div style={{ color: "rgba(255,255,255,0.75)" }}>{error}</div>
-          </div>
+          <div style={{ color: "rgba(255,255,255,0.75)" }}>{error}</div>
         </div>
       )}
 
