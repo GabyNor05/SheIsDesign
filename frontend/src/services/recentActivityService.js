@@ -39,7 +39,7 @@ export const recentActivityService = {
       }
     -----
     */
-    getRecentActivity: (limit) => apiClient.get('/', limit),
+    getRecentActivity: (limit) => apiClient.get('', limit ? { params: { limit } } : {}),
 
     /*
     Returns the top 10 most recent activities scoped to a specific event.

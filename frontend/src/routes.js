@@ -21,13 +21,13 @@ import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage"
 import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
 
 // Admin pages
-import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDashboardV2 from "./pages/admin/template/AdminDashboardV2";
 import ManageEvents from "./pages/admin/template/Events";
 import ManageParticipantsPage from "./pages/admin/ManageParticipantsPage";
 import ManageLeaderboardPage from "./pages/admin//ManageLeaderboardPage";
 import ManageDonations from "./pages/admin/ManageDonationsPage";
 import ManageGallery from "./pages/admin/ManageGalleryPage";
+import ManageActivityPage from "./pages/admin/ManageActivityPage";
 
 // Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
@@ -55,21 +55,18 @@ const Routes = createBrowserRouter([
       { path: "signup/success", element: <SignupSuccessPage /> },
       { path: "application-status", element: <ApplicationStatusPage /> },
 
-      // ── Old admin dashboard (kept for reference) ───────────────────────────
-      // { path: "admin", element: <AdminDashboard /> },
-
       // ── New admin — all share the sidebar via AdminLayout ──────────────────
       {
         path: "admin",
         element: <RoleProtectedRoute role="admin"><AdminLayout /></RoleProtectedRoute>,
         children: [
           { index: true, element: <AdminDashboardV2 /> },
-          { path: "dashboard", element: <AdminDashboard /> },
           { path: "events", element: <ManageEvents /> },
           { path: "participants", element: <ManageParticipantsPage /> },
           { path: "leaderboard", element: <ManageLeaderboardPage /> },
           { path: "gallery", element: <ManageGallery /> },
           { path: "donations", element: <ManageDonations /> },
+          { path: "activity", element: <ManageActivityPage /> },
         ],
       },
 

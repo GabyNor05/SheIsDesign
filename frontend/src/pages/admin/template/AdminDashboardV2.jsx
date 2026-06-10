@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { recentActivityService } from "../../../services/recentActivityService";
 import QuickActions from "../../../components/admin/overview/QuickActions";
 import PendingApplications from "../../../components/admin/overview/PendingApplications";
 import UpcomingEvents from "../../../components/admin/overview/UpcomingEvents";
@@ -30,14 +32,23 @@ const PENDING_PROFESSIONALS = [
   { id: 7, initials: "MB", name: "Mpho Baloyi",  uni: "Freelance",  field: "Brand Strategy",    date: "27 Apr 2026", color: "#f97316" },
 ];
 
-const RECENT_ACTIVITY = [
-  { id: 1, type: "participant", icon: "user",     title: "New student registered",   detail: "Amara Diailo · Wits University",     time: "2 min ago"  },
-  { id: 2, type: "event",      icon: "calendar", title: "Event created",            detail: "Brand Identity Challenge 2025",       time: "18 min ago" },
-  { id: 3, type: "submission", icon: "file",     title: "Submission uploaded",      detail: "Laila Nkosi · Spring Campaign",       time: "34 min ago" },
-  { id: 4, type: "donation",   icon: "heart",    title: "Donation received",        detail: "R 2,500 · Anonymous Donor",           time: "1h ago"     },
-  { id: 5, type: "participant",icon: "check",    title: "Student account approved", detail: "Zoë Petersen · UCT",                  time: "2h ago"     },
-  { id: 6, type: "event",      icon: "edit",     title: "Event updated",            detail: "Motion Design Bootcamp — date moved", time: "3h ago"     },
-];
+const ACTIVITY_TYPE_MAP = {
+  NewAccount:      { type: "participant", icon: "user"     },
+  Event:           { type: "event",       icon: "calendar" },
+  Post:            { type: "submission",  icon: "file"     },
+  Donation:        { type: "donation",    icon: "heart"    },
+  JudgeMarkScheme: { type: "submission",  icon: "check"    },
+};
+
+function timeAgo(timestamp) {
+  const diff = Date.now() - new Date(timestamp).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
 
 
 const STATUS_STYLE = {
@@ -172,12 +183,37 @@ function ActivityItem({ item, isLast }) {
 // RECENT ACTIVITY
 // ─────────────────────────────────────────────────────────────────────────────
 function RecentActivity() {
+  const [activities, setActivities] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    recentActivityService.getRecentActivity()
+      .then((data) => {
+        setActivities(data.map((item) => {
+          const { type, icon } = ACTIVITY_TYPE_MAP[item.activityType] ?? { type: "submission", icon: "file" };
+          return {
+            id: `${item.activityType}-${item.id}`,
+            type,
+            icon,
+            title: item.title,
+            detail: item.actorName ?? "",
+            time: timeAgo(item.timestamp),
+          };
+        }));
+      })
+      .catch(() => setActivities([]));
+  }, []);
+
   return (
     <Card>
-      <SectionHeader icon="bell" title="Recent Activity" action="View all" />
-      {RECENT_ACTIVITY.map((item, i) => (
-        <ActivityItem key={item.id} item={item} isLast={i === RECENT_ACTIVITY.length - 1} />
-      ))}
+      <SectionHeader icon="bell" title="Recent Activity" action="View all" onAction={() => navigate("/admin/activity")} />
+      {activities.length === 0 ? (
+        <p className="activity-empty">No recent activity.</p>
+      ) : (
+        activities.map((item, i) => (
+          <ActivityItem key={item.id} item={item} isLast={i === activities.length - 1} />
+        ))
+      )}
     </Card>
   );
 }

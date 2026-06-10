@@ -832,6 +832,14 @@ body {
     white-space: nowrap;
 }
 
+.activity-empty {
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 16px 0;
+    margin: 0;
+}
+
 /* ── Platform Summary ──────────────────────────────────────────────────────── */
 .platform-summary__label {
     margin: 0 0 14px;
