@@ -15,7 +15,7 @@ function Section({ icon, title, onNewEvent, children }) {
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "16px 24px", borderBottom: `1px solid ${T.border}`,
       }}>
-        <h2 style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 15, color: T.textPrimary }}>
+        <h2 style={{ display: "flex", alignItems: "center", gap: 8, margin: 0, fontFamily: "Poppins, sans-serif", fontWeight: 700, fontSize: 15, color: T.textPrimary }}>
           <span aria-hidden="true">{icon}</span>
           {title}
         </h2>
@@ -25,7 +25,7 @@ function Section({ icon, title, onNewEvent, children }) {
               display: "flex", alignItems: "center", gap: 7,
               background: T.pink, border: "none", borderRadius: 8,
               padding: "8px 16px", cursor: "pointer", color: "#fff",
-              fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600,
+              fontFamily: "'Poppins', sans-serif", fontSize: 13, fontWeight: 600,
               transition: "opacity 0.15s",
             }}
             onMouseEnter={e => e.currentTarget.style.opacity = "0.85"}
@@ -39,7 +39,7 @@ function Section({ icon, title, onNewEvent, children }) {
         ) : (
           <button style={{
             background: "none", border: "none", cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: T.pink, fontWeight: 600,
+            fontFamily: "'Poppins', sans-serif", fontSize: 13, color: T.pink, fontWeight: 600,
           }}
           onFocus={e  => { e.currentTarget.style.boxShadow = `0 0 0 2px ${T.pink}`; e.currentTarget.style.borderRadius = "4px"; }}
           onBlur={e   => { e.currentTarget.style.boxShadow = "none"; }}

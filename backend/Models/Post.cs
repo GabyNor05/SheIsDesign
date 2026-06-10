@@ -9,7 +9,7 @@ namespace SheDesign.Models
         public int studentId { get; set; }
         public string image_file_link { get; set; } = String.Empty;
         public string category { get; set; } = String.Empty;
-        public int eventId { get; set; }
+        public int? eventId { get; set; }
         public int link_count { get; set; }
         public int comment_count { get; set; } = 0;
         public DateTime post_date { get; set; } = DateTime.Now;

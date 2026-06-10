@@ -1,35 +1,45 @@
-// ─────────────────────────────────────────────────────────────────────────────
-// TokenModal.jsx — Admin access token verification modal
-// ─────────────────────────────────────────────────────────────────────────────
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { FiShield, FiKey } from "react-icons/fi";
+import { verifyAdminCode } from "../../../services/authService";
 
-// Simulated token — in production this is validated server-side
-const MOCK_TOKEN = "abc123def456";
-
-export default function TokenModal({ email, onClose, onVerified }) {
+export default function TokenModal({ onClose, onVerified }) {
   const [token, setToken] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function handleVerify() {
-    if (!token.trim()) { setError("Please enter your access token."); return; }
+  async function handleVerify() {
+    if (!token.trim()) { setError("Please enter your access code."); return; }
     setLoading(true);
-    setTimeout(() => {
-      if (token.trim() === MOCK_TOKEN) {
-        setLoading(false);
-        onVerified();
-      } else {
-        setLoading(false);
-        setError("Invalid token. Please check your email and try again.");
-      }
-    }, 900);
+    setError("");
+    try {
+      await verifyAdminCode(token.trim());
+      onVerified();
+    } catch {
+      setError("Invalid access code. Please check with your administrator.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleInputKeyDown(e) {
+    if (e.key === "Enter") handleVerify();
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-wrapper" onClick={(e) => e.stopPropagation()}>
+    <button
+      className="modal-overlay"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}
+      aria-label="Close modal"
+      type="button"
+    >
+      <dialog
+        open
+        className="modal-wrapper"
+        aria-labelledby="admin-modal-heading"
+      >
         <div className="modal-glow-line" />
         <button className="modal-close" onClick={onClose}>&times;</button>
 
@@ -41,25 +51,25 @@ export default function TokenModal({ email, onClose, onVerified }) {
           <div className="modal-eyebrow-dot" />
           <span>Admin Verification</span>
         </div>
-        <h2 className="modal-heading">Admin Access Token</h2>
+        <h2 id="admin-modal-heading" className="modal-heading">Admin Access Code</h2>
         <p className="modal-sub">
-          We sent a token to{" "}
-          <span className="modal-email">{email}</span>.<br />
-          Enter it below to continue.
+          Enter the admin access code that was distributed to you.
         </p>
 
         <div className="modal-field">
           <label className="modal-label">
             <FiKey size={12} />
-            Access Token
+            Access Code
           </label>
           <input
-            type="text"
+            type="password"
             value={token}
             onChange={(e) => { setToken(e.target.value); setError(""); }}
-            placeholder="e.g. abc123def456"
+            onKeyDown={handleInputKeyDown}
+            placeholder="Enter your admin access code"
             className={`modal-input ${error ? "modal-input--error" : ""}`}
             spellCheck={false}
+            autoFocus
           />
           {error && <span className="modal-error">{error}</span>}
         </div>
@@ -70,16 +80,16 @@ export default function TokenModal({ email, onClose, onVerified }) {
           ) : (
             <>
               <MdAdminPanelSettings size={18} />
-              Verify Token
+              Verify Code
             </>
           )}
         </button>
-
-        <p className="modal-resend">
-          Didn't receive it?{" "}
-          <button type="button" className="modal-resend-link">Resend token</button>
-        </p>
-      </div>
-    </div>
+      </dialog>
+    </button>
   );
 }
+
+TokenModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onVerified: PropTypes.func.isRequired,
+};

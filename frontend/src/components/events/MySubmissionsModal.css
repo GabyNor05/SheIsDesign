@@ -1,0 +1,332 @@
+.msm__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: msm-fade 0.2s ease;
+}
+
+@keyframes msm-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.msm__box {
+    background: #120508;
+    border: 1px solid rgba(196, 18, 98, 0.3);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 88vh;
+    overflow-y: auto;
+    position: relative;
+    animation: msm-up 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    scrollbar-width: none;
+}
+
+.msm__box::-webkit-scrollbar { display: none; }
+
+@keyframes msm-up {
+    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+}
+
+.msm__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.15s;
+}
+
+.msm__close:hover {
+    background: rgba(196, 18, 98, 0.3);
+    color: #fff;
+    border-color: rgba(196, 18, 98, 0.5);
+}
+
+.msm__header {
+    padding: 28px 28px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 20px;
+}
+
+.msm__category {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #C41262;
+    margin-bottom: 6px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.msm__title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 4px;
+    line-height: 1.2;
+    font-family: 'Poppins', sans-serif;
+}
+
+.msm__sub {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.msm__sub strong {
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 600;
+}
+
+.msm__body {
+    padding: 20px 28px 28px;
+}
+
+/* ── Empty / Loading ── */
+.msm__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.msm__spinner {
+    width: 28px;
+    height: 28px;
+    border: 2.5px solid rgba(196, 18, 98, 0.2);
+    border-top-color: #C41262;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.msm__empty-text {
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.35);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+}
+
+.msm__error {
+    font-size: 13px;
+    color: #F87171;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+}
+
+.msm__upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #C41262, #FE4081);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    box-shadow: 0 4px 16px rgba(196, 18, 98, 0.3);
+    margin-top: 4px;
+}
+
+.msm__upload-btn:hover { opacity: 0.88; }
+
+/* ── Submission list ── */
+.msm__list {
+    list-style: none;
+    margin: 0 0 16px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.msm__card {
+    display: flex;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    padding: 14px;
+    transition: border-color 0.15s;
+}
+
+.msm__card:hover {
+    border-color: rgba(196, 18, 98, 0.3);
+}
+
+.msm__card-img-wrap {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.msm__card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.msm__card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.msm__card-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.msm__card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #F0F0F0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Poppins', sans-serif;
+}
+
+.msm__card-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.msm__card-date {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.3);
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ── Status pills ── */
+.msm__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 999px;
+    padding: 3px 9px;
+}
+
+.msm__pill--approved {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22C55E;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.msm__pill--pending {
+    background: rgba(251, 191, 36, 0.08);
+    color: #FBBF24;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.msm__pill--scored {
+    background: #08121f;
+    color: #60A5FA;
+    border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+/* ── Judge score row ── */
+.msm__score-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.msm__score-val {
+    font-size: 15px;
+    font-weight: 800;
+    color: #FBBF24;
+    font-family: 'Poppins', sans-serif;
+    line-height: 1;
+}
+
+.msm__score-denom {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.msm__score-comment {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.45);
+    font-style: italic;
+    font-family: 'Poppins', sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.msm__awaiting {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, 0.25);
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+}
+
+/* ── Per-card resubmit button ── */
+.msm__add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    padding: 5px 12px;
+    background: #1a0508;
+    border: 1px solid rgba(196, 18, 98, 0.4);
+    border-radius: 8px;
+    color: #FE4081;
+    font-size: 11.5px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+    align-self: flex-start;
+}
+
+.msm__add-btn:hover {
+    background: #2d0a14;
+    border-color: rgba(196, 18, 98, 0.7);
+}

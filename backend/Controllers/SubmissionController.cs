@@ -63,29 +63,23 @@ namespace backend.Controllers
             return submission;
         }
 
-        // GET: api/Submission/details/5
-        [HttpGet("details/{id}")]
-        public async Task<ActionResult<LeaderboardTotalReadDTO>> GetSubmissionDetails(int id)
+        // GET: api/Submission/student/{studentId}
+        [HttpGet("student/{studentId}")]
+        public async Task<ActionResult<IEnumerable<SubmissionReadDTO>>> GetSubmissionsByStudent(int studentId)
         {
-            // Using Eager Loading to get Student and User in one go
-            var submission = await _context.Submission
-                .Include(s => s.Student)
-                    .ThenInclude(st => st.User)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (submission == null) return NotFound();
-
-            var dto = new LeaderboardTotalReadDTO
-            {
-                Student_name = submission.Student?.fullname ?? "Unknown",
-                Student_email = submission.Student?.User?.Email,
-                Score = submission.points,
-                Submission_title = submission.title,
-                Review_status = submission.status,
-                Rank = submission.rank 
-            };
-
-            return Ok(dto);
+            return await _context.Submission
+                .Where(s => s.studentId == studentId)
+                .Select(s => new SubmissionReadDTO
+                {
+                    Id = s.Id,
+                    StudentId = s.studentId,
+                    EventId = s.eventId,
+                    Title = s.title,
+                    Status = s.status,
+                    Points = s.points,
+                    Rank = s.rank,
+                    TimeStamp = s.timeStamp
+                }).ToListAsync();
         }
 
         // PUT: api/Submission/5
@@ -129,6 +123,10 @@ namespace backend.Controllers
             };
 
             _context.Submission.Add(submission);
+
+            var evt = await _context.Event.FindAsync(createDto.EventId);
+            if (evt != null) evt.Entry_count = (evt.Entry_count ?? 0) + 1;
+
             await _context.SaveChangesAsync();
 
             var readDto = new SubmissionReadDTO

@@ -1,7 +1,7 @@
 namespace SheDesign.DTO
 {
-    public class JudgeDTO
+    public class JudgeCreateDTO
     {
-        public int IndustryProfessionalId;
+        public int IndustryProfessionalId { get; set; }
     }
 }

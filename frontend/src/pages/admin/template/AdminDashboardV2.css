@@ -459,37 +459,63 @@ body {
 
 .upcoming-events__scroll {
     display: flex;
-    gap: 14px;
+    gap: 12px;
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding-bottom: 8px;
+    /* Extend scroll area to bleed past the dash-main padding */
+    margin-left: -32px;
+    margin-right: -32px;
+    padding-left: 32px;
+    padding-right: 32px;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
 }
 
 .upcoming-events__scroll::-webkit-scrollbar {
     display: none;
 }
 
-/* ── Event Card ────────────────────────────────────────────────────────────── */
+/* ── Event Card ────────────────────────────────────────────── 
+   ──────────────────────────────────────────────────────────────────────────── */
+
+.upcoming-events {
+    margin-bottom: 20px;
+}
+
+.upcoming-events__scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: 1280px;
+}
+
+.upcoming-events__scroll::-webkit-scrollbar {
+    display: none;
+}
+
 .event-card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 18px 20px;
-    min-width: 230px;
-    max-width: 260px;
-    flex: 0 0 240px;
+    padding: 16px 20px;
+    min-width: 280px;
+    max-width: 280px;
+    flex: 0 0 220px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    transition: border-color 0.2s, transform 0.2s;
+    gap: 10px;
+    transition: border-color 0.2s, transform 0.15s;
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .event-card:hover {
-    border-color: rgba(196, 18, 98, 0.4);
+    border-color: rgba(196, 18, 98, 0.35);
     transform: translateY(-2px);
 }
 
+/* Top row: title + status badge */
 .event-card__top {
     display: flex;
     align-items: flex-start;
@@ -499,21 +525,23 @@ body {
 
 .event-card__title {
     font-family: var(--font);
-    font-weight: 700;
-    font-size: 14.5px;
+    font-weight: 600;
+    font-size: 13px;
     color: var(--text-primary);
-    margin-bottom: 4px;
-    line-height: 1.3;
+    line-height: 1.35;
+    flex: 1;
 }
 
 .event-card__category {
     font-family: var(--font);
-    font-size: 10.5px;
+    font-size: 10px;
     color: var(--text-muted);
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    margin-top: 2px;
 }
 
+/* Date row */
 .event-card__date {
     display: flex;
     align-items: center;
@@ -523,40 +551,41 @@ body {
 
 .event-card__date span {
     font-family: var(--font);
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--text-second);
 }
 
+/* Progress */
 .event-card__entries-label {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
 }
 
 .event-card__entries-text {
     font-family: var(--font);
-    font-size: 11.5px;
+    font-size: 11px;
     color: var(--text-muted);
 }
 
 .event-card__entries-count {
     font-family: var(--font);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--text-second);
 }
 
 .event-card__bar-track {
-    height: 5px;
+    height: 3px;
     background: var(--surface-bord);
-    border-radius: 3px;
+    border-radius: 999px;
     overflow: hidden;
 }
 
 .event-card__bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, rgba(196, 18, 98, 0.6), #C41262);
-    border-radius: 3px;
+    background: rgba(196, 18, 98, 0.5);
+    border-radius: 999px;
     transition: width 0.5s ease;
 }
 
@@ -565,53 +594,55 @@ body {
 }
 
 /* ── Pending Applications ──────────────────────────────────────────────────── */
-.tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-}
-
 .tabs__btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px 16px 10px 0;
-    margin-right: 20px;
-    font-family: var(--font);
-    font-size: 13.5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
     color: var(--text-second);
     font-weight: 400;
-    border-bottom: 2px solid transparent;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 7px;
 }
 
 .tabs__btn--active {
     font-weight: 600;
     color: var(--text-primary);
-    border-bottom-color: var(--pink);
 }
 
-.tabs__count {
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 20px;
-    padding: 1px 7px;
-    transition: all 0.15s;
-    background: var(--surface-hi);
+.applicant-row__name {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.applicant-row__meta {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11.5px;
     color: var(--text-muted);
 }
 
-.tabs__count--active {
-    background: var(--pink-grad);
-    color: #fff;
+.applicant-row__date {
+    font-family: 'Poppins', sans-serif;
+    font-size: 11.5px;
+    color: var(--text-muted);
+}
+
+.applicant-row__approve-btn,
+.applicant-row__deny-btn,
+.applicant-row__result {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Empty state inside pending applications */
+.pending-empty {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 24px 0;
+    text-align: center;
 }
 
 /* ── Applicant Row ─────────────────────────────────────────────────────────── */
 .applicant-row {
+    font-family: 'Poppins', sans-serif;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -647,7 +678,7 @@ body {
 }
 
 .applicant-row__name {
-    font-family: var(--font);
+    font-family: 'Poppins', sans-serif;
     font-size: 13.5px;
     font-weight: 600;
     color: var(--text-primary);
@@ -657,13 +688,13 @@ body {
 }
 
 .applicant-row__meta {
-    font-family: var(--font);
+    font-family: 'Poppins', sans-serif;
     font-size: 11.5px;
     color: var(--text-muted);
 }
 
 .applicant-row__date {
-    font-family: var(--font);
+    font-family: 'Poppins', sans-serif;
     font-size: 11.5px;
     color: var(--text-muted);
     flex-shrink: 0;
@@ -738,6 +769,7 @@ body {
 
 /* ── Two-column grid ───────────────────────────────────────────────────────── */
 .dash-two-col {
+    font-family: 'Poppins', sans-serif;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -798,6 +830,14 @@ body {
     flex-shrink: 0;
     padding-top: 2px;
     white-space: nowrap;
+}
+
+.activity-empty {
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 16px 0;
+    margin: 0;
 }
 
 /* ── Platform Summary ──────────────────────────────────────────────────────── */

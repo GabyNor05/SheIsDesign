@@ -75,50 +75,6 @@ namespace SheDesign.Tests
         }
 
         [Fact]
-        public async Task GetSubmissionDetails_ReturnsLeaderboardDTO_WithEagerLoadedRelationships()
-        {
-            // Arrange
-            // Seed the deeply nested entities: User -> Student -> Submission
-            var user = new User { Id = 1, Email = "student@university.com", PasswordHash = "hash" };
-            var student = new Student { Id = 4, fullname = "Sarah Jenkins", User = user };
-            var submission = new Submission 
-            { 
-                Id = 100, 
-                title = "UI Design Concept", 
-                status = "Reviewed", 
-                points = 95, 
-                rank = 1, 
-                Student = student 
-            };
-
-            _context.Submission.Add(submission);
-            await _context.SaveChangesAsync();
-
-            // Act
-            var result = await _controller.GetSubmissionDetails(100);
-
-            // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result.Result);
-            var dto = Assert.IsType<LeaderboardTotalReadDTO>(okResult.Value);
-            
-            Assert.Equal("Sarah Jenkins", dto.Student_name);
-            Assert.Equal("student@university.com", dto.Student_email);
-            Assert.Equal("UI Design Concept", dto.Submission_title);
-            Assert.Equal(95, dto.Score);
-            Assert.Equal(1, dto.Rank);
-        }
-
-        [Fact]
-        public async Task GetSubmissionDetails_ReturnsNotFound_WhenIdDoesNotExist()
-        {
-            // Act
-            var result = await _controller.GetSubmissionDetails(999);
-
-            // Assert
-            Assert.IsType<NotFoundResult>(result.Result);
-        }
-
-        [Fact]
         public async Task PostSubmission_SetsDefaultPendingStatus_AndReturnsCreatedAtAction()
         {
             // Arrange

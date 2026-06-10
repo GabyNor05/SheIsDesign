@@ -48,6 +48,7 @@ export async function fetchLeaderboardForEvent(eventId) {
     score:
       typeof entry.score === "number" ? entry.score : (entry.Score ?? null),
     rank: entry.rank ?? entry.Rank ?? null,
+    fileLink: entry.image_file_link ?? entry.Image_file_link ?? null,
     submittedAt: "—",
     isWinner:
       (entry.review_status ?? entry.Review_status ?? "")

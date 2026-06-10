@@ -57,10 +57,22 @@ export const INPUT_STYLES = {
   borderRadius: 8,
   padding: "10px 14px",
   color: T.textPrimary,
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Poppins', sans-serif",
   fontSize: 14,
   outline: "none",
   width: "100%",
   boxSizing: "border-box",
   transition: "border-color 0.15s",
+};
+
+export const inputStyle = {
+  fontFamily: "'Poppins', sans-serif",
+  fontSize: 13,
+  padding: "10px 12px",
+  background: T.surface,
+  border: `1px solid ${T.border}`,
+  borderRadius: 8,
+  color: T.textPrimary,
+  width: "100%",
+  boxSizing: "border-box",
 };

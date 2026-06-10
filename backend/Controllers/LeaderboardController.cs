@@ -13,7 +13,6 @@ namespace backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class LeaderboardController : ControllerBase
     {
         private readonly SheDesignContext _context;
@@ -24,32 +23,51 @@ namespace backend.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LeaderboardTotalReadDTO>>> GetTotalLeaderboardDetails(int eventId)
+        public async Task<ActionResult<IEnumerable<LeaderboardEntryReadDTO>>> GetLeaderboard(int eventId)
         {
-            // 1. Fetch submissions and join with Student data
-            var results = await _context.Submission
-                .Where(s => s.eventId == eventId)
-                .Include(s => s.Student) // Ensure the Student relationship is loaded
-                .OrderByDescending(s => s.rank) // Sort by score for ranking
+            // Fetch all posts linked to the event, with their student and mark scheme scores
+            var posts = await _context.Post
+                .Where(p => p.eventId == eventId)
+                .Include(p => p.Student)
+                    .ThenInclude(s => s.User)
+                .Include(p => p.Event)
                 .ToListAsync();
 
-            // 2. Map to DTO and calculate Rank
-            var leaderboard = results.Select((s, index) => new LeaderboardTotalReadDTO
-            {
-                Id = s.Id,
-                EventId = s.eventId,
-                // Student Info (Accessing through navigation property)
-                Student_name = s.Student?.fullname ?? "Unknown",
-                Student_email = s.Student?.User?.Email,
+            if (!posts.Any())
+                return NotFound($"No posts found for event ID {eventId}.");
 
-                // Ranking (index starts at 0, so we add 1)
-                Rank = index + 1,
+            // Get all JudgeMarkScheme scores for posts in this event
+            var postIds = posts.Select(p => p.Id).ToList();
 
-                // Submission Info
-                Score = s.points,
-                Submission_title = s.title,
-                Review_status = s.status
-            }).ToList();
+            var markSchemes = await _context.JudgeMarkScheme
+                .Where(j => postIds.Contains(j.PostId))
+                .ToListAsync();
+
+            // Map to DTO, summing all judge scores per post, sorted by total score descending
+            var leaderboard = posts
+                .Select(p => new
+                {
+                    Post = p,
+                    TotalScore = markSchemes
+                        .Where(j => j.PostId == p.Id)
+                        .Sum(j => j.Score)
+                })
+                .OrderByDescending(x => x.TotalScore)
+                .Select((x, index) => new LeaderboardEntryReadDTO
+                {
+                    Id = x.Post.Id,
+                    EventId = eventId,
+                    Student_name = x.Post.Student?.fullname ?? "Unknown",
+                    Student_email = x.Post.Student?.User?.Email,
+                    Student_University = x.Post.Student?.university,
+                    Score = x.TotalScore,
+                    Submission_title = x.Post.title,
+                    Review_status = markSchemes.Any(j => j.PostId == x.Post.Id)
+                        ? ReviewStatus.Reviewed
+                        : ReviewStatus.Unreviewed,
+                    Image_file_link = x.Post.image_file_link
+                })
+                .ToList();
 
             return Ok(leaderboard);
         }

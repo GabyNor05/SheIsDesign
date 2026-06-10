@@ -1,22 +1,35 @@
+import { useState, useEffect } from "react";
 import { User, CalendarDots, Paperclip, HandHeart, ClockClockwise } from "@phosphor-icons/react";
 import SectionHeader from "../SectionHeader";
 import Card from "./Card";
 import { T } from "../theme";
-
+import { recentActivityService } from "../../../services/recentActivityService";
 
 const ACTIVITY_ICONS = {
-  participant: <User size = {14} />, event: <CalendarDots size = {14} />, submission: <Paperclip size = {14} />, donation: <HandHeart size = {14} />,
+  participant: <User size={14} />,
+  event: <CalendarDots size={14} />,
+  submission: <Paperclip size={14} />,
+  donation: <HandHeart size={14} />,
 };
 
-const RECENT_ACTIVITY = [
-  { id: 1, type: "participant", title: "New student registered",  detail: "Amara Dlamini — University of Johannesburg", time: "2 min ago" },
-  { id: 2, type: "event",       title: "Event created",           detail: "Global Sandbox Design Challenge 2025",        time: "41 min ago" },
-  { id: 3, type: "submission",  title: "Submission uploaded",     detail: "Lilli Brown — Spring Campaign",               time: "1h 30m ago" },
-  { id: 4, type: "donation",    title: "Donation received",       detail: "Anonymous — R 2,500",                         time: "3h ago" },
-  { id: 5, type: "participant", title: "Student account approved",detail: "Tara Khumalo — WITS University",              time: "4h ago" },
-  { id: 6, type: "event",       title: "Event updated",           detail: "Motion Design Bootcamp — dates revised",      time: "5h ago" },
-];
+const TYPE_MAP = {
+  NewAccount: "participant",
+  Event: "event",
+  Post: "submission",
+  Donation: "donation",
+  JudgeMarkScheme: "submission",
+};
 
+function timeAgo(timestamp) {
+  const diff = Date.now() - new Date(timestamp).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days}d ago`;
+}
 
 function ActivityRow({ item, isLast }) {
   return (
@@ -32,35 +45,58 @@ function ActivityRow({ item, isLast }) {
           fontSize: 15, flexShrink: 0,
         }}
       >
-        {ACTIVITY_ICONS[item.type]}
+        {ACTIVITY_ICONS[item.type] ?? <Paperclip size={14} />}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: T.textPrimary }}>
+        <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: 14, fontWeight: 500, color: T.textPrimary }}>
           {item.title}
         </div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12.5, color: T.textSecond, marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: 12.5, color: T.textSecond, marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
           {item.detail}
         </div>
       </div>
-      <time style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.textMuted, flexShrink: 0 }}>
+      <time style={{ fontFamily: "'Poppins', sans-serif", fontSize: 12, color: T.textMuted, flexShrink: 0 }}>
         {item.time}
       </time>
     </div>
   );
 }
 
-function RecentActivity(){
+function RecentActivity() {
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    recentActivityService.getRecentActivity()
+      .then((data) => {
+        const mapped = data.map((item) => ({
+          id: `${item.activityType}-${item.id}`,
+          type: TYPE_MAP[item.activityType] ?? "submission",
+          title: item.title,
+          detail: item.actorName ?? "",
+          time: timeAgo(item.timestamp),
+        }));
+        setActivities(mapped);
+      })
+      .catch(() => setActivities([]));
+  }, []);
+
   return (
     <Card>
-    <SectionHeader
-        icon= {<ClockClockwise size = {16} />}
+      <SectionHeader
+        icon={<ClockClockwise size={16} />}
         title="Recent Activities"
         action="View all"
       />
-        {RECENT_ACTIVITY.map((item, i) => (
-          <ActivityRow key={item.id} item={item} isLast={i === RECENT_ACTIVITY.length - 1} />
-        ))}
-      </Card>
+      {activities.length === 0 ? (
+        <div style={{ fontFamily: "'Poppins', sans-serif", fontSize: 13, color: T.textMuted, padding: "16px 0" }}>
+          No recent activity.
+        </div>
+      ) : (
+        activities.map((item, i) => (
+          <ActivityRow key={item.id} item={item} isLast={i === activities.length - 1} />
+        ))
+      )}
+    </Card>
   );
 }
 

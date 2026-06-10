@@ -1,4 +1,4 @@
-import { CalendarDots, X, Users, Trophy } from "@phosphor-icons/react";
+import { CalendarDots, X, Users, Trophy, UploadSimple } from "@phosphor-icons/react";
 import "./EventDetailModal.css";
 
 function fmtDate(d) {
@@ -10,31 +10,40 @@ function fmtDate(d) {
 
 function daysLeft(dateStr) {
   if (!dateStr) return null;
-  const diff = Math.ceil((new Date(dateStr) - new Date()) / (1000 * 60 * 60 * 24));
+  const now = new Date();
+  const end = new Date(dateStr);
+  const nowDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+  const diff = Math.round((endDay - nowDay) / (1000 * 60 * 60 * 24));
   if (diff < 0) return "Ended";
   if (diff === 0) return "Ends today";
+  if (diff === 1) return "1 day left";
   return `${diff} days left`;
 }
 
-export default function EventDetailModal({ event, onClose, onApply }) {
+export default function EventDetailModal({ event, onClose, onApply, onSubmitWork, onViewSubmissions, applied = false, hasSubmitted = false }) {
   if (!event) return null;
 
-  const status = event.status?.toUpperCase() || "DRAFT";
-  const max = event.max_entry ?? event.max_entries ?? 0;
-  const count = event.entry_count ?? 0;
-  const pct = max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0;
-  const isFull = count >= max && max > 0;
-  const isOpen = status === "OPEN" && !isFull;
+  const status   = event.status?.toUpperCase() || "DRAFT";
+  const max      = event.max_entry ?? event.max_entries ?? 0;
+  const count    = event.entry_count ?? 0;
+  const pct      = max > 0 ? Math.min(100, Math.round((count / max) * 100)) : 0;
+  const isFull   = count >= max && max > 0;
+  const isOpen   = status === "OPEN" && !isFull;
   const timeLeft = daysLeft(event.end_date);
+
+  function applyLabel() {
+    if (applied)  return "✓ Joined";
+    if (isFull)   return "Event Full";
+    if (!isOpen)  return "Closed";
+    return "Join event";
+  }
 
   return (
     <div className="edm__overlay" onClick={onClose}>
       <div className="edm__box" onClick={e => e.stopPropagation()}>
 
-        {/* Close button */}
-        <button className="edm__close" onClick={onClose}>
-          <X size={18} />
-        </button>
+        <button className="edm__close" onClick={onClose}><X size={18} /></button>
 
         {/* Image */}
         <div className="edm__image">
@@ -53,7 +62,6 @@ export default function EventDetailModal({ event, onClose, onApply }) {
           <p className="edm__category">{event.category || "Event"}</p>
           <h2 className="edm__title">{event.title}</h2>
 
-          {/* Date row */}
           <div className="edm__date-row">
             <CalendarDots size={14} color="rgba(255,255,255,0.4)" />
             <span className="edm__date-text">
@@ -61,12 +69,10 @@ export default function EventDetailModal({ event, onClose, onApply }) {
             </span>
           </div>
 
-          {/* Description */}
           {event.description && (
             <p className="edm__description">{event.description}</p>
           )}
 
-          {/* Stats row */}
           <div className="edm__stats">
             <div className="edm__stat">
               <Users size={16} color="#FE4081" />
@@ -84,7 +90,6 @@ export default function EventDetailModal({ event, onClose, onApply }) {
             </div>
           </div>
 
-          {/* Progress bar */}
           <div className="edm__progress-wrap">
             <div className="edm__progress-row">
               <span className="edm__progress-label">{pct}% full</span>
@@ -95,18 +100,37 @@ export default function EventDetailModal({ event, onClose, onApply }) {
             </div>
           </div>
 
-          {/* CTA */}
-          <div className="edm__cta">
-            <button
-              className={`edm__apply-btn ${!isOpen ? "edm__apply-btn--disabled" : ""}`}
-              onClick={() => isOpen && onApply(event)}
-              disabled={!isOpen}
-            >
-              {isFull ? "Event Full" : !isOpen ? "Closed" : "Apply for this event"}
-            </button>
-            <button className="edm__close-btn" onClick={onClose}>
-              Close
-            </button>
+          <div className="edm__cta" style={{ flexWrap: "wrap" }}>
+            {applied ? (
+              <>
+                {!hasSubmitted && (
+                  <button
+                    className="edm__apply-btn"
+                    style={{ background: "linear-gradient(135deg, #C41262, #FE4081)", cursor: "pointer", color: "#fff", boxShadow: "0 4px 20px rgba(196,18,98,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: "7px" }}
+                    onClick={() => onSubmitWork?.(event)}
+                  >
+                    <UploadSimple size={15} />
+                    Submit Work
+                  </button>
+                )}
+                <button
+                  className="edm__close-btn"
+                  style={{ borderColor: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.6)" }}
+                  onClick={() => onViewSubmissions?.(event)}
+                >
+                  My Submissions
+                </button>
+              </>
+            ) : (
+              <button
+                className={`edm__apply-btn ${!isOpen ? "edm__apply-btn--disabled" : ""}`}
+                onClick={() => isOpen && onApply(event)}
+                disabled={!isOpen}
+              >
+                {applyLabel()}
+              </button>
+            )}
+            <button className="edm__close-btn" onClick={onClose}>Close</button>
           </div>
         </div>
       </div>

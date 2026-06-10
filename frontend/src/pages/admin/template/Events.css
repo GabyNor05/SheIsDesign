@@ -279,7 +279,8 @@ section[aria-label="All events"] {
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     padding: 8px 4px 16px;
-    scrollbar-width: none;
+    scrollbar-width: thin;
+    scrollbar-color: #3A3A3A transparent;
     cursor: grab;
 }
 
@@ -288,7 +289,16 @@ section[aria-label="All events"] {
 }
 
 .live-scroll::-webkit-scrollbar {
-    display: none;
+    height: 6px;
+}
+
+.live-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.live-scroll::-webkit-scrollbar-thumb {
+    background: #3A3A3A;
+    border-radius: 3px;
 }
 
 .live-scroll>* {
@@ -301,9 +311,9 @@ section[aria-label="All events"] {
     border: 1px solid #2E2E2E;
     border-radius: 14px;
     overflow: visible;
-    flex: 1 1 280px;
+    flex: 0 0 280px;
     min-width: 280px;
-    max-width: 360px;
+    max-width: 280px;
     display: flex;
     flex-direction: column;
     transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;

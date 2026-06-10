@@ -17,7 +17,7 @@ function Searchbar(){
                   style={{
                     background: T.surface, border: `1px solid ${T.border}`,
                     borderRadius: 9, padding: "10px 14px 10px 36px",
-                    color: T.textPrimary, fontFamily: "'DM Sans', sans-serif",
+                    color: T.textPrimary, fontFamily: "'Poppins', sans-serif",
                     fontSize: 13.5, outline: "none", width: 220, transition: "border-color .15s",
                   }}
                   onFocus={e => { e.target.style.borderColor = T.pink; }}

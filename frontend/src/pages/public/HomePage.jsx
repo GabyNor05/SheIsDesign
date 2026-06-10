@@ -2,15 +2,15 @@ import { useEffect, useRef } from "react";
 import HeroSection from "../../components/home/HomeHeroNew/HomeHero";
 import WhatWeDoSection from "../../components/home/WhatWeDoSection/WhatWeDoSection";
 import EventsSection from "../../components/home/EventsSection/EventsSection";
-import LeaderboardSection from "../../components/home/LeaderboardSection/LeaderboardSection";
-import FeaturedWorkSection from "../../components/home/FeaturedWorkSection/FeaturedWorkSection";
 import ImpactSection from "../../components/home/ImpactSection/ImpactSection";
 import SupportSection from "../../components/home/SupportSection/SupportSection";
-import CTASection from "../../components/home/CTASection/CTASection";
+import { useAuth } from "../../context/AuthContext";
 import "./HomePage.css";
 
 function HomePage() {
   const orbRef = useRef(null);
+  const { user } = useAuth();
+  const isPending = !user || (user?.status === "Pending" && user?.role?.toLowerCase() !== "admin");
 
   useEffect(() => {
     let ticking = false;
@@ -47,12 +47,9 @@ const y = -10 + progress * 1;
 
       <HeroSection />
       <WhatWeDoSection />
-      <EventsSection />
-      <LeaderboardSection />
-      <FeaturedWorkSection />
-      <ImpactSection />
+      {/* {!isPending && <EventsSection />} */}
+      {/* <ImpactSection /> */}
       <SupportSection />
-      <CTASection />
     </div>
   );
 }

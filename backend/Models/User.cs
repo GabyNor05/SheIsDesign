@@ -10,6 +10,7 @@ namespace SheDesign.Models
         [EmailAddress]
         public string Email { get; set; } = String.Empty;
         public string PasswordHash { get; set; } = String.Empty;
+        public string? ProfilePictureLink { get; set; } = String.Empty;
         public DateTime DateCreated {get; set; } = DateTime.UtcNow;
         public Role Role { get; set; } = Role.User;
         public Status Status { get; set; } = Status.Pending;

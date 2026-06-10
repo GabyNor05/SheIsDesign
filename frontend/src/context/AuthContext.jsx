@@ -28,6 +28,8 @@ export function AuthProvider({ children }) {
   function logout() {
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("joinedEvents");
+    sessionStorage.removeItem("StudentID");
   }
 
   return (

@@ -6,7 +6,6 @@ import { FiMail } from "react-icons/fi";
 import { Field, PasswordField, OrDivider, GoogleButton } from "../../../components/ui/Fields/Field/Field";
 import FloatingCards from "../../../components/auth/FloatingCards/FloatingCards";
 import TokenModal from "../../../components/auth/TokenModal/TokenModal";
-import OtpModal from "../../../components/auth/OtpModal/OtpModal";
 import { useAuth } from "../../../context/AuthContext";
 import { useGoogleLogin } from "@react-oauth/google";
 import { loginUser, googleLoginUser } from "../../../services/authService";
@@ -194,7 +193,11 @@ function SignupFields({ onSubmit, error, onGoogleClick, googleLoading, googleErr
 
         {error && <p className="auth-card__error">{error}</p>}
 
-        <button type="submit" className="auth-card__submit">
+        <button
+          type="submit"
+          className="auth-card__submit"
+          disabled={!firstName.trim() || !lastName.trim() || !email.trim() || !password}
+        >
           <MdPersonAdd size={18} />
           Sign up
         </button>
@@ -258,8 +261,8 @@ function AuthCard() {
           login(res);
           if (res.status === "Pending") { navigate("/application-status"); return; }
           let dest = "/";
-          if (res.role === "Admin") dest = "/admin/dashboard";
-          else if (res.role === "Judge") dest = "/judge/dashboard";
+          if (res.role === "Admin") dest = "/admin";
+          else if (res.role === "Judge") dest = "/judge";
           navigate(dest);
         }
       } catch (err) {
@@ -275,11 +278,17 @@ function AuthCard() {
     setLoginError("");
     try {
       const res = await loginUser(email, password);
-      setApiUser(res);
-      setLoginEmail(email);
       const adminCheck = res.role === "Admin" || ADMIN_EMAILS.includes(email.toLowerCase().trim());
-      setIsAdmin(adminCheck);
-      setModalStep(adminCheck ? "token" : "otp");
+      if (adminCheck) {
+        setApiUser(res);
+        setLoginEmail(email);
+        setIsAdmin(true);
+        setModalStep("token");
+      } else {
+        login(res);
+        if (res.status === "Pending") { navigate("/application-status"); return; }
+        navigate("/");
+      }
     } catch (err) {
       setLoginError(sanitiseError(err));
     }
@@ -296,8 +305,8 @@ function AuthCard() {
     login(apiUser);
     if (apiUser?.status === "Pending") { navigate("/application-status"); return; }
     let dest = "/";
-    if (isAdmin) dest = "/admin/dashboard";
-    else if (apiUser?.role === "Judge") dest = "/judge/dashboard";
+    if (isAdmin) dest = "/admin";
+    else if (apiUser?.role === "Judge") dest = "/judge";
     navigate(dest);
   }
 
@@ -342,14 +351,6 @@ function AuthCard() {
       {modalStep === "token" && (
         <TokenModal
           email={loginEmail}
-          onClose={() => setModalStep(null)}
-          onVerified={() => setModalStep("otp")}
-        />
-      )}
-      {modalStep === "otp" && (
-        <OtpModal
-          email={loginEmail}
-          isAdmin={isAdmin}
           onClose={() => setModalStep(null)}
           onVerified={handleOtpVerified}
         />

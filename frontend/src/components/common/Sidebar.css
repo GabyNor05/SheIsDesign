@@ -1,40 +1,45 @@
+/* No Tailwind. No conflicting utility classes. Pure CSS. */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Container ────────────────────────────────────────────────────────────── */
 .sidebar-container {
     position: fixed;
+    top: 0;
     left: 0;
     z-index: 50;
     width: 220px;
+    height: 100vh;
     display: flex;
-    align-items: center;
-
-
-    background: #1A1A1A;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    /* Bottom edge: subtle pink glow line */
-    border-bottom: 1px solid rgba(196, 18, 98, 0.2);
-    box-shadow:
-        0 1px 0 rgba(196, 18, 98, 0.1),
-        0 4px 32px rgba(196, 18, 98, 0.08),
-        inset 0 -1px 0 rgba(196, 18, 98, 0.06);
-
-    transition:
-        background 0.35s ease,
-        box-shadow 0.35s ease;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 14px;
+    background: #161616;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
 }
 
-/*  Logo  */
-.sidebar-logo {
+/* ── Top block ────────────────────────────────────────────────────────────── */
+.sidebar-top {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    gap: 0;
+    min-height: 0;
+}
+
+/* ── Logo ─────────────────────────────────────────────────────────────────── */
+.sidebar-logo {
+    display: block;
     font-family: 'Poppins', sans-serif;
     font-weight: 800;
-    font-size: 20px;
+    font-size: 18px;
     letter-spacing: -0.3px;
     color: #F8EBED;
     text-decoration: none;
+    margin-bottom: 28px;
+    padding: 0 8px;
     transition: opacity 0.2s;
+    white-space: nowrap;
 }
 
 .sidebar-logo:hover {
@@ -43,4 +48,107 @@
 
 .sidebar-logo-accent {
     color: #FE4081;
+}
+
+/* ── Nav ──────────────────────────────────────────────────────────────────── */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+}
+
+.sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+
+.sidebar-nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.sidebar-nav-item.active {
+    background: rgba(196, 18, 98, 0.14);
+    border-color: rgba(196, 18, 98, 0.22);
+    color: #FE4081;
+    font-weight: 600;
+}
+
+/* ── Nav icon ─────────────────────────────────────────────────────────────── */
+.sidebar-nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    opacity: 0.55;
+}
+
+.sidebar-nav-item:hover .sidebar-nav-icon,
+.sidebar-nav-item.active .sidebar-nav-icon {
+    opacity: 1;
+}
+
+/* ── Nav label ────────────────────────────────────────────────────────────── */
+.sidebar-nav-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+.sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.sidebar-footer__divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.07);
+    margin-bottom: 8px;
+}
+
+.sidebar-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: rgba(248, 113, 113, 0.6);
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, color 0.15s;
+    box-sizing: border-box;
+}
+
+.sidebar-logout-btn:hover {
+    background: rgba(248, 113, 113, 0.08);
+    color: #F87171;
 }

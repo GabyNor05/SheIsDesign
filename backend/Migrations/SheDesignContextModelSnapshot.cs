@@ -74,7 +74,7 @@ namespace backend.Migrations
                         .HasColumnType("text")
                         .HasColumnName("donor_name");
 
-                    b.Property<int>("eventId")
+                    b.Property<int?>("eventId")
                         .HasColumnType("integer")
                         .HasColumnName("eventId");
 
@@ -96,9 +96,6 @@ namespace backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.PrimitiveCollection<int[]>("AssignedJudgeIDs")
-                        .HasColumnType("integer[]");
-
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasColumnType("text");
@@ -115,6 +112,9 @@ namespace backend.Migrations
 
                     b.Property<string>("Image_link")
                         .HasColumnType("text");
+
+                    b.Property<int?>("JudgeId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Max_entry")
                         .HasColumnType("integer");
@@ -135,6 +135,8 @@ namespace backend.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("JudgeId");
 
                     b.ToTable("Event", (string)null);
                 });
@@ -187,6 +189,35 @@ namespace backend.Migrations
                     b.ToTable("Judge");
                 });
 
+            modelBuilder.Entity("SheDesign.Models.JudgeMarkScheme", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<int>("JudgeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PostId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JudgeId");
+
+                    b.HasIndex("PostId");
+
+                    b.ToTable("JudgeMarkScheme");
+                });
+
             modelBuilder.Entity("SheDesign.Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -206,7 +237,7 @@ namespace backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("eventId")
+                    b.Property<int?>("eventId")
                         .HasColumnType("integer")
                         .HasColumnName("eventId");
 
@@ -344,14 +375,22 @@ namespace backend.Migrations
                         .HasColumnType("text")
                         .HasColumnName("password");
 
+                    b.Property<string>("ProfilePictureLink")
+                        .HasColumnType("text")
+                        .HasColumnName("profile_picture");
+
                     b.Property<int>("Role")
                         .HasColumnType("integer")
                         .HasColumnName("roles");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
                 });
@@ -379,11 +418,18 @@ namespace backend.Migrations
                 {
                     b.HasOne("SheDesign.Models.Event", "Event")
                         .WithMany("Donations")
-                        .HasForeignKey("eventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("eventId");
 
                     b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("SheDesign.Models.Event", b =>
+                {
+                    b.HasOne("SheDesign.Models.Judge", "AssignedJudgeIDs")
+                        .WithMany()
+                        .HasForeignKey("JudgeId");
+
+                    b.Navigation("AssignedJudgeIDs");
                 });
 
             modelBuilder.Entity("SheDesign.Models.IndustryProfessional", b =>
@@ -408,13 +454,30 @@ namespace backend.Migrations
                     b.Navigation("IndustryProfessional");
                 });
 
+            modelBuilder.Entity("SheDesign.Models.JudgeMarkScheme", b =>
+                {
+                    b.HasOne("SheDesign.Models.Judge", "Judge")
+                        .WithMany()
+                        .HasForeignKey("JudgeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SheDesign.Models.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Judge");
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("SheDesign.Models.Post", b =>
                 {
                     b.HasOne("SheDesign.Models.Event", "Event")
                         .WithMany("Posts")
-                        .HasForeignKey("eventId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("eventId");
 
                     b.HasOne("SheDesign.Models.Student", "Student")
                         .WithMany("Posts")

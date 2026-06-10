@@ -17,7 +17,7 @@ function daysUntil(dateStr) {
   return `${diff} days left`;
 }
 
-export default function FeaturedEvent({ event, onApply }) {
+export default function FeaturedEvent({ event, onApply, onViewDetails, applied = false, joining = false }) {
   if (!event) return null;
 
   const fillPct = event.max_entry > 0
@@ -108,14 +108,23 @@ export default function FeaturedEvent({ event, onApply }) {
             </div>
 
             <div className="featured-event__cta">
-              <button
-                onClick={isFull ? undefined : onApply}
-                disabled={isFull}
-                className={`featured-event__btn-primary${isFull ? " featured-event__btn-primary--disabled" : ""}`}
-              >
-                {isFull ? "Event full" : "Apply for this event"}
-              </button>
-              <button className="featured-event__btn-secondary">
+              {(() => {
+                let btnLabel = "Join event";
+                if (applied)       btnLabel = "✓ Joined";
+                else if (joining)  btnLabel = "Joining...";
+                else if (isFull)   btnLabel = "Event full";
+                const isDisabled = applied || isFull || joining;
+                return (
+                  <button
+                    onClick={isDisabled ? undefined : onApply}
+                    disabled={isDisabled}
+                    className={`featured-event__btn-primary${isDisabled ? " featured-event__btn-primary--disabled" : ""}`}
+                  >
+                    {btnLabel}
+                  </button>
+                );
+              })()}
+              <button className="featured-event__btn-secondary" onClick={onViewDetails}>
                 View full brief
               </button>
             </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Check, X } from "@phosphor-icons/react";
 import { RxPeople } from "react-icons/rx";
 import { T } from "../theme";
@@ -187,7 +188,7 @@ function ApplicantRow({ person, isLast, onApprove, onReject }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "Syne, sans-serif",
+          fontFamily: "Poppins, sans-serif",
           fontWeight: 800,
           fontSize: 12,
           color: person.color,
@@ -200,7 +201,7 @@ function ApplicantRow({ person, isLast, onApprove, onReject }) {
       <div style={{ flex: 1, minWidth: 0 }}>
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
             fontSize: 13.5,
             fontWeight: 600,
             color: T.textPrimary,
@@ -213,7 +214,7 @@ function ApplicantRow({ person, isLast, onApprove, onReject }) {
         </div>
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
             fontSize: 11.5,
             color: T.textMuted,
           }}
@@ -225,7 +226,7 @@ function ApplicantRow({ person, isLast, onApprove, onReject }) {
       {/* Date */}
       <time
         style={{
-          fontFamily: "'DM Sans', sans-serif",
+          fontFamily: "'Poppins', sans-serif",
           fontSize: 11.5,
           color: T.textMuted,
           flexShrink: 0,
@@ -250,7 +251,7 @@ function ApplicantRow({ person, isLast, onApprove, onReject }) {
               padding: "6px 12px",
               cursor: "pointer",
               color: T.activeGreen,
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Poppins', sans-serif",
               fontSize: 12,
               fontWeight: 600,
               transition: "all 0.15s",
@@ -277,7 +278,7 @@ function ApplicantRow({ person, isLast, onApprove, onReject }) {
               padding: "6px 12px",
               cursor: "pointer",
               color: T.textSecond,
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Poppins', sans-serif",
               fontSize: 12,
               fontWeight: 500,
               transition: "all 0.15s",
@@ -297,7 +298,7 @@ function ApplicantRow({ person, isLast, onApprove, onReject }) {
       ) : (
         <span
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
             fontSize: 12,
             fontWeight: 600,
             color: status === "approved" ? T.activeGreen : T.closedRed,
@@ -318,6 +319,7 @@ function PendingApplications() {
   const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const loadParticipants = async () => {
     try {
@@ -381,7 +383,7 @@ function PendingApplications() {
     );
   }
 
-  if (error) {
+if (error) {
     return (
       <Card className="w-full">
         <SectionHeader
@@ -389,10 +391,29 @@ function PendingApplications() {
           title="Pending Applications"
           badge={participants.length}
         />
-        <div
-          style={{ padding: "20px", textAlign: "center", color: T.closedRed }}
-        >
-          Failed to load applications: {error}
+        <div style={{ padding: "20px", textAlign: "center" }}>
+          <span style={{ color: T.closedRed, fontSize: 13, fontFamily: "'Poppins', sans-serif" }}>
+            ⚠ Unable to load applications
+          </span>
+          <p style={{ color: T.textMuted, fontSize: 12, marginTop: 6, fontFamily: "'Poppins', sans-serif" }}>
+            Check your backend connection and try again.
+          </p>
+          <button
+            onClick={loadParticipants}
+            style={{
+              marginTop: 12,
+              background: "none",
+              border: `1px solid ${T.border}`,
+              borderRadius: 8,
+              padding: "6px 16px",
+              color: T.textSecond,
+              fontFamily: "'Poppins', sans-serif",
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            Retry
+          </button>
         </div>
       </Card>
     );
@@ -405,6 +426,7 @@ function PendingApplications() {
         title="Pending Applications"
         badge={participants.length}
         action="View all"
+        onAction={() => navigate("/admin/participants")}
       />
 
       <div
@@ -437,7 +459,7 @@ function PendingApplications() {
               cursor: "pointer",
               padding: "10px 16px 10px 0",
               marginRight: 20,
-              fontFamily: "'DM Sans', sans-serif",
+              fontFamily: "'Poppins', sans-serif",
               fontSize: 13.5,
               fontWeight: tab === t.key ? 600 : 400,
               color: tab === t.key ? T.textPrimary : T.textSecond,

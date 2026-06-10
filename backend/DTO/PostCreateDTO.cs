@@ -16,9 +16,8 @@ namespace SheDesign.DTO
         [Required(ErrorMessage = "Category is required.")]
         public string Category { get; set; } = string.Empty;
 
-        public int EventId { get; set; }
+        public int? EventId { get; set; }
 
-        [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; } = string.Empty;
 
         public string Status { get; set; } = "Pending";

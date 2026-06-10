@@ -34,6 +34,7 @@ function OtpPage() {
   const firstName      = location.state?.firstName      || "";
   const lastName       = location.state?.lastName       || "";
   const password       = location.state?.password       || "";
+  const existingUserId = location.state?.userId         || null;
   const tab            = location.state?.tab            || "student";
   const studentFields  = location.state?.studentFields  || {};
   const wantsVolunteer = location.state?.wantsVolunteer || false;
@@ -88,11 +89,10 @@ function OtpPage() {
     setSubmitting(true);
     setSubmitError("");
     try {
-      const res = await registerUser(email, password);
-      const userId = res.id;
+      const userId = existingUserId ?? (await registerUser(email, password)).id;
 
       if (tab === "student") {
-        await createMentee({
+        const student_res = await createMentee({
           fullname:        `${firstName} ${lastName}`.trim(),
           university:      studentFields.university      || "",
           year_of_study:   studentFields.year_of_study  ?? 1,
@@ -101,6 +101,8 @@ function OtpPage() {
           wants_volunteer: wantsVolunteer,
           userId,
         });
+
+        const studentId = student_res.id;
       } else {
         await createIndustryProfessional({
           fullname:    `${firstName} ${lastName}`.trim(),
@@ -135,18 +137,14 @@ function OtpPage() {
       <div className="otp-page__glow otp-page__glow--2" />
 
       {/* Nav */}
-      <nav className="otp-page__nav">
-        <Link to="/" className="otp-page__nav-logo">
-          <div className="otp-page__nav-logo-mark">
-            <span className="material-icons" style={{ fontSize: "18px", color: "white" }}>brush</span>
-          </div>
-          <span className="otp-page__nav-logo-text">SheisDesign</span>
-        </Link>
-        <Link to="/signup/details" className="otp-page__nav-back">
-          <span className="material-icons" style={{ fontSize: "15px" }}>arrow_back</span>
-          Back
-        </Link>
-      </nav>
+<nav className="otp-page__nav">
+  <Link to="/" className="otp-page__nav-logo">
+    SheIs<span className="otp-page__nav-logo-accent">Design</span>
+  </Link>
+  <Link to="/signup/details" className="otp-page__nav-back">
+    ← Back
+  </Link>
+</nav>
 
       <div className="otp-page__content">
         <div className="otp-page__card">

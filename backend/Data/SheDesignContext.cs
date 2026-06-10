@@ -32,6 +32,9 @@ namespace SheDesign.Data
                 entity.Property(u => u.Email).HasColumnName("email");
                 entity.Property(u => u.PasswordHash).HasColumnName("password");
                 entity.Property(u => u.Role).HasColumnName("roles");
+                entity.Property(u => u.ProfilePictureLink).HasColumnName("profile_picture");
+                entity.HasIndex(u => u.Email).IsUnique();
+                entity.Property(u => u.Status).HasConversion<string>();
             });
 
             // Comment table naming & mapping
@@ -108,7 +111,8 @@ namespace SheDesign.Data
             modelBuilder.Entity<Post>()
                 .HasOne(p => p.Event)
                 .WithMany(e => e.Posts)
-                .HasForeignKey(p => p.eventId);
+                .HasForeignKey(p => p.eventId)
+                .IsRequired(false);
 
             // Submission relationship
             modelBuilder.Entity<Submission>()
@@ -123,5 +127,6 @@ namespace SheDesign.Data
                 .WithMany(u => u.IndustryProfessionals)
                 .HasForeignKey(ip => ip.userId);
         }
+        public DbSet<SheDesign.Models.JudgeMarkScheme> JudgeMarkScheme { get; set; } = default!;
     }
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   CalendarDots,
   CalendarBlank,
@@ -7,6 +8,11 @@ import SectionHeader from "../SectionHeader";
 import { eventService } from "../../../services/eventService";
 import {Icon} from "./Icon";
 import { T } from "../theme";
+
+function formatDateRange(start, end) {
+  const fmt = (d) => new Date(d).toLocaleDateString("en-ZA", { day: "numeric", month: "short" });
+  return `${fmt(start)} – ${fmt(end)}`;
+}
 
 const STATUS_MAP = {
   OPEN: { bg: "#10e26633", color: T.activeGreen, dot: T.activeGreen },
@@ -30,7 +36,7 @@ function StatusBadge({ status }) {
         padding: "4px 10px",
         fontSize: 11.5,
         fontWeight: 600,
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "'Poppins', sans-serif",
         letterSpacing: "0.06em",
       }}
     >
@@ -84,14 +90,23 @@ function UpcomingEvents() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   
   useEffect(() => {
     const loadEvents = async () => {
       try {
         setLoading(true);
-        const upcoming = await eventService.getUpcomingEvents();
-        console.log("Next events:", upcoming);
+        const raw = await eventService.getUpcomingEvents();
+        const upcoming = raw.map((e) => ({
+          id: e.id,
+          title: e.title,
+          category: e.category,
+          status: (e.status || "").toUpperCase(),
+          entries: e.entry_count ?? 0,
+          maxEntries: e.max_entry || 1,
+          dateRange: formatDateRange(e.start_date, e.end_date),
+        }));
         setEvents(upcoming);
         setError(null);
       } catch (err) {
@@ -144,19 +159,17 @@ function UpcomingEvents() {
         title="Upcoming Events"
         badge={`${openCount} open`}
         action="View all"
+        onAction={() => navigate("/admin/events")}
       />
       <div>
         <div
           style={{
             display: "flex",
-            width: "1020px",
-            height: "180px",
+            width: "100%",
             overflowX: "auto",
             overflowY: "hidden",
-            alignItems: "space-between",
-            whiteSpace: "nowrap",
             gap: 14,
-            padding: 4,
+            padding: "4px 4px 12px",
           }}
         >
           {events.map((ev) => (

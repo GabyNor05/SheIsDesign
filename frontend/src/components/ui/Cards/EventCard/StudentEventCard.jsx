@@ -11,7 +11,7 @@ function calcPct(count, max) {
   return Math.min(100, Math.round(((count ?? 0) / max) * 100));
 }
 
-export default function StudentEventCard({ event, onApply, onViewDetails }) {
+export default function StudentEventCard({ event, onApply, onViewDetails, applied = false }) {
   const [hov, setHov] = useState(false);
 
   const status = event.status?.toUpperCase() || "DRAFT";
@@ -38,7 +38,7 @@ export default function StudentEventCard({ event, onApply, onViewDetails }) {
       <div className="sec__body" onClick={() => onViewDetails(event)} style={{ cursor: "pointer" }}>
         <p className="sec__category">{event.category || "Event"}</p>
         <h3 className="sec__title">{event.title}</h3>
-        <p className="sec__dates">📅 {fmtDate(event.start_date)} — {fmtDate(event.end_date)}</p>
+        <p className="sec__dates">{fmtDate(event.start_date)} — {fmtDate(event.end_date)}</p>
 
         <div className="sec__progress-row">
           <span className="sec__progress-label">
@@ -62,13 +62,13 @@ export default function StudentEventCard({ event, onApply, onViewDetails }) {
         >
           View details
         </button>
-        <button
-          className={`sec__apply-btn ${!isOpen ? "sec__apply-btn--disabled" : ""}`}
-          onClick={() => isOpen && onApply(event)}
-          disabled={!isOpen}
-        >
-          {isFull ? "Full" : !isOpen ? "Closed" : "Apply"}
-        </button>
+<button
+  className={`sec__apply-btn ${applied ? "sec__apply-btn--applied" : !isOpen ? "sec__apply-btn--disabled" : ""}`}
+  onClick={() => !applied && isOpen && onApply(event)}
+  disabled={applied || !isOpen}
+>
+  {applied ? "✓ Joined" : isFull ? "Full" : !isOpen ? "Closed" : "Join"}
+</button>
       </div>
     </div>
   );

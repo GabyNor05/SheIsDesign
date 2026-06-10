@@ -14,7 +14,7 @@ function Badge({ status }) {
       border: `1px solid ${s.color}40`,
       borderRadius: 4, padding: "3px 8px",
       fontSize: 10, fontWeight: 800,
-      fontFamily: "'DM Sans', sans-serif",
+      fontFamily: "'Poppins', sans-serif",
       letterSpacing: "0.1em", textTransform: "uppercase",
     }}>
       {status}
@@ -29,10 +29,10 @@ function ProgressBar({ count, max, showLabel = true }) {
     <div>
       {showLabel && (
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, color: T.textSecond }}>
+          <span style={{ fontFamily: "'Poppins', sans-serif", fontSize: 11.5, color: T.textSecond }}>
             {count} / {max} entries
           </span>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11.5, fontWeight: 700, color: p >= 80 ? T.pink : T.textSecond }}>
+          <span style={{ fontFamily: "'Poppins', sans-serif", fontSize: 11.5, fontWeight: 700, color: p >= 80 ? T.pink : T.textSecond }}>
             {p}% full
           </span>
         </div>
@@ -63,12 +63,12 @@ function JudgeAvatars({ count }) {
             marginLeft: i ? -6 : 0,
             display: "flex", alignItems: "center", justifyContent: "center",
             fontSize: 7, fontWeight: 800, color: colors[i % 4],
-            fontFamily: "Syne, sans-serif",
+            fontFamily: "Poppins, sans-serif",
           }}>J</div>
         ))}
       </div>
       {count > 4 && (
-        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: T.textMuted }}>
+        <span style={{ fontFamily: "'Poppins', sans-serif", fontSize: 11, color: T.textMuted }}>
           +{count - 4}
         </span>
       )}
@@ -80,7 +80,7 @@ function MetaRow({ icon, text }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
       <Icon n={icon} s={12} c={T.textMuted} />
-      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: T.textSecond }}>
+      <span style={{ fontFamily: "'Poppins', sans-serif", fontSize: 12, color: T.textSecond }}>
         {text}
       </span>
     </div>
@@ -116,7 +116,7 @@ function EventCard({ event, onManage, onView }) {
       }}>
         <Badge status={event.status} />
         <span style={{
-          fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 11,
+          fontFamily: "Poppins, sans-serif", fontWeight: 800, fontSize: 11,
           color: T.pink, letterSpacing: "0.06em",
         }}>
           {event.points_reward} PTS
@@ -130,10 +130,10 @@ function EventCard({ event, onManage, onView }) {
       <div style={{ padding: "14px 16px", flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
         {/* Title + category */}
         <div>
-          <p style={{ margin: "0 0 2px", fontFamily: "'DM Sans', sans-serif", fontSize: 10.5, color: T.textMuted, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          <p style={{ margin: "0 0 2px", fontFamily: "'Poppins', sans-serif", fontSize: 10.5, color: T.textMuted, letterSpacing: "0.1em", textTransform: "uppercase" }}>
             {event.categoryLabel || event.category}
           </p>
-          <h3 style={{ margin: 0, fontFamily: "Syne, sans-serif", fontWeight: 700, fontSize: 15.5, color: T.textPrimary, lineHeight: 1.25 }}>
+          <h3 style={{ margin: 0, fontFamily: "Poppins, sans-serif", fontWeight: 700, fontSize: 15.5, color: T.textPrimary, lineHeight: 1.25 }}>
             {event.title}
           </h3>
         </div>
@@ -160,7 +160,7 @@ function EventCard({ event, onManage, onView }) {
             flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
             background: "none", border: "none", borderRight: `1px solid ${T.border}`,
             padding: "12px 0", cursor: "pointer", color: T.textSecond,
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
+            fontFamily: "'Poppins', sans-serif", fontSize: 13, fontWeight: 500,
             transition: "all .15s",
           }}
           onMouseEnter={e => { e.currentTarget.style.background = T.surfaceHi; e.currentTarget.style.color = T.textPrimary; }}
@@ -174,7 +174,7 @@ function EventCard({ event, onManage, onView }) {
             flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
             background: T.pink, border: "none",
             padding: "12px 0", cursor: "pointer", color: "#fff",
-            fontFamily: "Syne, sans-serif", fontSize: 13, fontWeight: 700,
+            fontFamily: "Poppins, sans-serif", fontSize: 13, fontWeight: 700,
             transition: "opacity .15s",
           }}
           onMouseEnter={e => { e.currentTarget.style.opacity = ".85"; }}

@@ -26,13 +26,17 @@ namespace backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostReadDto>>> GetPost()
         {
-            var posts = await _context.Post.ToListAsync();
+            // ── CHANGED: added .Include(p => p.Student) to return StudentName ──
+            var posts = await _context.Post
+                .Include(p => p.Student)
+                .ToListAsync();
 
             var postDtos = posts.Select(post => new PostReadDto
             {
                 Id = post.Id,
                 Title = post.title,
                 StudentId = post.studentId,
+                StudentName = post.Student?.fullname ?? "", // ── CHANGED ──
                 ImageFileLink = post.image_file_link,
                 Category = post.category,
                 EventId = post.eventId,
@@ -50,7 +54,10 @@ namespace backend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PostReadDto>> GetPost(int id)
         {
-            var post = await _context.Post.FindAsync(id);
+            // ── CHANGED: added .Include(p => p.Student) to return StudentName ──
+            var post = await _context.Post
+                .Include(p => p.Student)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (post == null) return NotFound();
 
@@ -59,6 +66,7 @@ namespace backend.Controllers
                 Id = post.Id,
                 Title = post.title,
                 StudentId = post.studentId,
+                StudentName = post.Student?.fullname ?? "", // ── CHANGED ──
                 ImageFileLink = post.image_file_link,
                 Category = post.category,
                 EventId = post.eventId,
@@ -72,7 +80,64 @@ namespace backend.Controllers
             return Ok(postDto);
         }
 
-        // PUT: api/Post/5
+        // GET: api/Post/event/{eventId}
+        [HttpGet("event/{eventId}")]
+        public async Task<ActionResult<IEnumerable<PostReadDto>>> GetPostsByEvent(int eventId)
+        {
+            var posts = await _context.Post
+                .Where(p => p.eventId == eventId)
+                .Include(p => p.Student)
+                .ToListAsync();
+
+            var postDtos = posts.Select(post => new PostReadDto
+            {
+                Id = post.Id,
+                Title = post.title,
+                StudentId = post.studentId,
+                StudentName = post.Student?.fullname ?? "",
+                ImageFileLink = post.image_file_link,
+                Category = post.category,
+                EventId = post.eventId,
+                LinkCount = post.link_count,
+                CommentCount = post.comment_count,
+                PostDate = post.post_date,
+                Description = post.description,
+                Status = post.status
+            }).ToList();
+
+            return Ok(postDtos);
+        }
+
+        // GET: api/Post/student/{studentId}/event/{eventId}
+        [HttpGet("student/{studentId}/event/{eventId}")]
+        public async Task<ActionResult<IEnumerable<PostReadDto>>> GetPostsByStudentAndEvent(int studentId, int eventId)
+        {
+            var posts = await _context.Post
+                .Where(p => p.studentId == studentId && p.eventId == eventId)
+                .Include(p => p.Student)
+                .OrderByDescending(p => p.post_date)
+                .ToListAsync();
+
+            var postDtos = posts.Select(post => new PostReadDto
+            {
+                Id = post.Id,
+                Title = post.title,
+                StudentId = post.studentId,
+                StudentName = post.Student?.fullname ?? "",
+                ImageFileLink = post.image_file_link,
+                Category = post.category,
+                EventId = post.eventId,
+                LinkCount = post.link_count,
+                CommentCount = post.comment_count,
+                PostDate = post.post_date,
+                Description = post.description,
+                Status = post.status
+            }).ToList();
+
+            return Ok(postDtos);
+        }
+
+        // PUT: api/Post/5 — unchanged
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(int id, PostCreateDto postUpdateDto)
         {
@@ -106,7 +171,7 @@ namespace backend.Controllers
             return NoContent();
         }
 
-        // POST: api/Post
+        // POST: api/Post — unchanged
         [HttpPost]
         public async Task<ActionResult<PostReadDto>> PostPost(PostCreateDto postCreateDto)
         {
@@ -144,7 +209,7 @@ namespace backend.Controllers
             return CreatedAtAction(nameof(GetPost), new { id = postReadDto.Id }, postReadDto);
         }
 
-        // DELETE: api/Post/5
+        // DELETE: api/Post/5 — unchanged
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {

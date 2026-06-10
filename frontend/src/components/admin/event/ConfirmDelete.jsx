@@ -37,7 +37,7 @@ export default function ConfirmDelete({ event, onConfirm, onClose }) {
             color: T.textSecond,
             cursor: "pointer",
             fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
           }}
         >
           Cancel
@@ -52,7 +52,7 @@ export default function ConfirmDelete({ event, onConfirm, onClose }) {
             color: "#fff",
             cursor: "pointer",
             fontWeight: 600,
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Poppins', sans-serif",
           }}
         >
           Delete Permanently

@@ -1,54 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { eventService } from "../../services/eventService";
+import { postService } from "../../services/postManagementService";
+import { judgeMarkSchemeService } from "../../services/judgeMarkService";
 import "./Judge.css";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MOCK DATA
-// 🔌 API CONNECTION: replace with real fetches
-// e.g. GET /api/judge/events/:eventId/submissions
-// e.g. POST /api/judge/events/:eventId/scores
-//      body: { scores: [{ submissionId, score, comment }] }
-// ─────────────────────────────────────────────────────────────────────────────
-const MOCK_EVENTS = {
-  1: { title: "Brand Identity Challenge",  category: "Branding",     deadline: "20 Mar 2026" },
-  2: { title: "UI/UX Hackathon 2026",      category: "UI/UX",        deadline: "12 Apr 2026" },
-  3: { title: "Annual Design Awards 2025", category: "Awards",       deadline: "21 Oct 2025" },
-  4: { title: "Illustration Open Brief",   category: "Illustration", deadline: "10 May 2026" },
-};
-
-const MOCK_SUBMISSIONS = {
-  1: [
-    { id: 101, studentName: "Ayasha Dlamini",  studentEmail: "a.dlamini@uct.ac.za",  submissionTitle: "Verde — Sustainable Fashion Identity",  color: "#C41262", existingScore: 92, existingComment: "Excellent concept, strong visual hierarchy." },
-    { id: 102, studentName: "Zanele Mokoena",  studentEmail: "z.mokoena@uj.ac.za",   submissionTitle: "Aura Collective Brand System",          color: "#60A5FA", existingScore: 87, existingComment: "" },
-    { id: 103, studentName: "Priya Naidoo",    studentEmail: "p.naidoo@ukzn.ac.za",  submissionTitle: "Bloom & Earth — Visual Identity",       color: "#22C55E", existingScore: 83, existingComment: "" },
-    { id: 104, studentName: "Amara Diallo",    studentEmail: "a.diallo@nmu.ac.za",   submissionTitle: "Umber Studio Branding Concept",         color: "#FBBF24", existingScore: 79, existingComment: "" },
-    { id: 105, studentName: "Nomvula Khumalo", studentEmail: "n.khumalo@wits.ac.za", submissionTitle: "Sol Co. Identity System",               color: "#a78bfa", existingScore: null, existingComment: "" },
-    { id: 106, studentName: "Lerato Sithole",  studentEmail: "l.sithole@tut.ac.za",  submissionTitle: "The Form Collective — Brand Mark",      color: "#34d399", existingScore: null, existingComment: "" },
-  ],
-  2: [
-    { id: 201, studentName: "Ayasha Dlamini",  studentEmail: "a.dlamini@uct.ac.za",  submissionTitle: "HealthLink — Community Mobile App",     color: "#C41262", existingScore: null, existingComment: "" },
-    { id: 202, studentName: "Lerato Sithole",  studentEmail: "l.sithole@tut.ac.za",  submissionTitle: "CareTrack Patient Dashboard",           color: "#34d399", existingScore: null, existingComment: "" },
-    { id: 203, studentName: "Amara Diallo",    studentEmail: "a.diallo@nmu.ac.za",   submissionTitle: "Vitals — Health Monitoring UI",         color: "#FBBF24", existingScore: null, existingComment: "" },
-    { id: 204, studentName: "Zanele Mokoena",  studentEmail: "z.mokoena@uj.ac.za",   submissionTitle: "Remedy App — Pharmacy UX Flow",         color: "#60A5FA", existingScore: null, existingComment: "" },
-    { id: 205, studentName: "Thandeka Zulu",   studentEmail: "t.zulu@dut.ac.za",     submissionTitle: "MediConnect Booking System",            color: "#f97316", existingScore: null, existingComment: "" },
-  ],
-  3: [
-    { id: 301, studentName: "Priya Naidoo",    studentEmail: "p.naidoo@ukzn.ac.za",  submissionTitle: "Afro-Futurist Packaging Series",        color: "#22C55E", existingScore: 94, existingComment: "Outstanding work." },
-    { id: 302, studentName: "Ayasha Dlamini",  studentEmail: "a.dlamini@uct.ac.za",  submissionTitle: "Watershed — Environmental Campaign",    color: "#C41262", existingScore: 91, existingComment: "" },
-    { id: 303, studentName: "Nomvula Khumalo", studentEmail: "n.khumalo@wits.ac.za", submissionTitle: "Frequency — Sound Brand Identity",      color: "#a78bfa", existingScore: 85, existingComment: "" },
-    { id: 304, studentName: "Amara Diallo",    studentEmail: "a.diallo@nmu.ac.za",   submissionTitle: "Solstice Type Specimen Book",           color: "#FBBF24", existingScore: 81, existingComment: "" },
-    { id: 305, studentName: "Zanele Mokoena",  studentEmail: "z.mokoena@uj.ac.za",   submissionTitle: "Ritual Objects — Illustration Set",     color: "#60A5FA", existingScore: 77, existingComment: "" },
-    { id: 306, studentName: "Chidi Okonkwo",   studentEmail: "c.okonkwo@cput.ac.za", submissionTitle: "Grid Study — Architectural Type",       color: "#fb7185", existingScore: 70, existingComment: "" },
-    { id: 307, studentName: "Lerato Sithole",  studentEmail: "l.sithole@tut.ac.za",  submissionTitle: "Signal — Poster Campaign",              color: "#34d399", existingScore: 65, existingComment: "" },
-  ],
-  4: [
-    { id: 501, studentName: "Ayasha Dlamini",  studentEmail: "a.dlamini@uct.ac.za",  submissionTitle: "Ancestors — Digital Mythology Series",  color: "#C41262", existingScore: null, existingComment: "" },
-    { id: 502, studentName: "Zanele Mokoena",  studentEmail: "z.mokoena@uj.ac.za",   submissionTitle: "Ntu — Spirit of Ubuntu Illustrations",  color: "#60A5FA", existingScore: null, existingComment: "" },
-    { id: 503, studentName: "Priya Naidoo",    studentEmail: "p.naidoo@ukzn.ac.za",  submissionTitle: "Alchemy — Afrofuturist Figures",        color: "#22C55E", existingScore: null, existingComment: "" },
-    { id: 504, studentName: "Thandeka Zulu",   studentEmail: "t.zulu@dut.ac.za",     submissionTitle: "Bloom — Botanical Mythology",           color: "#f97316", existingScore: null, existingComment: "" },
-    { id: 505, studentName: "Lerato Sithole",  studentEmail: "l.sithole@tut.ac.za",  submissionTitle: "Current — Water & Memory",              color: "#34d399", existingScore: null, existingComment: "" },
-  ],
-};
+const POST_COLORS = ["#C41262","#60A5FA","#22C55E","#FBBF24","#a78bfa","#34d399","#f97316","#fb7185"];
+function postColor(index) { return POST_COLORS[index % POST_COLORS.length]; }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
@@ -66,6 +25,7 @@ function Ic({ n, s = 16, c = "currentColor" }) {
     send:   <><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></>,
     file:   <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></>,
     close:  <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>,
+    eye:    <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>,
   };
   return (
     <svg width={s} height={s} viewBox="0 0 24 24" fill="none"
@@ -98,31 +58,51 @@ export default function JudgeScoringPage() {
   const { eventId }       = useParams();
   const id                = Number(eventId);
 
-  const [event,       setEvent]       = useState(null);
-  const [submissions, setSubmissions] = useState([]);
-  const [scores,      setScores]      = useState({});   // { submissionId: { score, comment } }
-  const [submitting,  setSubmitting]  = useState(false);
-  const [submitted,   setSubmitted]   = useState(false);
-  const [toast,       setToast]       = useState(null);
+  const [event,        setEvent]        = useState(null);
+  const [submissions,  setSubmissions]  = useState([]);
+  const [scores,       setScores]       = useState({});
+  const [submitting,   setSubmitting]   = useState(false);
+  const [submitted,    setSubmitted]    = useState(false);
+  const [toast,        setToast]        = useState(null);
+  const [lightboxSrc,  setLightboxSrc]  = useState(null);
+
+  const { user } = useAuth();
 
   useEffect(() => {
-    // 🔌 API CONNECTION: replace with real fetch
-    // const res = await fetch(`/api/judge/events/${id}/submissions`)
-    // const data = await res.json()
-    const ev   = MOCK_EVENTS[id];
-    const subs = MOCK_SUBMISSIONS[id] || [];
-    setEvent(ev);
-    setSubmissions(subs);
+    if (!id) return;
 
-    // Pre-fill existing scores
-    const initial = {};
-    subs.forEach(s => {
-      initial[s.id] = {
-        score:   s.existingScore ?? "",
-        comment: s.existingComment ?? "",
-      };
-    });
-    setScores(initial);
+    Promise.all([
+      eventService.getEventById(id),
+      postService.getPostsByEvent(id),
+      judgeMarkSchemeService.getMarkSchemesByEvent(id),
+    ]).then(([eventData, posts, markSchemes]) => {
+      setEvent({
+        title:    eventData.title ?? eventData.Title,
+        category: eventData.category ?? eventData.Category,
+        deadline: new Date(eventData.end_date ?? eventData.End_date)
+          .toLocaleDateString("en-ZA", { day: "numeric", month: "short", year: "numeric" }),
+      });
+
+      setSubmissions(posts.map((p, i) => ({
+        id:              p.id,
+        studentName:     p.studentName,
+        studentEmail:    "",
+        submissionTitle: p.title,
+        imageLink:       p.imageFileLink,
+        color:           postColor(i),
+      })));
+
+      const initial = {};
+      posts.forEach(p => {
+        const existing = markSchemes.find(m => m.postId === p.id);
+        initial[p.id] = {
+          score:        existing?.score ?? "",
+          comment:      existing?.comment ?? "",
+          markSchemeId: existing?.id ?? null,
+        };
+      });
+      setScores(initial);
+    }).catch(err => console.error("Failed to load scoring data:", err));
   }, [id]);
 
   function setScore(subId, value) {
@@ -144,24 +124,29 @@ export default function JudgeScoringPage() {
 
   async function handleSubmit() {
     if (!allScored) return;
+    const judgeId = user?.judgeId;
+    if (!judgeId) { setToast("Judge ID not found — please log in again."); return; }
+
     setSubmitting(true);
-
-
-
-    // 🔌 API CONNECTION: send scores to backend
-    // await fetch(`/api/judge/events/${id}/scores`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-    //   body: JSON.stringify({ scores: payload }),
-    // });
-
-    // Simulate API delay
-    await new Promise(r => setTimeout(r, 800));
-
-    setSubmitting(false);
-    setSubmitted(true);
-    setToast("Scores submitted successfully!");
-    setTimeout(() => setToast(null), 3500);
+    try {
+      await Promise.all(submissions.map(sub => {
+        const { score, comment, markSchemeId } = scores[sub.id];
+        const payload = { postId: sub.id, judgeId, score: Number(score), comment: comment ?? "" };
+        if (markSchemeId) {
+          return judgeMarkSchemeService.updateMarkScheme(markSchemeId, payload);
+        }
+        return judgeMarkSchemeService.createMarkScheme(payload);
+      }));
+      setSubmitted(true);
+      setToast("Scores submitted successfully!");
+      setTimeout(() => setToast(null), 3500);
+    } catch (err) {
+      console.error("Failed to save scores:", err);
+      setToast("Failed to save scores. Please try again.");
+      setTimeout(() => setToast(null), 4000);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (!event) return <div className="j-root" style={{ color: "rgba(255,255,255,0.4)", padding: 40 }}>Loading...</div>;
@@ -170,7 +155,7 @@ export default function JudgeScoringPage() {
     <div className="j-root">
 
       {/* ── Back */}
-      <button className="j-back-btn j-anim" onClick={() => navigate("/judge/events")}>
+      <button className="j-back-btn j-anim" onClick={() => navigate("/judge")}>
         <Ic n="left" s={14} c="currentColor" /> Back to Events
       </button>
 
@@ -245,6 +230,18 @@ export default function JudgeScoringPage() {
                 {initials(sub.studentName)}
               </div>
 
+              {/* View image button */}
+              {sub.imageLink && (
+                <button
+                  className="js-view-img-btn"
+                  onClick={() => setLightboxSrc({ src: sub.imageLink, title: sub.submissionTitle, student: sub.studentName })}
+                  title="View submission image"
+                >
+                  <Ic n="eye" s={14} c="currentColor" />
+                  View
+                </button>
+              )}
+
               {/* Info */}
               <div className="js-sub-card__info">
                 <div className="js-sub-card__name">{sub.studentName}</div>
@@ -313,6 +310,32 @@ export default function JudgeScoringPage() {
             )}
           </button>
         </div>
+      )}
+
+      {/* ── Image lightbox */}
+      {lightboxSrc && (
+        <dialog
+          className="js-lightbox"
+          open
+          aria-label="Submission image"
+          onCancel={() => setLightboxSrc(null)}
+        >
+          <button className="js-lightbox__backdrop" onClick={() => setLightboxSrc(null)} tabIndex={-1} />
+          <div className="js-lightbox__panel">
+            <div className="js-lightbox__header">
+              <div>
+                <div className="js-lightbox__student">{lightboxSrc.student}</div>
+                <div className="js-lightbox__title">{lightboxSrc.title}</div>
+              </div>
+              <button className="js-lightbox__close" onClick={() => setLightboxSrc(null)}>
+                <Ic n="close" s={16} c="currentColor" />
+              </button>
+            </div>
+            <div className="js-lightbox__img-wrap">
+              <img src={lightboxSrc.src} alt={lightboxSrc.title} className="js-lightbox__img" />
+            </div>
+          </div>
+        </dialog>
       )}
 
       {/* ── Toast */}

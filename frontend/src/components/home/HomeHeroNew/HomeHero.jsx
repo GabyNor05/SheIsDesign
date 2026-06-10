@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 import "./HomeHero.css";
 
 // ── Particle canvas ────────────────────────────────────────────────────────────
@@ -161,6 +162,8 @@ function AnimatedWord({ word, delay = 0, accent = false }) {
 // ── Main component ─────────────────────────────────────────────────────────────
 export default function HomeHero() {
   const [phase, setPhase] = useState(0); // 0=loading, 1=title-in, 2=tagline-in, 3=cta-in
+  const { user } = useAuth();
+  const canBrowseEvents = user && !(user.status === "Pending" && user.role?.toLowerCase() !== "admin");
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase(1), 200);
@@ -228,9 +231,11 @@ export default function HomeHero() {
           <Link to="/signup" className="home-hero__btn home-hero__btn--primary">
             Join the Community
           </Link>
-          <Link to="/events" className="home-hero__btn home-hero__btn--ghost">
-            Browse Events
-          </Link>
+          {canBrowseEvents && (
+            <Link to="/events" className="home-hero__btn home-hero__btn--ghost">
+              Browse Events
+            </Link>
+          )}
         </div>
 
         {/* Scroll cue */}

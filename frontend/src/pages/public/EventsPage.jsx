@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { eventService } from "../../services/eventService";
+import { submissionService } from "../../services/submissionService";
 
 import EventsHeroNew from "../../components/events/EventsHeroNew";
 import FeaturedEvent from "../../components/events/FeaturedEvent";
@@ -8,18 +9,56 @@ import EventsGrid from "../../components/ui/Grids/EventsGrid/EventsGrid";
 import RecommendedEvents from "../../components/events/RecommendedEvents";
 import LoginPromptModal from "../../components/ui/Modals/LoginPromptModal/LoginPromptModal";
 import EventDetailModal from "../../components/events/EventDetailModal";
+import SubmitWorkModal from "../../components/events/SubmitWorkModal";
+import MySubmissionsModal from "../../components/events/MySubmissionsModal";
+import { postService } from "../../services/postManagementService";
 import "./EventsPage.css";
 
 export default function EventsPage() {
   const { user } = useAuth();
 
   // ── State ──────────────────────────────────────────────────────────────────
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [activeFilter, setActiveFilter] = useState("all");
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [events,         setEvents]         = useState([]);
+  const [loading,        setLoading]        = useState(true);
+  const [error,          setError]          = useState(null);
+  const [activeFilter,   setActiveFilter]   = useState("all");
+  const [showLoginModal,      setShowLoginModal]      = useState(false);
+  const [selectedEvent,       setSelectedEvent]       = useState(null);
+  const [submitWorkEvent,      setSubmitWorkEvent]      = useState(null);
+  const [resubmitPost,         setResubmitPost]         = useState(null);
+  const [viewSubmissionsEvent, setViewSubmissionsEvent] = useState(null);
+  const [submittedEventIds,    setSubmittedEventIds]    = useState(new Set());
+
+  // ── Joined events tracking ────────────────────────────────────────────────
+  const [joinedIds,  setJoinedIds]  = useState(() => {
+    try { return new Set(JSON.parse(localStorage.getItem("joinedEvents") || "[]")); }
+    catch { return new Set(); }
+  });
+  const [joiningId,  setJoiningId]  = useState(null);
+
+  // Sync joined state from backend whenever the logged-in account changes
+  useEffect(() => {
+    setSubmittedEventIds(new Set());
+    const studentId = (user?.studentId ?? Number(sessionStorage.getItem("StudentID"))) || null;
+    if (!studentId) {
+      setJoinedIds(new Set());
+      return;
+    }
+    submissionService.getSubmissionsByStudent(studentId)
+      .then(subs => {
+        const ids = new Set(subs.map(s => s.eventId));
+        setJoinedIds(ids);
+        localStorage.setItem("joinedEvents", JSON.stringify([...ids]));
+      })
+      .catch(() => {
+        try {
+          const stored = new Set(JSON.parse(localStorage.getItem("joinedEvents") || "[]"));
+          setJoinedIds(stored);
+        } catch {
+          setJoinedIds(new Set());
+        }
+      });
+  }, [user?.id]);
 
   // ── Fetch all events on mount ──────────────────────────────────────────────
   useEffect(() => {
@@ -38,20 +77,18 @@ export default function EventsPage() {
   }, []);
 
   // ── Derived data ───────────────────────────────────────────────────────────
-
   const categories = useMemo(() => {
-    const cats = [...new Set(events.map((e) => e.category).filter(Boolean))];
+    const cats = [...new Set(events.map(e => e.category).filter(Boolean))];
     return cats;
   }, [events]);
 
   const featuredEvent = useMemo(() => {
     const open = events
-      .filter((e) => e.status?.toLowerCase() === "open")
+      .filter(e => e.status?.toLowerCase() === "open")
       .sort((a, b) => (b.entry_count ?? 0) - (a.entry_count ?? 0));
     if (open.length > 0) return open[0];
-
     const upcoming = events
-      .filter((e) => new Date(e.start_date) > new Date())
+      .filter(e => new Date(e.start_date) > new Date())
       .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
     return upcoming[0] ?? null;
   }, [events]);
@@ -60,36 +97,54 @@ export default function EventsPage() {
     if (!user) return [];
     const field = user.field_of_study?.toLowerCase() ?? "";
     if (!field) return [];
-    const keywords = field.split(/[\s,]+/).filter((w) => w.length > 2);
-    return events.filter((e) =>
-      keywords.some((kw) => e.category?.toLowerCase().includes(kw))
+    const keywords = field.split(/[\s,]+/).filter(w => w.length > 2);
+    return events.filter(e =>
+      keywords.some(kw => e.category?.toLowerCase().includes(kw))
     ).slice(0, 3);
   }, [events, user]);
 
   const heroStats = useMemo(() => ({
-    totalEvents: events.filter((e) => e.status?.toLowerCase() === "open").length,
+    totalEvents:  events.filter(e => e.status?.toLowerCase() === "open").length,
     totalEntries: events.reduce((sum, e) => sum + (e.entry_count ?? 0), 0),
-    totalPoints: events.reduce((sum, e) => sum + (e.points_reward ?? 0), 0),
+    totalPoints:  events.reduce((sum, e) => sum + (e.points_reward ?? 0), 0),
   }), [events]);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
+  // ── Check if student already submitted work for the selected event ───────
+  useEffect(() => {
+    const studentId = user?.studentId ?? Number(sessionStorage.getItem("StudentID"));
+    if (!selectedEvent || !studentId || !joinedIds.has(selectedEvent.id)) return;
+    postService.getPostsByStudentAndEvent(studentId, selectedEvent.id)
+      .then(posts => {
+        if (posts.length > 0) {
+          setSubmittedEventIds(prev => new Set([...prev, selectedEvent.id]));
+        }
+      })
+      .catch(() => {});
+  }, [selectedEvent?.id]);
 
-  function handleViewDetails(event) {
-    setSelectedEvent(event);
-  }
+  function handleViewDetails(event) { setSelectedEvent(event); }
+  function handleCloseModal()       { setSelectedEvent(null); }
 
-  function handleCloseModal() {
-    setSelectedEvent(null);
-  }
-
-  function handleApply(event) {
-    if (!user) {
-      setShowLoginModal(true);
-      return;
+  async function handleApply(event) {
+    if (!user) { setShowLoginModal(true); return; }
+    if (joinedIds.has(event.id) || joiningId === event.id) return;
+    const studentId = user.studentId ?? Number(sessionStorage.getItem("StudentID"));
+    setJoiningId(event.id);
+    try {
+      await submissionService.createSubmission({ studentId, eventId: event.id, title: event.title });
+      const next = new Set(joinedIds);
+      next.add(event.id);
+      setJoinedIds(next);
+      localStorage.setItem("joinedEvents", JSON.stringify([...next]));
+      setEvents(prev => prev.map(e =>
+        e.id === event.id ? { ...e, entry_count: (e.entry_count ?? 0) + 1 } : e
+      ));
+    } catch (err) {
+      console.error("Failed to join event:", err);
+    } finally {
+      setJoiningId(null);
     }
-    // TODO: hook up actual signup endpoint here
-    console.log("Applying for event:", event.id);
-    alert(`You are applying for: ${event.title}`);
   }
 
   function handleFilterChange(filter) {
@@ -116,10 +171,7 @@ export default function EventsPage() {
         <div className="events-page__error-inner">
           <p className="events-page__error-title">Could not load events</p>
           <p className="events-page__error-msg">{error}</p>
-          <button
-            className="events-page__retry-btn"
-            onClick={() => window.location.reload()}
-          >
+          <button className="events-page__retry-btn" onClick={() => window.location.reload()}>
             Try again
           </button>
         </div>
@@ -143,6 +195,8 @@ export default function EventsPage() {
           event={featuredEvent}
           onApply={() => handleApply(featuredEvent)}
           onViewDetails={() => handleViewDetails(featuredEvent)}
+          applied={featuredEvent ? joinedIds.has(featuredEvent.id) : false}
+          joining={joiningId === featuredEvent?.id}
         />
       </div>
 
@@ -153,6 +207,8 @@ export default function EventsPage() {
           activeFilter={activeFilter}
           onApply={handleApply}
           onViewDetails={handleViewDetails}
+          appliedIds={joinedIds}
+          joiningId={joiningId}
         />
       </div>
 
@@ -162,6 +218,7 @@ export default function EventsPage() {
         user={user}
         onApply={handleApply}
         onViewDetails={handleViewDetails}
+        appliedIds={joinedIds}
       />
 
       {/* Event detail modal */}
@@ -169,10 +226,33 @@ export default function EventsPage() {
         <EventDetailModal
           event={selectedEvent}
           onClose={handleCloseModal}
-          onApply={(event) => {
-            handleCloseModal();
-            handleApply(event);
-          }}
+          onApply={event => { handleCloseModal(); handleApply(event); }}
+          onSubmitWork={event => { handleCloseModal(); setSubmitWorkEvent(event); }}
+          onViewSubmissions={event => { handleCloseModal(); setViewSubmissionsEvent(event); }}
+          applied={joinedIds.has(selectedEvent.id)}
+          hasSubmitted={submittedEventIds.has(selectedEvent.id)}
+          joining={joiningId === selectedEvent?.id}
+        />
+      )}
+
+      {/* Submit / resubmit work modal */}
+      {submitWorkEvent && (
+        <SubmitWorkModal
+          event={submitWorkEvent}
+          studentId={user?.studentId ?? Number(sessionStorage.getItem("StudentID"))}
+          existingPost={resubmitPost}
+          onClose={() => { setSubmitWorkEvent(null); setResubmitPost(null); }}
+          onSuccess={() => { setSubmitWorkEvent(null); setResubmitPost(null); }}
+        />
+      )}
+
+      {/* My submissions modal */}
+      {viewSubmissionsEvent && (
+        <MySubmissionsModal
+          event={viewSubmissionsEvent}
+          studentId={user?.studentId ?? Number(sessionStorage.getItem("StudentID"))}
+          onClose={() => setViewSubmissionsEvent(null)}
+          onResubmit={(event, post) => { setViewSubmissionsEvent(null); setResubmitPost(post); setSubmitWorkEvent(event); }}
         />
       )}
 

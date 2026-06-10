@@ -137,7 +137,7 @@ export default function LiveEvents() {
             padding: "8px 16px",
             color: "#fff",
             cursor: "pointer",
-            fontFamily: "Syne, sans-serif",
+            fontFamily: "Poppins, sans-serif",
             fontWeight: 700,
           }}
         >
@@ -181,7 +181,7 @@ export default function LiveEvents() {
             />
             <span
               style={{
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "'Poppins', sans-serif",
                 fontSize: 12.5,
                 fontWeight: 600,
                 color: T.textSecond,

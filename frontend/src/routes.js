@@ -1,6 +1,9 @@
 import { createHashRouter } from "react-router-dom";
 import RootLayout from "./components/common/RootLayout";
 import AdminLayout from "./pages/admin/template/AdminLayout";
+import PendingBlockedRoute from "./components/common/PendingBlockedRoute";
+import AuthRequiredRoute from "./components/common/AuthRequiredRoute";
+import RoleProtectedRoute from "./components/common/RoleProtectedRoute";
 
 // Public pages
 import HomePage from "./pages/public/HomePage";
@@ -18,31 +21,33 @@ import SignupSuccessPage from "./pages/auth/SignupSuccessPage/SignupSuccessPage"
 import ApplicationStatusPage from "./pages/auth/ApplicationStatusPage/ApplicationStatusPage";
 
 // Admin pages
-import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDashboardV2 from "./pages/admin/template/AdminDashboardV2";
 import ManageEvents from "./pages/admin/template/Events";
 import ManageParticipantsPage from "./pages/admin/ManageParticipantsPage";
 import ManageLeaderboardPage from "./pages/admin//ManageLeaderboardPage";
 import ManageDonations from "./pages/admin/ManageDonationsPage";
 import ManageGallery from "./pages/admin/ManageGalleryPage";
+import ManageActivityPage from "./pages/admin/ManageActivityPage";
 
 // Judge pages
 import JudgeDashboard from "./pages/judge/JudgeDashboard";
-import JudgeEventsPage from "./pages/judge/JudgeEventsPage";
 import JudgeScoringPage from "./pages/judge/JudgeScoringPage";
 
-const Routes = createHashRouter([
+import NotFoundPage from "./pages/public/NotFoundPage";
+
+const Routes = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       // ── Public ────────────────────────────────────────────────────────────
       { index: true, element: <HomePage /> },
-      { path: "events", element: <EventsPage /> },
-      { path: "gallery", element: <GalleryPage /> },
-      { path: "leaderboard", element: <LeaderboardPage /> },
-      { path: "donate", element: <DonatePage /> },
-      { path: "profile", element: <ProfilePage /> },
+      { path: "events",      element: <PendingBlockedRoute><EventsPage /></PendingBlockedRoute> },
+      { path: "gallery",     element: <AuthRequiredRoute><GalleryPage /></AuthRequiredRoute> },
+      { path: "leaderboard", element: <PendingBlockedRoute><LeaderboardPage /></PendingBlockedRoute> },
+      { path: "donate",      element: <DonatePage /> },
+      { path: "profile",     element: <PendingBlockedRoute><ProfilePage /></PendingBlockedRoute> },
 
       // ── Auth ──────────────────────────────────────────────────────────────
       { path: "auth", element: <AuthPage /> },
@@ -53,28 +58,27 @@ const Routes = createHashRouter([
       { path: "signup/success", element: <SignupSuccessPage /> },
       { path: "application-status", element: <ApplicationStatusPage /> },
 
-      // ── Old admin dashboard (kept for reference) ───────────────────────────
-      // { path: "admin", element: <AdminDashboard /> },
-
       // ── New admin — all share the sidebar via AdminLayout ──────────────────
       {
         path: "admin",
-        element: <AdminLayout />,
+        element: <RoleProtectedRoute role="admin"><AdminLayout /></RoleProtectedRoute>,
         children: [
           { index: true, element: <AdminDashboardV2 /> },
-          {path: "dashboard", element: <AdminDashboard /> },
           { path: "events", element: <ManageEvents /> },
           { path: "participants", element: <ManageParticipantsPage /> },
           { path: "leaderboard", element: <ManageLeaderboardPage /> },
           { path: "gallery", element: <ManageGallery /> },
           { path: "donations", element: <ManageDonations /> },
+          { path: "activity", element: <ManageActivityPage /> },
         ],
       },
 
       // ── Judge ─────────────────────────────────────────────────────────────
-      { path: "judge", element: <JudgeDashboard /> },
-      { path: "judge/events", element: <JudgeEventsPage /> },
-      { path: "judge/score/:eventId", element: <JudgeScoringPage /> },
+      { path: "judge", element: <RoleProtectedRoute role="judge"><JudgeDashboard /></RoleProtectedRoute> },
+      { path: "judge/score/:eventId", element: <RoleProtectedRoute role="judge"><JudgeScoringPage /></RoleProtectedRoute> },
+
+      // ── 404 catch-all ─────────────────────────────────────────────────────
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ]);

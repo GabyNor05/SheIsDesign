@@ -31,7 +31,16 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<SheDesignContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("SheIsDesignDatabase")));
+builder.Services.AddDbContext<SheDesignContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("SheIsDesignDatabase"),
+        npgsql => npgsql.EnableRetryOnFailure(
+            maxRetryCount: 3,
+            maxRetryDelay: TimeSpan.FromSeconds(5),
+            errorCodesToAdd: null
+        )
+    )
+);
 
 var app = builder.Build();
 

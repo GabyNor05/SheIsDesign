@@ -31,7 +31,7 @@ function Modal({ onClose, title, children, wide }) {
           padding: "20px 24px", borderBottom: `1px solid ${T.border}`,
           position: "sticky", top: 0, background: T.surface, zIndex: 1,
         }}>
-          <h2 style={{ margin: 0, fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 18, color: T.text }}>
+          <h2 style={{ margin: 0, fontFamily: "Poppins, sans-serif", fontWeight: 800, fontSize: 18, color: T.text }}>
             {title}
           </h2>
           <button onClick={onClose} style={{

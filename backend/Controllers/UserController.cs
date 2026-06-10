@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SheDesign.Data;
 using SheDesign.Models;
 using SheDesign.DTO;
@@ -16,10 +17,12 @@ namespace backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly SheDesignContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserController(SheDesignContext context)
+        public UserController(SheDesignContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: api/Users
@@ -31,7 +34,9 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                Status = user.Status,
+                ProfilePictureLink = user.ProfilePictureLink
             }).ToListAsync();
         }
 
@@ -48,18 +53,20 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                Status = user.Status,
+                ProfilePictureLink = user.ProfilePictureLink
             };
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        [HttpPut("{id}/ChangeUserStatus")]
+        public async Task<IActionResult> ChangeUserStatus(int id, Status userStatus)
         {
-            if (id != user.Id) return BadRequest();
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
 
-            _context.Entry(user).State = EntityState.Modified;
+            user.Status = userStatus;
+            _context.Entry(user).Property(u => u.Status).IsModified = true;
 
             try
             {
@@ -68,31 +75,105 @@ namespace backend.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!UserExists(id))
-                {
                     return NotFound();
-                }
                 else
-                {
                     throw;
-                }
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}/ChangeUserRole")]
+        public async Task<IActionResult> ChangeUserRole(int id, Role userRole)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            user.Role = userRole;
+            _context.Entry(user).Property(u => u.Role).IsModified = true;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}/UpdateProfilePicture")]
+        public async Task<IActionResult> UpdateProfilePicture(int id, UserProfilePictureDTO profilePictureDTO)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            user.ProfilePictureLink = profilePictureDTO.ProfilePictureLink;
+            _context.Entry(user).Property(u => u.ProfilePictureLink).IsModified = true; // fixed
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return NoContent();
+        }
+
+        // PUT: api/Users/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id, UserUpdateDTO dto)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            user.Email = dto.email;
+            user.Role = dto.role;
+            user.Status = dto.status;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                    return NotFound();
+                else
+                    throw;
             }
 
             return NoContent();
         }
 
         // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(UserCreateDTO dto)
         {
+            var emailExists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
+            if (emailExists)
+                return Conflict("An account with this email address already exists.");
+
             var hash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-            Console.WriteLine($"DEBUG: The generated hash is: {hash}");
+
             var user = new User
             {
                 Email = dto.Email,
                 PasswordHash = hash,
                 DateCreated = DateTime.UtcNow,
-                Role = Role.User
+                Role = Role.User,
+                ProfilePictureLink = dto.ProfilePictureLink
             };
 
             _context.Users.Add(user);
@@ -103,13 +184,13 @@ namespace backend.Controllers
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                ProfilePictureLink = user.ProfilePictureLink
             };
 
             return CreatedAtAction("GetUser", new { id = user.Id }, result);
         }
 
-        
         [HttpPost("Login")]
         public async Task<ActionResult> Login([FromBody] LoginDTO dto)
         {
@@ -118,17 +199,31 @@ namespace backend.Controllers
             if (user == null) return Unauthorized("User Not Found");
 
             bool validPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
+            if (!validPassword) return Unauthorized("Incorrect Password");
 
-            if (!validPassword)
-                return Unauthorized("Incorrect Password");
+            var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == user.Id);
+            var ip      = await _context.IndustryProfessional.FirstOrDefaultAsync(ip => ip.userId == user.Id);
+            var judge   = ip != null ? await _context.Judge.FirstOrDefaultAsync(j => j.IndustryProfessionalID == ip.Id) : null;
 
             return Ok(new UserReadDTO
             {
                 Id = user.Id,
                 Email = user.Email,
                 DateCreated = user.DateCreated,
-                Role = user.Role
+                Role = user.Role,
+                Status = user.Status,
+                StudentId = student?.Id,
+                JudgeId = judge?.Id,
             });
+        }
+
+        [HttpPost("VerifyAdminCode")]
+        public ActionResult VerifyAdminCode([FromBody] AdminCodeDTO dto)
+        {
+            var expected = _configuration["AdminAccessCode"];
+            if (string.IsNullOrEmpty(expected) || dto.Code?.Trim() != expected)
+                return Unauthorized("Invalid admin access code.");
+            return Ok();
         }
 
         [HttpPost("GoogleLogin")]
@@ -155,6 +250,7 @@ namespace backend.Controllers
 
             bool isNewUser = false;
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
             if (user == null)
             {
                 isNewUser = true;
@@ -163,21 +259,28 @@ namespace backend.Controllers
                     Email = email,
                     PasswordHash = string.Empty,
                     DateCreated = DateTime.UtcNow,
-                    Role = Role.User
+                    Role = Role.User,
                 };
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
             }
 
+            var student = await _context.Student.FirstOrDefaultAsync(s => s.userId == user.Id);
+            var ip      = await _context.IndustryProfessional.FirstOrDefaultAsync(ip => ip.userId == user.Id);
+            var judge   = ip != null ? await _context.Judge.FirstOrDefaultAsync(j => j.IndustryProfessionalID == ip.Id) : null;
+
             return Ok(new UserReadDTO
             {
-                Id          = user.Id,
-                Email       = user.Email,
-                Role        = user.Role,
+                Id         = user.Id,
+                Email      = user.Email,
+                Role       = user.Role,
                 DateCreated = user.DateCreated,
-                IsNewUser   = isNewUser,
-                GivenName   = givenName,
-                FamilyName  = familyName,
+                Status     = user.Status,
+                IsNewUser  = isNewUser,
+                GivenName  = givenName,
+                FamilyName = familyName,
+                StudentId  = student?.Id,
+                JudgeId    = judge?.Id,
             });
         }
 
