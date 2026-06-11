@@ -23,32 +23,33 @@
     background: radial-gradient(circle, rgba(254, 64, 129, 0.08) 0%, transparent 70%);
 }
 
-/* ─── Header ──────────────────────────────────────────────────────────────────── */
-.lb-header {
+/* ─── Hero + Podium merged section ───────────────────────────────────────────── */
+.lb-hero-podium {
     position: relative;
     overflow: hidden;
     background: #0D0608;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 64px 48px 48px;
+    /* Enough top padding to let the title breathe above the cards */
+    padding: 72px 48px 0;
     z-index: 1;
 }
 
-.lb-header__bg-gradient {
+.lb-hero-podium__bg-gradient {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(ellipse 80% 60% at 65% 20%, rgba(196, 18, 98, 0.28) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 15% 80%, rgba(254, 64, 129, 0.14) 0%, transparent 55%),
-        radial-gradient(ellipse 50% 40% at 90% 70%, rgba(196, 18, 98, 0.10) 0%, transparent 50%);
+        radial-gradient(ellipse 80% 60% at 65% 20%, rgba(196, 18, 98, 0.32) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 15% 80%, rgba(254, 64, 129, 0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 90% 70%, rgba(196, 18, 98, 0.12) 0%, transparent 50%);
     pointer-events: none;
 }
 
-.lb-header__orb {
+.lb-hero-podium__orb {
     position: absolute;
-    width: 420px;
-    height: 420px;
+    width: 480px;
+    height: 480px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(196, 18, 98, 0.32) 0%, rgba(254, 64, 129, 0.14) 40%, transparent 70%);
+    background: radial-gradient(circle, rgba(196, 18, 98, 0.38) 0%, rgba(254, 64, 129, 0.16) 40%, transparent 70%);
     pointer-events: none;
     animation: lb-orb-move 9s ease-in-out infinite;
     filter: blur(40px);
@@ -87,12 +88,12 @@
     }
 }
 
-.lb-header__orb2 {
+.lb-hero-podium__orb2 {
     position: absolute;
-    width: 260px;
-    height: 260px;
+    width: 280px;
+    height: 280px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(254, 64, 129, 0.22) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.28) 0%, transparent 70%);
     filter: blur(36px);
     top: 60%;
     left: 5%;
@@ -123,33 +124,35 @@
     }
 }
 
-.lb-header__inner {
-    max-width: 1200px;
-    margin: 0 auto;
+/* Giant title — z-index 1 so cards (z-index 2) overlap it */
+.lb-hero-title {
     position: relative;
     z-index: 1;
+    font-size: clamp(80px, 14vw, 160px);
+    font-weight: 900;
+    line-height: 0.88;
+    letter-spacing: -6px;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 -0.18em;
+    /* negative margin pulls cards up to overlap the text */
+    font-family: 'Poppins', sans-serif;
+    /* Subtle pink glow on the text itself */
+    text-shadow:
+        0 0 80px rgba(254, 64, 129, 0.25),
+        0 0 160px rgba(196, 18, 98, 0.15);
+    /* Centered, matching the podium below */
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Cards wrapper — z-index 2 so it sits in front of the title */
+.lb-podium-wrapper {
+    position: relative;
+    z-index: 2;
     display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.lb-header__title {
-    font-size: clamp(52px, 8vw, 88px);
-    font-weight: 800;
-    line-height: 0.95;
-    letter-spacing: -3px;
-    color: #ffffff;
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-}
-
-.lb-header__sub {
-    font-size: 15px;
-    line-height: 1.75;
-    color: rgba(255, 255, 255, 0.65);
-    max-width: 480px;
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
+    justify-content: center;
+    padding-bottom: 0;
 }
 
 /* ─── Shared section label ────────────────────────────────────────────────────── */
@@ -165,22 +168,7 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* ─── Podium section ──────────────────────────────────────────────────────────── */
-.lb-podium-section {
-    position: relative;
-    z-index: 1;
-    padding: 48px 48px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.lb-podium-section__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-}
-
+/* ─── Podium ──────────────────────────────────────────────────────────────────── */
 .lb-podium {
     display: flex;
     align-items: flex-end;
@@ -195,42 +183,51 @@
     align-items: center;
     border-radius: 24px 24px 0 0;
     overflow: visible;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    background: rgba(255, 255, 255, 0.02);
+    /* Stronger border & slight backdrop blur for contrast */
+    border: 1px solid rgba(254, 64, 129, 0.2);
+    background: rgba(13, 6, 8, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     transition: transform 0.2s;
 }
 
 .lb-podium-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
 }
 
 .lb-podium-card--center {
     width: 300px;
-    border-color: rgba(196, 18, 98, 0.3);
-    background: linear-gradient(180deg, rgba(196, 18, 98, 0.1) 0%, rgba(13, 6, 8, 0.8) 100%);
-    z-index: 2;
+    border-color: rgba(254, 64, 129, 0.55);
+    background: linear-gradient(180deg, rgba(196, 18, 98, 0.18) 0%, rgba(13, 6, 8, 0.85) 60%);
+    box-shadow:
+        0 0 0 1px rgba(254, 64, 129, 0.3),
+        0 8px 48px rgba(196, 18, 98, 0.28),
+        inset 0 1px 0 rgba(254, 64, 129, 0.2);
 }
 
 .lb-podium-card--left,
 .lb-podium-card--right {
     width: 240px;
+    box-shadow:
+        0 0 0 1px rgba(254, 64, 129, 0.12),
+        0 4px 24px rgba(196, 18, 98, 0.12);
 }
 
 .lb-podium-card--you {
-    border-color: rgba(196, 18, 98, 0.5) !important;
+    border-color: rgba(196, 18, 98, 0.6) !important;
 }
 
 .lb-podium-card__glow {
     position: absolute;
-    top: -40px;
+    top: -50px;
     left: 50%;
     transform: translateX(-50%);
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, rgba(196, 18, 98, 0.3) 0%, transparent 70%);
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle, rgba(254, 64, 129, 0.4) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
-    filter: blur(30px);
+    filter: blur(32px);
 }
 
 .lb-podium-card__rank-badge {
@@ -261,6 +258,8 @@
 .lb-podium-card--center .lb-podium-card__avatar {
     width: 88px;
     height: 88px;
+    /* Pink ring on 1st place avatar */
+    box-shadow: 0 0 0 3px rgba(254, 64, 129, 0.4), 0 0 20px rgba(254, 64, 129, 0.25);
 }
 
 .lb-podium-card__initials {
@@ -301,16 +300,21 @@
 
 .lb-podium-card__category {
     font-size: 10px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.55);
+    font-weight: 600;
+    color: #FE7FAB;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     font-family: 'Poppins', sans-serif;
+}
+
+.lb-podium-card--left .lb-podium-card__category,
+.lb-podium-card--right .lb-podium-card__category {
+    color: rgba(254, 127, 171, 0.7);
 }
 
 .lb-podium-card__university {
     font-size: 11px;
-    color: rgba(255, 255, 255, 0.35);
+    color: rgba(255, 255, 255, 0.4);
     font-family: 'Poppins', sans-serif;
 }
 
@@ -330,11 +334,12 @@
 }
 
 .lb-podium-card--center .lb-podium-card__points {
-    font-size: 40px;
-    background: linear-gradient(135deg, #C41262, #FE4081, #FE7FAB);
+    font-size: 44px;
+    background: linear-gradient(135deg, #C41262, #FE4081, #FF6BA8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    filter: drop-shadow(0 0 12px rgba(254, 64, 129, 0.5));
 }
 
 .lb-podium-card__pts-label {
@@ -351,22 +356,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-top: 1px solid rgba(254, 64, 129, 0.15);
 }
 
 .lb-podium-card__base--center {
     height: 64px;
-    background: linear-gradient(135deg, rgba(196, 18, 98, 0.4), rgba(254, 64, 129, 0.3));
+    background: linear-gradient(135deg, rgba(196, 18, 98, 0.5), rgba(254, 64, 129, 0.35));
 }
 
 .lb-podium-card__base--left {
     height: 44px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(254, 64, 129, 0.06);
 }
 
 .lb-podium-card__base--right {
     height: 32px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(254, 64, 129, 0.04);
 }
 
 .lb-podium-card__base-rank {
@@ -379,7 +384,7 @@
 
 .lb-podium-card__base--center .lb-podium-card__base-rank {
     font-size: 28px;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .lb-podium-skeleton {
@@ -457,7 +462,7 @@
 
 .lb-table-divider {
     height: 1px;
-    background: rgba(196, 18, 98, 0.15);
+    background: rgba(196, 18, 98, 0.2);
     margin: 4px 0;
     position: relative;
 }
@@ -472,7 +477,7 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(196, 18, 98, 0.5);
+    color: rgba(196, 18, 98, 0.55);
     font-family: 'Poppins', sans-serif;
     background: #0D0608;
     padding-left: 8px;
@@ -504,8 +509,8 @@
 }
 
 .lb-row:hover {
-    background: rgba(255, 255, 255, 0.025);
-    border-color: rgba(255, 255, 255, 0.05);
+    background: rgba(254, 64, 129, 0.04);
+    border-color: rgba(254, 64, 129, 0.08);
 }
 
 .lb-row--you {
@@ -752,8 +757,8 @@
 }
 
 .lb-how-card:hover {
-    border-color: rgba(196, 18, 98, 0.25);
-    background: rgba(196, 18, 98, 0.04);
+    border-color: rgba(196, 18, 98, 0.3);
+    background: rgba(196, 18, 98, 0.05);
 }
 
 .lb-how-card__top {
@@ -766,8 +771,8 @@
     width: 40px;
     height: 40px;
     border-radius: 11px;
-    background: rgba(196, 18, 98, 0.12);
-    border: 1px solid rgba(196, 18, 98, 0.25);
+    background: rgba(196, 18, 98, 0.15);
+    border: 1px solid rgba(254, 64, 129, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -882,12 +887,17 @@
 
 @media (max-width: 768px) {
 
-    .lb-header,
-    .lb-podium-section,
+    .lb-hero-podium,
     .lb-table-section,
     .lb-how-section {
         padding-left: 24px;
         padding-right: 24px;
+    }
+
+    .lb-hero-title {
+        font-size: clamp(56px, 18vw, 100px);
+        letter-spacing: -3px;
+        margin-bottom: -0.14em;
     }
 
     .lb-podium {

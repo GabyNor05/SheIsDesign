@@ -2,11 +2,33 @@ import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext(null);
 
+function normalizeUserData(rawUser) {
+  if (!rawUser) return null;
+  return {
+    ...rawUser,
+    id: rawUser.id ?? rawUser.Id,
+    email: rawUser.email ?? rawUser.Email,
+    role: rawUser.role ?? rawUser.Role,
+    status: rawUser.status ?? rawUser.Status,
+    judgeId: rawUser.judgeId ?? rawUser.JudgeId,
+    studentId: rawUser.studentId ?? rawUser.StudentId,
+    givenName: rawUser.givenName ?? rawUser.GivenName,
+    familyName: rawUser.familyName ?? rawUser.FamilyName,
+    profilePictureUrl:
+      rawUser.profilePictureUrl ??
+      rawUser.profilePictureLink ??
+      rawUser.ProfilePictureLink ??
+      rawUser.profileImageUrl,
+    isNewUser: rawUser.isNewUser ?? rawUser.IsNewUser,
+    dateCreated: rawUser.dateCreated ?? rawUser.DateCreated,
+  };
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
       const stored = localStorage.getItem("user");
-      return stored ? JSON.parse(stored) : null;
+      return stored ? normalizeUserData(JSON.parse(stored)) : null;
     } catch {
       return null;
     }
@@ -17,8 +39,9 @@ export function AuthProvider({ children }) {
   );
 
   function login(userData) {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
+    const normalized = normalizeUserData(userData);
+    setUser(normalized);
+    localStorage.setItem("user", JSON.stringify(normalized));
     if (!hasLoggedInBefore) {
       localStorage.setItem("hasLoggedInBefore", "true");
       setHasLoggedInBefore(true);

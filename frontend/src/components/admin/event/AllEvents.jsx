@@ -54,15 +54,18 @@ function AllEvents() {
     return matchTab && matchSearch;
   });
 
-  const handleCreate = (data) => {
-    const newEvent = { ...data, EventID: "evt-" + Date.now().toString(36) };
+  const handleCreate = async (data) => {
+    const createdEvent = data || {};
+    const eventId = createdEvent.id ?? createdEvent.Id ?? createdEvent.EventID ?? `evt-${Date.now().toString(36)}`;
+    const newEvent = { ...createdEvent, EventID: eventId };
     setEvents([newEvent, ...events]);
     setModal(null);
   };
 
-  const handleEdit = (data) => {
+  const handleEdit = async (data) => {
+    const eventId = active?.EventID ?? active?.Id ?? active?.id;
     setEvents(events.map(e =>
-      e.EventID === active.EventID ? { ...data, EventID: active.EventID } : e
+      (e.EventID ?? e.Id ?? e.id) === eventId ? { ...data, EventID: eventId } : e
     ));
     setModal(null);
     setActive(null);

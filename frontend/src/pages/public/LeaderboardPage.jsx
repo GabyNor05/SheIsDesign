@@ -30,6 +30,56 @@ const DUMMY = [
   { rank: 15, fullname: "Rania Khalil",     event: "App Icon Design Challenge",      category: "UI Design",             university: "Wits",         points: 644 },
 ];
 
+// ── Aggregate raw entries so each person appears once ──────────────────────────
+// Groups by userId (if present) or fullname as fallback.
+// Sums all points, surfaces the highest-scoring event as the display event,
+// then re-ranks by total points descending.
+function aggregateEntries(raw) {
+  const map = new Map();
+
+  for (const entry of raw) {
+    // Use userId as the canonical key; fall back to lowercased fullname
+    const key = entry.userId
+      ? String(entry.userId)
+      : (entry.fullname ?? "").toLowerCase().trim();
+
+    if (!key) continue;
+
+    if (!map.has(key)) {
+      map.set(key, {
+        userId:     entry.userId     ?? null,
+        fullname:   entry.fullname   ?? "Unknown",
+        university: entry.university ?? null,
+        totalPoints: 0,
+        bestEvent:   null,   // entry with highest points — used for display
+      });
+    }
+
+    const person = map.get(key);
+    const pts = Number(entry.points) || 0;
+    person.totalPoints += pts;
+
+    // Track the single best-scoring event row for display
+    if (!person.bestEvent || pts > (Number(person.bestEvent.points) || 0)) {
+      person.bestEvent = entry;
+    }
+  }
+
+  // Convert to the shape the rest of the component expects, sorted + re-ranked
+  return Array.from(map.values())
+    .sort((a, b) => b.totalPoints - a.totalPoints)
+    .map((person, i) => ({
+      rank:       i + 1,
+      userId:     person.userId,
+      fullname:   person.fullname,
+      university: person.university,
+      points:     person.totalPoints,
+      // Show the best event's name and category in the table
+      event:      person.bestEvent?.event    ?? person.bestEvent?.eventTitle ?? "—",
+      category:   person.bestEvent?.category ?? "—",
+    }));
+}
+
 function initials(name) {
   return name.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
@@ -42,13 +92,13 @@ function avatarHue(name) {
 
 function isCurrentUserEntry(entry, user) {
   if (!user) return false;
-  if (entry.userId && user.id && entry.userId === user.id) return true;
+  if (entry.userId && (user.id ?? user.userId) && String(entry.userId) === String(user.id ?? user.userId)) return true;
   const entryName = entry.fullname?.toLowerCase().trim() || "";
-  const userName = (user.fullname || user.name || "").toLowerCase().trim();
+  const userName  = (user.fullname || user.name || "").toLowerCase().trim();
   return entryName.length > 0 && userName.length > 0 && entryName === userName;
 }
 
-function PodiumCard({ entry, position, isCurrentUser }) {
+function PodiumCard({ entry, position, isCurrentUser, index = 0 }) {
   const isCenter = position === "center";
   const hue = avatarHue(entry.fullname);
 
@@ -63,7 +113,7 @@ function PodiumCard({ entry, position, isCurrentUser }) {
 
       <div className="lb-podium-card__rank-badge">
         {rankIcon}
-        <span className="lb-podium-card__rank-num">{entry.rank}</span>
+        <span className="lb-podium-card__rank-num">{index + 1}</span>
       </div>
 
       <div
@@ -108,7 +158,7 @@ function TableRow({ entry, index, isCurrentUser }) {
       style={{ animationDelay: `${index * 40}ms` }}
     >
       <div className="lb-row__rank">
-        <span className="lb-row__rank-num">{entry.rank}</span>
+        <span className="lb-row__rank-num">{index + 1}</span>
       </div>
 
       <div className="lb-row__student">
@@ -172,13 +222,11 @@ export default function LeaderboardPage() {
   useEffect(() => {
     fetchLeaderboard()
       .then((data) => {
-        if (data && data.length > 0) {
-          setEntries(data);
-        } else {
-          setEntries(DUMMY);
-        }
+        const raw = (data && data.length > 0) ? data : DUMMY;
+        // Aggregate here — one entry per person, ranked by total points
+        setEntries(aggregateEntries(raw));
       })
-      .catch(() => setEntries(DUMMY))
+      .catch(() => setEntries(aggregateEntries(DUMMY)))
       .finally(() => setLoading(false));
   }, []);
 
@@ -192,37 +240,25 @@ export default function LeaderboardPage() {
     <div className="lb-page">
       <div className="lb-glow lb-glow--mid-right" />
 
-      {/* Header */}
-      <header className="lb-header">
-        <div className="lb-header__bg-gradient" />
-        <div className="lb-header__orb" />
-        <div className="lb-header__orb2" />
-        <div className="lb-header__inner">
-          <h1 className="lb-header__title">Leaderboard</h1>
-          <p className="lb-header__sub">
-            See who's rising to the top. Points update after every event — compete, place, and get noticed by industry.
-          </p>
-        </div>
-      </header>
+      <section className="lb-hero-podium">
+        <div className="lb-hero-podium__bg-gradient" />
+        <div className="lb-hero-podium__orb" />
+        <div className="lb-hero-podium__orb2" />
 
-      {/* Podium */}
-      <section className="lb-podium-section">
-        <div className="lb-podium-section__inner">
-          <div className="lb-section-label">
-            <Crown size={13} weight="fill" color="#FE4081" />
-            <span>Top performers</span>
-          </div>
+        <h1 className="lb-hero-title">Leaderboard</h1>
 
+        <div className="lb-podium-wrapper">
           {loading ? (
             <div className="lb-podium-skeleton">
               {[0, 1, 2].map((i) => <div key={i} className="lb-podium-sk" />)}
             </div>
           ) : (
             <div className="lb-podium">
-              {podiumOrder.map(({ entry, pos }) => (
+              {podiumOrder.map(({ entry, pos }, index) => (
                 <PodiumCard
                   key={entry.rank}
                   entry={entry}
+                  index={index}
                   position={pos}
                   isCurrentUser={isCurrentUserEntry(entry, user)}
                 />
@@ -232,7 +268,6 @@ export default function LeaderboardPage() {
         </div>
       </section>
 
-      {/* Full table */}
       <section className="lb-table-section">
         <div className="lb-table-section__inner">
           <div className="lb-table-header">
@@ -248,7 +283,7 @@ export default function LeaderboardPage() {
           <div className="lb-table-cols">
             <span>Rank</span>
             <span>Student</span>
-            <span>Event / Discipline</span>
+            <span>Top Event / Discipline</span>
             <span>Points</span>
           </div>
 
@@ -277,7 +312,6 @@ export default function LeaderboardPage() {
         </div>
       </section>
 
-      {/* How it works */}
       <section className="lb-how-section">
         <div className="lb-how-section__inner">
           <div className="lb-how-header">
