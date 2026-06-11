@@ -197,6 +197,7 @@ chore:    Build, config, tooling
 
 ## Authors
 ![banner](./documentation/sheIsDesignTeamPic.jpeg)
+
 <a href="https://github.com/GabyNor05/SheIsDesign/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=GabyNor05/SheIsDesign" />
 </a>
@@ -210,7 +211,7 @@ Made with [contrib.rocks](https://contrib.rocks).
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [LICENSE](../LICENSE) for more information.
 
 ---
 
