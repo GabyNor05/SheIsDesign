@@ -35,16 +35,17 @@ The public-facing side allows students and industry professionals to register, e
 
 ## UI & Brand Style
 
-**Style summary**
+### Style summary*
 
-- Palette: calming teals/greens for trust & growth.
-- Typography: modern, accessible (system fonts or Inter/Poppins).
-- Components: rounded cards, soft shadows, clear CTAs.
-- Illustration: friendly tutoring scenes, subtle texture background.
+- **The Client’s Vision**: The client explicitly requested a pink-centric colour scheme paired with the modern Poppins typeface. The core design challenge was honouring this specific palette while ensuring the platform remained sophisticated, highly accessible, and appealing to a broad demographic of design students.
+- **Colour Palette (Dark Mode Elegance)**: Inspired by the neon fluid energy of our moodboard, we anchored the vibrant pinks against a deep, premium dark-mode canvas. The system uses a bold Primary Magenta (#C41262) and Tertiary Pink (#FE40B1) for impactful highlights, balanced by soft, muted neutrals (#DBC1C6 and #FBEBED) for backgrounds, and an ultra-dark charcoal (#201A1B) for text contrast, comfortably meeting WCAG AA standards.
+- **Typography**: Fully committed to the Poppins typeface, using a strict hierarchical scale stretching from bold, statement headings (H1 at 32px, Weight 700) down to highly readable platform interface body text (13–14px, Weight 400, 1.6 line-height) to maintain clean, geometric layout pacing.
+- **Layout & Components**: Designed around a responsive 12-column grid system built for desktop and Electron breakpoints. Components feature smooth, intentional micro-interactions, distinct state chips (Active, Pending, Rejected), and soft, rounded container geometry (with border radii ranging from 8px to 16px) to give the application an approachable yet clean, modular aesthetic.
 
-**Design System**
+### Moodboard
 
-![banner](./documentation/styleTile.png)
+<img width="496" height="420" alt="Moodboard (2)" src="https://github.com/user-attachments/assets/392cf5ca-2b5e-4ed3-ae1e-ac54c4f426c6" />
+
 
 ---
 ## Key Features
@@ -162,7 +163,7 @@ Beyond the technical architecture, this project was a masterclass in cross-funct
 
 ## Demo Video
 
-[Watch Demo Video]()
+[Watch Demo Video](https://drive.google.com/file/d/1Vuk0S-6KSA4xeNBTiyUunoKhHjJYpbML/view?usp=sharing)
 
 
 ## Final Presentation Slide Show
@@ -195,7 +196,7 @@ chore:    Build, config, tooling
 ---
 
 ## Authors
-
+![banner](./documentation/sheIsDesignTeamPic.jpeg)
 <a href="https://github.com/GabyNor05/SheIsDesign/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=GabyNor05/SheIsDesign" />
 </a>
