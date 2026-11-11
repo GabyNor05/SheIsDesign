@@ -275,4 +275,3 @@ Distributed under the MIT License. See [LICENSE](./LICENSE) for more information
 **SheIs**Design &nbsp;·&nbsp; Built with 🤍 in South Africa &nbsp;·&nbsp; DV300 · 2026
 
 </div>
-
