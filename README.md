@@ -1,67 +1,121 @@
-<img width="1920" height="583" alt="header" src="https://github.com/user-attachments/assets/22849e46-aaf5-46f7-805b-38831701a09b" />
+<img width="1920" height="583" alt="SheIsDesign header" src="https://github.com/user-attachments/assets/22849e46-aaf5-46f7-805b-38831701a09b" />
 
-
-- - - -
+<div align="center">
 
 # SheIsDesign
 
-> **A community platform celebrating, challenging, and elevating female students in design.**  
-> Built with React · Powered by a dark, accessible design system · Crafted with intention.
+**A community platform celebrating, challenging and elevating female students in design.**
+
+Built with React · .NET · PostgreSQL · Packaged with Electron
+
+[▶ Demo video](https://drive.google.com/file/d/1Vuk0S-6KSA4xeNBTiyUunoKhHjJYpbML/view?usp=sharing) &nbsp;·&nbsp;
+[Presentation](https://www.figma.com/slides/FDR25zYjXFTsmbLN681JkI) &nbsp;·&nbsp;
+[Figma design file](https://www.figma.com/design/3iPXXomn08rmvUxEBEykBZ/SheisDesign-DV300) &nbsp;·&nbsp;
+[Trello board](https://trello.com/b/P1MS94fg/dv300-semester-1)
+
+</div>
+
+![SheIsDesign on tablet, laptop and phone](./documentation/readme/02-every-screen.jpg)
 
 ---
 
 ## Overview
 
-ShelsDesign is a full-stack web platform designed to support and celebrate female design students across South Africa. The platform enables administrators to manage events, participants, leaderboards, galleries, and donations — all through a cohesive, dark-mode admin interface built to WCAG AA accessibility standards.
+SheIsDesign is a full-stack web platform that supports and celebrates female design students across South Africa. Students and industry professionals register, enter monthly design challenges, submit their work and track their progress on a live leaderboard. Industry judges score submissions in their own portal, and administrators run events, participants, the gallery and donations from a dark-mode admin dashboard built to WCAG AA accessibility standards.
 
-The public-facing side allows students and industry professionals to register, enter competitions, submit work, and track their progress on a leaderboard.
+![SheIsDesign hero showcase](./documentation/readme/01-hero-showcase.jpg)
 
 ---
 
-## Tech Stack 
+## Key Features
+
+<table>
+  <tr>
+    <td width="33%"><img src="./documentation/readme/04-post-1-join-the-community.jpg" alt="Join the community" /></td>
+    <td width="33%"><img src="./documentation/readme/04-post-2-monthly-challenges.jpg" alt="Monthly challenges" /></td>
+    <td width="33%"><img src="./documentation/readme/04-post-3-climb-the-leaderboard.jpg" alt="Climb the leaderboard" /></td>
+  </tr>
+  <tr>
+    <td valign="top"><b>Join the community</b><br/>Students sign up with email or Google, verify with a one-time code and get approved by an admin before entering events.</td>
+    <td valign="top"><b>Monthly challenges & gallery</b><br/>Real design briefs every month. Submissions land in a public gallery where the community can browse and comment.</td>
+    <td valign="top"><b>Live leaderboard</b><br/>Judge scores turn into points, and the leaderboard ranks every student in real time.</td>
+  </tr>
+</table>
+
+### Role-based dashboards
+
+![Admin dashboard and judge portal](./documentation/readme/03-built-for-every-role.jpg)
+
+- **Admin interface**: a control centre for platform administrators to approve applicants and manage events, participants, galleries, donations and the leaderboard.
+- **Judge scoring system**: a dedicated portal with a task-oriented flow and backend scoring logic, so judges can review and score student work cleanly.
+
+### Gamification & engagement
+
+- **Live competition leaderboard**: calculates competition points and renders live rankings from validated judge scores.
+- **Serverless transactional messaging**: EmailJS sends emails (like sign-up codes) straight from the frontend, so the backend needs no SMTP server.
+
+### Donations system
+
+Incoming donations are split across three platform pillars:
+
+- **Events & competitions**: prize pools, logistics and running the design challenges.
+- **Student resources**: academic materials, software access and learning tools.
+- **Community workshops**: regional training sessions, guest lectures and design masterclasses.
+
+---
+
+## Tech Stack
 
 | Layer               | Technology             | Purpose                                     |
 | ------------------- | ---------------------- | ------------------------------------------- |
 | **Frontend**        | React (CRA) + DaisyUI  | SPA UI, responsive layout, components       |
-| **Backend**         | .Net                   | Contexts, Models, Controllers and DTOs      |
-| **Testing**         | Jest + xUnit +         | TDD - Unit, Integration and Component       |
-| **Database**        | PostgreSQL (Aiven)     | Relational data for ERD Schemas             |
-| **HTTP Client**     | Axios                  | Frontend ↔ backend requests                 |
+| **Backend**         | .NET 10 (C#)           | Contexts, Models, Controllers and DTOs      |
+| **Testing**         | Jest + xUnit           | TDD: unit, integration and component tests  |
+| **Database**        | PostgreSQL (Aiven)     | Relational data for the ERD schema          |
+| **HTTP client**     | Axios                  | Frontend ↔ backend requests                 |
 | **Deployment**      | Render (backend)       | CI/CD and hosting                           |
-| **Packaging**       | Electron               | For creating a desktop app                  |
-| **Version Control** | GitHub                 | To manage developer commits and branches    |
+| **Packaging**       | Electron               | Desktop app                                 |
+| **Version control** | GitHub                 | Commits, branches and pull requests         |
 
 ---
 
 ## UI & Brand Style
 
-### Style summary*
+<img src="./documentation/readme/wordmark.png" alt="SheIsDesign wordmark on dark and light" width="320" />
 
-- **The Client’s Vision**: The client explicitly requested a pink-centric colour scheme paired with the modern Poppins typeface. The core design challenge was honouring this specific palette while ensuring the platform remained sophisticated, highly accessible, and appealing to a broad demographic of design students.
-- **Colour Palette (Dark Mode Elegance)**: Inspired by the neon fluid energy of our moodboard, we anchored the vibrant pinks against a deep, premium dark-mode canvas. The system uses a bold Primary Magenta (#C41262) and Tertiary Pink (#FE40B1) for impactful highlights, balanced by soft, muted neutrals (#DBC1C6 and #FBEBED) for backgrounds, and an ultra-dark charcoal (#201A1B) for text contrast, comfortably meeting WCAG AA standards.
-- **Typography**: Fully committed to the Poppins typeface, using a strict hierarchical scale stretching from bold, statement headings (H1 at 32px, Weight 700) down to highly readable platform interface body text (13–14px, Weight 400, 1.6 line-height) to maintain clean, geometric layout pacing.
-- **Layout & Components**: Designed around a responsive 12-column grid system built for desktop and Electron breakpoints. Components feature smooth, intentional micro-interactions, distinct state chips (Active, Pending, Rejected), and soft, rounded container geometry (with border radii ranging from 8px to 16px) to give the application an approachable yet clean, modular aesthetic.
+- **The client's vision**: the client asked for a pink-centric colour scheme paired with the modern Poppins typeface. The design challenge was honouring that palette while keeping the platform sophisticated, accessible and appealing to a broad range of design students.
+- **Colour palette (dark-mode elegance)**: inspired by the neon fluid energy of our moodboard, the vibrant pinks sit on a deep, premium dark canvas. Primary Magenta (#C41262) and Secondary Pink (#FE4081) carry the highlights, with Blush (#F8EBED) for light text and surfaces, all meeting WCAG AA contrast.
+- **Typography**: Poppins throughout, on a strict scale from bold statement headings down to readable interface body text (13–14px, weight 400, 1.6 line height).
+- **Layout & components**: a responsive 12-column grid for desktop and Electron breakpoints, smooth micro-interactions, clear status chips (Active, Pending, Rejected) and soft rounded containers (8–16px radius) for an approachable, modular look.
+
+![Brand colours](./documentation/readme/brand-colours.png)
+
+![Poppins typeface](./documentation/readme/typeface.png)
 
 ### Moodboard
 
-<img width="496" height="420" alt="Moodboard (2)" src="https://github.com/user-attachments/assets/392cf5ca-2b5e-4ed3-ae1e-ac54c4f426c6" />
+<img width="496" height="420" alt="Moodboard" src="https://github.com/user-attachments/assets/392cf5ca-2b5e-4ed3-ae1e-ac54c4f426c6" />
 
+### Wireframes
 
----
-## Key Features
-### Role-based Dashboards
-- **Admin Interface**: A cohesive, control centre designed for platform administrators to seamlessly manage real-time events, participants, galleries, and the leaderboard.
-- **Judge Scoring System**: A dedicated portal featuring a custom, task-oriented user flow and backend scoring logic built specifically to allow judges to review and evaluate student work cleanly.
+Low-fidelity wireframes came first, before the brand was applied.
 
-### Gamification & Engangement
-- **Live Competition Leaderboard**: A gamified, real-time student tracking system that calculates competition points and renders live rankings based on system-validated judge scores.
-- **Serverless Transactional Messaging**: Integration of an asynchronous, frontend-driven email client via EmailJS, eliminating backend SMTP server configuration overhead while ensuring fast user messaging pipelines.
+<table>
+  <tr>
+    <td width="33%"><img src="./documentation/readme/wireframe-login.png" alt="Login wireframe" /></td>
+    <td width="33%"><img src="./documentation/readme/wireframe-2fa.png" alt="Two-factor authentication wireframe" /></td>
+    <td width="33%"><img src="./documentation/readme/wireframe-admin-overview.png" alt="Admin overview wireframe" /></td>
+  </tr>
+  <tr>
+    <td align="center">Log in</td>
+    <td align="center">One-time code</td>
+    <td align="center">Admin overview</td>
+  </tr>
+</table>
 
-### Donations System
-A smart donation feature that automatically distributes incoming financial support across three core platform pillars to guarantee maximum impact:
-- **Events & Competitions**: Funds the prize pools, logistics, and execution of active design challenges.
-- **Student Resources**: Supplies academic materials, software access, and learning tools for design students.
-- **Community Workshops**: Powers regional training sessions, guest lectures, and collaborative design masterclasses.
+### Event poster
+
+<img src="./documentation/readme/05-event-poster-a3.jpg" alt="SheIsDesign A3 event poster" width="420" />
 
 ---
 
@@ -69,76 +123,82 @@ A smart donation feature that automatically distributes incoming financial suppo
 
 ### Prerequisites
 
-- React `>= 19.2.4.x`
-- .Net `>= 10.x`
+- Node.js and npm (React `>= 19.2.4`)
+- .NET SDK `>= 10`
 
-### Backend
+### 1. Clone the repository
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-org/sheisdesign.git
-cd backend
+git clone https://github.com/GabyNor05/SheIsDesign.git
+cd SheIsDesign
+```
 
-# Start the backend
+### 2. Backend
+
+The backend needs a `backend/appsettings.json` file with the database connection string (`ConnectionStrings:SheIsDesignDatabase`) and the `AdminAccessCode`. It's git-ignored, so ask the team for it. Never commit it.
+
+```bash
+cd backend
 dotnet run
 ```
 
-### Frontend
+The API runs at [http://localhost:5160](http://localhost:5160).
+
+### 3. Frontend
+
+The frontend needs a `frontend/.env` file with `REACT_APP_GOOGLE_CLIENT_ID`, `REACT_APP_EMAILJS_SERVICE_ID`, `REACT_APP_EMAILJS_TEMPLATE_ID` and `REACT_APP_EMAILJS_PUBLIC_KEY`. Without it, the login and sign-up page won't load. It's git-ignored too.
 
 ```bash
-# New Terminal
+# In a new terminal
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start the development server
 npm start
 ```
 
-The app will open at [http://localhost:3000](http://localhost:3000).
+The app opens at [http://localhost:3000](http://localhost:3000).
 
 ---
 
 ## 🛢 Database Schema (ERD Summary)
-The database schema, as illustrated in the ERD below, is engineered to support a highly relational, scalable, and secure platform. The architecture centres around managing core entities such as Users, Students, Events, and community interactions (Posts, Comments, Submissions, and Donations).
 
-#### Key Architectural Standards
-- **3rd Normal Form (3NF) Compliance**: The database has been carefully normalized to the 3rd level of normalization (3NF). This eliminates data redundancy, prevents update anomalies, and ensures that all non-key attributes are fully dependent solely on the primary keys.
-- **No Many-to-Many Relationships**: To maximise data integrity and optimise query performance, direct many-to-many relationships were intentionally avoided. Any complex relationships are resolved cleanly via one-to-many logical constraints and specialised relational mapping (such as separating general User credentials from specific Student profiles or mapping Donation records directly to individual Event targets).
+The database schema is designed for a highly relational, scalable and secure platform. It centres on Users, Students and Events, plus community interactions (Posts, Comments, Submissions and Donations).
 
-#### Core Entities & Relationships
-- **User & Student**: Handles authentication and role-based access control. A base User record maps directly to a detailed Student profile containing university and academic tracking metrics.
-- **Event & Donation**: Tracks platform events alongside financial support. The Donation table links directly to a specific EventID, ensuring transparent financial allocation.
-- **Post & Comment**: Drives community interaction. Post entities tie back to specific events, while the Comment table acts as a relational bridge connecting comments directly to the User who authored them.
-- **Submission**: Manages competition entries, work status, points, and leaderboard ranks linked directly to an individual StudentID.
+#### Key architectural standards
 
-br 
-![Banner](./documentation/erd.jpeg)
+- **3rd Normal Form (3NF)**: the database is normalised to 3NF. This removes redundancy, prevents update anomalies and makes every non-key attribute depend only on the primary key.
+- **No many-to-many relationships**: to protect data integrity and query performance, complex relationships are resolved with one-to-many constraints (for example, separating User credentials from Student profiles, and mapping Donations directly to Events).
+
+#### Core entities & relationships
+
+- **User & Student**: authentication and role-based access. A base User maps to a detailed Student profile with university and academic details.
+- **Event & Donation**: each Donation links to a specific EventID for transparent financial allocation.
+- **Post & Comment**: Posts tie back to events, and Comments connect to the User who wrote them.
+- **Submission**: competition entries, status, points and leaderboard rank, linked to a StudentID.
+
+![ERD](./documentation/erd.jpeg)
 
 ---
 
 ## Deployment Process
 
-#### Backend (.Net + C#):
-Deployed on **Render**.  
-Responsible for handling data requests, authentication, and database communication.
+#### Backend (.NET + C#)
+Deployed on **Render**. Handles data requests, authentication and database communication.
 
-#### Database (PostgreSQL):
-Hosted on **Aiven**, allowing remote access through phpMyAdmin.  
-Credentials are stored in appsettings.json in the backend and are git-ignored.
+#### Database (PostgreSQL)
+Hosted on **Aiven**. Credentials live in `appsettings.json` in the backend, which is git-ignored.
 
 ---
 
-##  Reflection
+## Reflection
+
 Building SheIsDesign was a transformative journey that pushed our team to evolve from individual developers into a cohesive, full-stack engineering team. Navigating the integration of a React frontend packaged with Electron, a .NET backend, and a 3NF-compliant PostgreSQL database required immense technical adaptability and precision. Overcoming critical roadblocks—such as configuring secure Google Cloud permissions, managing complex component-based states, establishing isolated unit-testing frameworks with mock services, and executing fluid database migrations—forced us to adopt rigorous debugging and optimisation standards. This process significantly sharpened our understanding of server-client architecture, serverless data pipelines, and strict data contracts, transforming major technical hurdles into deep learning experiences.
 
 Beyond the technical architecture, this project was a masterclass in cross-functional collaboration and user-centric design. We successfully balanced highly technical administrative requirements—like designing task-oriented workflows for Admin and Judge dashboards—with strict accessibility and visual identity goals, building lightweight, library-free CSS animations that perform beautifully. When individual bottlenecks arose in testing or UI modularity, we leveraged internal peer mentoring and agile prototyping to keep the team unblocked. Ultimately, SheIsDesign stands as a testament to our team's shared resilience, proving that intentional, high-fidelity community platforms are built at the intersection of clean engineering and collaborative problem-solving.
 
-###  Proud Moments
+### Proud Moments
 - **Keagan**: Engineered a robust frontend functions library that abstracted complex API interactions into clean, reusable data-fetching pipelines, strictly maintaining a separation of concerns and alleviating backend workloads. Additionally, partnered closely with **Gaby** throughout the system development life cycle (SDLC) to bridge frontend requirements and backend logic, successfully implementing state management, business rules, and UI layouts for the intricate Judge scoring system and real-time event management features.
 - **Anika**: Brought the SheIsDesign visual brand to life by authoring custom, fluid, floating orb animations that run across key landing sections. By building these directly with vanilla CSS keyframes and JSX, a high-fidelity visual aesthetic was achieved with zero external library overhead, keeping the application bundle lightweight, performant, and optimised for load speed.
-- **Gaby**: Modernised the platform's communication flow by integrating EmailJS to handle automated user messaging directly from the frontend UI, eliminating the need to configure a traditional backend SMTP server while minimising infrastructure complexity. Furthermore, successfully designed and implemented the structural layouts for both the Admin and Judge dashboards, creating a highly logical, task-oriented user flow that aligned perfectly with the client’s administrative needs.
+- **Gaby**: Modernised the platform's communication flow by integrating EmailJS to handle automated user messaging directly from the frontend UI, eliminating the need to configure a traditional backend SMTP server while minimising infrastructure complexity. Furthermore, successfully designed and implemented the structural layouts for both the Admin and Judge dashboards, creating a highly logical, task-oriented user flow that aligned perfectly with the client's administrative needs.
 - **Keabetswe (KB)**: Architected the entire database access layer from the ground up by building out all relational Models, API Controllers, Data Transfer Objects (DTOs), and DbContext handlers before successfully hosting the production PostgreSQL instance on Aiven. Additionally, co-authored and optimised critical backend utility methods within the common frontend functions library to establish clean, reliable data contracts across the stack.
 
 ### Challenges & Solutions
@@ -163,12 +223,11 @@ Beyond the technical architecture, this project was a masterclass in cross-funct
 
 ## Demo Video
 
-[Watch Demo Video](https://drive.google.com/file/d/1Vuk0S-6KSA4xeNBTiyUunoKhHjJYpbML/view?usp=sharing)
-
+[Watch the demo video](https://drive.google.com/file/d/1Vuk0S-6KSA4xeNBTiyUunoKhHjJYpbML/view?usp=sharing)
 
 ## Final Presentation Slide Show
 
-[View Presentation](https://www.figma.com/slides/FDR25zYjXFTsmbLN681JkI)
+[View the presentation](https://www.figma.com/slides/FDR25zYjXFTsmbLN681JkI)
 
 ---
 
@@ -196,7 +255,8 @@ chore:    Build, config, tooling
 ---
 
 ## Authors
-![banner](./documentation/sheIsDesignTeamPic.jpeg)
+
+![The SheIsDesign team](./documentation/sheIsDesignTeamPic.jpeg)
 
 <a href="https://github.com/GabyNor05/SheIsDesign/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=GabyNor05/SheIsDesign" />
@@ -204,14 +264,11 @@ chore:    Build, config, tooling
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-#### Trello
-[Check out Trello board](https://trello.com/b/P1MS94fg/dv300-semester-1)
-
 ---
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](../LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
 
 ---
 
