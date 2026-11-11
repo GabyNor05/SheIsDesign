@@ -1,4 +1,4 @@
-<img width="1920" height="583" alt="SheIsDesign header" src="https://github.com/user-attachments/assets/22849e46-aaf5-46f7-805b-38831701a09b" />
+![SheIsDesign on tablet, laptop and phone](./documentation/readme/02-every-screen.jpg)
 
 <div align="center">
 
@@ -14,8 +14,6 @@ Built with React · .NET · PostgreSQL · Packaged with Electron
 [Trello board](https://trello.com/b/P1MS94fg/dv300-semester-1)
 
 </div>
-
-![SheIsDesign on tablet, laptop and phone](./documentation/readme/02-every-screen.jpg)
 
 ---
 
@@ -277,3 +275,4 @@ Distributed under the MIT License. See [LICENSE](./LICENSE) for more information
 **SheIs**Design &nbsp;·&nbsp; Built with 🤍 in South Africa &nbsp;·&nbsp; DV300 · 2026
 
 </div>
+
